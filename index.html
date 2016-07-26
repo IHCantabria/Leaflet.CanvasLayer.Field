@@ -17,11 +17,8 @@
     <div id="map" style="width: 900px; height: 600px"></div>
 
     <script type="text/javascript">
-        var map = L.map('map').setView([43.42, -3.7944], 10);
-        L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 10,
-            }).addTo(map);
+        const map = L.map("map").setView([43.42, -3.7944], 10);
+        L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
         /* Initialize the SVG layer */
         map._initPathRoot();
@@ -30,52 +27,58 @@
         var svg = d3.select("#map").select("svg");
         var g = svg.append("g");
 
+        /**
+         * Coordenada en mapa para pintar en SVG
+         * @param   {L.LatLng} latlon - objeto punto longitud / latitud
+         * @returns {L.Point} - punto con coordenadas x, y en píxels
+         */
+        function point2map(latlon) {
+            return map.latLngToLayerPoint(latlon);
+        }
+
+        /**
+         * Genera un path SVG para cada punto, con una longitud 'inventada'
+         * @param {L.LatLng} pto - punto  origen
+         */
+        function lineaVector(pto) {
+            let malla = 0.0083 * 2.0; // ancho malla, en grados decimales (aprox. 2km)
+            let p = point2map(pto); // origen
+            let p2 = point2map(new L.latLng(pto.lat + malla, pto.lng + malla)) // destino, a 45º
+            let x0 = p.x;
+            let y0 = p.y;
+            let x1 = p2.x;
+            let y1 = p2.y;
+
+            let e = `M ${x0} ${y0} L ${x1} ${y1}`
+            return e;
+        }
 
         //pintarCirculosTest();
 
-        d3.csv('puntos.csv', function (data) {
-
-            var ptos = data.map(function (d) {
-                d.latlon = [+d.lat, +d.lon];
+        d3.csv("puntos.csv", function (data) {
+            let ptos = data.map(function (d) {
+                d.latlon = new L.latLng(+d.lat, +d.lon);
                 return d;
             });
 
-            var feature = g.selectAll("line")
+            let feature = g.selectAll("path")
                 .data(ptos)
-                .enter().append("line")
-                .style("stroke", "brown")
-                .attr('stroke-width', 4)
-                .attr("x1", function (d) {
-                    return point2map(d.latlon).x
+                .enter()
+                .append("path")
+                .attr("d", function (d) {
+                    return lineaVector(d.latlon)
                 })
-                .attr("y1", function (d) {
-                    return point2map(d.latlon).y
-                })
-                .attr("x2", function (d) {
-                    return point2map(d.latlon).x - 150
-                })
-                .attr("y2", function (d) {
-                    return point2map(d.latlon).y - 150
-                })
+                .style("stroke-width", 3)
+                .style("stroke", "steelblue")
+                .style("fill", "none");;
 
             map.on("viewreset", update);
             update();
 
-
-            function point2map(latlon) {
-                return map.latLngToLayerPoint(latlon);
-            }
-
-
             function update() {
-                /*    feature.attr("transform",
-                        function (d) {
-                            return "translate(" +
-                                map.latLngToLayerPoint(d.latlon).x + "," +
-                                map.latLngToLayerPoint(d.latlon).y + ")";
-                        }
-                    )
-                */
+                feature.attr("d", function (d) {
+                    return lineaVector(d.latlon)
+                });
             }
         });
 
