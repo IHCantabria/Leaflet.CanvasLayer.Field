@@ -14,7 +14,7 @@
 
 <body>
 
-    <div id="map" style="width: 600px; height: 400px"></div>
+    <div id="map" style="width: 900px; height: 600px"></div>
 
     <script type="text/javascript">
         var map = L.map('map').setView([43.42, -3.7944], 10);
@@ -30,7 +30,54 @@
         var svg = d3.select("#map").select("svg");
         var g = svg.append("g");
 
+
         //pintarCirculosTest();
+
+        d3.csv('puntos.csv', function (data) {
+
+            var ptos = data.map(function (d) {
+                d.latlon = [+d.lat, +d.lon];
+                return d;
+            });
+
+            var feature = g.selectAll("line")
+                .data(ptos)
+                .enter().append("line")
+                .style("stroke", "brown")
+                .attr('stroke-width', 4)
+                .attr("x1", function (d) {
+                    return point2map(d.latlon).x
+                })
+                .attr("y1", function (d) {
+                    return point2map(d.latlon).y
+                })
+                .attr("x2", function (d) {
+                    return point2map(d.latlon).x - 150
+                })
+                .attr("y2", function (d) {
+                    return point2map(d.latlon).y - 150
+                })
+
+            map.on("viewreset", update);
+            update();
+
+
+            function point2map(latlon) {
+                return map.latLngToLayerPoint(latlon);
+            }
+
+
+            function update() {
+                /*    feature.attr("transform",
+                        function (d) {
+                            return "translate(" +
+                                map.latLngToLayerPoint(d.latlon).x + "," +
+                                map.latLngToLayerPoint(d.latlon).y + ")";
+                        }
+                    )
+                */
+            }
+        });
 
         /**
          * Función test pintado
