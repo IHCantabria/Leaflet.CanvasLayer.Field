@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>d3.js with leaflet.js</title>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+
+</head>
+
+<body>
+
+    <div id="map" style="width: 600px; height: 400px"></div>
+
+    <script type="text/javascript">
+        var map = L.map('map').setView([43.42, -3.7944], 10);
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 10,
+            }).addTo(map);
+
+        /* Initialize the SVG layer */
+        map._initPathRoot();
+
+        /* We simply pick up the SVG from the map object */
+        var svg = d3.select("#map").select("svg");
+        var g = svg.append("g");
+
+        //pintarCirculosTest();
+
+        /**
+         * Función test pintado
+         */
+        function pintarCirculosTest() {
+            /* Pintado de circulos - TEST */
+            d3.json("circles.json", function (collection) {
+                collection.objects.forEach(function (d) {
+                    d.LatLng = new L.LatLng(d.circle.coordinates[0],
+                        d.circle.coordinates[1])
+                })
+
+                var feature = g.selectAll("circle")
+                    .data(collection.objects)
+                    .enter().append("circle")
+                    .style("stroke", "black")
+                    .style("opacity", .6)
+                    .style("fill", "red")
+                    .attr("r", 20);
+
+                map.on("viewreset", update);
+                update();
+
+                function update() {
+                    feature.attr("transform",
+                        function (d) {
+                            return "translate(" +
+                                map.latLngToLayerPoint(d.LatLng).x + "," +
+                                map.latLngToLayerPoint(d.LatLng).y + ")";
+                        }
+                    )
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
+
+<!-- 
+    * REFERENCIAS 
+    https://bost.ocks.org/mike/leaflet/
+-->
