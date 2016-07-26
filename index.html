@@ -10,6 +10,10 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
     </script>
 
+    <script src="leaflet.geometryutil.js">
+    </script>
+
+
 </head>
 
 <body>
@@ -18,7 +22,12 @@
 
     <script type="text/javascript">
         const map = L.map("map").setView([43.42, -3.7944], 10);
-        L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
 
         /* Initialize the SVG layer */
         map._initPathRoot();
@@ -40,24 +49,24 @@
          * Genera un path SVG para cada punto, con una longitud 'inventada'
          * @param {L.LatLng} pto - punto  origen
          */
-        function lineaVector(pto) {
-            let malla = 0.0083 * 2.0; // ancho malla, en grados decimales (aprox. 2km)
-            let p = point2map(pto); // origen
-            let p2 = point2map(new L.latLng(pto.lat + malla, pto.lng + malla)) // destino, a 45º
-            let x0 = p.x;
-            let y0 = p.y;
-            let x1 = p2.x;
-            let y1 = p2.y;
+        function lineaVector(d) {
+            let pto0 = d.latlng;
+            let pto1 = L.GeometryUtil.destination(pto0, d.dir, 2000) // línea 2km
 
-            let e = `M ${x0} ${y0} L ${x1} ${y1}`
-            return e;
+            let p0 = point2map(pto0); // origen
+            let p1 = point2map(pto1); // origen
+
+            let p = `M ${p0.x} ${p0.y} L ${p1.x} ${p1.y}`
+            return p;
         }
 
         //pintarCirculosTest();
 
         d3.csv("puntos.csv", function (data) {
             let ptos = data.map(function (d) {
-                d.latlon = new L.latLng(+d.lat, +d.lon);
+                d.latlng = new L.latLng(+d.lat, +d.lon);
+                d.dir = +d.dir; // direccion
+                d.vel = +d.vel // velocidad
                 return d;
             });
 
@@ -65,20 +74,16 @@
                 .data(ptos)
                 .enter()
                 .append("path")
-                .attr("d", function (d) {
-                    return lineaVector(d.latlon)
-                })
+                .attr("d", lineaVector)
                 .style("stroke-width", 3)
-                .style("stroke", "steelblue")
+                .style("stroke", "red")
                 .style("fill", "none");;
 
             map.on("viewreset", update);
             update();
 
             function update() {
-                feature.attr("d", function (d) {
-                    return lineaVector(d.latlon)
-                });
+                feature.attr("d", lineaVector);
             }
         });
 
