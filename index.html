@@ -51,7 +51,7 @@
          */
         function lineaVector(d) {
             let pto0 = d.latlng;
-            let pto1 = L.GeometryUtil.destination(pto0, d.dir, 2000) // línea 2km
+            let pto1 = L.GeometryUtil.destination(pto0, d.dir, 4000) // línea n metros
 
             let p0 = point2map(pto0); // origen
             let p1 = point2map(pto1); // origen
@@ -60,13 +60,27 @@
             return p;
         }
 
+
+        function animarPath(p) {
+            let l = p.getTotalLength();
+            d3.select(p)
+                .attr("stroke-dasharray", function () {
+                    return `${l} ${l} `;
+                })
+                .attr("stroke-dashoffset", `${l}`)
+                .transition()
+                .duration(2000)
+                .ease("linear")
+                .attr("stroke-dashoffset", 0);
+        }
+
         //pintarCirculosTest();
 
         d3.csv("puntos.csv", function (data) {
             let ptos = data.map(function (d) {
                 d.latlng = new L.latLng(+d.lat, +d.lon);
                 d.dir = +d.dir; // direccion
-                d.vel = +d.vel // velocidad
+                d.vel = +d.vel; // velocidad
                 return d;
             });
 
@@ -77,7 +91,9 @@
                 .attr("d", lineaVector)
                 .style("stroke-width", 3)
                 .style("stroke", "red")
-                .style("fill", "none");;
+                .each(function () {
+                    animarPath(this);
+                });
 
             map.on("viewreset", update);
             update();
