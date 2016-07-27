@@ -60,18 +60,30 @@
             return p;
         }
 
-
+        /**
+         * Anima un path individual
+         * @param   {[[Type]]} p [[Description]]
+         * @returns {[[Type]]} [[Description]]
+         */
         function animarPath(p) {
             let l = p.getTotalLength();
-            d3.select(p)
-                .attr("stroke-dasharray", function () {
-                    return `${l} ${l} `;
-                })
-                .attr("stroke-dashoffset", `${l}`)
-                .transition()
-                .duration(2000)
-                .ease("linear")
-                .attr("stroke-dashoffset", 0);
+            var path = d3.select(p);
+
+            (function repetir() {
+                path
+                    .style("stroke-width", 3)
+                    .style("stroke", "red")
+                    .attr("stroke-dasharray", function () {
+                        return `${l} ${l} `;
+                    })
+                    .attr("stroke-dashoffset", `${l}`)
+                    .transition()
+                    .duration(2000)
+                    .ease("linear")
+                    .attr("stroke-dashoffset", 0)
+
+                .each("end", repetir);
+            })();
         }
 
         //pintarCirculosTest();
@@ -89,8 +101,6 @@
                 .enter()
                 .append("path")
                 .attr("d", lineaVector)
-                .style("stroke-width", 3)
-                .style("stroke", "red")
                 .each(function () {
                     animarPath(this);
                 });
@@ -99,7 +109,9 @@
             update();
 
             function update() {
-                feature.attr("d", lineaVector);
+                feature.attr("d", lineaVector).each(function () {
+                    animarPath(this);
+                });
             }
         });
 
