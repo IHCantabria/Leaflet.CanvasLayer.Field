@@ -21,7 +21,9 @@
     <div id="map" style="width: 900px; height: 600px"></div>
 
     <script type="text/javascript">
-        const map = L.map("map").setView([43.42, -3.7944], 10);
+        const map = L.map("map").setView([43.45, -3.7944], 12);
+        const anchoMetros = 300.0;
+
 
         L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
@@ -51,7 +53,7 @@
          */
         function lineaVector(d) {
             let pto0 = d.latlng;
-            let pto1 = L.GeometryUtil.destination(pto0, d.dir, 4000) // línea n metros
+            let pto1 = L.GeometryUtil.destination(pto0, d.dir, anchoMetros) // línea n metros
 
             let p0 = point2map(pto0); // origen
             let p1 = point2map(pto1); // origen
@@ -71,24 +73,19 @@
 
             (function repetir() {
                 path
-                    .style("stroke-width", 3)
-                    .style("stroke", "red")
                     .attr("stroke-dasharray", function () {
                         return `${l} ${l} `;
                     })
                     .attr("stroke-dashoffset", `${l}`)
                     .transition()
-                    .duration(2000)
+                    .duration(3000)
                     .ease("linear")
                     .attr("stroke-dashoffset", 0)
-
-                .each("end", repetir);
+                    .each("end", repetir);
             })();
         }
 
-        //pintarCirculosTest();
-
-        d3.csv("puntos.csv", function (data) {
+        d3.csv("puntos_bahia.csv", function (data) {
             let ptos = data.map(function (d) {
                 d.latlng = new L.latLng(+d.lat, +d.lon);
                 d.dir = +d.dir; // direccion
@@ -96,10 +93,16 @@
                 return d;
             });
 
+            ptos = ptos.filter(function (e, i) {
+                if (i % 10 === 0) return e;
+            });
+
             let feature = g.selectAll("path")
                 .data(ptos)
                 .enter()
                 .append("path")
+                .style("stroke-width", 2)
+                .style("stroke", "blue")
                 .attr("d", lineaVector)
                 .each(function () {
                     animarPath(this);
@@ -114,40 +117,6 @@
                 });
             }
         });
-
-        /**
-         * Función test pintado
-         */
-        function pintarCirculosTest() {
-            /* Pintado de circulos - TEST */
-            d3.json("circles.json", function (collection) {
-                collection.objects.forEach(function (d) {
-                    d.LatLng = new L.LatLng(d.circle.coordinates[0],
-                        d.circle.coordinates[1])
-                })
-
-                var feature = g.selectAll("circle")
-                    .data(collection.objects)
-                    .enter().append("circle")
-                    .style("stroke", "black")
-                    .style("opacity", .6)
-                    .style("fill", "red")
-                    .attr("r", 20);
-
-                map.on("viewreset", update);
-                update();
-
-                function update() {
-                    feature.attr("transform",
-                        function (d) {
-                            return "translate(" +
-                                map.latLngToLayerPoint(d.LatLng).x + "," +
-                                map.latLngToLayerPoint(d.LatLng).y + ")";
-                        }
-                    )
-                }
-            });
-        }
     </script>
 </body>
 
