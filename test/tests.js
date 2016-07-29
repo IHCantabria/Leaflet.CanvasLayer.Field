@@ -18,17 +18,23 @@ var datosMundo90 = {
     nVectores() {
         return this.ncols() * this.nfilas();
     },
+    /**
+     * Valor para longitud-latitud
+     * @param   {[[Type]]} lon [[Description]]
+     * @param   {[[Type]]} lat [[Description]]
+     * @returns {Array}    [[Description]]
+     */
     UV_LonLat(lon, lat) {
-        var x = this._xLon(lon);
-        var y = this._yLat(lat);
-        return [x, y];
+        var x = this.filaLat(lat);
+        var y = this.columnaLon(lon);
+        return this.campo[x][y];
     },
     /**
      * Índice de fila para Latitud, desde 0
      * @param   {float} lat Latitud EPSG:4326
      * @returns {integer} Índice de fila donde buscar el valor de campo
      */
-    xLat(lat) {
+    filaLat(lat) {
         var indiceX = (lat - this.y0) / this.dy;
         return indiceX;
     },
@@ -38,12 +44,12 @@ var datosMundo90 = {
      * @param   {float} lon Longitud EPSG:4326
      * @returns {integer} Índice de columna donde buscar el valor de campo
      */
-    yLon(lon) {
+    columnaLon(lon) {
         var indiceY = (lon - this.x0) / this.dx;
         return indiceY;
     },
     /*
-        ascendente-x, una fila por longitud
+        ascendente-x, una fila por latitud
         [0, 0] --> coords (-180,-90)
         [0, 1] --> coords (-90,-90)
         [0, 2] --> coords (0,-90)
@@ -51,8 +57,8 @@ var datosMundo90 = {
     */
     campo: [
         [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], // (x, -90)
-        [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], // (x, 0)
-        [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]] //  (x, 90)
+        [[0, 0], [0, 0], [0.5, 0.5], [0, 0], [0, 0]], // (x, 0)
+        [[0, 0], [0, 0], [0, 0], [0, 0], [0.9, 0.9]] //  (x, 90)
     ]
 };
 
@@ -69,23 +75,23 @@ QUnit.test("datos - filas y columnas", function (assert) {
 
 QUnit.test("datos - índice fila latitud Y", function (assert) {
     var datos = datosMundo90;
-    assert.equal(datos.xLat(-90), 0, "fila para latitud -90");
-    assert.equal(datos.xLat(0), 1, "fila para latitud 0");
-    assert.equal(datos.xLat(90), 2, "fila para latitud 90");
+    assert.equal(datos.filaLat(-90), 0, "fila para latitud -90");
+    assert.equal(datos.filaLat(0), 1, "fila para latitud 0");
+    assert.equal(datos.filaLat(90), 2, "fila para latitud 90");
 });
 
 QUnit.test("datos - índice columna longitud X", function (assert) {
     var datos = datosMundo90;
-    assert.equal(datos.yLon(-180), 0, "columna para longitud -180");
-    assert.equal(datos.yLon(-90), 1, "columna para longitud -90");
-    assert.equal(datos.yLon(0), 2, "columna para longitud 0");
-    assert.equal(datos.yLon(90), 3, "columna para longitud 90");
-    assert.equal(datos.yLon(180), 4, "columna para longitud 180");
+    assert.equal(datos.columnaLon(-180), 0, "columna para longitud -180");
+    assert.equal(datos.columnaLon(-90), 1, "columna para longitud -90");
+    assert.equal(datos.columnaLon(0), 2, "columna para longitud 0");
+    assert.equal(datos.columnaLon(90), 3, "columna para longitud 90");
+    assert.equal(datos.columnaLon(180), 4, "columna para longitud 180");
 });
 
-/*
 QUnit.test("datos - valores (U,V) en posición", function (assert) {
     var datos = datosMundo90;
     assert.deepEqual(datos.UV_LonLat(-180, -90), [0, 0], "valores UV en esquina inferior izquierda");
-    assert.deepEqual(datos.UV_LonLat(180, 90), [0.5, 0.5], "valores UV en esquina superior derecha");
-});*/
+    assert.deepEqual(datos.UV_LonLat(0, 0), [0.5, 0.5], "valores UV en ecuador/greenwhich");
+    assert.deepEqual(datos.UV_LonLat(180, 90), [0.9, 0.9], "valores UV en esquina superior derecha");
+});
