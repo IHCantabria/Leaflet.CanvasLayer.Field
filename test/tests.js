@@ -1,5 +1,5 @@
 /**
-    Malla mundo, con datos cada 45º
+    Malla mundo, con datos cada 90º
 */
 "use strict";
 var datosMundo90 = {
@@ -64,7 +64,8 @@ var datosMundo90 = {
 
 
 // Datos vectoriales
-QUnit.test("datos - filas y columnas", function (assert) {
+QUnit.module("Datos");
+QUnit.test("filas y columnas", function (assert) {
     var datos = datosMundo90;
     assert.ok(datos.x0 === -180.0, "x0");
     assert.ok(datos.y0 === -90.0, "y0");
@@ -73,14 +74,14 @@ QUnit.test("datos - filas y columnas", function (assert) {
     assert.equal(datos.nVectores(), 15, "n vectores");
 });
 
-QUnit.test("datos - índice fila latitud Y", function (assert) {
+QUnit.test("índice fila latitud Y", function (assert) {
     var datos = datosMundo90;
     assert.equal(datos.filaLat(-90), 0, "fila para latitud -90");
     assert.equal(datos.filaLat(0), 1, "fila para latitud 0");
     assert.equal(datos.filaLat(90), 2, "fila para latitud 90");
 });
 
-QUnit.test("datos - índice columna longitud X", function (assert) {
+QUnit.test("índice columna longitud X", function (assert) {
     var datos = datosMundo90;
     assert.equal(datos.columnaLon(-180), 0, "columna para longitud -180");
     assert.equal(datos.columnaLon(-90), 1, "columna para longitud -90");
@@ -89,7 +90,7 @@ QUnit.test("datos - índice columna longitud X", function (assert) {
     assert.equal(datos.columnaLon(180), 4, "columna para longitud 180");
 });
 
-QUnit.test("datos - valores (U,V) en posición", function (assert) {
+QUnit.test("valores U,V en lon/lat", function (assert) {
     var datos = datosMundo90;
     assert.deepEqual(datos.UV_LonLat(-180, -90), [0, 0], "valores UV en esquina inferior izquierda");
     assert.deepEqual(datos.UV_LonLat(0, 0), [0.5, 0.5], "valores UV en ecuador/greenwhich");
