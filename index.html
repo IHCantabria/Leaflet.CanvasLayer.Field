@@ -22,7 +22,7 @@
 
     <script type="text/javascript">
         const map = L.map("map").setView([43.45, -3.7944], 12);
-        const anchoMetros = 300.0;
+        const anchoMetros = 500;
 
 
         L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -94,7 +94,7 @@
             });
 
             ptos = ptos.filter(function (e, i) {
-                if (i % 10 === 0) return e;
+                if (i % 20 === 0) return e;
             });
 
             let feature = g.selectAll("path")
