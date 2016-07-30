@@ -3,126 +3,20 @@
 
 <head>
     <title>d3.js with leaflet.js</title>
-
+    <!-- CSS -->
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-
-    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
-    </script>
-
-    <script src="leaflet.geometryutil.js">
-    </script>
-
-
 </head>
 
 <body>
-
     <div id="map" style="width: 900px; height: 600px"></div>
 
-    <script type="text/javascript">
-        const map = L.map("map").setView([43.45, -3.7944], 12);
-        const anchoMetros = 500;
+    <!-- JS -->
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="//cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
 
-
-        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
-
-        /* Initialize the SVG layer */
-        map._initPathRoot();
-
-        /* We simply pick up the SVG from the map object */
-        var svg = d3.select("#map").select("svg");
-        var g = svg.append("g");
-
-        /**
-         * Coordenada en mapa para pintar en SVG
-         * @param   {L.LatLng} latlon - objeto punto longitud / latitud
-         * @returns {L.Point} - punto con coordenadas x, y en píxels
-         */
-        function point2map(latlon) {
-            return map.latLngToLayerPoint(latlon);
-        }
-
-        /**
-         * Genera un path SVG para cada punto, con una longitud 'inventada'
-         * @param {L.LatLng} pto - punto  origen
-         */
-        function lineaVector(d) {
-            let pto0 = d.latlng;
-            let pto1 = L.GeometryUtil.destination(pto0, d.dir, anchoMetros) // línea n metros
-
-            let p0 = point2map(pto0); // origen
-            let p1 = point2map(pto1); // origen
-
-            let p = `M ${p0.x} ${p0.y} L ${p1.x} ${p1.y}`
-            return p;
-        }
-
-        /**
-         * Anima un path individual
-         * @param   {[[Type]]} p [[Description]]
-         * @returns {[[Type]]} [[Description]]
-         */
-        function animarPath(p) {
-            let l = p.getTotalLength();
-            var path = d3.select(p);
-
-            (function repetir() {
-                path
-                    .attr("stroke-dasharray", function () {
-                        return `${l} ${l} `;
-                    })
-                    .attr("stroke-dashoffset", `${l}`)
-                    .transition()
-                    .duration(3000)
-                    .ease("linear")
-                    .attr("stroke-dashoffset", 0)
-                    .each("end", repetir);
-            })();
-        }
-
-        d3.csv("puntos_bahia.csv", function (data) {
-            let ptos = data.map(function (d) {
-                d.latlng = new L.latLng(+d.lat, +d.lon);
-                d.dir = +d.dir; // direccion
-                d.vel = +d.vel; // velocidad
-                return d;
-            });
-
-            ptos = ptos.filter(function (e, i) {
-                if (i % 20 === 0) return e;
-            });
-
-            let feature = g.selectAll("path")
-                .data(ptos)
-                .enter()
-                .append("path")
-                .style("stroke-width", 2)
-                .style("stroke", "blue")
-                .attr("d", lineaVector)
-                .each(function () {
-                    animarPath(this);
-                });
-
-            map.on("viewreset", update);
-            update();
-
-            function update() {
-                feature.attr("d", lineaVector).each(function () {
-                    animarPath(this);
-                });
-            }
-        });
-    </script>
+    <!-- JS local -->
+    <script src="js/lib/leaflet.geometryutil.js"></script>
+    <script src="index.js"></script>
 </body>
 
 </html>
-
-<!-- 
-    * REFERENCIAS 
-    https://bost.ocks.org/mike/leaflet/
--->
