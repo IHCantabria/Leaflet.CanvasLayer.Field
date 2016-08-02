@@ -1,3 +1,4 @@
+// Pintado de vectores animados, en 1 pto.
 /* Preparación de Mapa */
 const map = L.map("map").setView([43.45, -3.7944], 12);
 const ancho = 500;

@@ -1,5 +1,5 @@
 /* Preparación de Mapa */
-const map = L.map("map").setView([0, 0], 1);
+const map = L.map("map").setView([43.45, -3.7944], 12);
 const ancho = 500;
 
 L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -8,23 +8,22 @@ L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
     maxZoom: 19
 }).addTo(map);
 
-/* Capa Canvas */
-L.canvasLayer()
-    .delegate(this)
-    .addTo(map);
 
-function onDrawLayer(info) {
-    var ctx = info.canvas.getContext('2d');
-    ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
-    ctx.fillStyle = "rgba(255,0,0, 0.4)";
-    for (var i = 0; i < data.length; i++) {
-        var d = data[i];
-        if (info.bounds.contains([d[0], d[1]])) {
-            dot = info.layer._map.latLngToContainerPoint([d[0], d[1]]);
-            ctx.beginPath();
-            ctx.arc(dot.x, dot.y, 3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.closePath();
-        }
+
+d3.csv("data/puntos_bahia.csv", function (data) {
+    let ptos = data.map(function (d) {
+        d.latlng = new L.latLng(+d.lat, +d.lon);
+        d.dir = +d.dir; // direccion
+        d.vel = +d.vel; // velocidad
+        return d;
+    });
+
+
+    /* Capa Canvas */
+    var capa = new CapaSimple(ptos);
+    capa.addTo(map);
+
+    function onDrawLayer(info) {
+
     }
-};
+});
