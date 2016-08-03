@@ -1,4 +1,14 @@
  CapaVectorAnimado = function (ptos) {
+     // Característicias generales de la animación
+     const NUMERO_TRAYECTORIAS = 50,
+         EDAD_INICIAL_PARTICULA = 0,
+         DURACION_FRAME = 40, // milisegundos de cada 'frame' en la animación
+         EDAD_MAXIMA_PARTICULA = 100;
+
+
+     const PASO_MALLA = 0.0005;
+
+
      this.ptos = ptos;
 
      this.onLayerDidMount = function () {
@@ -12,51 +22,72 @@
          this.needRedraw(); // -- call to drawLayer
      };
      this.onDrawLayer = function (viewInfo) {
+         // preparación del canvas
          let g = viewInfo.canvas.getContext('2d');
          g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
+
+         // caracterìsticas de pintado de líneas
          g.fillStyle = "rgba(255, 0, 0, 0.01)"; // for fading curves
          g.lineWidth = 0.7;
          g.strokeStyle = "#FF8000"; // html color code
-         g.globalCompositeOperation = "source-over";
 
-         // Preparación de animación
+         // selección de partículas
          // let puntosGraficar = this.ptos; TODOS
-         let puntosGraficar = this.ptos.filter(function (e, index, arr) {
-             if (index % 5 === 0) return e;
+         let particulas = this.ptos.filter(function (e, index, arr) {
+             // habría que aplicar una distribución seleccionando N PARTICULAS, 100-1000?????
+             // ¿con una posición random?
+             if (index % 5 === 0) {
+                 let p = e; // inicialmente le adjudicamos todo el pto (más adelante, solo posición??? muy condicionado a estructura del campovectorial)
+                 //p.edad = EDAD_INICIAL_PARTICULA; //??
+                 p.edad = Math.floor((Math.random() * 100) + 1); //vida 1 a 100
+
+                 return p;
+             }
          });
 
-
-         let animAge = 0, // edad inicial
-             frameRate = 40, // ms por cada paso temporal o 'frame'
-             M = puntosGraficar.length,
-             MaxAge = 100, // # edad máxima (timesteps before restart)
-             edad = [];
-
-         // localizaciones iniciales
-         let X0 = [],
-             Y0 = [];
-         // posición actual para cada curva
-         let X = [],
-             Y = [];
-
-         /*         for (var i = 0; i < M; i++) {
-                      edad.push(this._edadAleatoria());
-                  }
-         */
+         let particulasPintar = []; //buckets?
 
          d3.timer(function () {
              moverParticulas();
              dibujar();
-         }, frameRate);
+         }, DURACION_FRAME);
 
-         var particulas = []; // ¿?
 
+         /**
+          * Construye las trayectorias de las partículas, modificando a cada paso temporal
+          * sus características (edad / posición origen > destino)
+          */
          function moverParticulas() {
-             particulas = puntosGraficar.map(function (el) {
-                 return el;
+             particulas.forEach(function (par) {
+                 if (par.edad > EDAD_MAXIMA_PARTICULA) {
+                     par.edad = EDAD_INICIAL_PARTICULA; // mismo sitio, comienza de nuevo
+                     // en earth se le randomiza la posición x|y para que empiece en otro sitio
+                 }
+                 // datos en 'ubicación actual'
+                 var x = par.lon;
+                 var y = par.lat;
+                 var u = par.u;
+                 var v = par.v;
+                 var m = par.m;
+
+                 // siguiente punto
+                 var xt = x + u * PASO_MALLA * 5;
+                 var yt = y + v * PASO_MALLA * 5;
+
+
+                 // ¿particula visible / no visible? | ¿bordes?
+                 par.latlngT = new L.latLng(yt, xt);
+                 /*par.lont = xt;
+                 par.latt = yt;*/
+                 par.edad += 1;
+
+                 particulasPintar.push(par);
              });
          }
 
+         /**
+          * Pinta las partículas en el canvas
+          */
          function dibujar() {
              //
              g.globalCompositeOperation = "destination-in";
@@ -65,7 +96,7 @@
 
              const ANCHO = 0.0005; //paso de malla (lon|lat)
 
-             particulas.forEach(function (pto) {
+             particulasPintar.forEach(function (par) {
                  /*
                  - ¿qué pintar?
                     >> inicialmente, una línea iniciada en TODAS las celdas
@@ -89,12 +120,16 @@
 
                      */
 
-                 let origen = pto.latlng;
+                 let origen = par.latlng;
+                 //let origen = [par.lat, par.lon];
 
                  //let destino = [origen.lon += ]
-                 let destino = L.GeometryUtil.destination(origen, pto.dir, 100); // línea n metros
+                 // let destino = L.GeometryUtil.destination(origen, par.dir, 100); // línea n metros
+                 let destino = par.latlngT;
 
-                 if (viewInfo.bounds.contains(origen)) {
+                 // grafica lo que está en pantalla...
+                 // ... y tiene "vida"
+                 if (viewInfo.bounds.contains(origen) && par.edad <= EDAD_MAXIMA_PARTICULA) {
                      let ptoA = viewInfo.layer._map.latLngToContainerPoint(origen);
                      let ptoB = viewInfo.layer._map.latLngToContainerPoint(destino);
 
