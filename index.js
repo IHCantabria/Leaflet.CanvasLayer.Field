@@ -20,10 +20,7 @@ d3.csv("data/puntos_bahia.csv", function (data) {
 
 
     /* Capa Canvas */
-    var capa = new CapaSimple(ptos);
+    var capa = new CapaVectorAnimado(ptos);
     capa.addTo(map);
 
-    function onDrawLayer(info) {
-
-    }
 });
