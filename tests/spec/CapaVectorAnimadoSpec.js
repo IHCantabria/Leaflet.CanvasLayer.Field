@@ -1,4 +1,4 @@
-describe("CapaSimple", function () {
+describe("CapaVectorAnimado", function () {
     var capa;
     beforeEach(function () {
         let ptos = [];
@@ -12,12 +12,12 @@ describe("CapaSimple", function () {
             dir: 90,
             el: 0.82
         });
-        capa = new CapaSimple(ptos);
+        capa = new CapaVectorAnimado(ptos);
     });
 
 
-    it("es una capa Leaflet con ptos", function () {
-        expect(capa instanceof CapaSimple).toBe(true);
+    it("es una CapaVectorAnimado con ptos", function () {
+        expect(capa instanceof CapaVectorAnimado).toBe(true);
         expect(capa.ptos.length).toBeGreaterThan(0);
     });
 });
