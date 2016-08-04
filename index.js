@@ -12,6 +12,7 @@ L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
 
 d3.csv("data/puntos_bahia_uv.csv", function (data) {
     let ptos = data.map(function (d) {
+        d.POINTID = +d.POINTID;
         d.latlng = new L.latLng(+d.lat, +d.lon);
         d.lon = +d.lon;
         d.lat = +d.lat;

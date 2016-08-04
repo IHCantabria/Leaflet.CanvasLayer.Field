@@ -13,7 +13,10 @@
 ## Notas técnicas:
 - HTML5
 - JS ecmascript 2015
-- Libs vía CDN: D3 (v3) y Leaflet (v1.0-rc)
+- Libs vía CDN: 
+    * D3 (v3) 
+    * Leaflet (v1.0-rc)
+    * Underscore ()
 - Libs locales: 
     * [Leaflet.GeometryUtil](https://github.com/makinacorpus/Leaflet.GeometryUtil/) (v0.4.0) - para cálculos geométricos
     * [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (v1.0.1) - para crear una capa CanvasLayer

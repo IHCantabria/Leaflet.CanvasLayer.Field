@@ -36,12 +36,16 @@
          let particulas = this.ptos.filter(function (e, index, arr) {
              // habría que aplicar una distribución seleccionando N PARTICULAS, 100-1000?????
              // ¿con una posición random?
-             if (index % 5 === 0) {
-                 let p = e; // inicialmente le adjudicamos todo el pto (más adelante, solo posición??? muy condicionado a estructura del campovectorial)
-                 //p.edad = EDAD_INICIAL_PARTICULA; //??
-                 p.edad = Math.floor((Math.random() * 100) + 1); //vida 1 a 100
+             /*             if (index % 100 === 0) {
+                              let p = e; // inicialmente le adjudicamos todo el pto (más adelante, solo posición??? muy condicionado a estructura del campovectorial)
+                              //p.edad = EDAD_INICIAL_PARTICULA; //??
+                              p.edad = Math.floor((Math.random() * 100) + 1); //vida 1 a 100
 
-                 return p;
+                              return p;
+                          }*/
+             if (e.POINTID === 14508) {
+                 let p = e;
+                 p.edad = EDAD_INICIAL_PARTICULA;
              }
          });
 
@@ -100,7 +104,7 @@
                  /*
                  - ¿qué pintar?
                     >> inicialmente, una línea iniciada en TODAS las celdas
-                    >> más adelante crear "particulas" (sólo un número "razonable")
+                    -- más adelante crear "trayectorias" (sólo un número "razonable")
 
                 - ¿dónde empezar?
                     >> inicialmente, empezar siempre en el punto "inicio" de la celda (no hay desplazamiento)
@@ -111,14 +115,14 @@
                     >> más adelante, la dirección del punto de la celda en la que cae, o una dirección interpolada basada en varias celdas!!
 
                 -  ¿cuánta longitud?
-                    >> un valor fijo!??
-                    >> la determinada por el vector???
+                    - un valor fijo
+                    >>> la determinada por el vector
 
                 -  ¿de qué color pintar?
                     >> primero usar un color fijo de línea
-                    >> más adelante, considerar un color ligado a magnitud del vector
+                    - más adelante, considerar un color ligado a magnitud del vector
 
-                     */
+                */
 
                  let origen = par.latlng;
                  //let origen = [par.lat, par.lon];
