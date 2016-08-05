@@ -4,6 +4,8 @@ describe("CampoVectorial", function () {
         componenteU = [0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0.9];
         componenteV = [0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0.9];
 
+
+
         campoVectorial = new CampoVectorial(-180, -90, 180, 90, 90);
         campoVectorial.componenteU = componenteU;
         campoVectorial.componenteV = componenteV;

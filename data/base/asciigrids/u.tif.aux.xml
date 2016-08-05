@@ -1,6 +1,5 @@
 <PAMDataset>
   <PAMRasterBand band="1">
-    <ColorInterp>Gray</ColorInterp>
     <Histograms>
       <HistItem>
         <HistMin>-0.8594133959710598</HistMin>

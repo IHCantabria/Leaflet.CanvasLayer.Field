@@ -1,0 +1,18 @@
+<PAMDataset>
+  <Metadata>
+    <MDI key="AREA_OR_POINT">Area</MDI>
+    <MDI key="DataType">Generic</MDI>
+  </Metadata>
+  <PAMRasterBand band="1">
+    <ColorInterp>Gray</ColorInterp>
+    <Metadata>
+      <MDI key="STATISTICS_COVARIANCES">0.1528687266319709</MDI>
+      <MDI key="STATISTICS_MAXIMUM">1,0506991147995</MDI>
+      <MDI key="STATISTICS_MEAN">0,417277586852</MDI>
+      <MDI key="STATISTICS_MINIMUM">-0,85845881700516</MDI>
+      <MDI key="STATISTICS_SKIPFACTORX">1</MDI>
+      <MDI key="STATISTICS_SKIPFACTORY">1</MDI>
+      <MDI key="STATISTICS_STDDEV">0,39098430484096</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>
