@@ -17,19 +17,19 @@ CapaVectorAnimado = function (campoVectorial) {
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
         // caracterìsticas de pintado de líneas
-        g.fillStyle = "rgba(255, 0, 0, 0.5)"; // for fading curves
-        g.lineWidth = 0.7;
+        g.fillStyle = "rgba(255, 0, 0, 0.78)"; // for fading curves
+        g.lineWidth = 2;
         g.strokeStyle = "#FF8000"; // html color code
 
         // selección de partículas
         // let puntosGraficar = this.ptos; TODOS
         let cv = this.campoVectorial;
 
-        let inicioTrayectorias = [];
+        let trayectorias = [];
         for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
             let p = cv.posicionAleatoria();
             p.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
-            inicioTrayectorias.push(p)
+            trayectorias.push(p)
         }
 
         d3.timer(function () {
@@ -37,13 +37,13 @@ CapaVectorAnimado = function (campoVectorial) {
             dibujar();
         }, CapaVectorAnimado.DURACION_FRAME);
 
-        let trayectorias = [];
+
         /**
          * Construye las trayectorias de las partículas, modificando a cada paso temporal
          * sus características (edad / posición origen > destino)
          */
         function moverParticulas() {
-            inicioTrayectorias.forEach(function (par) {
+            trayectorias.forEach(function (par) {
                 if (par.edad > CapaVectorAnimado.EDAD_MAXIMA_PARTICULA) {
                     par.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
                     cv.posicionAleatoria(par);
@@ -55,8 +55,8 @@ CapaVectorAnimado = function (campoVectorial) {
                     let vector = cv.vectorEn(par.x, par.y);
 
                     // siguiente punto
-                    var incx = cv.dx * 10;
-                    var incy = cv.dy * 10;
+                    var incx = cv.dx * 5;
+                    var incy = cv.dy * 5;
                     let xt = par.x + vector.u * incx;
                     let yt = par.y + vector.v * incy;
 
@@ -64,7 +64,7 @@ CapaVectorAnimado = function (campoVectorial) {
                     par.xt = xt;
                     par.yt = yt; // new L.latLng(yt, xt);
 
-                    trayectorias.push(par);
+                    //trayectorias.push(par);
                 } else {
                     par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA; //
                 }
@@ -131,7 +131,6 @@ CapaVectorAnimado = function (campoVectorial) {
                     */
                 }
             });
-            console.log('yap');
         }
     };
 
@@ -157,7 +156,7 @@ CapaVectorAnimado = function (campoVectorial) {
 CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 500;
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1000; //
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
-CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame' en la animación
-CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 100;
+CapaVectorAnimado.DURACION_FRAME = 200; //40; // milisegundos de cada 'frame' en la animación
+CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 50;
