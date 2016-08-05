@@ -26,11 +26,21 @@ CapaVectorAnimado = function (campoVectorial) {
         let cv = this.campoVectorial;
 
         let trayectorias = [];
+
+        /*
         for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
             let p = cv.posicionAleatoria();
             p.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
             trayectorias.push(p)
         }
+        */
+
+        for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
+            let p = cv.posicionAleatoria();
+            p.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
+            trayectorias.push(p)
+        }
+
 
         d3.timer(function () {
             moverParticulas();
@@ -55,10 +65,12 @@ CapaVectorAnimado = function (campoVectorial) {
                     let vector = cv.vectorEn(par.x, par.y);
 
                     // siguiente punto
-                    var incx = cv.dx * 5;
-                    var incy = cv.dy * 5;
+                    var incx = cv.dx * 2;
+                    var incy = cv.dy * 2;
                     let xt = par.x + vector.u * incx;
                     let yt = par.y + vector.v * incy;
+
+                    // vector.magnitud()
 
                     // ¿particula visible / no visible? | ¿bordes?
                     par.xt = xt;
@@ -156,7 +168,7 @@ CapaVectorAnimado = function (campoVectorial) {
 CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1000; //
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 100; //1000; //
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
-CapaVectorAnimado.DURACION_FRAME = 200; //40; // milisegundos de cada 'frame' en la animación
-CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 50;
+CapaVectorAnimado.DURACION_FRAME = 400; //40; // milisegundos de cada 'frame' en la animación
+CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 200;
