@@ -34,12 +34,30 @@ describe("CampoVectorial", function () {
         expect(campoVectorial.lonLatEnIndice(14)).toEqual([180, 90]);
     });
 
-    it("debería devolver el vector en una Lon-Lat", function () {
+    it("debería devolver los valores [u, v] del vector en una Lon-Lat", function () {
         expect(campoVectorial.valorEn(-180, -90)).toEqual([0, 0]); // LL
         expect(campoVectorial.valorEn(0, 0)).toEqual([0.5, 0.5]); // ecuador-greenwhich
         expect(campoVectorial.valorEn(180, 90)).toEqual([0.9, 0.9]); // UR
 
         expect(campoVectorial.valorEn(-360, -180)).toEqual(null);
+    });
+
+    it("debería devolver el {Vector} en una Lon-Lat", function () {
+        // LL
+        var uv = campoVectorial.vectorEn(-180, -90);
+        expect(uv).toEqual(new Vector(0, 0));
+
+        // ecuador-greenwhich
+        uv = campoVectorial.vectorEn(0, 0);
+        expect(uv).toEqual(new Vector(0.5, 0.5));
+
+        // UR
+        uv = campoVectorial.vectorEn(180, 90);
+        expect(uv).toEqual(new Vector(0.9, 0.9));
+
+        // out...
+        uv = campoVectorial.vectorEn(-360, -180);
+        expect(uv).toEqual(null);
     });
 
     it("debería permitir saber si una posición tiene valor", function () {

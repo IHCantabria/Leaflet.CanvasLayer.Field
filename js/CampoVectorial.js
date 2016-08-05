@@ -1,11 +1,11 @@
 class CampoVectorial {
-    constructor(x0, y0, x1, y1, dxy) {
+    constructor(x0, y0, x1, y1, dx, dy) {
         this.x0 = x0;
         this.y0 = y0;
         this.x1 = x1;
         this.y1 = y1;
-        this.dx = dxy;
-        this.dy = dxy;
+        this.dx = dx;
+        this.dy = dy;
 
         this.componenteU = [];
         this.componenteV = [];
@@ -31,8 +31,9 @@ class CampoVectorial {
      * @returns {Array} [u, v]
      */
     vector(i) {
-        let u = this.componenteU[i],
-            v = this.componenteV[i];
+        let ir = Math.round(i);
+        let u = this.componenteU[ir],
+            v = this.componenteV[ir];
         let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
         return valido ? [u, v] : null;
     }
@@ -54,7 +55,7 @@ class CampoVectorial {
     }
 
     /**
-     * Valor en las coordenadas longitud-latitud
+     * Valores del vector en las coordenadas longitud-latitud
      * @param   {[[Type]]} lon [[Description]]
      * @param   {[[Type]]} lat [[Description]]
      * @returns {Array}   [u, v]
@@ -67,21 +68,26 @@ class CampoVectorial {
         return this.vector(posy + posx);
     }
 
+    vectorEn(lon, lat) {
+        let uv = this.valorEn(lon, lat);
+
+        if (uv !== null) {
+            return new Vector(uv[0], uv[1]);
+        } else {
+            return null;
+        }
+    }
+
     tieneValorEn(lon, lat) {
         return this.valorEn(lon, lat) !== null;
     }
 
     posicionAleatoria(o = {}) {
-        let x, y;
-        let safetyNet = 0;
-        do {
-            x = Math.round(_.random(this.x0, this.x1));
-            y = Math.round(_.random(this.y0, this.y1));
-        } while (!this.tieneValorEn(x, y) && safetyNet++ < 30);
+        let pos = _.random(0, this.nVectores() - 1);
+        var lonlat = this.lonLatEnIndice(pos);
 
-
-        o.x = x;
-        o.y = y;
+        o.x = lonlat[0];
+        o.y = lonlat[1];
         return o;
     }
 
