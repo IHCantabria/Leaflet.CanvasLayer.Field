@@ -31,9 +31,9 @@ class CampoVectorial {
      * @returns {Array} [u, v]
      */
     vector(i) {
-        var u = this.componenteU[i],
+        let u = this.componenteU[i],
             v = this.componenteV[i];
-        var valido = (u !== null && u !== undefined && v !== null & v !== undefined);
+        let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
         return valido ? [u, v] : null;
     }
 
@@ -44,10 +44,13 @@ class CampoVectorial {
      * @returns {Array} [lon, lat];
      */
     lonLatEnIndice(i) {
-        var iCols = this.ncols() - 1;
-        var iFilas = this.nfilas() - 1;
+        var indicey = Math.floor(i / this.ncols());
+        var lat = this.y0 + (indicey * this.dy);
 
-        return [0, 0];
+        var indicex = i % this.ncols();
+        var lon = this.x0 + (indicex * this.dx);
+
+        return [lon, lat];
     }
 
     /**
@@ -58,8 +61,8 @@ class CampoVectorial {
      */
     valorEn(lon, lat) {
         // Los datos se almacenan en x-ascendente y luego y-ascendente
-        var posy = (lat - this.y0) / this.dy * this.ncols();
-        var posx = (lon - this.x0) / this.dx;
+        let posy = (lat - this.y0) / this.dy * this.ncols();
+        let posx = (lon - this.x0) / this.dx;
 
         return this.vector(posy + posx);
     }
@@ -69,8 +72,8 @@ class CampoVectorial {
     }
 
     posicionAleatoria(o = {}) {
-        var x, y;
-        var safetyNet = 0;
+        let x, y;
+        let safetyNet = 0;
         do {
             x = Math.round(_.random(this.x0, this.x1));
             y = Math.round(_.random(this.y0, this.y1));
