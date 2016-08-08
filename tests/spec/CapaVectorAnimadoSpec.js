@@ -18,6 +18,6 @@ describe("CapaVectorAnimado", function () {
 
     it("es una CapaVectorAnimado con ptos", function () {
         expect(capa instanceof CapaVectorAnimado).toBe(true);
-        expect(capa.ptos.length).toBeGreaterThan(0);
+        expect(capa.campoVectorial).not.toBe(null);
     });
 });

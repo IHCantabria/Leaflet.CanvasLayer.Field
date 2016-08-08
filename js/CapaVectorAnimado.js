@@ -1,5 +1,7 @@
-CapaVectorAnimado = function (campoVectorial) {
+CapaVectorAnimado = function (campoVectorial, malla = false) {
     this.campoVectorial = campoVectorial;
+    this.verMalla = malla;
+
 
     this.onLayerDidMount = function () {
         // -- prepare custom drawing
@@ -16,8 +18,12 @@ CapaVectorAnimado = function (campoVectorial) {
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
+        if (this.verMalla) {
+            //this._dibujarMalla(g, viewInfo);
+        }
+
         // caracterìsticas de pintado de líneas
-        g.fillStyle = "rgba(255, 0, 0, 0.78)"; // for fading curves
+        g.fillStyle = "rgba(255, 0, 0, 255)"; // for fading curves
         g.lineWidth = 2;
         g.strokeStyle = "#FF8000"; // html color code
 
@@ -35,12 +41,13 @@ CapaVectorAnimado = function (campoVectorial) {
         }
         */
 
-        for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
-            let p = cv.posicionAleatoria();
-            p.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
-            trayectorias.push(p)
-        }
-
+        // posición fija
+        let p = {
+            x: -3.7697348203510046,
+            y: 43.46467965721646465,
+            edad: 0
+        };
+        trayectorias.push(p);
 
         d3.timer(function () {
             moverParticulas();
@@ -56,19 +63,19 @@ CapaVectorAnimado = function (campoVectorial) {
             trayectorias.forEach(function (par) {
                 if (par.edad > CapaVectorAnimado.EDAD_MAXIMA_PARTICULA) {
                     par.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
-                    cv.posicionAleatoria(par);
-                    // se inicia de nuevo, en una posición x|y aleatoria
+                    //cv.posicionAleatoria(par); TODO ACTIVAR// se inicia de nuevo, en una posición x|y aleatoria
                 }
 
                 if (cv.tieneValorEn(par.x, par.y)) {
                     // datos en 'ubicación actual'
                     let vector = cv.vectorEn(par.x, par.y);
 
+                    console.log(par.x, par.y, vector.u, vector.v);
                     // siguiente punto
-                    var incx = cv.dx * 2;
-                    var incy = cv.dy * 2;
-                    let xt = par.x + vector.u * incx;
-                    let yt = par.y + vector.v * incy;
+                    /*var incx = cv.dx * 5;
+                    var incy = cv.dy * 5;*/
+                    let xt = par.x + vector.u; //* cv.dx; //* incx;
+                    let yt = par.y + vector.v; //* cv.dy; //* incy;
 
                     // vector.magnitud()
 
@@ -156,19 +163,28 @@ CapaVectorAnimado = function (campoVectorial) {
         return Math.round(Math.random() * 100);
     }
 
+    this._dibujarMalla = function (g, viewInfo) {
+        let malla = this.campoVectorial.malla();
 
-    /* Valores [u,v,magnitud] en un punto concreto
-    function field(x, y) {
-           var column = columns[Math.round(x)];
-           return column && column[Math.round(y)] || NULL_WIND_VECTOR;
-       }
-    */
+        for (var i = 0; i < malla.length; i++) {
+            let lonlat = malla[i];
+            let x = lonlat[0];
+            let y = lonlat[1];
+
+            let p = viewInfo.layer._map.latLngToContainerPoint([y, x]);
+            /* Pinta el punto */
+            g.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            g.fill();
+            g.closePath();
+
+        }
+    }
 }
 
 CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 100; //1000; //
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1; //1000; //
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
-CapaVectorAnimado.DURACION_FRAME = 400; //40; // milisegundos de cada 'frame' en la animación
+CapaVectorAnimado.DURACION_FRAME = 2000; //40; // milisegundos de cada 'frame' en la animación
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 200;

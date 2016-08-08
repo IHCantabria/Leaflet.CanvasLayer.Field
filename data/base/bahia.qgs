@@ -8,21 +8,45 @@
     <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="ptos20160727144340502" name="ptos">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current">
+    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="porcion">
       <customproperties/>
-    </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="porcionV20160808120823870" name="porcionV">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="porcion20160808112142813" name="porcion">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="porcionU20160808120517420" name="porcionU">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="baseNC">
       <customproperties/>
-    </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="convertidoTIFF">
+      <customproperties/>
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="v20160808120713430" name="v">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="u20160808111919868" name="u">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
   </layer-tree-group>
   <relations/>
   <mapcanvas>
     <units>degrees</units>
     <extent>
-      <xmin>-3.84949729661457241</xmin>
-      <ymin>43.37500530528004106</ymin>
-      <xmax>-3.71320535917766392</xmax>
-      <ymax>43.52455371571605269</ymax>
+      <xmin>-3.77788050591927149</xmin>
+      <ymin>43.45574012053446467</ymin>
+      <xmax>-3.75755156529522605</xmax>
+      <ymax>43.46898770456385108</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>0</projections>
@@ -46,6 +70,11 @@
       <item>ptos20160727144340502</item>
       <item>NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998</item>
       <item>NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019</item>
+      <item>u20160808111919868</item>
+      <item>porcion20160808112142813</item>
+      <item>porcionU20160808120517420</item>
+      <item>v20160808120713430</item>
+      <item>porcionV20160808120823870</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
@@ -54,16 +83,47 @@
         <legendlayerfile isInOverview="0" layerid="ptos20160727144340502" visible="0"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" visible="1"/>
-      </filegroup>
-    </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" visible="1"/>
-      </filegroup>
-    </legendlayer>
+    <legendgroup open="true" checked="Qt::PartiallyChecked" name="porcion">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="porcionV" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="porcionV20160808120823870" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="porcion" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="porcion20160808112142813" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="porcionU" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="porcionU20160808120517420" visible="0"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+    <legendgroup open="false" checked="Qt::Unchecked" name="baseNC">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" visible="0"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+    <legendgroup open="true" checked="Qt::PartiallyChecked" name="convertidoTIFF">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="v" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="v20160808120713430" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="u" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="u20160808111919868" visible="0"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
   </legend>
   <projectlayers>
     <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
@@ -157,6 +217,206 @@
           <contrastEnhancement>
             <minValue>-0.0588092775344849</minValue>
             <maxValue>0.0983957334756851</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <id>porcion20160808112142813</id>
+      <datasource>./asciigrids/porcion/porcion.shp</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>porcion</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <provider encoding="UTF-8">ogr</provider>
+      <previewExpression></previewExpression>
+      <vectorjoins/>
+      <layerDependencies/>
+      <expressionfields/>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <edittypes>
+        <edittype widgetv2type="TextEdit" name="id">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+      </edittypes>
+      <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
+        <symbols>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="200,118,182,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="solid"/>
+            </layer>
+          </symbol>
+        </symbols>
+        <rotation/>
+        <sizescale scalemethod="diameter"/>
+      </renderer-v2>
+      <labeling type="simple"/>
+      <customproperties/>
+      <blendMode>0</blendMode>
+      <featureBlendMode>0</featureBlendMode>
+      <layerTransparency>0</layerTransparency>
+      <displayfield>id</displayfield>
+      <label>0</label>
+      <labelattributes>
+        <label fieldname="" text="Label"/>
+        <family fieldname="" name="MS Shell Dlg 2"/>
+        <size fieldname="" units="pt" value="12"/>
+        <bold fieldname="" on="0"/>
+        <italic fieldname="" on="0"/>
+        <underline fieldname="" on="0"/>
+        <strikeout fieldname="" on="0"/>
+        <color fieldname="" red="0" blue="0" green="0"/>
+        <x fieldname=""/>
+        <y fieldname=""/>
+        <offset x="0" y="0" units="pt" yfieldname="" xfieldname=""/>
+        <angle fieldname="" value="0" auto="0"/>
+        <alignment fieldname="" value="center"/>
+        <buffercolor fieldname="" red="255" blue="255" green="255"/>
+        <buffersize fieldname="" units="pt" value="1"/>
+        <bufferenabled fieldname="" on=""/>
+        <multilineenabled fieldname="" on=""/>
+        <selectedonly on=""/>
+      </labelattributes>
+      <annotationform></annotationform>
+      <excludeAttributesWMS/>
+      <excludeAttributesWFS/>
+      <attributeactions default="-1"/>
+      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="63242352">
+        <columns/>
+      </attributetableconfig>
+      <editform></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <widgets/>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.8462522504851222</xmin>
+        <ymin>43.3785659817189142</ymin>
+        <xmax>-3.71645040530704218</xmax>
+        <ymax>43.52099303927710139</ymax>
+      </extent>
+      <id>porcionU20160808120517420</id>
+      <datasource>./asciigrids/porcion/porcionU.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>porcionU</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
+          <rasterTransparency/>
+          <contrastEnhancement>
+            <minValue>0.0113055260200053</minValue>
+            <maxValue>0.20602539208252</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.8462522504851222</xmin>
+        <ymin>43.3785659817189142</ymin>
+        <xmax>-3.71645040530704218</xmax>
+        <ymax>43.52099303927710139</ymax>
+      </extent>
+      <id>porcionV20160808120823870</id>
+      <datasource>./asciigrids/porcion/porcionV.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>porcionV</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
+          <rasterTransparency/>
+          <contrastEnhancement>
+            <minValue>-0.0286688878014684</minValue>
+            <maxValue>0.0144728982821107</maxValue>
             <algorithm>StretchToMinimumMaximum</algorithm>
           </contrastEnhancement>
         </rasterrenderer>
@@ -275,7 +535,7 @@
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
       <attributeactions default="-1"/>
-      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="1887406584">
+      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="&quot;u&quot;" sortOrder="0">
         <columns>
           <column width="-1" hidden="0" type="field" name="POINTID"/>
           <column width="-1" hidden="0" type="field" name="v"/>
@@ -299,6 +559,106 @@
         <rowstyles/>
         <fieldstyles/>
       </conditionalstyles>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.8462522504851222</xmin>
+        <ymin>43.37856598171899236</ymin>
+        <xmax>-3.71645040530711412</xmax>
+        <ymax>43.52099303927710139</ymax>
+      </extent>
+      <id>u20160808111919868</id>
+      <datasource>./asciigrids/u.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>u</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
+          <rasterTransparency/>
+          <contrastEnhancement>
+            <minValue>-0.329622069895268</minValue>
+            <maxValue>0.875056585073471</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.8462522504851222</xmin>
+        <ymin>43.37856598171899236</ymin>
+        <xmax>-3.71645040530711412</xmax>
+        <ymax>43.52099303927710139</ymax>
+      </extent>
+      <id>v20160808120713430</id>
+      <datasource>./asciigrids/v.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>v</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
+          <rasterTransparency/>
+          <contrastEnhancement>
+            <minValue>-0.0588092775344849</minValue>
+            <maxValue>0.0983957334756851</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
     </maplayer>
   </projectlayers>
   <properties>
@@ -334,15 +694,30 @@
     </Gui>
     <Digitizing>
       <DefaultSnapToleranceUnit type="int">2</DefaultSnapToleranceUnit>
-      <LayerSnappingList type="QStringList"/>
-      <LayerSnappingEnabledList type="QStringList"/>
+      <LayerSnappingList type="QStringList">
+        <value>ptos20160727144340502</value>
+        <value>porcion20160808112142813</value>
+      </LayerSnappingList>
+      <LayerSnappingEnabledList type="QStringList">
+        <value>disabled</value>
+        <value>disabled</value>
+      </LayerSnappingEnabledList>
       <SnappingMode type="QString">current_layer</SnappingMode>
       <AvoidIntersectionsList type="QStringList"/>
-      <LayerSnappingToleranceUnitList type="QStringList"/>
-      <LayerSnapToList type="QStringList"/>
+      <LayerSnappingToleranceUnitList type="QStringList">
+        <value>2</value>
+        <value>2</value>
+      </LayerSnappingToleranceUnitList>
+      <LayerSnapToList type="QStringList">
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+      </LayerSnapToList>
       <DefaultSnapType type="QString">off</DefaultSnapType>
       <DefaultSnapTolerance type="double">0</DefaultSnapTolerance>
-      <LayerSnappingToleranceList type="QStringList"/>
+      <LayerSnappingToleranceList type="QStringList">
+        <value>0.000000</value>
+        <value>0.000000</value>
+      </LayerSnappingToleranceList>
     </Digitizing>
     <PositionPrecision>
       <DecimalPlaces type="int">2</DecimalPlaces>
