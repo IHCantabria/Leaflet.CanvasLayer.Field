@@ -164,34 +164,23 @@ describe("CampoVectorial - IHCOAWST", function () {
         expect(LR[0]).toBeCloseTo(0.14851, 6);
         expect(LR[1]).toBeCloseTo(-0.0152797, 6);
     });
-    /*
-        it("puede devolver el {Vector} en una Lon-Lat", function () {
-            // LL
-            var uv = campoVectorial.vectorEn(-180, -90);
-            expect(uv).toEqual(new Vector(0, 0));
 
-            // ecuador-greenwhich
-            uv = campoVectorial.vectorEn(0, 0);
-            expect(uv).toEqual(new Vector(0.5, 0.5));
+    it("puede devolver el {Vector} en una Lon-Lat", function () {
+        let x0 = -3.76922975;
+        let y0 = 43.46063913;
+        let x1 = -3.76468416;
+        let y1 = 43.46518472;
 
-            // UR
-            uv = campoVectorial.vectorEn(180, 90);
-            expect(uv).toEqual(new Vector(0.9, 0.9));
+        // LL
+        var uv = campoVectorial.vectorEn(x0, y0);
+        expect(uv).toEqual(new Vector(0.00586759, -0.00329966));
 
-            // out...
-            uv = campoVectorial.vectorEn(-360, -180);
-            expect(uv).toEqual(null);
-        });
-    */
-    /*
-        it("recupera ok datos reales", function () {
-            // esquina superior izquierda
-            var vector = campoVectorial.vectorEn(-3.769182, 43.465161);
-            var esperado = {
-                u: 0.0112753259018064,
-                v: -0.00354065117426217
-            };
-            expect(vector).toBe(esperado);
-        });
-    */
+        // UR
+        uv = campoVectorial.vectorEn(x1, y1);
+        expect(uv).toEqual(new Vector(0.2150189, -0.00158082));
+
+        // out...
+        uv = campoVectorial.vectorEn(-360, -180);
+        expect(uv).toEqual(null);
+    });
 });
