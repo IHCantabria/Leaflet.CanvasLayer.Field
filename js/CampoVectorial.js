@@ -14,6 +14,9 @@ class CampoVectorial {
         // TODO verificar longitudes por pares
         this.us = params["us"];
         this.vs = params["vs"];
+
+        this.PRECISION_LON_LAT = 8;
+        this.PRECISION_UV = 8;
     }
 
     ncols() {
@@ -74,14 +77,32 @@ class CampoVectorial {
      * @returns {Array}   [u, v]
      */
     valorEn(lon, lat) {
-
-        if (lon < this.x0 || lon > this.x1 || lat < this.y0 || lat > this.y1) return null;
+        if (!this.dentroDeEncuadre(lon, lat)) {
+            return null;
+        }
 
         //let posy = (lat - this.y0) / this.dy * this.ncols(); // y-ascending
         let posy = (this.y1 - lat) / this.dy * this.ncols(); // y-ascending
         let posx = (lon - this.x0) / this.dx;
 
         return this.vector(posy + posx);
+    }
+
+    dentroDeEncuadre(lon, lat) {
+        let xs = [
+            this._redondeo(this.x0, this.PRECISION_LON_LAT),
+            this._redondeo(this.x1, this.PRECISION_LON_LAT),
+        ]
+
+        let ys = [
+            this._redondeo(this.y0, this.PRECISION_LON_LAT),
+            this._redondeo(this.y1, this.PRECISION_LON_LAT),
+        ]
+
+        let lonR = this._redondeo(lon, this.PRECISION_LON_LAT);
+        let latR = this._redondeo(lat, this.PRECISION_LON_LAT);
+
+        return (lonR >= xs[0] && lonR <= xs[1] && latR >= ys[0] && latR <= ys[1]);
     }
 
     /**
@@ -93,9 +114,9 @@ class CampoVectorial {
     vectorEn(lon, lat) {
         let uv = this.valorEn(lon, lat);
         if (uv !== null) {
-            let PRECISION_UV = 8;
-            let ur = this._redondeo(uv[0], PRECISION_UV);
-            let vr = this._redondeo(uv[1], PRECISION_UV);
+
+            let ur = this._redondeo(uv[0], this.PRECISION_UV);
+            let vr = this._redondeo(uv[1], this.PRECISION_UV);
             return new Vector(ur, vr);
         } else {
             return null; // TODO...
