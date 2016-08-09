@@ -74,6 +74,9 @@ class CampoVectorial {
      * @returns {Array}   [u, v]
      */
     valorEn(lon, lat) {
+
+        if (lon < this.x0 || lon > this.x1 || lat < this.y0 || lat > this.y1) return null;
+
         //let posy = (lat - this.y0) / this.dy * this.ncols(); // y-ascending
         let posy = (this.y1 - lat) / this.dy * this.ncols(); // y-ascending
         let posx = (lon - this.x0) / this.dx;

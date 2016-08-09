@@ -108,6 +108,12 @@ describe("CampoVectorial (IHCOAWST)", function () {
         expect(campoVectorial.tieneValorEn(-360, -180)).toBe(false);
     });
 
+    it("no da valor para una posición fuera de la malla", function () {
+        let x = -3.710591474014617;
+        let y = 43.47082043045964;
+        expect(campoVectorial.tieneValorEn(x, y)).toBe(false);
+    });
+
     it("puede devolver una posición aleatoria dentro", function () {
         var pos = campoVectorial.posicionAleatoria();
         expect(pos).not.toBe(null);
