@@ -11,13 +11,17 @@ L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
 }).addTo(mapa);
 
 
-d3.json("data/grid.json", function (d) {
+//d3.json("data/grid.json", function (d) {
+d3.json("data/porcion.json", function (d) {
     let params = {
-        "encuadre": [d.x0, d.y0, d.x1, d.y1],
+        "x0": d.x0,
+        "y0": d.y0,
+        "x1": d.x1,
+        "y1": d.y1,
         "dx": d.dx,
         "dy": d.dy,
-        "us": d.componenteU,
-        "vs": d.componenteV
+        "us": d.us,
+        "vs": d.vs
     };
 
     let campo = new CampoVectorial(params);

@@ -43,8 +43,8 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 
         // posición fija
         let p = {
-            x: -3.7697348203510046,
-            y: 43.46467965721646465,
+            x: -3.76670442708,
+            y: 43.46316446060,
             edad: 0
         };
         trayectorias.push(p);
@@ -74,8 +74,8 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
                     // siguiente punto
                     /*var incx = cv.dx * 5;
                     var incy = cv.dy * 5;*/
-                    let xt = par.x + vector.u; //* cv.dx; //* incx;
-                    let yt = par.y + vector.v; //* cv.dy; //* incy;
+                    let xt = par.x + vector.u * cv.dx; //* incx;
+                    let yt = par.y + vector.v * cv.dy; //* incy;
 
                     // vector.magnitud()
 
