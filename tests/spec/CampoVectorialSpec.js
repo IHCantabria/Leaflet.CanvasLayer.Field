@@ -148,11 +148,21 @@ describe("CampoVectorial - IHCOAWST", function () {
         let x1 = -3.76468416;
         let y1 = 43.46518472;
 
-        var valores = campoVectorial.valorEn(x0, y0); //LL
-        expect(valores[0]).toBeCloseTo(0.00586759, 7); // almostEqual, 7 dec.
-        expect(valores[1]).toBeCloseTo(-0.003299657, 7); // almostEqual, 7 dec.
-        //
-        //expect(campoVectorial.valorEn(-360, -180)).toEqual(null);
+        var LL = campoVectorial.valorEn(x0, y0);
+        expect(LL[0]).toBeCloseTo(0.00586759, 6);
+        expect(LL[1]).toBeCloseTo(-0.003299657, 6);
+
+        var TL = campoVectorial.valorEn(x0, y1);
+        expect(TL[0]).toBeCloseTo(0.01127530003, 6);
+        expect(TL[1]).toBeCloseTo(-0.0035406511, 6);
+
+        var TR = campoVectorial.valorEn(x1, y1);
+        expect(TR[0]).toBeCloseTo(0.215019, 6);
+        expect(TR[1]).toBeCloseTo(-0.00158082, 6);
+
+        var LR = campoVectorial.valorEn(x1, y0);
+        expect(LR[0]).toBeCloseTo(0.14851, 6);
+        expect(LR[1]).toBeCloseTo(-0.0152797, 6);
     });
     /*
         it("puede devolver el {Vector} en una Lon-Lat", function () {
