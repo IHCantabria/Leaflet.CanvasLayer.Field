@@ -1,4 +1,6 @@
 // orden de vectores, el del ASCIIGrid (left->right & top ->down)
+// x-ascending
+// y-descending
 class CampoVectorial {
     constructor(params) {
         this.x0 = params["x0"];
@@ -48,29 +50,32 @@ class CampoVectorial {
      */
     lonLatEnIndice(i) {
         let indicey = Math.floor(i / this.ncols());
-        //var lat = this.y0 + (indicey * this.dy); //y-ascending
+        //var lat = this.y0 + (indicey * this.dy); // y-ascending
         let lat = this.y1 - (indicey * this.dy); // y-descending
 
         let indicex = i % this.ncols();
         let lon = this.x0 + (indicex * this.dx);
 
-        let PRECISION_LON_LAT = 8;
+        return [lon, lat];
 
+        /*
+        redondeado
+        let PRECISION_LON_LAT = 8;
         let lonR = this._redondeo(lon, PRECISION_LON_LAT);
         let latR = this._redondeo(lat, PRECISION_LON_LAT);
-
         return [lonR, latR];
+        */
     }
 
     /**
      * Valores del vector en las coordenadas longitud-latitud
-     * @param   {[[Type]]} lon [[Description]]
-     * @param   {[[Type]]} lat [[Description]]
+     * @param   {Number} lon - Longitud
+     * @param   {Number} lat - Latitud
      * @returns {Array}   [u, v]
      */
     valorEn(lon, lat) {
-        // Los datos se almacenan en x-ascendente y luego y-ascendente
-        let posy = (lat - this.y0) / this.dy * this.ncols();
+        //let posy = (lat - this.y0) / this.dy * this.ncols(); // y-ascending
+        let posy = (this.y1 - lat) / this.dy * this.ncols(); // y-ascending
         let posx = (lon - this.x0) / this.dx;
 
         return this.vector(posy + posx);
@@ -84,9 +89,11 @@ class CampoVectorial {
      */
     vectorEn(lon, lat) {
         let uv = this.valorEn(lon, lat);
-
         if (uv !== null) {
-            return new Vector(uv[0], uv[1]);
+            let PRECISION_UV = 8;
+            let ur = this._redondeo(uv[0], PRECISION_UV);
+            let vr = this._redondeo(uv[1], PRECISION_UV);
+            return new Vector(ur, vr);
         } else {
             return null; // TODO...
         }

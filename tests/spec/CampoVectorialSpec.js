@@ -127,16 +127,52 @@ describe("CampoVectorial - IHCOAWST", function () {
         expect(campoVectorial.vector(99)).toEqual([0.14851005375385284, -0.015279672108590603]);
     });
 
-    it("conocer cada Lon-Lat de una posición", function () {
+    it("debe conocer cada Lon-Lat de una posición", function () {
         let x0 = -3.76922975;
         let y0 = 43.46063913;
         let x1 = -3.76468416;
         let y1 = 43.46518472;
 
-        expect(campoVectorial.lonLatEnIndice(0)).toEqual([x0, y1]);
-        expect(campoVectorial.lonLatEnIndice(99)).toEqual([x1, y0]);
+        var primero = campoVectorial.lonLatEnIndice(0);
+        expect(primero[0]).toBeCloseTo(x0, 7);
+        expect(primero[1]).toBeCloseTo(y1, 7);
+
+        var ultimo = campoVectorial.lonLatEnIndice(99);
+        expect(ultimo[0]).toBeCloseTo(x1, 7);
+        expect(ultimo[1]).toBeCloseTo(y0, 7);
     });
 
+    it("puede devolver los valores [u, v] del vector en una Lon-Lat", function () {
+        let x0 = -3.76922975;
+        let y0 = 43.46063913;
+        let x1 = -3.76468416;
+        let y1 = 43.46518472;
+
+        var valores = campoVectorial.valorEn(x0, y0); //LL
+        expect(valores[0]).toBeCloseTo(0.00586759, 7); // almostEqual, 7 dec.
+        expect(valores[1]).toBeCloseTo(-0.003299657, 7); // almostEqual, 7 dec.
+        //
+        //expect(campoVectorial.valorEn(-360, -180)).toEqual(null);
+    });
+    /*
+        it("puede devolver el {Vector} en una Lon-Lat", function () {
+            // LL
+            var uv = campoVectorial.vectorEn(-180, -90);
+            expect(uv).toEqual(new Vector(0, 0));
+
+            // ecuador-greenwhich
+            uv = campoVectorial.vectorEn(0, 0);
+            expect(uv).toEqual(new Vector(0.5, 0.5));
+
+            // UR
+            uv = campoVectorial.vectorEn(180, 90);
+            expect(uv).toEqual(new Vector(0.9, 0.9));
+
+            // out...
+            uv = campoVectorial.vectorEn(-360, -180);
+            expect(uv).toEqual(null);
+        });
+    */
     /*
         it("recupera ok datos reales", function () {
             // esquina superior izquierda
