@@ -31,20 +31,20 @@ describe("CampoVectorial", function () {
             expect(cv.xurcorner).toBeCloseTo(-3.7644193777140003, 8);
             expect(cv.yurcorner).toBeCloseTo(43.4653925542880017, 8);
 
-            expect(cv.nVectores()).toEqual(100);
+            expect(cv.numeroCeldas()).toEqual(100);
         });
 
-        it("tienes los datos organizados como malla (filas x columnas)", function () {
+        it("tiene los datos organizados como malla (filas x columnas)", function () {
             var i = cv.malla.length;
             var j = cv.malla[0].length;
             expect(i).toBe(cv.nrows);
-            expect(j).toBe(cv.nrows);
+            expect(j).toBe(cv.ncols);
         });
 
         it("puede devolver una posición aleatoria dentro", function () {
             var pos = cv.posicionAleatoria();
             expect(pos).not.toBe(null);
-            expect(cv.tieneValorEn(pos.x, pos.y)).toBe(true);
+            expect(cv.contiene(pos.x, pos.y)).toBe(true);
         });
 
 

@@ -16,19 +16,76 @@ class CampoVectorial {
         this.malla = this._crearMalla(params["us"], params["vs"]);
     }
 
-    /*    ncols() {
-
-            //return Math.round((this.x1 - this.x0) / this.dx + 1);
-        }
-
-        nfilas() {
-            return Math.round((this.y1 - this.y0) / this.dy + 1);
-        }
+    /**
+     * Filas x columnas
+     * @returns {Integer} - número de celdas de la malla
+     */
+    numeroCeldas() {
+        return this.nrows * this.ncols;
+        /* equivalente a...
+        var nFilas = this.malla.length;
+        var nColumnas = this.malla[0].length;
+        return nFilas * nColumnas;
         */
-
-    nVectores() {
-        return this.us.length;
     }
+
+    /**
+     * Malla con los valores [u,v] en cada punto
+     * Se asume orden x-ascending e y-descending (el mismo que en ASCIIGrid y otros)
+     * @private
+     * @param {Array} us - componentes-u
+     * @param {Array} vs - componentes-v
+     */
+    _crearMalla(us, vs) {
+        let grid = [];
+        let p = 0;
+
+        for (var j = 0; j < this.nrows; j++) {
+            var row = [];
+            for (var i = 0; i < this.ncols; i++, p++) {
+                // Se asume x-ascending e y-descending
+                let u = us[i],
+                    v = vs[i];
+                let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
+                row[i] = (valido) ? [u, v] : null;;
+            }
+            grid[j] = row;
+        }
+        return grid;
+    }
+
+    /**
+     * Crea / modifica una posición, con un valor aleatorio
+     * dentro de la malla
+     */
+    posicionAleatoria(o = {}) {
+        let indiceX = _.random(0, this.ncols - 1);
+        let indiceY = _.random(0, this.nrows - 1);
+
+        var lon = this.xllcorner + (indiceX * this.dx);
+        var lat = this.yllcorner + (indiceY * this.dy);;
+
+        o.x = lon;
+        o.y = lat;
+        return o;
+    }
+
+    /**
+     * Determina si unas coordenadas están dentro de la malla
+     * @param   {Float} lon - longitud
+     * @param   {Float} lat - latitud
+     * @returns {Boolean}
+     */
+    dentroDeEncuadre(lon, lat) {
+        return (lon >= this.xllcorner &&
+            lon <= this.xurcorner &&
+            lat >= this.yllcorner &&
+            lat <= this.yurcorner);
+    }
+
+    // ----------------------
+
+
 
 
     /**
@@ -87,22 +144,7 @@ class CampoVectorial {
         return this.vector(posy + posx);
     }
 
-    dentroDeEncuadre(lon, lat) {
-        let xs = [
-            this._redondeo(this.x0, this.PRECISION_LON_LAT),
-            this._redondeo(this.x1, this.PRECISION_LON_LAT),
-        ]
 
-        let ys = [
-            this._redondeo(this.y0, this.PRECISION_LON_LAT),
-            this._redondeo(this.y1, this.PRECISION_LON_LAT),
-        ]
-
-        let lonR = this._redondeo(lon, this.PRECISION_LON_LAT);
-        let latR = this._redondeo(lat, this.PRECISION_LON_LAT);
-
-        return (lonR >= xs[0] && lonR <= xs[1] && latR >= ys[0] && latR <= ys[1]);
-    }
 
     /**
      * Objeto {Vector} en un punto lon lat.
@@ -126,39 +168,9 @@ class CampoVectorial {
         return this.valorEn(lon, lat) !== null;
     }
 
-    posicionAleatoria(o = {}) {
-        let pos = _.random(0, this.nVectores() - 1);
-        var lonlat = this.lonLatEnIndice(pos);
 
-        o.x = lonlat[0];
-        o.y = lonlat[1];
-        return o;
-    }
 
-    /**
-     * Malla con los valores [u,v] en cada punto
-     * Se asume orden x-ascending e y-descending (el mismo que en ASCIIGrid y otros)
-     * @private
-     * @param {Array} us - componentes-u
-     * @param {Array} vs - componentes-v
-     */
-    _crearMalla(us, vs) {
-        let grid = [];
-        let p = 0;
 
-        for (var j = 0; j < this.nrows; j++) {
-            var row = [];
-            for (var i = 0; i < this.ncols; i++, p++) {
-                // Se asume x-ascending e y-descending
-                let u = us[i],
-                    v = vs[i];
-                let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
-                row[i] = (valido) ? [u, v] : null;;
-            }
-            grid[j] = row;
-        }
-        return grid;
-    }
 
     /**
      * Tomado de https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
