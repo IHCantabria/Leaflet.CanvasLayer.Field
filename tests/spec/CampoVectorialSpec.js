@@ -51,27 +51,30 @@ describe("CampoVectorial", function () {
     });
 
     describe("Posición", function () {
-        it("puede devolver el vector en una posición", function () {
+        it("puede devolver los valores del vector en un (i,j) de la malla", function () {
             // top-left
-            expect(cv.vector(0)).toEqual([0.011275325901806355, -0.003540651174262166]);
+            expect(cv.vector(0, 0)).toEqual([0.011275325901806355, -0.003540651174262166]);
 
             // botton-right
-            expect(cv.vector(99)).toEqual([0.14851005375385284, -0.015279672108590603]);
+            expect(cv.vector(9, 9)).toEqual([0.14851005375385284, -0.015279672108590603]);
         });
 
         it("debe conocer cada Lon-Lat de una posición", function () {
-            let x0 = -3.76922975;
-            let y0 = 43.46063913;
-            let x1 = -3.76468416;
-            let y1 = 43.46518472;
+            throw Error('en proceso...');
+            /*
+            let xmin = cv.longitudIndiceX(0);
+            let ymin = cv.latitudIndiceY(9);
+            let xmax = cv.longitudIndiceX(9);
+            let ymax = cv.latitudIndiceY(0);
 
-            var primero = cv.lonLatEnIndice(0);
-            expect(primero[0]).toBeCloseTo(x0, 7);
-            expect(primero[1]).toBeCloseTo(y1, 7);
+            var primero = cv.lonLatEnIndice(0, 0);
+            expect(primero[0]).toBeCloseTo(cv.xllcorner, 7);
+            expect(primero[1]).toBeCloseTo(cv.yurcorner, 7);
 
-            var ultimo = cv.lonLatEnIndice(99);
-            expect(ultimo[0]).toBeCloseTo(x1, 7);
-            expect(ultimo[1]).toBeCloseTo(y0, 7);
+            var ultimo = cv.lonLatEnIndice(9, 9);
+            expect(ultimo[0]).toBeCloseTo(cv.xurcorner, 7);
+            expect(ultimo[1]).toBeCloseTo(cv.yllcorner, 7);
+            */
         });
     });
 

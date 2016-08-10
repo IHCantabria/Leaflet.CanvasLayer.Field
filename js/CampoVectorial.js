@@ -44,10 +44,10 @@ class CampoVectorial {
             var row = [];
             for (var i = 0; i < this.ncols; i++, p++) {
                 // Se asume x-ascending e y-descending
-                let u = us[i],
-                    v = vs[i];
+                let u = us[p],
+                    v = vs[p];
                 let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
-                row[i] = (valido) ? [u, v] : null;;
+                row[i] = (valido) ? [u, v] : null;
             }
             grid[j] = row;
         }
@@ -59,15 +59,29 @@ class CampoVectorial {
      * dentro de la malla
      */
     posicionAleatoria(o = {}) {
-        let indiceX = _.random(0, this.ncols - 1);
-        let indiceY = _.random(0, this.nrows - 1);
-
-        var lon = this.xllcorner + (indiceX * this.dx);
-        var lat = this.yllcorner + (indiceY * this.dy);;
-
-        o.x = lon;
-        o.y = lat;
+        let i = _.random(0, this.ncols - 1);
+        let j = _.random(0, this.nrows - 1);
+        o.x = this.longitudIndiceX(i);
+        o.y = this.latitudIndiceY(j);
         return o;
+    }
+
+    /**
+     * Longitud para un índice de la malla
+     * @param   {Integer} i - índice columna
+     * @returns {Float} longitud
+     */
+    longitudIndiceX(i) {
+        return this.xllcorner + (i * this.dx);
+    }
+
+    /**
+     * Latitud para un índice de la malla
+     * @param   {Integer} j - índice fila
+     * @returns {Float} latitud
+     */
+    latitudIndiceY(j) {
+        return this.yurcorner - (j * this.dy);
     }
 
     /**
@@ -76,55 +90,37 @@ class CampoVectorial {
      * @param   {Float} lat - latitud
      * @returns {Boolean}
      */
-    dentroDeEncuadre(lon, lat) {
+    contiene(lon, lat) {
         return (lon >= this.xllcorner &&
             lon <= this.xurcorner &&
             lat >= this.yllcorner &&
             lat <= this.yurcorner);
     }
 
-    // ----------------------
-
-
-
-
     /**
-     * Devuelve el 'n' vector
+     * Devuelve los valores del vector en las posiciones de malla indicadas
      * @param   {Integer} índice de vector
      * @returns {Array} [u, v]
      */
-    vector(i) {
-        //let ir = Math.round(i); // TODO. revisar precisión...
-        let u = this.us[i],
-            v = this.vs[i];
-        let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
-        return valido ? [u, v] : null;
+    vector(i, j) {
+        return this.malla[i][j];
     }
-
 
     /**
-     * Devuelve las coordenadas del vector en el índice indicado, con
-     * @param   {Integer} índice
-     * @returns {Array} [lon, lat];
+     * Devuelve las coordenadas del vector en índices indicados
+     * @param   {Integer} i - índice entero
+     * @param   {Integer} j - índice entero
+     * @returns {Array} [lon, lat]
      */
-    lonLatEnIndice(i) {
-        let indicey = Math.floor(i / this.ncols());
-        //var lat = this.y0 + (indicey * this.dy); // y-ascending
-        let lat = this.y1 - (indicey * this.dy); // y-descending
-
-        let indicex = i % this.ncols();
-        let lon = this.x0 + (indicex * this.dx);
+    lonLatEnIndice(i, j) {
+        let lon = this.longitudIndiceX(i);
+        let lat = this.latitudIndiceY(j);
 
         return [lon, lat];
-
-        /*
-        redondeado
-        let PRECISION_LON_LAT = 8;
-        let lonR = this._redondeo(lon, PRECISION_LON_LAT);
-        let latR = this._redondeo(lat, PRECISION_LON_LAT);
-        return [lonR, latR];
-        */
     }
+
+    // ----------------------
+
 
     /**
      * Valores del vector en las coordenadas longitud-latitud
@@ -133,18 +129,8 @@ class CampoVectorial {
      * @returns {Array}   [u, v]
      */
     valorEn(lon, lat) {
-        if (!this.dentroDeEncuadre(lon, lat)) {
-            return null;
-        }
-
-        //let posy = (lat - this.y0) / this.dy * this.ncols(); // y-ascending
-        let posy = (this.y1 - lat) / this.dy * this.ncols(); // y-ascending
-        let posx = (lon - this.x0) / this.dx;
-
-        return this.vector(posy + posx);
+        throw Error('not implemented');
     }
-
-
 
     /**
      * Objeto {Vector} en un punto lon lat.
@@ -167,10 +153,6 @@ class CampoVectorial {
     tieneValorEn(lon, lat) {
         return this.valorEn(lon, lat) !== null;
     }
-
-
-
-
 
     /**
      * Tomado de https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
