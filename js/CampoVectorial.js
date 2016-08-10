@@ -1,31 +1,30 @@
 // orden de vectores, el del ASCIIGrid (left->right & top ->down)
-// x-ascending
-// y-descending
 class CampoVectorial {
-    constructor(params, precisionLonLat = 8) {
-        this.x0 = params["x0"];
-        this.y0 = params["y0"];
-        this.x1 = params["x1"];
-        this.y1 = params["y1"];
+    constructor(params) {
+        this.ncols = params["ncols"];
+        this.nrows = params["nrows"];
+
+        this.xllcorner = params["xllcorner"]; // esquina ll = lower-left
+        this.yllcorner = params["yllcorner"];
+
+        this.xurcorner = params["xllcorner"] + params["ncols"] * params["dx"]; // esquina ur = upper-right
+        this.yurcorner = params["yllcorner"] + params["nrows"] * params["dy"];
 
         this.dx = params["dx"];
         this.dy = params["dy"];
 
-        // TODO verificar longitudes por pares
-        this.us = params["us"];
-        this.vs = params["vs"];
-
-        this.PRECISION_LON_LAT = precisionLonLat;
-        this.PRECISION_UV = 8;
+        this.malla = this._crearMalla(params["us"], params["vs"]);
     }
 
-    ncols() {
-        return Math.round((this.x1 - this.x0) / this.dx + 1);
-    }
+    /*    ncols() {
 
-    nfilas() {
-        return Math.round((this.y1 - this.y0) / this.dy + 1);
-    }
+            //return Math.round((this.x1 - this.x0) / this.dx + 1);
+        }
+
+        nfilas() {
+            return Math.round((this.y1 - this.y0) / this.dy + 1);
+        }
+        */
 
     nVectores() {
         return this.us.length;
@@ -137,14 +136,28 @@ class CampoVectorial {
     }
 
     /**
-     * La lista de puntos LonLat que configura la malla
+     * Malla con los valores [u,v] en cada punto
+     * Se asume orden x-ascending e y-descending (el mismo que en ASCIIGrid y otros)
+     * @private
+     * @param {Array} us - componentes-u
+     * @param {Array} vs - componentes-v
      */
-    malla() {
-        let lista = [];
-        for (var i = 0; i < this.nVectores(); i++) {
-            lista.push(this.lonLatEnIndice(i));
+    _crearMalla(us, vs) {
+        let grid = [];
+        let p = 0;
+
+        for (var j = 0; j < this.nrows; j++) {
+            var row = [];
+            for (var i = 0; i < this.ncols; i++, p++) {
+                // Se asume x-ascending e y-descending
+                let u = us[i],
+                    v = vs[i];
+                let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
+                row[i] = (valido) ? [u, v] : null;;
+            }
+            grid[j] = row;
         }
-        return lista;
+        return grid;
     }
 
     /**
