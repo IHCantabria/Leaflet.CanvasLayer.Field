@@ -18,9 +18,11 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
-        if (this.verMalla) {
-            //this._dibujarMalla(g, viewInfo);
-        }
+        this._dibujarMalla(g, viewInfo);
+
+        /*if (this.verMalla) {
+           this._dibujarMalla(g, viewInfo);
+        }*/
 
         // caracterìsticas de pintado de líneas
         g.fillStyle = "rgba(255, 0, 0, 0.5)"; // for fading curves
@@ -51,8 +53,8 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         */
 
         d3.timer(function () {
-            moverParticulas();
-            dibujar();
+            //moverParticulas();
+            //dibujar();
         }, CapaVectorAnimado.DURACION_FRAME);
 
 
@@ -163,18 +165,20 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 
     this._dibujarMalla = function (g, viewInfo) {
         let malla = this.campoVectorial.malla();
+        //console.log(malla);
 
-        for (var i = 0; i < malla.length; i++) {
+        for (var i = 0; i < malla.length; i = i + 1) {
             let lonlat = malla[i];
             let x = lonlat[0];
             let y = lonlat[1];
+            //console.log([x, y]);
 
             let p = viewInfo.layer._map.latLngToContainerPoint([y, x]);
-            /* Pinta el punto */
+            g.beginPath();
             g.arc(p.x, p.y, 3, 0, Math.PI * 2);
             g.fill();
             g.closePath();
-
+            g.stroke();
         }
     }
 }
@@ -182,7 +186,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 20; //1000; //
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 5; //1000; //
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
 CapaVectorAnimado.DURACION_FRAME = 400; //40; // milisegundos de cada 'frame' en la animación
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 200;

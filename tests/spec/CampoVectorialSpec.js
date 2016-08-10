@@ -47,6 +47,12 @@ describe("CampoVectorial", function () {
         it("permite obtener la malla de base, con sus coordenadas", function () {
             var malla = campoVectorial.malla();
             expect(malla.length).toBeGreaterThan(0);
+
+            var lat1 = malla[0][1];
+            var lat2 = malla[1][1];
+
+            expect(lat1).toEqual(lat2);
+
         });
     });
 
@@ -76,7 +82,7 @@ describe("CampoVectorial", function () {
     });
 
     describe("Lon-Lat", function () {
-        it("puede devolver los valores [u, v] en una Lon-Lat ", function () {
+        it("puede devolver [u, v] en una Lon-Lat ", function () {
             let x0 = -3.76922975;
             let y0 = 43.46063913;
             let x1 = -3.76468416;
@@ -118,7 +124,7 @@ describe("CampoVectorial", function () {
             expect(uv).toEqual(null);
         });
 
-        it("permite saber si en una Lon-Lat tiene valor el vector", function () {
+        it("permite saber si hay valor de vector en una Lon-Lat", function () {
             let x0 = -3.76922975;
             let y0 = 43.46063913;
             expect(campoVectorial.tieneValorEn(x0, y0)).toBe(true);
