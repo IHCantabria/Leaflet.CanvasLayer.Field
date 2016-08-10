@@ -2,7 +2,7 @@
 // x-ascending
 // y-descending
 class CampoVectorial {
-    constructor(params) {
+    constructor(params, precisionLonLat = 8) {
         this.x0 = params["x0"];
         this.y0 = params["y0"];
         this.x1 = params["x1"];
@@ -15,7 +15,7 @@ class CampoVectorial {
         this.us = params["us"];
         this.vs = params["vs"];
 
-        this.PRECISION_LON_LAT = 8;
+        this.PRECISION_LON_LAT = precisionLonLat;
         this.PRECISION_UV = 8;
     }
 
@@ -38,9 +38,9 @@ class CampoVectorial {
      * @returns {Array} [u, v]
      */
     vector(i) {
-        let ir = Math.round(i); // TODO. revisar precisión...
-        let u = this.us[ir],
-            v = this.vs[ir];
+        //let ir = Math.round(i); // TODO. revisar precisión...
+        let u = this.us[i],
+            v = this.vs[i];
         let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
         return valido ? [u, v] : null;
     }

@@ -14,7 +14,7 @@ L.tileLayer(url, {
 }).addTo(mapa);
 
 
-d3.json("data/porcion.json", function (d) {
+d3.json("data/grid.json", function (d) {
     let params = {
         "x0": d.x0,
         "y0": d.y0,

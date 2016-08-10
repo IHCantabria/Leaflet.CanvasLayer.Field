@@ -2,7 +2,6 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
     this.campoVectorial = campoVectorial;
     this.verMalla = malla;
 
-
     this.onLayerDidMount = function () {
         // -- prepare custom drawing
     };
@@ -18,43 +17,36 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
-        this._dibujarMalla(g, viewInfo);
+        //this._dibujarMalla(g, viewInfo);
 
-        /*if (this.verMalla) {
-           this._dibujarMalla(g, viewInfo);
-        }*/
-
-        // caracterìsticas de pintado de líneas
-        g.fillStyle = "rgba(255, 0, 0, 0.5)"; // for fading curves
-        g.lineWidth = 2;
+        // caracterìsticas de pintado de trayectorias
+        g.fillStyle = "rgba(255, 0, 0, 0.025)"; // for fading curves
+        g.lineWidth = 10;
         g.strokeStyle = "#FF8000"; // html color code
 
-        // selección de partículas
-        // let puntosGraficar = this.ptos; TODOS
+        // preparación de trayectorias de partículas
         let cv = this.campoVectorial;
-
         let trayectorias = [];
 
-
+        /*
         for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
             let p = cv.posicionAleatoria();
-            p.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
+            p.edad = this._edadAleatoria();
             trayectorias.push(p)
         }
-
+        */
 
         // posición fija
-        /*let p = {
-            x: -3.76670442708,
-            y: 43.46316446060,
+        let p = {
+            x: -3.79665404416,
+            y: 43.4712638261,
             edad: 0
         };
         trayectorias.push(p);
-        */
 
         d3.timer(function () {
-            //moverParticulas();
-            //dibujar();
+            moverParticulas();
+            dibujar();
         }, CapaVectorAnimado.DURACION_FRAME);
 
 
@@ -95,42 +87,20 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
          * Pinta las partículas en el canvas
          */
         function dibujar() {
-
             g.globalCompositeOperation = "destination-in";
             g.fillRect(0, 0, g.canvas.width, g.canvas.height);
             g.globalCompositeOperation = "source-over";
 
             trayectorias.forEach(function (par) {
                 /*
-                 - ¿qué pintar?
-                    >> inicialmente, una línea iniciada en TODAS las celdas
-                    -- más adelante crear "trayectorias" (sólo un número "razonable")
-
-                - ¿dónde empezar?
-                    >> inicialmente, empezar siempre en el punto "inicio" de la celda (no hay desplazamiento)
-                    >> más adelante, trazar una trayectoria donde el pto. inicial va siendo en cada paso el final del pintado previo
-
-                - ¿en qué dirección pìntar?
-                    >> inicialmente, la indicada por el vector en cada celda "inicio"
-                    >> más adelante, la dirección del punto de la celda en la que cae, o una dirección interpolada basada en varias celdas!!
-
-                -  ¿cuánta longitud?
-                    - un valor fijo
-                    >>> la determinada por el vector
-
                 -  ¿de qué color pintar?
                     >> primero usar un color fijo de línea
                     - más adelante, considerar un color ligado a magnitud del vector
 
                 */
                 let origen = new L.latLng(par.y, par.x);
-
-                //let destino = [origen.lon += ]
-                // let destino = L.GeometryUtil.destination(origen, par.dir, 100); // línea n metros
                 let destino = new L.latLng(par.yt, par.xt);
 
-                // grafica lo que está en pantalla...
-                // ... y tiene "vida"
                 if (viewInfo.bounds.contains(origen) && par.edad <= CapaVectorAnimado.EDAD_MAXIMA_PARTICULA) {
                     let ptoA = viewInfo.layer._map.latLngToContainerPoint(origen);
                     let ptoB = viewInfo.layer._map.latLngToContainerPoint(destino);
@@ -139,15 +109,10 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
                     g.moveTo(ptoA.x, ptoA.y);
                     g.lineTo(ptoB.x, ptoB.y);
 
-                    par.x = par.xt; // movimiento al siguiente...
+                    // movimiento para siguiente paso
+                    par.x = par.xt;
                     par.y = par.yt;
                     g.stroke();
-
-                    /* Pinta el punto
-                    g.arc(origen.x, origen.y, 3, 0, Math.PI * 2);
-                    g.fill();
-                    g.closePath();
-                    */
                 }
             });
         }
@@ -167,7 +132,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         let malla = this.campoVectorial.malla();
         //console.log(malla);
 
-        for (var i = 0; i < malla.length; i = i + 1) {
+        for (var i = 0; i < malla.length; i = i + 3) {
             let lonlat = malla[i];
             let x = lonlat[0];
             let y = lonlat[1];
@@ -186,7 +151,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 5; //1000; //
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 100; //1000; //
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
-CapaVectorAnimado.DURACION_FRAME = 400; //40; // milisegundos de cada 'frame' en la animación
-CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 200;
+CapaVectorAnimado.DURACION_FRAME = 100; //40; // milisegundos de cada 'frame' en la animación
+CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;
