@@ -209,7 +209,7 @@ class CampoVectorial {
                 var g11 = row[ci]; // derecha >>
                 if (this.esValido(g01) && this.esValido(g11)) {
                     // encontrados los 4 puntos = se interpola el valor
-                    console.log(g00, g10, g01, g11);
+                    //console.log(g00, g10, g01, g11);
                     return this.bilinearInterpolateVector(i - fi, j - fj, g00, g10, g01, g11);
                 }
             }
