@@ -25,11 +25,15 @@ describe("CampoVectorial", function () {
             expect(cv.ncols).toEqual(10);
             expect(cv.nrows).toEqual(10);
 
-            expect(cv.xllcorner).toEqual(-3.769470033164);
-            expect(cv.yllcorner).toEqual(43.460341898838);
+            let xmin = -3.769470033164;
+            let ymin = 43.460341898838;
+            let xmax = -3.764419377714;
+            let ymax = 43.465392554288;
 
-            expect(cv.xurcorner).toBeCloseTo(-3.7644193777140003, 8);
-            expect(cv.yurcorner).toBeCloseTo(43.4653925542880017, 8);
+            expect(cv.xllcorner).toEqual(xmin);
+            expect(cv.yllcorner).toEqual(ymin);
+            expect(cv.xurcorner).toBeCloseTo(xmax, 8);
+            expect(cv.yurcorner).toBeCloseTo(ymax, 8);
 
             expect(cv.numeroCeldas()).toEqual(100);
         });
@@ -75,16 +79,14 @@ describe("CampoVectorial", function () {
             let yminCenter = cv.latitudIndiceY(9);
             expect(yminCenter).toBeCloseTo(43.460594431610502, 6);
 
-            /*
+            //
             var primero = cv.lonLatEnIndice(0, 0);
-            expect(primero[0]).toBeCloseTo(cv.xllcorner, 7);
-            expect(primero[1]).toBeCloseTo(cv.yurcorner, 7);
+            expect(primero[0]).toBeCloseTo(-3.7692175003915001, 7);
+            expect(primero[1]).toBeCloseTo(43.465140021515502, 7);
 
             var ultimo = cv.lonLatEnIndice(9, 9);
-            expect(ultimo[0]).toBeCloseTo(cv.xurcorner, 7);
-            expect(ultimo[1]).toBeCloseTo(cv.yllcorner, 7);
-            */
-
+            expect(ultimo[0]).toBeCloseTo(-3.7646719104865003, 7);
+            expect(ultimo[1]).toBeCloseTo(43.460594431610502, 7);
         });
     });
 
