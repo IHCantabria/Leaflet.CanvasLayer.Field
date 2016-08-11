@@ -4,8 +4,8 @@
 const mapa = L.map("map").setView([43.45, -3.7944], 12);
 const ancho = 500;
 
-let url = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-//let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+//let url = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
 
 L.tileLayer(url, {
     attribution: 'OSM & Carto',

@@ -7,7 +7,7 @@
 - Pintado ágil de capa estática de 'puntos_bahia.csv' sobre el CANVAS, en su totalidad (aprox. 20.000 ptos)
 
 ## v0.3
-
+- Primer pintado de trayectorias "fluidas", sobre el CANVAS
 
 
 ## Notas técnicas:
