@@ -28,21 +28,22 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         let cv = this.campoVectorial;
         let trayectorias = [];
 
-        /*
+
         for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
             let p = cv.posicionAleatoria();
             p.edad = this._edadAleatoria();
             trayectorias.push(p)
         }
-        */
+
 
         // posición fija
-        let p = {
+        /*let p = {
             x: -3.79665404416,
             y: 43.4712638261,
             edad: 0
         };
         trayectorias.push(p);
+*/
 
         d3.timer(function () {
             moverParticulas();
@@ -62,22 +63,25 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
                     //se inicia de nuevo, en una posición x|y aleatoria
                 }
 
-                if (cv.tieneValorEn(par.x, par.y)) {
-                    // datos en 'ubicación actual'
-                    let vector = cv.vectorEn(par.x, par.y);
-
-                    console.log(par.x, par.y, vector.u, vector.v);
-                    // siguiente punto
+                if (cv.noTieneValorEn(par.x, par.y)) {
+                    par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA; //
+                } else {
+                    // tiene vector...
+                    let uv = cv.valorEn(par.x, par.y);
+                    let vector = new Vector(uv[0], uv[1]);
+                    // siguiente punto sería
                     let xt = par.x + vector.u * cv.dx;
                     let yt = par.y + vector.v * cv.dy;
 
-                    // ¿particula visible / no visible? | ¿bordes?
-                    par.xt = xt;
-                    par.yt = yt; // new L.latLng(yt, xt);
+                    if (cv.TieneValorEn(xy, yt)) {
+                        par.xt = xt;
+                        par.yt = yt;
+                    } else {
+                        // no visible...? continuar moviendo ??? TODO
+                        par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA; // ??
+                    }
 
                     //trayectorias.push(par);
-                } else {
-                    par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA; //
                 }
                 par.edad += 1;
             });

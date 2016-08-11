@@ -135,6 +135,10 @@ class CampoVectorial {
         return this.valorEn(lon, lat) !== null;
     }
 
+    noTieneValorEn(lon, lat) {
+        return !this.tieneValorEn(lon, lat);
+    }
+
 
     /**
      * Si tiene valor (ni 'null' ni 'undefined')
@@ -227,6 +231,24 @@ class CampoVectorial {
     }
 
 
+    /**
+     * Constructor desde .json
+     * @param   {object}   d [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    static desdeJson(d) {
+        let params = {
+            "ncols": d.ncols,
+            "nrows": d.nrows,
+            "xllcorner": d.xllcorner,
+            "yllcorner": d.yllcorner,
+            "dx": d.dx,
+            "dy": d.dy,
+            "us": d.us,
+            "vs": d.vs
+        };
 
-
+        let cv = new CampoVectorial(params);
+        return cv;
+    }
 }

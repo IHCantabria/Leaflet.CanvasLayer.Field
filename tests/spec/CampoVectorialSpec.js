@@ -4,18 +4,7 @@ describe("CampoVectorial", function () {
     beforeEach(function (done) {
         // Porción de datos  IHCOAWST
         d3.json("../../data/porcion.json", function (d) {
-            let params = {
-                "ncols": d.ncols,
-                "nrows": d.nrows,
-                "xllcorner": d.xllcorner,
-                "yllcorner": d.yllcorner,
-                "dx": d.dx,
-                "dy": d.dy,
-                "us": d.us,
-                "vs": d.vs
-            };
-
-            cv = new CampoVectorial(params);
+            cv = CampoVectorial.desdeJson(d);
             done();
         });
     });
