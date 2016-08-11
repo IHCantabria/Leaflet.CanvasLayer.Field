@@ -37,7 +37,6 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
             trayectorias.push(p)
         }
 
-
         // posición fija
         /*let p = {
             x: -3.79665404416,
@@ -45,12 +44,13 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
             edad: 0
         };
         trayectorias.push(p);
-*/
+        */
 
         d3.timer(function () {
             moverParticulas();
             dibujar();
         }, CapaVectorAnimado.DURACION_FRAME);
+        //requestAnimationFrame ???
 
 
         /**
@@ -72,8 +72,8 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
                     let uv = cv.valorEn(par.x, par.y);
                     let vector = new Vector(uv[0], uv[1]);
                     // siguiente punto sería
-                    let xt = par.x + vector.u * cv.dx;
-                    let yt = par.y + vector.v * cv.dy;
+                    let xt = par.x + (vector.u * cv.dx);
+                    let yt = par.y + (vector.v * cv.dy);
 
                     if (cv.tieneValorEn(xt, yt)) {
                         par.xt = xt;
@@ -118,7 +118,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
                     // movimiento para siguiente paso
                     par.x = par.xt;
                     par.y = par.yt;
-                    g.stroke();
+                    g.stroke(); // TODO. 1 llamada vs. varias... rendimiento?
                 }
             });
         }
@@ -157,7 +157,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 2000;
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1000;
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
 CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame' en la animación
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;
