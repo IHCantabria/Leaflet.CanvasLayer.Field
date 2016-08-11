@@ -19,8 +19,9 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 
         //this._dibujarMalla(g, viewInfo);
 
-        // caracterìsticas de pintado de trayectorias
-        g.fillStyle = "rgba(255, 0, 0, 0.9)"; // for fading curves
+        // caracterìsticas de pintado de trayectorias que se desvanecen
+        g.fillStyle = "rgba(255, 0, 0, 0.9)";
+        g.fillStyle = "rgba(0, 0, 0, 0.9)";
         g.lineWidth = 2;
         g.strokeStyle = "#FF8000"; // html color code
 
@@ -80,8 +81,6 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
                         // no visible...? continuar moviendo ??? TODO
                         par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA; // ??
                     }
-
-                    //trayectorias.push(par);
                 }
                 par.edad += 1;
             });
@@ -91,10 +90,12 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
          * Pinta las partículas en el canvas
          */
         function dibujar() {
+            // Desvanecer trayectorias previas
             g.globalCompositeOperation = "destination-in";
             g.fillRect(0, 0, g.canvas.width, g.canvas.height);
             g.globalCompositeOperation = "source-over";
 
+            // Dibujar nuevas
             trayectorias.forEach(function (par) {
                 /*
                 -  ¿de qué color pintar?
