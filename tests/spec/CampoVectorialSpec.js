@@ -91,29 +91,23 @@ describe("CampoVectorial", function () {
     });
 
     describe("Lon-Lat", function () {
-        it("puede devolver [u, v] en una Lon-Lat ", function () {
-            let x0 = -3.76922975;
-            let y0 = 43.46063913;
-            let x1 = -3.76468416;
-            let y1 = 43.46518472;
 
-            var LL = cv.valorEn(x0, y0);
-            expect(LL[0]).toBeCloseTo(0.00586759, 6);
-            expect(LL[1]).toBeCloseTo(-0.003299657, 6);
-
-            var TL = cv.valorEn(x0, y1);
-            expect(TL[0]).toBeCloseTo(0.01127530003, 6);
-            expect(TL[1]).toBeCloseTo(-0.0035406511, 6);
-
-            var TR = cv.valorEn(x1, y1);
-            expect(TR[0]).toBeCloseTo(0.215019, 6);
-            expect(TR[1]).toBeCloseTo(-0.00158082, 6);
-
-            var LR = cv.valorEn(x1, y0);
-            expect(LR[0]).toBeCloseTo(0.14851, 6);
-            expect(LR[1]).toBeCloseTo(-0.0152797, 6);
+        it("no da valor para una Lon-Lat fuera de la malla", function () {
+            let x = -3.710591474014617;
+            let y = 43.47082043045964;
+            expect(cv.tieneValorEn(x, y)).toBe(false);
         });
 
+        it("puede devolver [u, v] en una Lon-Lat ", function () {
+            let x0 = -3.76919;
+            let y0 = 43.46062;
+
+            var LL = cv.valorEn(x0, y0);
+            expect(LL[0]).toBeCloseTo(1, 6);
+            expect(LL[1]).toBeCloseTo(1, 6);
+        });
+
+        /*
         it("puede devolver el {Vector} en una Lon-Lat", function () {
             let x0 = -3.76922975;
             let y0 = 43.46063913;
@@ -143,11 +137,8 @@ describe("CampoVectorial", function () {
             //para grid // expect(cv.tieneValorEn(-3.819427007621642, 43.47742891281832)).toBe(false);
         });
 
-        it("no da valor para una Lon-Lat fuera de la malla", function () {
-            let x = -3.710591474014617;
-            let y = 43.47082043045964;
-            expect(cv.tieneValorEn(x, y)).toBe(false);
-        });
+
+        */
     });
 
 });

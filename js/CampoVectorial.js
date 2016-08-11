@@ -30,8 +30,8 @@ class CampoVectorial {
     }
 
     /**
-     * Malla con los valores [u,v] en cada punto
-     * Se asume orden x-ascending e y-descending (el mismo que en ASCIIGrid y otros)
+     * Preparación de una Malla(i,j) con los valores [u,v] en cada punto
+     * Se asume orden x-ascending e y-descending en los componentes u y v (el mismo que en ASCIIGrid y otros)
      * @private
      * @param {Array} us - componentes-u
      * @param {Array} vs - componentes-v
@@ -46,7 +46,7 @@ class CampoVectorial {
                 // Se asume x-ascending e y-descending
                 let u = us[p],
                     v = vs[p];
-                let valido = (u !== null && u !== undefined && v !== null & v !== undefined);
+                let valido = (this.esValido(u) && this.esValido(v));
                 row[i] = (valido) ? [u, v] : null;
             }
             grid[j] = row;
@@ -99,6 +99,10 @@ class CampoVectorial {
             lat <= this.yurcorner);
     }
 
+    noContiene(lon, lat) {
+        return !this.contiene(lon, lat);
+    }
+
     /**
      * Devuelve los valores del vector en las posiciones de malla indicadas
      * @param   {Integer} índice de vector
@@ -121,7 +125,28 @@ class CampoVectorial {
         return [lon, lat];
     }
 
-    // ----------------------
+    /**
+     * Indica si el vector tiene valores en unas coordenadas lon-lat
+     * @param   {Float} lon - longitud
+     * @param   {Float} lat - latitud
+     * @returns {Boolean} tiene valor
+     */
+    tieneValorEn(lon, lat) {
+        return this.valorEn(lon, lat) !== null;
+    }
+
+
+    /**
+     * Si tiene valor (ni 'null' ni 'undefined')
+     * @private
+     * @param   {Object} x objeto
+     * @returns {Boolean} OK
+     */
+    esValido(x) {
+        return (x !== null) && (x !== undefined);
+    }
+
+    // -------------------------------------------------------------------
 
 
     /**
@@ -131,7 +156,72 @@ class CampoVectorial {
      * @returns {Array}   [u, v]
      */
     valorEn(lon, lat) {
-        throw Error('not implemented');
+        if (this.noContiene(lon, lat)) return null;
+
+        let v = this._interpolar(lon, lat);
+        return v;
+    }
+
+
+    /**
+     * Obtiene el valor del vector [u, v], a partir de la interpolación
+     * de los valores más próximos de la malla
+     * @private
+     * @param {Float} lon - longitud
+     * @param {Float} lat - latitud
+     *
+     * Tomado de https://github.com/cambecc/earth > product.js
+     */
+    _interpolar(lon, lat) {
+        //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
+        //        fi  i   ci          four points "G" that enclose point (i, j). These points are at the four
+        //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
+        //      ---G--|---G--- fj 8   i = 1.4 and j = 8.3, the four surrounding grid points are (1, 8), (2, 8),
+        //    j ___|_ .   |           (1, 9) and (2, 9).
+        //  =8.3   |      |
+        //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
+        //         |      |           column, so the index ci can be used without taking a modulo.
+
+
+        // índices (con decimales)
+        var i = (lon - this.xllcorner) / this.dx;
+        var j = (this.yurcorner - lat) / this.dy;
+
+        // índices enteros, para las 4 celdas que rodean el punto (i, j)...
+        var fi = Math.floor(i),
+            ci = fi + 1;
+        var fj = Math.floor(j),
+            cj = fj + 1;
+
+        // y sus valores (si los hay...)
+        var row;
+        if ((row = this.malla[fj])) {
+            var g00 = row[fi];
+            var g10 = row[ci];
+            if (this.esValido(g00) && this.esValido(g10) && (row = this.malla[cj])) {
+                var g01 = row[fi];
+                var g11 = row[ci];
+                if (this.esValido(g01) && this.esValido(g11)) {
+                    // // All four points found, so interpolate the value.
+                    console.log(g00, g10, g01, g11);
+                    return this.bilinearInterpolateVector(i - fi, j - fj, g00, g10, g01, g11);
+                }
+            }
+        }
+        // console.log("cannot interpolate: " + λ + "," + φ + ": " + fi + " " + ci + " " + fj + " " + cj);
+        return null;
+    }
+
+    bilinearInterpolateVector(x, y, g00, g10, g01, g11) {
+        var rx = (1 - x);
+        var ry = (1 - y);
+        var a = rx * ry,
+            b = x * ry,
+            c = rx * y,
+            d = x * y;
+        var u = g00[0] * a + g10[0] * b + g01[0] * c + g11[0] * d;
+        var v = g00[1] * a + g10[1] * b + g01[1] * c + g11[1] * d;
+        return [u, v, Math.sqrt(u * u + v * v)];
     }
 
     /**
@@ -152,9 +242,7 @@ class CampoVectorial {
         }
     }
 
-    tieneValorEn(lon, lat) {
-        return this.valorEn(lon, lat) !== null;
-    }
+
 
     /**
      * Tomado de https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
@@ -169,4 +257,6 @@ class CampoVectorial {
         var roundedTempNumber = Math.round(tempNumber);
         return roundedTempNumber / factor;
     }
+
+
 }
