@@ -20,8 +20,8 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         //this._dibujarMalla(g, viewInfo);
 
         // caracterìsticas de pintado de trayectorias
-        g.fillStyle = "rgba(255, 0, 0, 0.025)"; // for fading curves
-        g.lineWidth = 10;
+        g.fillStyle = "rgba(255, 0, 0, 0.5)"; // for fading curves
+        g.lineWidth = 2;
         g.strokeStyle = "#FF8000"; // html color code
 
         // preparación de trayectorias de partículas
@@ -73,7 +73,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
                     let xt = par.x + vector.u * cv.dx;
                     let yt = par.y + vector.v * cv.dy;
 
-                    if (cv.TieneValorEn(xy, yt)) {
+                    if (cv.tieneValorEn(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
                     } else {

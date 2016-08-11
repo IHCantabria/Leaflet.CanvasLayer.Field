@@ -14,7 +14,7 @@ L.tileLayer(url, {
 }).addTo(mapa);
 
 
-d3.json("data/grid.json", function (d) {
+d3.json("data/porcion.json", function (d) {
     let cv = CampoVectorial.desdeJson(d);
     let capa = new CapaVectorAnimado(cv, true);
     capa.addTo(mapa);
