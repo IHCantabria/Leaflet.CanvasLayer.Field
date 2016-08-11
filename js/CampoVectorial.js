@@ -146,9 +146,6 @@ class CampoVectorial {
         return (x !== null) && (x !== undefined);
     }
 
-    // -------------------------------------------------------------------
-
-
     /**
      * Valores del vector (interpolados) en las coordenadas longitud-latitud 
      
