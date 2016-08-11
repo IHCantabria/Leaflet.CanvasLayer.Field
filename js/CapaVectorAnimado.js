@@ -20,7 +20,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         //this._dibujarMalla(g, viewInfo);
 
         // caracterìsticas de pintado de trayectorias
-        g.fillStyle = "rgba(255, 0, 0, 0.5)"; // for fading curves
+        g.fillStyle = "rgba(255, 0, 0, 0.9)"; // for fading curves
         g.lineWidth = 2;
         g.strokeStyle = "#FF8000"; // html color code
 
@@ -155,7 +155,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 500; //1000; //
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 2500; //1000; //
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
-CapaVectorAnimado.DURACION_FRAME = 2000; //40; // milisegundos de cada 'frame' en la animación
+CapaVectorAnimado.DURACION_FRAME = 40; //40; // milisegundos de cada 'frame' en la animación
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;

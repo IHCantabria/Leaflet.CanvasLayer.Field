@@ -196,7 +196,7 @@ class CampoVectorial {
         let fj = Math.floor(j);
         let cj = fj + 1;
 
-        console.log(fi, ci, fj, cj);
+        //console.log(fi, ci, fj, cj);
 
         // y sus valores (si los hay...)
         var row;
