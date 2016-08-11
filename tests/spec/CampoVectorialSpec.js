@@ -80,13 +80,19 @@ describe("CampoVectorial", function () {
             expect(yminCenter).toBeCloseTo(43.460594431610502, 6);
 
             //
-            var primero = cv.lonLatEnIndice(0, 0);
+            var primero = cv.lonLatEnIndices(0, 0);
             expect(primero[0]).toBeCloseTo(-3.7692175003915001, 7);
             expect(primero[1]).toBeCloseTo(43.465140021515502, 7);
 
-            var ultimo = cv.lonLatEnIndice(9, 9);
+            var ultimo = cv.lonLatEnIndices(9, 9);
             expect(ultimo[0]).toBeCloseTo(-3.7646719104865003, 7);
             expect(ultimo[1]).toBeCloseTo(43.460594431610502, 7);
+
+
+            // otro... 
+            var pto = cv.lonLatEnIndices(0, 8);
+            expect(pto[0]).toBeCloseTo(-3.7692175001640003, 7);
+            expect(pto[1]).toBeCloseTo(43.461099497838006, 7);
         });
     });
 
@@ -99,12 +105,25 @@ describe("CampoVectorial", function () {
         });
 
         it("puede devolver [u, v] en una Lon-Lat ", function () {
-            let x0 = -3.76919;
-            let y0 = 43.46062;
+            // muy cerca del pto. central de la celda LL (arriba a su derecha)
+            var ptoCercaLL = cv.valorEn(-3.76921724303, 43.4605948227);
+            expect(ptoCercaLL[0]).toBeCloseTo(0.00586759205907583, 4);
+            expect(ptoCercaLL[1]).toBeCloseTo(-0.00329965655691922, 4);
 
-            var LL = cv.valorEn(x0, y0);
-            expect(LL[0]).toBeCloseTo(1, 6);
-            expect(LL[1]).toBeCloseTo(1, 6);
+            // muy cerca del pto. central de la celda UL (abajo a su derecha)
+            var ptoCercaUL = cv.valorEn(-3.76921740247, 43.4651398993);
+            expect(ptoCercaUL[0]).toBeCloseTo(0.01127532590180643, 4);
+            expect(ptoCercaUL[1]).toBeCloseTo(-0.00354065117426217, 4);
+
+            // muy cerca del pto. central de la celda UR (abajo a su izquierda)
+            var ptoCercaUR = cv.valorEn(-3.76467191838, 43.4651400146);
+            expect(ptoCercaUR[0]).toBeCloseTo(0.215018898248672, 4);
+            expect(ptoCercaUR[1]).toBeCloseTo(-0.00158081843983382, 4);
+
+            // muy cerca del pto. central de la celda LR (arriba a su izquierda)
+            var ptoCercaLR = cv.valorEn(-3.76467191746, 43.4605944395);
+            expect(ptoCercaLR[0]).toBeCloseTo(0.148510053753853, 4);
+            expect(ptoCercaLR[1]).toBeCloseTo(-0.0152796721085906, 4);
         });
 
         /*

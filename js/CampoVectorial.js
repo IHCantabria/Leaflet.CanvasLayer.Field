@@ -114,13 +114,13 @@ class CampoVectorial {
 
     /**
      * Devuelve las coordenadas del vector en índices indicados
-     * @param   {Integer} i - índice entero
-     * @param   {Integer} j - índice entero
+     * @param   {Integer} indiceColumna - índice entero
+     * @param   {Integer} indiceFila - índice entero
      * @returns {Array} [lon, lat]
      */
-    lonLatEnIndice(i, j) {
-        let lon = this.longitudIndiceX(i);
-        let lat = this.latitudIndiceY(j);
+    lonLatEnIndices(indiceColumna, indiceFila) {
+        let lon = this.longitudIndiceX(indiceColumna);
+        let lat = this.latitudIndiceY(indiceFila);
 
         return [lon, lat];
     }
@@ -150,22 +150,21 @@ class CampoVectorial {
 
 
     /**
-     * Valores del vector en las coordenadas longitud-latitud
+     * Valores del vector (interpolados) en las coordenadas longitud-latitud 
+     
      * @param   {Number} lon - Longitud
      * @param   {Number} lat - Latitud
      * @returns {Array}   [u, v]
      */
     valorEn(lon, lat) {
         if (this.noContiene(lon, lat)) return null;
-
-        let v = this._interpolar(lon, lat);
-        return v;
+        return this._interpolar(lon, lat);
     }
 
 
     /**
      * Obtiene el valor del vector [u, v], a partir de la interpolación
-     * de los valores más próximos de la malla
+     * de los valores más próximos de la malla (las 4 celdas más cercanas)
      * @private
      * @param {Float} lon - longitud
      * @param {Float} lat - latitud
@@ -184,25 +183,31 @@ class CampoVectorial {
 
 
         // índices (con decimales)
-        var i = (lon - this.xllcorner) / this.dx;
-        var j = (this.yurcorner - lat) / this.dy;
+        let lon0 = this.xllcorner + (this.dx / 2.0);
+        let i = (lon - lon0) / this.dx;
+
+        let lat0 = this.yurcorner - (this.dy / 2.0);
+        let j = (lat0 - lat) / this.dy;
 
         // índices enteros, para las 4 celdas que rodean el punto (i, j)...
-        var fi = Math.floor(i),
-            ci = fi + 1;
-        var fj = Math.floor(j),
-            cj = fj + 1;
+        let fi = Math.floor(i);
+        let ci = fi + 1;
+        let fj = Math.floor(j);
+        let cj = fj + 1;
+
+        console.log(fi, ci, fj, cj);
 
         // y sus valores (si los hay...)
         var row;
-        if ((row = this.malla[fj])) {
-            var g00 = row[fi];
-            var g10 = row[ci];
-            if (this.esValido(g00) && this.esValido(g10) && (row = this.malla[cj])) {
-                var g01 = row[fi];
-                var g11 = row[ci];
+
+        if ((row = this.malla[fj])) { // fila arriba ^^
+            var g00 = row[fi]; // << izquierda
+            var g10 = row[ci]; // derecha >>
+            if (this.esValido(g00) && this.esValido(g10) && (row = this.malla[cj])) { // fila abajo vv
+                var g01 = row[fi]; // << izquierda
+                var g11 = row[ci]; // derecha >>
                 if (this.esValido(g01) && this.esValido(g11)) {
-                    // // All four points found, so interpolate the value.
+                    // encontrados los 4 puntos = se interpola el valor
                     console.log(g00, g10, g01, g11);
                     return this.bilinearInterpolateVector(i - fi, j - fj, g00, g10, g01, g11);
                 }
@@ -224,39 +229,7 @@ class CampoVectorial {
         return [u, v, Math.sqrt(u * u + v * v)];
     }
 
-    /**
-     * Objeto {Vector} en un punto lon lat.
-     * @param   {[[Type]]} lon [[Description]]
-     * @param   {[[Type]]} lat [[Description]]
-     * @returns {[[Type]]} [[Description]]
-     */
-    vectorEn(lon, lat) {
-        let uv = this.valorEn(lon, lat);
-        if (uv !== null) {
 
-            let ur = this._redondeo(uv[0], this.PRECISION_UV);
-            let vr = this._redondeo(uv[1], this.PRECISION_UV);
-            return new Vector(ur, vr);
-        } else {
-            return null; // TODO...
-        }
-    }
-
-
-
-    /**
-     * Tomado de https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
-     * @private
-     * @param   {[[Type]]} number    [[Description]]
-     * @param   {[[Type]]} precision [[Description]]
-     * @returns {[[Type]]} [[Description]]
-     */
-    _redondeo(number, precision) {
-        var factor = Math.pow(10, precision);
-        var tempNumber = number * factor;
-        var roundedTempNumber = Math.round(tempNumber);
-        return roundedTempNumber / factor;
-    }
 
 
 }
