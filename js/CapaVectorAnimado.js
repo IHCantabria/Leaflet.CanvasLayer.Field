@@ -23,7 +23,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         g.fillStyle = "rgba(255, 0, 0, 0.97)";
         //  g.fillStyle = "rgba(0, 0, 0, 0.95)";
         g.lineWidth = 2;
-        g.strokeStyle = "#FF8000"; // html color code
+        g.strokeStyle = "cyan"; // html color code
         //g.strokeStyle = "white"; // html color code
 
         // preparación de trayectorias de partículas
