@@ -69,19 +69,21 @@ class CampoVectorial {
     /**
      * Longitud para un índice de la malla
      * @param   {Integer} i - índice columna
-     * @returns {Float} longitud
+     * @returns {Float} longitud en centro de la celda
      */
     longitudIndiceX(i) {
-        return this.xllcorner + (i * this.dx);
+        let medioPixel = this.dx / 2.0;
+        return this.xllcorner + medioPixel + (i * this.dx);
     }
 
     /**
      * Latitud para un índice de la malla
      * @param   {Integer} j - índice fila
-     * @returns {Float} latitud
+     * @returns {Float} latitud en centro de la celda
      */
     latitudIndiceY(j) {
-        return this.yurcorner - (j * this.dy);
+        let medioPixel = this.dy / 2.0;
+        return this.yurcorner - medioPixel - (j * this.dy);
     }
 
     /**

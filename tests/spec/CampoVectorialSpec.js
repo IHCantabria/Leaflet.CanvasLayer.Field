@@ -59,14 +59,23 @@ describe("CampoVectorial", function () {
             expect(cv.vector(9, 9)).toEqual([0.14851005375385284, -0.015279672108590603]);
         });
 
-        it("debe conocer cada Lon-Lat de una posición", function () {
-            throw Error('en proceso...');
-            /*
-            let xmin = cv.longitudIndiceX(0);
-            let ymin = cv.latitudIndiceY(9);
-            let xmax = cv.longitudIndiceX(9);
-            let ymax = cv.latitudIndiceY(0);
+        it("debe conocer cada Lon-Lat de una celda", function () {
 
+            // longitudes de celda
+            let xminCenter = cv.longitudIndiceX(0);
+            expect(xminCenter).toBeCloseTo(-3.7692175003915001, 6);
+
+            let xmaxCenter = cv.longitudIndiceX(9);
+            expect(xmaxCenter).toBeCloseTo(-3.7646719104865003, 6);
+
+            // latitudes de celda
+            let ymaxCenter = cv.latitudIndiceY(0);
+            expect(ymaxCenter).toBeCloseTo(43.465140021515502, 6);
+
+            let yminCenter = cv.latitudIndiceY(9);
+            expect(yminCenter).toBeCloseTo(43.460594431610502, 6);
+
+            /*
             var primero = cv.lonLatEnIndice(0, 0);
             expect(primero[0]).toBeCloseTo(cv.xllcorner, 7);
             expect(primero[1]).toBeCloseTo(cv.yurcorner, 7);
@@ -75,6 +84,7 @@ describe("CampoVectorial", function () {
             expect(ultimo[0]).toBeCloseTo(cv.xurcorner, 7);
             expect(ultimo[1]).toBeCloseTo(cv.yllcorner, 7);
             */
+
         });
     });
 
