@@ -20,11 +20,10 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         //this._dibujarMalla(g, viewInfo);
 
         // caracterìsticas de pintado de trayectorias que se desvanecen
-        g.fillStyle = "rgba(255, 0, 0, 0.97)";
-        //  g.fillStyle = "rgba(0, 0, 0, 0.95)";
+        //g.fillStyle = "rgba(255, 0, 0, 0.97)";
+        g.fillStyle = "rgba(0, 0, 0, 0.97)";
         g.lineWidth = 2;
         g.strokeStyle = "cyan"; // html color code
-        //g.strokeStyle = "white"; // html color code
 
         // preparación de trayectorias de partículas
         let cv = this.campoVectorial;
@@ -60,18 +59,18 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         function moverParticulas() {
             trayectorias.forEach(function (par) {
                 if (par.edad > CapaVectorAnimado.EDAD_MAXIMA_PARTICULA) {
+                    //se inicia de nuevo, en una posición x|y aleatoria
                     par.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
                     cv.posicionAleatoria(par);
-                    //se inicia de nuevo, en una posición x|y aleatoria
                 }
 
                 if (cv.noTieneValorEn(par.x, par.y)) {
-                    par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA; //
+                    par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA;
                 } else {
                     // tiene vector...
                     let uv = cv.valorEn(par.x, par.y);
                     let vector = new Vector(uv[0], uv[1]);
-                    // siguiente punto sería
+                    // ... y el siguiente punto sería
                     let xt = par.x + (vector.u * cv.dx);
                     let yt = par.y + (vector.v * cv.dy);
 
@@ -98,12 +97,6 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 
             // Dibujar nuevas
             trayectorias.forEach(function (par) {
-                /*
-                -  ¿de qué color pintar?
-                    >> primero usar un color fijo de línea
-                    - más adelante, considerar un color ligado a magnitud del vector
-
-                */
                 let origen = new L.latLng(par.y, par.x);
                 let destino = new L.latLng(par.yt, par.xt);
 
@@ -131,7 +124,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
      * @returns {[[Type]]} [[Description]]
      */
     this._edadAleatoria = function () {
-        return Math.round(Math.random() * 100);
+        return Math.round(Math.random() * CapaVectorAnimado.EDAD_MAXIMA_PARTICULA);
     }
 
     this._dibujarMalla = function (g, viewInfo) {
@@ -154,10 +147,10 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
     }
 }
 
-CapaVectorAnimado.prototype = new L.CanvasLayer(); // -- setup prototype
+CapaVectorAnimado.prototype = new L.CanvasLayer();
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1000;
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1500;
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
 CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame' en la animación
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;
