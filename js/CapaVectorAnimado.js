@@ -1,10 +1,15 @@
 CapaVectorAnimado = function (campoVectorial) {
-    this.campoVectorial = campoVectorial;
+    this.cv = campoVectorial;
+    this.opciones = {
+        trayectorias: CapaVectorAnimado.NUMERO_TRAYECTORIAS,
+        duracion: CapaVectorAnimado.DURACION_FRAME,
+        edadMaxima: CapaVectorAnimado.EDAD_MAXIMA_PARTICULA
+    };
     this.timer = null;
+    let self = this;
 
     this.onLayerDidMount = function () {
         // -- prepare custom drawing
-        let self = this;
         this._map.on('movestart', function (e) {
             if (self.timer) self.timer.stop();
         });
@@ -24,15 +29,14 @@ CapaVectorAnimado = function (campoVectorial) {
 
         // caracterìsticas de pintado de trayectorias que se desvanecen
         g.fillStyle = "rgba(0, 0, 0, 0.97)";
-        g.lineWidth = 2;
+        g.lineWidth = 1;
         g.strokeStyle = "cyan"; // html color code
 
         // preparación de trayectorias de partículas
-        let cv = this.campoVectorial;
         let trayectorias = [];
 
-        for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
-            let p = cv.posicionAleatoria();
+        for (var i = 0; i < this.opciones.trayectorias; i++) {
+            let p = self.cv.posicionAleatoria();
             p.edad = this._edadAleatoria();
             trayectorias.push(p)
         }
@@ -40,7 +44,7 @@ CapaVectorAnimado = function (campoVectorial) {
         this.timer = d3.timer(function () {
             moverParticulas();
             dibujar();
-        }, CapaVectorAnimado.DURACION_FRAME);
+        }, this.opciones.duracion);
 
 
         /**
@@ -49,28 +53,28 @@ CapaVectorAnimado = function (campoVectorial) {
          */
         function moverParticulas() {
             trayectorias.forEach(function (par) {
-                if (par.edad > CapaVectorAnimado.EDAD_MAXIMA_PARTICULA) {
+                if (par.edad > self.opciones.edadMaxima) {
                     //se inicia de nuevo, en una posición x|y aleatoria
-                    par.edad = CapaVectorAnimado.EDAD_INICIAL_PARTICULA;
-                    cv.posicionAleatoria(par);
+                    par.edad = 0;
+                    self.cv.posicionAleatoria(par);
                 }
 
-                if (cv.noTieneValorEn(par.x, par.y)) {
-                    par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA;
+                if (self.cv.noTieneValorEn(par.x, par.y)) {
+                    par.edad = self.opciones.edadMaxima;
                 } else {
                     // tiene vector...
-                    let uv = cv.valorEn(par.x, par.y);
+                    let uv = self.cv.valorEn(par.x, par.y);
                     let vector = new Vector(uv[0], uv[1]);
                     // ... y el siguiente punto sería
-                    let xt = par.x + (vector.u * cv.dx);
-                    let yt = par.y + (vector.v * cv.dy);
+                    let xt = par.x + (vector.u * self.cv.dx);
+                    let yt = par.y + (vector.v * self.cv.dy);
 
-                    if (cv.tieneValorEn(xt, yt)) {
+                    if (self.cv.tieneValorEn(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
                     } else {
                         // no visible...? continuar moviendo ??? TODO
-                        par.edad = CapaVectorAnimado.EDAD_MAXIMA_PARTICULA; // ??
+                        par.edad = self.opciones.edadMaxima; // ??
                     }
                 }
                 par.edad += 1;
@@ -91,7 +95,7 @@ CapaVectorAnimado = function (campoVectorial) {
                 let origen = new L.latLng(par.y, par.x);
                 let destino = new L.latLng(par.yt, par.xt);
 
-                if (viewInfo.bounds.contains(origen) && par.edad <= CapaVectorAnimado.EDAD_MAXIMA_PARTICULA) {
+                if (viewInfo.bounds.contains(origen) && par.edad <= self.opciones.edadMaxima) {
                     let ptoA = viewInfo.layer._map.latLngToContainerPoint(origen);
                     let ptoB = viewInfo.layer._map.latLngToContainerPoint(destino);
 
@@ -108,21 +112,19 @@ CapaVectorAnimado = function (campoVectorial) {
         }
     };
 
-
     /**
      * Edad aleatoria en cada curva dibujada
      * @private
      * @returns {[[Type]]} [[Description]]
      */
     this._edadAleatoria = function () {
-        return Math.round(Math.random() * CapaVectorAnimado.EDAD_MAXIMA_PARTICULA);
+        return Math.round(Math.random() * this.opciones.edadMaxima);
     }
 }
 
 CapaVectorAnimado.prototype = new L.CanvasLayer();
 
-// Característicias generales de la animación
+// Valores por defecto
 CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1500;
-CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
-CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame' en la animación
+CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame'
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;
