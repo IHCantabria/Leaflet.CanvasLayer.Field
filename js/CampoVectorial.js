@@ -99,6 +99,12 @@ class CampoVectorial {
             lat <= this.yurcorner);
     }
 
+    /**
+     * Determina si unas coordenadas están fuera de la malla
+     * @param   {Float} lon - longitud
+     * @param   {Float} lat - latitud
+     * @returns {Boolean}
+     */
     noContiene(lon, lat) {
         return !this.contiene(lon, lat);
     }
@@ -126,7 +132,7 @@ class CampoVectorial {
     }
 
     /**
-     * Indica si el vector tiene valores en unas coordenadas lon-lat
+     * Indica si el campo tiene valores en unas coordenadas lon-lat
      * @param   {Float} lon - longitud
      * @param   {Float} lat - latitud
      * @returns {Boolean} tiene valor
@@ -135,10 +141,15 @@ class CampoVectorial {
         return this.valorEn(lon, lat) !== null;
     }
 
+    /**
+     * Indica si el campo NO tiene valores en unas coordenadas lon-lat
+     * @param   {Float} lon - longitud
+     * @param   {Float} lat - latitud
+     * @returns {Boolean} no tiene valor
+     */
     noTieneValorEn(lon, lat) {
         return !this.tieneValorEn(lon, lat);
     }
-
 
     /**
      * Si tiene valor (ni 'null' ni 'undefined')
@@ -161,7 +172,6 @@ class CampoVectorial {
         if (this.noContiene(lon, lat)) return null;
         return this._interpolar(lon, lat);
     }
-
 
     /**
      * Obtiene el valor del vector [u, v], a partir de la interpolación
@@ -218,6 +228,17 @@ class CampoVectorial {
         return null;
     }
 
+    /**
+     * Interpolación bilineal
+     * https://es.wikipedia.org/wiki/Interpolaci%C3%B3n_bilineal
+     * @param   {[[Type]]} x   [[Description]]
+     * @param   {[[Type]]} y   [[Description]]
+     * @param   {[[Type]]} g00 [[Description]]
+     * @param   {[[Type]]} g10 [[Description]]
+     * @param   {[[Type]]} g01 [[Description]]
+     * @param   {[[Type]]} g11 [[Description]]
+     * @returns {Array}    [[Description]]
+     */
     bilinearInterpolateVector(x, y, g00, g10, g01, g11) {
         var rx = (1 - x);
         var ry = (1 - y);
@@ -229,7 +250,6 @@ class CampoVectorial {
         var v = g00[1] * a + g10[1] * b + g01[1] * c + g11[1] * d;
         return [u, v, Math.sqrt(u * u + v * v)];
     }
-
 
     /**
      * Constructor desde .json

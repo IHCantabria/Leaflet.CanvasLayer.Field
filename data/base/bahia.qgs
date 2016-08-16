@@ -5,7 +5,7 @@
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="porcion">
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="porcion">
       <customproperties/>
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="porcion20160808112142813" name="porcion">
         <customproperties/>
@@ -16,10 +16,10 @@
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="us20160808122346478" name="us">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="vs_ptos20160811125704076" name="vs_ptos">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="vs_ptos20160811125704076" name="vs_ptos">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="vs20160808122451767" name="vs">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="vs20160808122451767" name="vs">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="porcionU20160808121451679" name="porcionU">
@@ -44,12 +44,12 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="baseNC">
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="baseNC">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
@@ -61,10 +61,10 @@
   <mapcanvas>
     <units>degrees</units>
     <extent>
-      <xmin>-3.77624900143260067</xmin>
-      <ymin>43.45723356106856983</ymin>
-      <xmax>-3.76670326263210153</xmax>
-      <ymax>43.4667792998690814</ymax>
+      <xmin>-3.84949729661457241</xmin>
+      <ymin>43.3750038433676508</ymin>
+      <xmax>-3.71320535917766392</xmax>
+      <ymax>43.52455375137245142</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -82,22 +82,24 @@
     </destinationsrs>
     <rendermaptile>0</rendermaptile>
     <layer_coordinate_transform_info>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us_ptos20160811125453473"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs20160808122451767"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="u20160808111919868"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs_ptos20160811125704076"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us_completo20160810093231344"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_us20160811095857852"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125648911"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125538024"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us20160808122346478"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs_completo20160810093400348"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_us20160811125333387"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="porcion20160808112142813"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="u20160808111919868"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20160810110410561"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs_ptos20160811125704076"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us_completo20160810093231344"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="porcionV20160808121520609"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us_ptos20160811125453473"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us20160808122346478"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125538024"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125648911"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs20160808122451767"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="porcionU20160808121451679"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_us20160811095857852"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs_completo20160810093400348"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="v20160808120713430"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="porcionV20160808121520609"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20160810110410561"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
@@ -119,7 +121,7 @@
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendgroup open="true" checked="Qt::PartiallyChecked" name="porcion">
+    <legendgroup open="false" checked="Qt::Unchecked" name="porcion">
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="porcion" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="porcion20160808112142813" visible="0"/>
@@ -135,14 +137,14 @@
           <legendlayerfile isInOverview="0" layerid="us20160808122346478" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="vs_ptos" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="vs_ptos" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="vs_ptos20160811125704076" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="vs_ptos20160811125704076" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="vs" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="vs" showFeatureCount="0">
         <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="vs20160808122451767" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="vs20160808122451767" visible="0"/>
         </filegroup>
       </legendlayer>
       <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="porcionU" showFeatureCount="0">
@@ -178,15 +180,15 @@
         </filegroup>
       </legendlayer>
     </legendgroup>
-    <legendgroup open="false" checked="Qt::Unchecked" name="baseNC">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current" showFeatureCount="0">
+    <legendgroup open="true" checked="Qt::Checked" name="baseNC">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:vbar_current" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" visible="0"/>
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" visible="0"/>
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998" visible="1"/>
         </filegroup>
       </legendlayer>
     </legendgroup>

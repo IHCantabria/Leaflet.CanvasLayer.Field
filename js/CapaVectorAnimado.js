@@ -1,18 +1,29 @@
 CapaVectorAnimado = function (campoVectorial, malla = false) {
     this.campoVectorial = campoVectorial;
     this.verMalla = malla;
+    this.timer = null;
 
     this.onLayerDidMount = function () {
         // -- prepare custom drawing
+        let self = this;
+        this._map.on('movestart', function (e) {
+            if (self.timer) self.timer.stop();
+
+        });
     };
     this.onLayerWillUnmount = function () {
         // -- custom cleanup
     };
+
     this.setData = function (data) {
         // -- custom data set
         this.needRedraw(); // -- call to drawLayer
     };
     this.onDrawLayer = function (viewInfo) {
+
+        console.log('a pintar...');
+        //if (!this.pintadoActivo) return;
+
         // preparación del canvas
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
@@ -20,7 +31,6 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         //this._dibujarMalla(g, viewInfo);
 
         // caracterìsticas de pintado de trayectorias que se desvanecen
-        //g.fillStyle = "rgba(255, 0, 0, 0.97)";
         g.fillStyle = "rgba(0, 0, 0, 0.97)";
         g.lineWidth = 2;
         g.strokeStyle = "cyan"; // html color code
@@ -29,27 +39,16 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         let cv = this.campoVectorial;
         let trayectorias = [];
 
-
         for (var i = 0; i < CapaVectorAnimado.NUMERO_TRAYECTORIAS; i++) {
             let p = cv.posicionAleatoria();
             p.edad = this._edadAleatoria();
             trayectorias.push(p)
         }
 
-        // posición fija
-        /*let p = {
-            x: -3.79665404416,
-            y: 43.4712638261,
-            edad: 0
-        };
-        trayectorias.push(p);
-        */
-
-        d3.timer(function () {
+        this.timer = d3.timer(function () {
             moverParticulas();
             dibujar();
         }, CapaVectorAnimado.DURACION_FRAME);
-        //requestAnimationFrame ???
 
 
         /**
@@ -150,7 +149,7 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
 CapaVectorAnimado.prototype = new L.CanvasLayer();
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1500;
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1000;
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
 CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame' en la animación
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;
