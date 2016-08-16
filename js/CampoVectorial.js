@@ -55,6 +55,26 @@ class CampoVectorial {
     }
 
     /**
+     * Construcción de una malla con todos los puntos lon-lat del campo
+     * Para cada posición, se devuelve su latitud
+     * @returns {[[Type]]} [[Description]]
+     */
+    mallaLonLat() {
+        let lonslats = [];
+        let lon = this.xllcorner;
+        let lat = this.yllcorner;
+        for (var j = 0; j < this.nrows; j++) {
+            for (var i = 0; i < this.ncols; i++) {
+                lonslats.push([lon, lat]);
+                lon += this.dx;
+            }
+            lat += this.dy;
+            lon = this.xllcorner;
+        }
+        return lonslats;
+    }
+
+    /**
      * Crea / modifica una posición, con un valor aleatorio
      * dentro de la malla
      */

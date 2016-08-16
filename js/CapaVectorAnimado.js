@@ -1,6 +1,5 @@
-CapaVectorAnimado = function (campoVectorial, malla = false) {
+CapaVectorAnimado = function (campoVectorial) {
     this.campoVectorial = campoVectorial;
-    this.verMalla = malla;
     this.timer = null;
 
     this.onLayerDidMount = function () {
@@ -8,7 +7,6 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         let self = this;
         this._map.on('movestart', function (e) {
             if (self.timer) self.timer.stop();
-
         });
     };
     this.onLayerWillUnmount = function () {
@@ -20,15 +18,9 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         this.needRedraw(); // -- call to drawLayer
     };
     this.onDrawLayer = function (viewInfo) {
-
-        console.log('a pintar...');
-        //if (!this.pintadoActivo) return;
-
         // preparación del canvas
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-
-        //this._dibujarMalla(g, viewInfo);
 
         // caracterìsticas de pintado de trayectorias que se desvanecen
         g.fillStyle = "rgba(0, 0, 0, 0.97)";
@@ -126,24 +118,23 @@ CapaVectorAnimado = function (campoVectorial, malla = false) {
         return Math.round(Math.random() * CapaVectorAnimado.EDAD_MAXIMA_PARTICULA);
     }
 
+    /*
     this._dibujarMalla = function (g, viewInfo) {
-        let malla = this.campoVectorial.malla();
-        //console.log(malla);
+        let malla = this.campoVectorial.mallaLonLat();
 
-        for (var i = 0; i < malla.length; i = i + 3) {
+        for (var i = 0; i < malla.length; i++) {
             let lonlat = malla[i];
             let x = lonlat[0];
             let y = lonlat[1];
-            //console.log([x, y]);
 
             let p = viewInfo.layer._map.latLngToContainerPoint([y, x]);
             g.beginPath();
-            g.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            g.arc(p.x, p.y, 0.25, 0, Math.PI * 2);
             g.fill();
             g.closePath();
             g.stroke();
         }
-    }
+    }*/
 }
 
 CapaVectorAnimado.prototype = new L.CanvasLayer();
