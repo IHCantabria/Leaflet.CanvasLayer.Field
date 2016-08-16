@@ -117,24 +117,6 @@ CapaVectorAnimado = function (campoVectorial) {
     this._edadAleatoria = function () {
         return Math.round(Math.random() * CapaVectorAnimado.EDAD_MAXIMA_PARTICULA);
     }
-
-    /*
-    this._dibujarMalla = function (g, viewInfo) {
-        let malla = this.campoVectorial.mallaLonLat();
-
-        for (var i = 0; i < malla.length; i++) {
-            let lonlat = malla[i];
-            let x = lonlat[0];
-            let y = lonlat[1];
-
-            let p = viewInfo.layer._map.latLngToContainerPoint([y, x]);
-            g.beginPath();
-            g.arc(p.x, p.y, 0.25, 0, Math.PI * 2);
-            g.fill();
-            g.closePath();
-            g.stroke();
-        }
-    }*/
 }
 
 CapaVectorAnimado.prototype = new L.CanvasLayer();
