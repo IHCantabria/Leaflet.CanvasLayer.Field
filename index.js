@@ -15,8 +15,8 @@ L.tileLayer(url, {
 d3.json("data/grid.json", function (d) {
     let cv = CampoVectorial.desdeJson(d);
 
-    /*let capaGrid = new CapaPuntos(cv.mallaLonLat(), 'gray');
-    capaGrid.addTo(mapa);*/
+    let capaGrid = new CapaPuntos(cv.mallaLonLat(), 'gray');
+    capaGrid.addTo(mapa);
 
     let capa = new CapaVectorAnimado(cv, true);
     capa.addTo(mapa);
