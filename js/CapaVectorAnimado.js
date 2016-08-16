@@ -122,7 +122,7 @@ CapaVectorAnimado = function (campoVectorial) {
 CapaVectorAnimado.prototype = new L.CanvasLayer();
 
 // Característicias generales de la animación
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1000;
+CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1500;
 CapaVectorAnimado.EDAD_INICIAL_PARTICULA = 0;
 CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame' en la animación
 CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;
