@@ -9,5 +9,11 @@ describe("MapaColor", function () {
             expect(f(0).hex()).toBe('#00008f');
             expect(f(2).hex()).toBe('#8c0000');
         });
+
+        it("se puede ajustar a un rango", function () {
+            let f = MapaColor.paraCorrientes([0, 1]);
+            expect(f(0).hex()).toBe('#00008f');
+            expect(f(1).hex()).toBe('#8c0000');
+        });
     });
 });
