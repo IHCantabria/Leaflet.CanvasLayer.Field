@@ -34,8 +34,8 @@ d3.json("data/grid.json", function (d) {
     // 3. Más parámetros personalizados
     let capa3 = new CapaVectorAnimado(cv, {
         trayectorias: 150,
-        duracion: 200,
-        edadMaxima: 2000,
+        duracion: 20,
+        edadMaxima: 200,
         color: "yellow",
         grosor: 1
     });
