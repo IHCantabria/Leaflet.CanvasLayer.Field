@@ -18,7 +18,7 @@ d3.json("data/grid.json", function (d) {
     let cv = CampoVectorial.desdeJson(d);
 
     // Grid base
-    let capaGrid = new CapaPuntos(cv.mallaLonLat(), 'gray');
+    let capaGrid = new CapaPuntos(cv.mallaLonLat());
     //capaGrid.addTo(mapa);
 
     // 1. Básica
