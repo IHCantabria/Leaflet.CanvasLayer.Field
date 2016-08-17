@@ -11,8 +11,13 @@ body,
 }
 
 .leaflet-control-leyendaEscalaColor {
-    background-color: 'white';
+    background-color: white;
     width: 400px;
-    height: 200px;
+    height: 100px;
     border: 1px white solid;
+}
+
+.leaflet-control-leyendaEscalaColor svg {
+    border: 2px red solid;
+    padding: 10px;
 }

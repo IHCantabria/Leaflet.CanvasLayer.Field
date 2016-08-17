@@ -1,6 +1,6 @@
 L.Control.LeyendaEscalaColor = L.Control.extend({
     options: {
-        position: 'topright',
+        position: 'bottomleft',
         pasos: 100,
         ancho: 400
     },
