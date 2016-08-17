@@ -72,10 +72,12 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
                     // ... y el siguiente punto sería
                     let xt = par.x + (vector.u * self.cv.dx);
                     let yt = par.y + (vector.v * self.cv.dy);
+                    let m = vector.longitud(); //magnitud en unidades de entrada (m/s?)
 
                     if (self.cv.tieneValorEn(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
+                        par.m = m;
                     } else {
                         // no visible...? continuar moviendo ??? TODO
                         par.edad = self.opciones.edadMaxima; // ??
@@ -94,6 +96,9 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
             g.fillRect(0, 0, g.canvas.width, g.canvas.height);
             g.globalCompositeOperation = "source-over";
 
+            let mapa = MapaColor.paraCorrientes([0, 1]);
+            let colorPara = mapa.escala; // función valor-->color
+
             // Dibujar nuevas
             trayectorias.forEach(function (par) {
                 let origen = new L.latLng(par.y, par.x);
@@ -110,7 +115,11 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
                     // movimiento para siguiente paso
                     par.x = par.xt;
                     par.y = par.yt;
-                    g.stroke(); // TODO. 1 llamada vs. varias... rendimiento?
+
+
+                    g.strokeStyle = colorPara(par.m).hex(); // html color code
+
+                    g.stroke();
                 }
             });
         }

@@ -26,6 +26,7 @@ d3.json("data/grid.json", function (d) {
     capa.addTo(mapa);
 
     // 2. Cambio de color
+    /*
     let capa2 = new CapaVectorAnimado(cv, {
         color: "green"
     });
@@ -40,4 +41,11 @@ d3.json("data/grid.json", function (d) {
         grosor: 1
     });
     capa3.addTo(mapa);
+    */
+
+    var m = MapaColor.paraCorrientes([0, 2]);
+    var leyenda = new L.Control.LeyendaEscalaColor({
+        mapaColor: m
+    });
+    mapa.addControl(leyenda);
 });

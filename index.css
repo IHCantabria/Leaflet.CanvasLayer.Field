@@ -2,9 +2,17 @@ body {
     padding: 0;
     margin: 0;
 }
+
 html,
 body,
 #map {
     height: 100%;
     width: 100%;
+}
+
+.leaflet-control-leyendaEscalaColor {
+    background-color: 'white';
+    width: 400px;
+    height: 200px;
+    border: 1px white solid;
 }
