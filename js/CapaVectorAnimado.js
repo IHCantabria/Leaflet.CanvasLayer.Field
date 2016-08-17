@@ -1,10 +1,14 @@
-CapaVectorAnimado = function (campoVectorial) {
+CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.cv = campoVectorial;
-    this.opciones = {
-        trayectorias: CapaVectorAnimado.NUMERO_TRAYECTORIAS,
-        duracion: CapaVectorAnimado.DURACION_FRAME,
-        edadMaxima: CapaVectorAnimado.EDAD_MAXIMA_PARTICULA
+    let opcionesPorDefecto = {
+        trayectorias: 1500,
+        duracion: 40, // milisegundos / 'frame'
+        edadMaxima: 1000,
+        color: "white",
+        grosor: 1
     };
+
+    this.opciones = _.defaults(opciones, opcionesPorDefecto);
     this.timer = null;
     let self = this;
 
@@ -29,8 +33,8 @@ CapaVectorAnimado = function (campoVectorial) {
 
         // caracterìsticas de pintado de trayectorias que se desvanecen
         g.fillStyle = "rgba(0, 0, 0, 0.97)";
-        g.lineWidth = 1;
-        g.strokeStyle = "cyan"; // html color code
+        g.lineWidth = this.opciones.grosor;
+        g.strokeStyle = this.opciones.color; // html color code
 
         // preparación de trayectorias de partículas
         let trayectorias = [];
@@ -123,8 +127,3 @@ CapaVectorAnimado = function (campoVectorial) {
 }
 
 CapaVectorAnimado.prototype = new L.CanvasLayer();
-
-// Valores por defecto
-CapaVectorAnimado.NUMERO_TRAYECTORIAS = 1500;
-CapaVectorAnimado.DURACION_FRAME = 40; // milisegundos de cada 'frame'
-CapaVectorAnimado.EDAD_MAXIMA_PARTICULA = 1000;
