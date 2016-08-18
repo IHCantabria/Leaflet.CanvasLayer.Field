@@ -1,12 +1,14 @@
 CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.cv = campoVectorial;
     let opcionesPorDefecto = {
-        trayectorias: 1500,
+        trayectorias: 2000,
         duracion: 40, // milisegundos - 'frame'
         edadMaxima: 1000,
-        color: "white", // html color code
+        color: "white", // html-color o chromajs.scale
         grosor: 1
     };
+
+    //console.log(this.cv.rangoMagnitud());
 
     this.opciones = _.defaults(opciones, opcionesPorDefecto);
     this.timer = null;
@@ -96,9 +98,6 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
             g.fillRect(0, 0, g.canvas.width, g.canvas.height);
             g.globalCompositeOperation = "source-over";
 
-            let mapa = MapaColor.paraCorrientes([0, 1]);
-            let colorPara = mapa.escala; // función valor-->color
-
             // Dibujar nuevas
             trayectorias.forEach(function (par) {
                 let origen = new L.latLng(par.y, par.x);
@@ -116,7 +115,11 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
                     par.x = par.xt;
                     par.y = par.yt;
 
-                    g.strokeStyle = colorPara(par.m).hex(); // html color code
+                    // color personalizado por intensidad, si procede
+                    let color = self.opciones.color;
+                    if (typeof color == 'function') {
+                        g.strokeStyle = color(par.m).hex();
+                    }
                     g.stroke();
                 }
             });

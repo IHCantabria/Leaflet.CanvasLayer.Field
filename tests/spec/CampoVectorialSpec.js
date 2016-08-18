@@ -40,7 +40,10 @@ describe("CampoVectorial", function () {
             expect(cv.contiene(pos.x, pos.y)).toBe(true);
         });
 
-
+        it("puede leer rango de magnitudes", function () {
+            var rango = cv.rangoMagnitud();
+            expect(rango).not.toBe(null);
+        });
     });
 
     describe("Posición", function () {

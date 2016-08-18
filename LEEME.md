@@ -11,6 +11,9 @@
 - Se incluyen varios parámetros opcionales, para controlar el pintado de trayectorias
 - *CapaPuntos*, para dibujar el grid de base
 
+## v0.4
+- *CapaVectorAnimado* con color de línea basado en intensidad, usando una escala de color chroma
+- Control de leyenda
 
 ## Notas técnicas:
 - HTML5 & JS ECMAScript 2015 (ES6)

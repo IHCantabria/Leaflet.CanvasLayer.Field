@@ -17,16 +17,15 @@ L.tileLayer(url, {
 d3.json("data/grid.json", function (d) {
     let cv = CampoVectorial.desdeJson(d);
 
-    // Grid base
+    // 0. Grid base
     let capaGrid = new CapaPuntos(cv.mallaLonLat());
     //capaGrid.addTo(mapa);
 
     // 1. Básica
     let capa = new CapaVectorAnimado(cv);
-    capa.addTo(mapa);
+    //capa.addTo(mapa);
 
     // 2. Cambio de color
-
     let capa2 = new CapaVectorAnimado(cv, {
         color: "green"
     });
@@ -42,7 +41,14 @@ d3.json("data/grid.json", function (d) {
     });
     //capa3.addTo(mapa);
 
-    var m = MapaColor.paraCorrientes([0, 2]);
+    // 4. Capa con color por velocidad
+    var m = MapaColor.paraCorrientes([0, 1]);
+    let capa4 = new CapaVectorAnimado(cv, {
+        color: m.escala
+    });
+    capa4.addTo(mapa);
+
+    // 5. Leyenda
     var leyenda = new L.Control.LeyendaEscalaColor({
         mapaColor: m
     });
