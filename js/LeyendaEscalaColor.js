@@ -1,17 +1,20 @@
 L.Control.LeyendaEscalaColor = L.Control.extend({
     options: {
         position: 'bottomleft',
-        ancho: 400,
-        alto: 50,
+        ancho: 300,
+        alto: 25,
+        fondo: '#fff',
         leyenda: {
-            pasos: 100
+            pasos: 100,
+            unidades: 'm/s'
         }
     },
 
+    /*
     initialize: function (options) {
         L.Util.setOptions(this, options);
     },
-
+*/
     onAdd: function (map) {
         this._map = map;
         let controlDiv = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
@@ -33,12 +36,13 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
         let colores = data.map(d => f(d).css());
 
         // div.contenedor > svg
+        //let anchoTotal =
         let w = Math.floor(this.options.ancho / colores.length);
         let d = document.createElement("div");
         let svg = d3.select(d).append("svg")
             .attr('width', this.options.ancho)
-            .attr('height', this.options.alto);
-        //.style('position', 'absolute');
+            .attr('height', this.options.alto)
+            .style('padding', '10px'); //
 
         // n barras de color
         let cubos = svg.selectAll('rect').data(colores).enter().append('rect');
@@ -48,6 +52,8 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             .attr('height', (d) => w * 4)
             .attr('width', (d) => w)
             .attr('fill', (d) => d);
+
+        cubos.append('title').text((d) => d + "m/s");
         return d.innerHTML;
     }
 });
