@@ -4,8 +4,8 @@
 const mapa = L.map("map").setView([43.45, -3.7944], 13);
 
 /* Base */
-//let url = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+let url = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+//let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
 L.tileLayer(url, {
     attribution: 'OSM & Carto',
     subdomains: 'abcd',
@@ -26,11 +26,11 @@ d3.json("data/grid.json", function (d) {
     capa.addTo(mapa);
 
     // 2. Cambio de color
-    /*
+
     let capa2 = new CapaVectorAnimado(cv, {
         color: "green"
     });
-    capa2.addTo(mapa);
+    //capa2.addTo(mapa);
 
     // 3. Más parámetros personalizados
     let capa3 = new CapaVectorAnimado(cv, {
@@ -40,8 +40,7 @@ d3.json("data/grid.json", function (d) {
         color: "yellow",
         grosor: 1
     });
-    capa3.addTo(mapa);
-    */
+    //capa3.addTo(mapa);
 
     var m = MapaColor.paraCorrientes([0, 2]);
     var leyenda = new L.Control.LeyendaEscalaColor({

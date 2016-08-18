@@ -26,40 +26,28 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
     paleta: function () {
         // preparación de datos
         let m = this.options.mapaColor;
-        let p = this.options.leyenda.pasos;
         let min = m.dominio[0];
         let max = m.dominio[1];
-        let data = _.range(0, 2, max / p);
+        let data = _.range(0, 2, (max - min) / this.options.leyenda.pasos);
         let f = m.escala; // función valor --> color
-        let colores = data.map(function (d) {
-            return f(d).css();
-        });
+        let colores = data.map(d => f(d).css());
 
         // div.contenedor > svg
-        let w = Math.floor(400 / colores.length);
+        let w = Math.floor(this.options.ancho / colores.length);
         let d = document.createElement("div");
         let svg = d3.select(d).append("svg")
             .attr('width', this.options.ancho)
             .attr('height', this.options.alto);
+        //.style('position', 'absolute');
 
-        // barra de color
+        // n barras de color
         let cubos = svg.selectAll('rect').data(colores).enter().append('rect');
         cubos
-            .attr('x', function (d, i) {
-                return i * w;
-            })
-            .attr('y', function (d) {
-                return 0;
-            })
-            .attr('height', function (d) {
-                return w * 4;
-            })
-            .attr('width', function (d) {
-                return w;
-            })
-            .attr('fill', function (d) {
-                return d;
-            });
+            .attr('x', (d, i) => i * w)
+            .attr('y', (d) => 0)
+            .attr('height', (d) => w * 4)
+            .attr('width', (d) => w)
+            .attr('fill', (d) => d);
         return d.innerHTML;
     }
 });
