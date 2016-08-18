@@ -1,8 +1,11 @@
 L.Control.LeyendaEscalaColor = L.Control.extend({
     options: {
         position: 'bottomleft',
-        pasos: 100,
-        ancho: 400
+        ancho: 400,
+        alto: 50,
+        leyenda: {
+            pasos: 100
+        }
     },
 
     initialize: function (options) {
@@ -12,23 +15,18 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
     onAdd: function (map) {
         this._map = map;
         let controlDiv = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
-        /*controlDiv.style.width = this.options.ancho + 'px';
-        controlDiv.style.height = this.options.ancho + 'px';*/
-        //controlDiv.style.he = this.options.ancho;
         L.DomEvent
             .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
             .addListener(controlDiv, 'click', L.DomEvent.preventDefault);
 
-        let svg = this.generarPaleta();
-        controlDiv.appendChild(svg);
+        controlDiv.innerHTML = this.paleta();
         return controlDiv;
     },
 
-    generarPaleta: function () {
-
+    paleta: function () {
         // preparación de datos
         let m = this.options.mapaColor;
-        let p = this.options.pasos;
+        let p = this.options.leyenda.pasos;
         let min = m.dominio[0];
         let max = m.dominio[1];
         let data = _.range(0, 2, max / p);
@@ -37,12 +35,14 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             return f(d).css();
         });
 
-        // svg contenedor
+        // div.contenedor > svg
         let w = Math.floor(400 / colores.length);
-        let e = document.createElement("svg");
-        let svg = d3.select(e);
-        svg.attr('width', 400).attr('height', w * 100);
+        let d = document.createElement("div");
+        let svg = d3.select(d).append("svg")
+            .attr('width', this.options.ancho)
+            .attr('height', this.options.alto);
 
+        // barra de color
         let cubos = svg.selectAll('rect').data(colores).enter().append('rect');
         cubos
             .attr('x', function (d, i) {
@@ -60,38 +60,6 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             .attr('fill', function (d) {
                 return d;
             });
-        /*
-        let cubosConAtributos = cubos.attr({
-            x: function (d, i) {
-                return i * w;
-            },
-            y: function (d) {
-                return 0;
-            },
-            height: function (d) {
-                return w;
-            },
-            width: function (d) {
-                return w;
-            },
-            fill: function (d) {
-                return d;
-            }
-        });
-*/
-
-        return svg.node();
+        return d.innerHTML;
     }
 });
-
-/*
-class Leyenda {
-    constructor(div) {
-        this._div = div;
-    }
-
-    render() {
-        this._div.html('<b>Soy una leyenda</b>');
-    }
-}
-*/
