@@ -24,8 +24,8 @@ class MapaColor {
     static paraCorrientes(dominio = [0, 2]) {
         // Valores desde 0 a 2 m/s
         //let escala = chroma.scale(['#00008F', '#8C0000']).domain(dominio); // Tipo sst_36 azul--->rojo
-        let escala = chroma.scale('OrRd').domain(dominio);
-        //let escala = chroma.scale(['cyan', 'red']).domain(dominio);
+        //let escala = chroma.scale('OrRd').domain(dominio);
+        let escala = chroma.scale(['cyan', 'red']).domain(dominio);
         let mapa = new MapaColor(escala, dominio, 'm/s');
         return mapa;
     }

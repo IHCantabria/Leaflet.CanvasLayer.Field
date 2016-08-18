@@ -37,7 +37,7 @@ d3.json("data/grid.json", function (d) {
         duracion: 20,
         edadMaxima: 200,
         color: "yellow",
-        grosor: 1
+        grosor: 3
     });
     //capa3.addTo(mapa);
 
