@@ -2,11 +2,12 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
     options: {
         position: 'bottomleft',
         ancho: 300,
-        alto: 25,
-        fondo: '#fff',
+        alto: 20,
+        fondo: 'transparent',
         leyenda: {
             pasos: 100,
-            unidades: 'm/s'
+            unidades: 'm/s',
+            decimales: 2
         }
     },
 
@@ -21,7 +22,7 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
         L.DomEvent
             .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
             .addListener(controlDiv, 'click', L.DomEvent.preventDefault);
-
+        controlDiv.style.backgroundColor = this.options.fondo;
         controlDiv.innerHTML = this.paleta();
         return controlDiv;
     },
@@ -32,12 +33,16 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
         let min = m.dominio[0];
         let max = m.dominio[1];
         let data = _.range(0, 2, (max - min) / this.options.leyenda.pasos);
-        let f = m.escala; // función valor --> color
-        let colores = data.map(d => f(d).css());
+        let colorPorValor = data.map(d => {
+            return {
+                "valor": d,
+                "color": m.escala(d).css() //función valor --> color css
+            }
+        });
 
         // div.contenedor > svg
         //let anchoTotal =
-        let w = Math.floor(this.options.ancho / colores.length);
+        let w = Math.floor(this.options.ancho / colorPorValor.length);
         let d = document.createElement("div");
         let svg = d3.select(d).append("svg")
             .attr('width', this.options.ancho)
@@ -45,15 +50,17 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             .style('padding', '10px'); //
 
         // n barras de color
-        let cubos = svg.selectAll('rect').data(colores).enter().append('rect');
+        let cubos = svg.selectAll('rect').data(colorPorValor).enter().append('rect');
         cubos
             .attr('x', (d, i) => i * w)
             .attr('y', (d) => 0)
-            .attr('height', (d) => w * 4)
+            .attr('height', (d) => this.options.alto /*w * 4*/ )
             .attr('width', (d) => w)
-            .attr('fill', (d) => d);
+            .attr('fill', (d) => d.color);
 
-        cubos.append('title').text((d) => d + "m/s");
+        cubos.append('title').text(
+            (d) => `${d.valor.toFixed(this.options.leyenda.decimales)} ${this.options.leyenda.unidades}`
+        );
         return d.innerHTML;
     }
 });
