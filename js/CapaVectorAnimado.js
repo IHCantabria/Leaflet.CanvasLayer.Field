@@ -2,9 +2,9 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.cv = campoVectorial;
     let opcionesPorDefecto = {
         trayectorias: 1500,
-        duracion: 40, // milisegundos / 'frame'
-        edadMaxima: 1000,
-        color: "white",
+        duracion: 40, // milisegundos - 'frame'
+        edadMaxima: 500,
+        color: "white", // html color code
         grosor: 1
     };
 
@@ -34,7 +34,7 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
         // caracterìsticas de pintado de trayectorias que se desvanecen
         g.fillStyle = "rgba(0, 0, 0, 0.97)";
         g.lineWidth = this.opciones.grosor;
-        g.strokeStyle = this.opciones.color; // html color code
+        g.strokeStyle = this.opciones.color;
 
         // preparación de trayectorias de partículas
         let trayectorias = [];
@@ -79,7 +79,7 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
                         par.yt = yt;
                         par.m = m;
                     } else {
-                        // no visible...? continuar moviendo ??? TODO
+                        // no visible... continuar moviendo?
                         par.edad = self.opciones.edadMaxima; // ??
                     }
                 }
@@ -116,9 +116,7 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
                     par.x = par.xt;
                     par.y = par.yt;
 
-
                     g.strokeStyle = colorPara(par.m).hex(); // html color code
-
                     g.stroke();
                 }
             });

@@ -2,20 +2,14 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
     options: {
         position: 'bottomleft',
         ancho: 300,
-        alto: 20,
+        alto: 15,
         fondo: 'transparent',
         leyenda: {
             pasos: 100,
-            unidades: 'm/s',
             decimales: 2
         }
     },
 
-    /*
-    initialize: function (options) {
-        L.Util.setOptions(this, options);
-    },
-*/
     onAdd: function (map) {
         this._map = map;
         let controlDiv = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
@@ -23,6 +17,7 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
             .addListener(controlDiv, 'click', L.DomEvent.preventDefault);
         controlDiv.style.backgroundColor = this.options.fondo;
+        controlDiv.style.cursor = 'text';
         controlDiv.innerHTML = this.paleta();
         return controlDiv;
     },
@@ -32,7 +27,8 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
         let m = this.options.mapaColor;
         let min = m.dominio[0];
         let max = m.dominio[1];
-        let data = _.range(0, 2, (max - min) / this.options.leyenda.pasos);
+        let incremento = (max - min) / (this.options.leyenda.pasos);
+        let data = _.range(min, max + incremento, incremento);
         let colorPorValor = data.map(d => {
             return {
                 "valor": d,
@@ -41,7 +37,6 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
         });
 
         // div.contenedor > svg
-        //let anchoTotal =
         let w = Math.floor(this.options.ancho / colorPorValor.length);
         let d = document.createElement("div");
         let svg = d3.select(d).append("svg")
@@ -59,7 +54,7 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             .attr('fill', (d) => d.color);
 
         cubos.append('title').text(
-            (d) => `${d.valor.toFixed(this.options.leyenda.decimales)} ${this.options.leyenda.unidades}`
+            (d) => `${d.valor.toFixed(this.options.leyenda.decimales)} ${this.options.mapaColor.unidades}`
         );
         return d.innerHTML;
     }
