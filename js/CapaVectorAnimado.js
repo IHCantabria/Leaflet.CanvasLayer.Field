@@ -3,7 +3,7 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     let opcionesPorDefecto = {
         trayectorias: 1500,
         duracion: 40, // milisegundos - 'frame'
-        edadMaxima: 500,
+        edadMaxima: 1000,
         color: "white", // html color code
         grosor: 1
     };
