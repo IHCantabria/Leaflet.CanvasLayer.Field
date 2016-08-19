@@ -43,32 +43,36 @@ describe("CampoVectorial", function () {
         it("puede leer rango de magnitudes", function () {
             var rango = cv.rangoMagnitud();
             expect(rango).not.toBe(null);
+
+            // min-max velocidad en 'porcion'
+            expect(rango[0]).toEqual(0.0067317434565905545);
+            expect(rango[1]).toEqual(0.2150247092568961);
         });
     });
 
     describe("Posición", function () {
         it("puede devolver los valores del vector en un (i,j) de la malla", function () {
             // top-left
-            expect(cv.vector(0, 0)).toEqual([0.011275325901806355, -0.003540651174262166]);
+            expect(cv._vector(0, 0)).toEqual([0.011275325901806355, -0.003540651174262166]);
 
             // botton-right
-            expect(cv.vector(9, 9)).toEqual([0.14851005375385284, -0.015279672108590603]);
+            expect(cv._vector(9, 9)).toEqual([0.14851005375385284, -0.015279672108590603]);
         });
 
         it("debe conocer cada Lon-Lat de una celda", function () {
 
             // longitudes de celda
-            let xminCenter = cv.longitudIndiceX(0);
+            let xminCenter = cv._longitudIndiceX(0);
             expect(xminCenter).toBeCloseTo(-3.7692175003915001, 6);
 
-            let xmaxCenter = cv.longitudIndiceX(9);
+            let xmaxCenter = cv._longitudIndiceX(9);
             expect(xmaxCenter).toBeCloseTo(-3.7646719104865003, 6);
 
             // latitudes de celda
-            let ymaxCenter = cv.latitudIndiceY(0);
+            let ymaxCenter = cv._latitudIndiceY(0);
             expect(ymaxCenter).toBeCloseTo(43.465140021515502, 6);
 
-            let yminCenter = cv.latitudIndiceY(9);
+            let yminCenter = cv._latitudIndiceY(9);
             expect(yminCenter).toBeCloseTo(43.460594431610502, 6);
 
             //
@@ -118,7 +122,6 @@ describe("CampoVectorial", function () {
             expect(ptoCercaLR[1]).toBeCloseTo(-0.0152796721085906, 4);
         });
 
-        /*
         it("puede devolver el {Vector} en una Lon-Lat", function () {
             let x0 = -3.76922975;
             let y0 = 43.46063913;
@@ -137,19 +140,19 @@ describe("CampoVectorial", function () {
             uv = cv.vectorEn(-360, -180);
             expect(uv).toEqual(null);
         });
+        /*
+                it("permite saber si hay valor de vector en una Lon-Lat", function () {
 
-        it("permite saber si hay valor de vector en una Lon-Lat", function () {
+                    let x0 = -3.76922975;
+                    let y0 = 43.46063913;
+                    expect(cv.tieneValorEn(x0, y0)).toBe(true);
+                    expect(cv.tieneValorEn(-360, -180)).toBe(false);
 
-            let x0 = -3.76922975;
-            let y0 = 43.46063913;
-            expect(cv.tieneValorEn(x0, y0)).toBe(true);
-            expect(cv.tieneValorEn(-360, -180)).toBe(false);
-
-            //para grid // expect(cv.tieneValorEn(-3.819427007621642, 43.47742891281832)).toBe(false);
-        });
+                    //para grid // expect(cv.tieneValorEn(-3.819427007621642, 43.47742891281832)).toBe(false);
+                });
 
 
-        */
+                */
     });
 
 });

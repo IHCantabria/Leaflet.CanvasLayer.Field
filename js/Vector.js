@@ -5,7 +5,7 @@ class Vector {
     }
 
     /**
-     * Longitud
+     * Longitud (módulo)
      * @returns {float} [[Description]]
      */
     longitud() {
@@ -13,7 +13,7 @@ class Vector {
     }
 
     /**
-     * Ángulo
+     * Ángulo (dirección)
      * @returns {float} Ángulo, en radianes
      */
     angulo() {

@@ -23,11 +23,9 @@ describe("MapaColor", function () {
 
 
         it("se puede ajustar su función a un rango", function () {
-            let f = MapaColor.paraCorrientes([0, 1]);
-
-            let c0 = f(0).hex();
-            let c2 = f(2).hex();
-
+            let m = MapaColor.paraCorrientes([0, 1]);
+            let c0 = m.escala(0).hex();
+            let c2 = m.escala(2).hex();
             expect(c0).not.toBe('');
             expect(c2).toBe(null);
         });

@@ -17,55 +17,47 @@ class CampoVectorial {
     }
 
     /**
+     * Constructor desde .json
+     * @param   {object}   d [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    static desdeJson(d) {
+        let params = {
+            "ncols": d.ncols,
+            "nrows": d.nrows,
+            "xllcorner": d.xllcorner,
+            "yllcorner": d.yllcorner,
+            "dx": d.dx,
+            "dy": d.dy,
+            "us": d.us,
+            "vs": d.vs
+        };
+
+        let cv = new CampoVectorial(params);
+        return cv;
+    }
+
+    /**
      * Filas x columnas
      * @returns {Integer} - número de celdas de la malla
      */
     numeroCeldas() {
         return this.nrows * this.ncols;
-        /* equivalente a...
-        var nFilas = this.malla.length;
-        var nColumnas = this.malla[0].length;
-        return nFilas * nColumnas;
-        */
     }
 
     /**
-     * Preparación de una Malla(i,j) con los valores [u,v] en cada punto
-     * Se asume orden x-ascending e y-descending en los componentes u y v (el mismo que en ASCIIGrid y otros)
-     * @private
-     * @param {Array} us - componentes-u
-     * @param {Array} vs - componentes-v
+     * Construcción de una lista con todos los puntos de la malla
+     * Para cada posición se devuelve su [lon, lat, u, v]
+     * @returns {Array} - lista de coordenadas
      */
-    _crearMalla(us, vs) {
-        let grid = [];
-        let p = 0;
-
-        for (var j = 0; j < this.nrows; j++) {
-            var row = [];
-            for (var i = 0; i < this.ncols; i++, p++) {
-                // Se asume x-ascending e y-descending
-                let u = us[p],
-                    v = vs[p];
-                let valido = (this.esValido(u) && this.esValido(v));
-                row[i] = (valido) ? [u, v] : null;
-            }
-            grid[j] = row;
-        }
-        return grid;
-    }
-
-    /**
-     * Construcción de una malla con todos los puntos lon-lat del campo
-     * Para cada posición, se devuelve su latitud
-     * @returns {[[Type]]} [[Description]]
-     */
-    mallaLonLat() {
+    mallaLonLatUV() {
         let lonslats = [];
         let lon = this.xllcorner;
         let lat = this.yllcorner;
         for (var j = 0; j < this.nrows; j++) {
             for (var i = 0; i < this.ncols; i++) {
-                lonslats.push([lon, lat]);
+                let uv = this._vector(i, j);
+                lonslats.push([lon, lat, uv[0], uv[1]]);
                 lon += this.dx;
             }
             lat += this.dy;
@@ -74,40 +66,9 @@ class CampoVectorial {
         return lonslats;
     }
 
-    /**
-     * Crea / modifica una posición, con un valor aleatorio
-     * dentro de la malla
-     */
-    posicionAleatoria(o = {}) {
-        let i = _.random(0, this.ncols - 1);
-        let j = _.random(0, this.nrows - 1);
-        o.x = this.longitudIndiceX(i);
-        o.y = this.latitudIndiceY(j);
-        return o;
-    }
 
     /**
-     * Longitud para un índice de la malla
-     * @param   {Integer} i - índice columna
-     * @returns {Float} longitud en centro de la celda
-     */
-    longitudIndiceX(i) {
-        let medioPixel = this.dx / 2.0;
-        return this.xllcorner + medioPixel + (i * this.dx);
-    }
-
-    /**
-     * Latitud para un índice de la malla
-     * @param   {Integer} j - índice fila
-     * @returns {Float} latitud en centro de la celda
-     */
-    latitudIndiceY(j) {
-        let medioPixel = this.dy / 2.0;
-        return this.yurcorner - medioPixel - (j * this.dy);
-    }
-
-    /**
-     * Determina si unas coordenadas están dentro de la malla
+     * Determina si unas coordenadas están dentro de la malla (se asume rectangular)
      * @param   {Float} lon - longitud
      * @param   {Float} lat - latitud
      * @returns {Boolean}
@@ -129,26 +90,16 @@ class CampoVectorial {
         return !this.contiene(lon, lat);
     }
 
-    /**
-     * Devuelve los valores del vector en las posiciones de malla indicadas
-     * @param   {Integer} índice de vector
-     * @returns {Array} [u, v]
-     */
-    vector(i, j) {
-        return this.malla[i][j];
-    }
 
     /**
-     * Devuelve las coordenadas del vector en índices indicados
-     * @param   {Integer} indiceColumna - índice entero
-     * @param   {Integer} indiceFila - índice entero
-     * @returns {Array} [lon, lat]
+     * Valores del vector (interpolados) en las coordenadas longitud-latitud
+     * @param   {Number} lon - Longitud
+     * @param   {Number} lat - Latitud
+     * @returns {Array}   [u, v]
      */
-    lonLatEnIndices(indiceColumna, indiceFila) {
-        let lon = this.longitudIndiceX(indiceColumna);
-        let lat = this.latitudIndiceY(indiceFila);
-
-        return [lon, lat];
+    valorEn(lon, lat) {
+        if (this.noContiene(lon, lat)) return null;
+        return this._interpolar(lon, lat);
     }
 
     /**
@@ -172,26 +123,99 @@ class CampoVectorial {
     }
 
     /**
-     * Si tiene valor (ni 'null' ni 'undefined')
-     * @private
-     * @param   {Object} x objeto
-     * @returns {Boolean} OK
+     * Crea / modifica la posición de 'o', con un valor aleatorio
+     * dentro de la malla
      */
-    esValido(x) {
-        return (x !== null) && (x !== undefined);
+    posicionAleatoria(o = {}) {
+        let i = _.random(0, this.ncols - 1);
+        let j = _.random(0, this.nrows - 1);
+        o.x = this._longitudIndiceX(i);
+        o.y = this._latitudIndiceY(j);
+        return o;
     }
 
     /**
-     * Valores del vector (interpolados) en las coordenadas longitud-latitud 
-     
-     * @param   {Number} lon - Longitud
-     * @param   {Number} lat - Latitud
-     * @returns {Array}   [u, v]
+     * Determina el valor mínimo y máximo del campo
      */
-    valorEn(lon, lat) {
-        if (this.noContiene(lon, lat)) return null;
-        return this._interpolar(lon, lat);
+    rangoMagnitud() {
+        let vectores = this.mallaLonLatUV().map(pto => new Vector(pto[2], pto[3]));
+        let magnitudes = vectores.map(v => v.longitud());
+        let min = Math.min(...magnitudes);
+        let max = Math.max(...magnitudes);
+
+        return [min, max];
     }
+
+    /**
+     * Preparación de una Malla con los valores [u,v] en cada punto
+     * Se asume orden x-ascending e y-descending en los componentes u - v (el mismo que en ASCIIGrid)
+     * @private
+     * @param   {Array} us - componentes-u
+     * @param   {Array} vs - componentes-v
+     * @returns {Array} Malla[j][i] con valores [u,v] - filas/columunas
+     */
+    _crearMalla(us, vs) {
+        let grid = [];
+        let p = 0;
+
+        for (var j = 0; j < this.nrows; j++) {
+            var row = [];
+            for (var i = 0; i < this.ncols; i++, p++) {
+                // Se asume x-ascending e y-descending
+                let u = us[p],
+                    v = vs[p];
+                let valido = (this._esValido(u) && this._esValido(v));
+                row[i] = (valido) ? [u, v] : null;
+            }
+            grid[j] = row;
+        }
+        return grid;
+    }
+
+    /**
+     * Devuelve los valores del vector en las posiciones de malla indicadas
+     * @param   {Integer} i - indiceColumna
+     * @param   {Integer} j - fila
+     * @returns {Array} [u, v]
+     */
+    _vector(i, j) {
+        return this.malla[j][i]; // <-- j,i !
+    }
+
+    /**
+     * Devuelve las coordenadas del vector en índices indicados
+     * @param   {Integer} i - indiceColumna entero
+     * @param   {Integer} j - indiceFila entero
+     * @returns {Array} [lon, lat]
+     */
+    lonLatEnIndices(i, j) {
+        let lon = this._longitudIndiceX(i);
+        let lat = this._latitudIndiceY(j);
+
+        return [lon, lat];
+    }
+
+    /**
+     * Longitud para un índice de la malla
+     * @param   {Integer} i - índice columna
+     * @returns {Float} longitud en centro de la celda
+     */
+    _longitudIndiceX(i) {
+        let medioPixel = this.dx / 2.0;
+        return this.xllcorner + medioPixel + (i * this.dx);
+    }
+
+    /**
+     * Latitud para un índice de la malla
+     * @param   {Integer} j - índice fila
+     * @returns {Float} latitud en centro de la celda
+     */
+    _latitudIndiceY(j) {
+        let medioPixel = this.dy / 2.0;
+        return this.yurcorner - medioPixel - (j * this.dy);
+    }
+
+
 
     /**
      * Obtiene el valor del vector [u, v], a partir de la interpolación
@@ -234,13 +258,13 @@ class CampoVectorial {
         if ((row = this.malla[fj])) { // fila arriba ^^
             var g00 = row[fi]; // << izquierda
             var g10 = row[ci]; // derecha >>
-            if (this.esValido(g00) && this.esValido(g10) && (row = this.malla[cj])) { // fila abajo vv
+            if (this._esValido(g00) && this._esValido(g10) && (row = this.malla[cj])) { // fila abajo vv
                 var g01 = row[fi]; // << izquierda
                 var g11 = row[ci]; // derecha >>
-                if (this.esValido(g01) && this.esValido(g11)) {
+                if (this._esValido(g01) && this._esValido(g11)) {
                     // encontrados los 4 puntos = se interpola el valor
                     //console.log(g00, g10, g01, g11);
-                    return this.bilinearInterpolateVector(i - fi, j - fj, g00, g10, g01, g11);
+                    return this._bilinearInterpolateVector(i - fi, j - fj, g00, g10, g01, g11);
                 }
             }
         }
@@ -259,7 +283,7 @@ class CampoVectorial {
      * @param   {[[Type]]} g11 [[Description]]
      * @returns {Array}    [[Description]]
      */
-    bilinearInterpolateVector(x, y, g00, g10, g01, g11) {
+    _bilinearInterpolateVector(x, y, g00, g10, g01, g11) {
         var rx = (1 - x);
         var ry = (1 - y);
         var a = rx * ry,
@@ -271,24 +295,14 @@ class CampoVectorial {
         return [u, v, Math.sqrt(u * u + v * v)];
     }
 
-    /**
-     * Constructor desde .json
-     * @param   {object}   d [[Description]]
-     * @returns {[[Type]]} [[Description]]
-     */
-    static desdeJson(d) {
-        let params = {
-            "ncols": d.ncols,
-            "nrows": d.nrows,
-            "xllcorner": d.xllcorner,
-            "yllcorner": d.yllcorner,
-            "dx": d.dx,
-            "dy": d.dy,
-            "us": d.us,
-            "vs": d.vs
-        };
 
-        let cv = new CampoVectorial(params);
-        return cv;
+    /**
+     * Si tiene valor (ni 'null' ni 'undefined')
+     * @private
+     * @param   {Object} x objeto
+     * @returns {Boolean} OK
+     */
+    _esValido(x) {
+        return (x !== null) && (x !== undefined);
     }
 }

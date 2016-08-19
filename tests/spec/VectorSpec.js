@@ -9,6 +9,14 @@ describe("Vector", function () {
     });
     it("debería calcular su longitud", function () {
         expect(vector.longitud()).toEqual(0.1);
+
+        /*
+         porcion.json esquina superior derecha
+         velocidad calculada por GDAL calc (QGIS) = 0.215025
+         */
+        let v = new Vector(0.215018898248672, -0.00158081843983382);
+        expect(v.longitud()).toBeCloseTo(0.215025, 6);
+
     });
     it("debería calcular su ángulo (en radianes)", function () {
         expect(vector.angulo()).toBeCloseTo(1.57, 2);
