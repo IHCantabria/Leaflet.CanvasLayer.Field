@@ -31,6 +31,17 @@ class MapaColor {
     }
 }
 
+/*
+    Paletas ColorBrewer
+    * Sequential:
+    Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
+
+    * Diverging:
+    BrBG PiYG PRGn PuOr RdBu RdGy RdYlBu RdYlGn Spectral
+
+
+*/
+
 /* ¿para leyendas?
 http://jsfiddle.net/ramnathv/g8stqcf6/
 http://jsfiddle.net/vis4/cYLZH/

@@ -42,7 +42,7 @@ d3.json("data/grid.json", function (d) {
     //capa3.addTo(mapa);
 
     // 4. Capa con color por velocidad
-    var m = MapaColor.paraCorrientes([0, 1]);
+    var m = MapaColor.paraCorrientes([0, 1.1]); // revisar rangos de valores
     let capa4 = new CapaVectorAnimado(cv, {
         color: m.escala
     });

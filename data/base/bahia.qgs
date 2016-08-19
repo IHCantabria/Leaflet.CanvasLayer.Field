@@ -7,12 +7,15 @@
     <customproperties/>
     <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="porcion">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="porcion20160808112142813" name="porcion">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="porcion20160808112142813" name="porcion">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-group expanded="0" checked="Qt::Unchecked" name="us">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="velocidad20160819140900792" name="velocidad">
         <customproperties/>
-        <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="us_ptos20160811125453473" name="us_ptos">
+      </layer-tree-layer>
+      <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="us">
+        <customproperties/>
+        <layer-tree-layer expanded="1" checked="Qt::Checked" id="us_ptos20160811125453473" name="us_ptos">
           <customproperties/>
         </layer-tree-layer>
         <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="us20160808122346478" name="us_asc">
@@ -22,9 +25,9 @@
           <customproperties/>
         </layer-tree-layer>
       </layer-tree-group>
-      <layer-tree-group expanded="0" checked="Qt::Unchecked" name="vs">
+      <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="vs">
         <customproperties/>
-        <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="vs_ptos20160811125704076" name="vs_ptos">
+        <layer-tree-layer expanded="1" checked="Qt::Checked" id="vs_ptos20160811125704076" name="vs_ptos">
           <customproperties/>
         </layer-tree-layer>
         <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="vs20160808122451767" name="vs_asc">
@@ -97,6 +100,7 @@
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us_completo20160810093231344"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_us20160811095857852"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125648911"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="velocidad20160819140900792"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125538024"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us20160808122346478"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs_completo20160810093400348"/>
@@ -124,19 +128,25 @@
       <item>OpenStreetMap20160810110410561</item>
       <item>us_ptos20160811125453473</item>
       <item>vs_ptos20160811125704076</item>
+      <item>velocidad20160819140900792</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
     <legendgroup open="true" checked="Qt::PartiallyChecked" name="porcion">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="porcion" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="porcion" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="porcion20160808112142813" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="porcion20160808112142813" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendgroup open="false" checked="Qt::Unchecked" name="us">
-        <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="us_ptos" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="velocidad" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="velocidad20160819140900792" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendgroup open="true" checked="Qt::PartiallyChecked" name="us">
+        <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="us_ptos" showFeatureCount="0">
           <filegroup open="true" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="us_ptos20160811125453473" visible="0"/>
+            <legendlayerfile isInOverview="0" layerid="us_ptos20160811125453473" visible="1"/>
           </filegroup>
         </legendlayer>
         <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="us_asc" showFeatureCount="0">
@@ -150,10 +160,10 @@
           </filegroup>
         </legendlayer>
       </legendgroup>
-      <legendgroup open="false" checked="Qt::Unchecked" name="vs">
-        <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="vs_ptos" showFeatureCount="0">
+      <legendgroup open="true" checked="Qt::PartiallyChecked" name="vs">
+        <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="vs_ptos" showFeatureCount="0">
           <filegroup open="true" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="vs_ptos20160811125704076" visible="0"/>
+            <legendlayerfile isInOverview="0" layerid="vs_ptos20160811125704076" visible="1"/>
           </filegroup>
         </legendlayer>
         <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="vs_asc" showFeatureCount="0">
@@ -1094,6 +1104,61 @@ def my_form_open(dialog, layer, feature):
             <maxValue>0.0983957334756851</maxValue>
             <algorithm>StretchToMinimumMaximum</algorithm>
           </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="100000" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.7694700000000001</xmin>
+        <ymin>43.46034000000000219</ymin>
+        <xmax>-3.76441999999999988</xmax>
+        <ymax>43.4653899999999993</ymax>
+      </extent>
+      <id>velocidad20160819140900792</id>
+      <datasource>./preparacion/porcion/velocidad.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>velocidad</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="0" classificationMax="0.20461" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="0.0150635" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="0.0151" label="0.0151" color="#fef0d9"/>
+              <item alpha="255" value="0.0625" label="0.0625" color="#fdcc8a"/>
+              <item alpha="255" value="0.11" label="0.11" color="#fc8d59"/>
+              <item alpha="255" value="0.157" label="0.157" color="#e34a33"/>
+              <item alpha="255" value="0.205" label="0.205" color="#b30000"/>
+            </colorrampshader>
+          </rastershader>
         </rasterrenderer>
         <brightnesscontrast brightness="0" contrast="0"/>
         <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>

@@ -122,6 +122,8 @@ class CampoVectorial {
         return !this.tieneValorEn(lon, lat);
     }
 
+
+
     /**
      * Crea / modifica la posición de 'o', con un valor aleatorio
      * dentro de la malla
@@ -165,7 +167,8 @@ class CampoVectorial {
                 let u = us[p],
                     v = vs[p];
                 let valido = (this._esValido(u) && this._esValido(v));
-                row[i] = (valido) ? [u, v] : null;
+                //row[i] = (valido) ? [u, v] : null;
+                row[i] = (valido) ? [u, v] : [null, null];
             }
             grid[j] = row;
         }

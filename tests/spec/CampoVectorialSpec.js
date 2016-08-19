@@ -122,37 +122,6 @@ describe("CampoVectorial", function () {
             expect(ptoCercaLR[1]).toBeCloseTo(-0.0152796721085906, 4);
         });
 
-        it("puede devolver el {Vector} en una Lon-Lat", function () {
-            let x0 = -3.76922975;
-            let y0 = 43.46063913;
-            let x1 = -3.76468416;
-            let y1 = 43.46518472;
-
-            // LL
-            var uv = cv.vectorEn(x0, y0);
-            expect(uv).toEqual(new Vector(0.00586759, -0.00329966));
-
-            // UR
-            uv = cv.vectorEn(x1, y1);
-            expect(uv).toEqual(new Vector(0.2150189, -0.00158082));
-
-            // out...
-            uv = cv.vectorEn(-360, -180);
-            expect(uv).toEqual(null);
-        });
-        /*
-                it("permite saber si hay valor de vector en una Lon-Lat", function () {
-
-                    let x0 = -3.76922975;
-                    let y0 = 43.46063913;
-                    expect(cv.tieneValorEn(x0, y0)).toBe(true);
-                    expect(cv.tieneValorEn(-360, -180)).toBe(false);
-
-                    //para grid // expect(cv.tieneValorEn(-3.819427007621642, 43.47742891281832)).toBe(false);
-                });
-
-
-                */
     });
 
 });

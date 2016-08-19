@@ -11,7 +11,7 @@
 - Se incluyen varios parámetros opcionales, para controlar el pintado de trayectorias
 - *CapaPuntos*, para dibujar el grid de base
 
-## v0.4
+## preparando v0.4...
 - *CapaVectorAnimado* con capacidad para usar como color de línea una escala de color chroma
 - *L.Control.LeyendaEscalaColor* un control de leyenda dinámico, con una barra de colores gradual
 

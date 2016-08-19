@@ -5,10 +5,10 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
         duracion: 40, // milisegundos - 'frame'
         edadMaxima: 1000,
         color: "white", // html-color o chromajs.scale
-        grosor: 1
+        grosor: 2
     };
 
-    //console.log(this.cv.rangoMagnitud());
+    console.log('Rangos corrientes', this.cv.rangoMagnitud());
 
     this.opciones = _.defaults(opciones, opcionesPorDefecto);
     this.timer = null;
