@@ -2,13 +2,16 @@
  *  Capa para crear una animación de un campo vectorial, usando el canvas
  */
 CapaVectorAnimado = function (campoVectorial, opciones = {}) {
+
+    // TODO Limpieza en la construcción | initialize
     this.cv = campoVectorial;
     let opcionesPorDefecto = {
         trayectorias: 2000,
         duracion: 40, // milisegundos - 'frame'
         edadMaxima: 1000,
         color: "white", // html-color o chromajs.scale
-        grosor: 2
+        grosor: 2,
+        click: true
     };
 
     // console.log('Rangos corrientes', this.cv.rangoMagnitud()); // ojo 'Maximum call stack size exceeded'
@@ -17,11 +20,39 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.timer = null;
     let self = this;
 
+
+
     this.onLayerDidMount = function () {
         // -- prepare custom drawing
         this._map.on('movestart', function (e) {
             if (self.timer) self.timer.stop();
         });
+
+        if (this.opciones.click) {
+            /*L.DomEvent.on(this._canvas, 'click', function (e) {
+            // obtención del punto 'contenedor-canvas'
+            console.log(e);
+            let point = null;
+            let latlon = this._map.containerPointToLatLng(point);
+
+            // consulta al origen de datos (campoVectorial)
+            let vector = this.cv.valorEn(latlon[1], latlon[0]);
+            console.log('Valor en vector: ', vector);
+        });
+*/
+            L.DomEvent.on(this._canvas, 'click', function (e) {
+                console.log(e);
+                /*console.log(e.clientX);
+                console.log(e.clientY);
+                console.log(e);*/
+                let point = e.getMousePosition();
+                let latlon = this._map.containerPointToLatLng(point);
+
+                // consulta al origen de datos (campoVectorial)
+                let vector = this.cv.valorEn(latlon[1], latlon[0]);
+                console.log('Valor en vector: ', vector);
+            })
+        }
     };
     this.onLayerWillUnmount = function () {
         // -- custom cleanup
@@ -138,4 +169,5 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
         return Math.round(Math.random() * this.opciones.edadMaxima);
     }
 }
+
 CapaVectorAnimado.prototype = new L.CanvasLayer();
