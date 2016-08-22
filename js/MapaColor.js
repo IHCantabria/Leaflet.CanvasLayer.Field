@@ -1,7 +1,6 @@
 /**
-    Clase para aplicar mapas de color, basado en chromajs
-    http://gka.github.io/chroma.js/
-*/
+ * Clase para aplicar mapas de color, basado en chromajs (http://gka.github.io/chroma.js/)
+ */
 class MapaColor {
     /**
      * Nuevo mapacolor
@@ -24,25 +23,19 @@ class MapaColor {
     static paraCorrientes(dominio = [0, 2]) {
         // Valores desde 0 a 2 m/s
         //let escala = chroma.scale(['#00008F', '#8C0000']).domain(dominio); // Tipo sst_36 azul--->rojo
-        let escala = chroma.scale('Reds').domain(dominio);
+        let escala = chroma.scale('OrRd').domain(dominio);
         //let escala = chroma.scale(['cyan', 'red']).domain(dominio);
         let mapa = new MapaColor(escala, dominio, 'm/s');
         return mapa;
     }
+
+    /*
+        Paletas ColorBrewer
+        - Sequential:
+        Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
+
+        - Diverging:
+        BrBG PiYG PRGn PuOr RdBu RdGy RdYlBu RdYlGn Spectral
+    */
+
 }
-
-/*
-    Paletas ColorBrewer
-    * Sequential:
-    Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
-
-    * Diverging:
-    BrBG PiYG PRGn PuOr RdBu RdGy RdYlBu RdYlGn Spectral
-
-
-*/
-
-/* ¿para leyendas?
-http://jsfiddle.net/ramnathv/g8stqcf6/
-http://jsfiddle.net/vis4/cYLZH/
-*/

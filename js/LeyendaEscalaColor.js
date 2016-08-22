@@ -1,3 +1,6 @@
+/**
+ *   Control para mostrar en pantalla una barra con el mapa de color aplicado
+ */
 L.Control.LeyendaEscalaColor = L.Control.extend({
     options: {
         position: 'bottomleft',
@@ -24,7 +27,7 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
 
     paleta: function () {
         // preparación de datos
-        let m = this.options.mapaColor;
+        let m = this.options.mapaColor; // <<<
         let min = m.dominio[0];
         let max = m.dominio[1];
         let incremento = (max - min) / (this.options.leyenda.pasos);
@@ -59,3 +62,9 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
         return d.innerHTML;
     }
 });
+
+/*
+    Referencias:
+    http://jsfiddle.net/ramnathv/g8stqcf6/
+    http://jsfiddle.net/vis4/cYLZH/
+*/

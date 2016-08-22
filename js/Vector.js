@@ -1,3 +1,6 @@
+/**
+ *  Clase simple para manejo de un vector (u | v)
+ */
 class Vector {
     constructor(u, v) {
         this.u = u;

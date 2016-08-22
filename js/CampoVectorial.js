@@ -1,4 +1,9 @@
-// orden de vectores, el del ASCIIGrid (left->right & top ->down)
+/**
+ *  Clase para el manejo de un 'Campo Vectorial', entendido como un conjunto de vectores
+ *  (con su lista de valores U y V) en una malla regular.
+ *
+ *  Nota: El orden de los datos vectoriales es el del ASCIIGrid (left->right & top ->down)
+ */
 class CampoVectorial {
     constructor(params) {
         this.ncols = params["ncols"];

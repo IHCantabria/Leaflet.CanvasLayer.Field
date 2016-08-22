@@ -14,7 +14,7 @@ L.tileLayer(url, {
 
 
 /* Capas animadas */
-d3.json("data/grid_ATL.json", function (d) {
+d3.json("data/grid_BAHIA.json", function (d) {
     let cv = CampoVectorial.desdeJson(d);
 
     // 0. Grid base

@@ -1,3 +1,6 @@
+/**
+ *  Capa para mostrar puntos de un color usando el canvas
+ */
 CapaPuntos = function (lonslats, color = "rgba(255, 255, 255, 1)") {
     this.lonslats = lonslats; // Array con puntos [lon, lat, xxxxx]
     this.color = color;
@@ -38,5 +41,4 @@ CapaPuntos = function (lonslats, color = "rgba(255, 255, 255, 1)") {
         }
     }
 }
-
 CapaPuntos.prototype = new L.CanvasLayer();

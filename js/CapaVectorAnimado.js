@@ -1,3 +1,6 @@
+/**
+ *  Capa para crear una animación de un campo vectorial, usando el canvas
+ */
 CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.cv = campoVectorial;
     let opcionesPorDefecto = {
@@ -135,5 +138,4 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
         return Math.round(Math.random() * this.opciones.edadMaxima);
     }
 }
-
 CapaVectorAnimado.prototype = new L.CanvasLayer();
