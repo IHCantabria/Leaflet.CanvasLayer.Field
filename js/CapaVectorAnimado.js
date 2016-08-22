@@ -1,14 +1,14 @@
 CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.cv = campoVectorial;
     let opcionesPorDefecto = {
-        trayectorias: 3000,
+        trayectorias: 2000,
         duracion: 40, // milisegundos - 'frame'
         edadMaxima: 1000,
         color: "white", // html-color o chromajs.scale
         grosor: 2
     };
 
-    console.log('Rangos corrientes', this.cv.rangoMagnitud());
+    // console.log('Rangos corrientes', this.cv.rangoMagnitud()); // ojo 'Maximum call stack size exceeded'
 
     this.opciones = _.defaults(opciones, opcionesPorDefecto);
     this.timer = null;

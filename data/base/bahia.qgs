@@ -5,17 +5,17 @@
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="porcion">
+    <layer-tree-group expanded="0" checked="Qt::PartiallyChecked" name="porcion">
       <customproperties/>
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="porcion20160808112142813" name="porcion">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="velocidad20160819140900792" name="velocidad">
+      <layer-tree-layer expanded="0" checked="Qt::Checked" id="velocidad20160819140900792" name="velocidad">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="us">
+      <layer-tree-group expanded="0" checked="Qt::Unchecked" name="us">
         <customproperties/>
-        <layer-tree-layer expanded="1" checked="Qt::Checked" id="us_ptos20160811125453473" name="us_ptos">
+        <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="us_ptos20160811125453473" name="us_ptos">
           <customproperties/>
         </layer-tree-layer>
         <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="us20160808122346478" name="us_asc">
@@ -25,12 +25,12 @@
           <customproperties/>
         </layer-tree-layer>
       </layer-tree-group>
-      <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="vs">
+      <layer-tree-group expanded="1" checked="Qt::Unchecked" name="vs">
         <customproperties/>
-        <layer-tree-layer expanded="1" checked="Qt::Checked" id="vs_ptos20160811125704076" name="vs_ptos">
+        <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="vs_ptos20160811125704076" name="vs_ptos">
           <customproperties/>
         </layer-tree-layer>
-        <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="vs20160808122451767" name="vs_asc">
+        <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="vs20160808122451767" name="vs_asc">
           <customproperties/>
         </layer-tree-layer>
         <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="porcionV20160808121520609" name="porcionV_tif">
@@ -40,6 +40,9 @@
     </layer-tree-group>
     <layer-tree-group expanded="0" checked="Qt::Unchecked" name="convertidoTIFF">
       <customproperties/>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="velocidad20160822110709311" name="velocidad">
+        <customproperties/>
+      </layer-tree-layer>
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="u20160808111919868" name="u">
         <customproperties/>
       </layer-tree-layer>
@@ -62,54 +65,43 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
+    <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="OpenLayers_plugin_layer20160822110903188" name="Bing Aerial">
+      <customproperties/>
+    </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="OpenStreetMap20160810110410561" name="OpenStreetMap">
       <customproperties/>
     </layer-tree-layer>
   </layer-tree-group>
   <relations/>
   <mapcanvas>
-    <units>degrees</units>
+    <units>meters</units>
     <extent>
-      <xmin>-3.77132780184608052</xmin>
-      <ymin>43.45683303831367539</ymin>
-      <xmax>-3.76104161788857816</xmax>
-      <ymax>43.46811982382347139</ymax>
+      <xmin>-420790.82766260072821751</xmin>
+      <ymin>5380882.48466110043227673</ymin>
+      <xmax>-418427.40394193032989278</xmax>
+      <ymax>5384137.12013162486255169</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
     <destinationsrs>
       <spatialrefsys>
-        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
-        <srsid>3452</srsid>
-        <srid>4326</srid>
-        <authid>EPSG:4326</authid>
-        <description>WGS 84</description>
-        <projectionacronym>longlat</projectionacronym>
+        <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs</proj4>
+        <srsid>3857</srsid>
+        <srid>3857</srid>
+        <authid>EPSG:3857</authid>
+        <description>WGS 84 / Pseudo Mercator</description>
+        <projectionacronym>merc</projectionacronym>
         <ellipsoidacronym>WGS84</ellipsoidacronym>
-        <geographicflag>true</geographicflag>
+        <geographicflag>false</geographicflag>
       </spatialrefsys>
     </destinationsrs>
     <rendermaptile>0</rendermaptile>
     <layer_coordinate_transform_info>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us_ptos20160811125453473"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs20160808122451767"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="u20160808111919868"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs_ptos20160811125704076"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us_completo20160810093231344"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_us20160811095857852"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125648911"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="velocidad20160819140900792"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_vs20160811125538024"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="us20160808122346478"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="vs_completo20160810093400348"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="puntos_us20160811125333387"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="porcion20160808112142813"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="porcionU20160808121451679"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="v20160808120713430"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="porcionV20160808121520609"/>
-      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20160810110410561"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="velocidad20160822110709311"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20160801081357998"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenLayers_plugin_layer20160822110903188"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="velocidad20160819140900792"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__vbar_current20160801081400019"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
@@ -129,24 +121,26 @@
       <item>us_ptos20160811125453473</item>
       <item>vs_ptos20160811125704076</item>
       <item>velocidad20160819140900792</item>
+      <item>velocidad20160822110709311</item>
+      <item>OpenLayers_plugin_layer20160822110903188</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendgroup open="true" checked="Qt::PartiallyChecked" name="porcion">
+    <legendgroup open="false" checked="Qt::PartiallyChecked" name="porcion">
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="porcion" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="porcion20160808112142813" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="velocidad" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="velocidad" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="velocidad20160819140900792" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendgroup open="true" checked="Qt::PartiallyChecked" name="us">
-        <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="us_ptos" showFeatureCount="0">
+      <legendgroup open="false" checked="Qt::Unchecked" name="us">
+        <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="us_ptos" showFeatureCount="0">
           <filegroup open="true" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="us_ptos20160811125453473" visible="1"/>
+            <legendlayerfile isInOverview="0" layerid="us_ptos20160811125453473" visible="0"/>
           </filegroup>
         </legendlayer>
         <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="us_asc" showFeatureCount="0">
@@ -160,14 +154,14 @@
           </filegroup>
         </legendlayer>
       </legendgroup>
-      <legendgroup open="true" checked="Qt::PartiallyChecked" name="vs">
-        <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="vs_ptos" showFeatureCount="0">
+      <legendgroup open="true" checked="Qt::Unchecked" name="vs">
+        <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="vs_ptos" showFeatureCount="0">
           <filegroup open="true" hidden="false">
-            <legendlayerfile isInOverview="0" layerid="vs_ptos20160811125704076" visible="1"/>
+            <legendlayerfile isInOverview="0" layerid="vs_ptos20160811125704076" visible="0"/>
           </filegroup>
         </legendlayer>
-        <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="vs_asc" showFeatureCount="0">
-          <filegroup open="false" hidden="false">
+        <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="vs_asc" showFeatureCount="0">
+          <filegroup open="true" hidden="false">
             <legendlayerfile isInOverview="0" layerid="vs20160808122451767" visible="0"/>
           </filegroup>
         </legendlayer>
@@ -179,6 +173,11 @@
       </legendgroup>
     </legendgroup>
     <legendgroup open="false" checked="Qt::Unchecked" name="convertidoTIFF">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="velocidad" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="velocidad20160822110709311" visible="0"/>
+        </filegroup>
+      </legendlayer>
       <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="u" showFeatureCount="0">
         <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="u20160808111919868" visible="0"/>
@@ -212,6 +211,11 @@
         </filegroup>
       </legendlayer>
     </legendgroup>
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Bing Aerial" showFeatureCount="0">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" layerid="OpenLayers_plugin_layer20160822110903188" visible="0"/>
+      </filegroup>
+    </legendlayer>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="OpenStreetMap" showFeatureCount="0">
       <filegroup open="true" hidden="false">
         <legendlayerfile isInOverview="0" layerid="OpenStreetMap20160810110410561" visible="0"/>
@@ -318,6 +322,35 @@
         <rasterresampler maxOversampling="2"/>
       </pipe>
       <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="plugin" hasScaleBasedVisibilityFlag="0" name="openlayers">
+      <extent>
+        <xmin>-20037508.33999999985098839</xmin>
+        <ymin>-20037508.33999999985098839</ymin>
+        <xmax>20037508.33999999985098839</xmax>
+        <ymax>20037508.33999999985098839</ymax>
+      </extent>
+      <id>OpenLayers_plugin_layer20160822110903188</id>
+      <datasource></datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>Bing Aerial</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs</proj4>
+          <srsid>3857</srsid>
+          <srid>3857</srid>
+          <authid>EPSG:3857</authid>
+          <description>WGS 84 / Pseudo Mercator</description>
+          <projectionacronym>merc</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="ol_layer_type" value="Bing Aerial"/>
+      </customproperties>
     </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
       <extent>
@@ -949,6 +982,12 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>-3.76921750039150005</xmin>
+        <ymin>43.4605944316105024</ymin>
+        <xmax>-3.76467191048649985</xmax>
+        <ymax>43.46514002151550216</ymax>
+      </extent>
       <id>us_ptos20160811125453473</id>
       <datasource>./preparacion/porcion/aai/us_ptos.geojson</datasource>
       <keywordList>
@@ -1168,6 +1207,65 @@ def my_form_open(dialog, layer, feature):
     </maplayer>
     <maplayer minimumScale="100000" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
       <extent>
+        <xmin>-3.84624999999999995</xmin>
+        <ymin>43.3785700000000034</ymin>
+        <xmax>-3.71645000000000003</xmax>
+        <ymax>43.52098999999999762</ymax>
+      </extent>
+      <id>velocidad20160822110709311</id>
+      <datasource>./preparacion/velocidad.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>velocidad</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="0" classificationMax="0.875564" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="0.00427626" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="0.00428" label="0.00428" color="#f7fbff"/>
+              <item alpha="255" value="0.118" label="0.118" color="#deebf7"/>
+              <item alpha="255" value="0.231" label="0.231" color="#c6dbef"/>
+              <item alpha="255" value="0.344" label="0.344" color="#9ecae1"/>
+              <item alpha="255" value="0.457" label="0.457" color="#6baed6"/>
+              <item alpha="255" value="0.571" label="0.571" color="#4292c6"/>
+              <item alpha="255" value="0.684" label="0.684" color="#2171b5"/>
+              <item alpha="255" value="0.788" label="0.788" color="#08519c"/>
+              <item alpha="255" value="0.876" label="0.876" color="#08306b"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="100000" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
         <xmin>-3.76947003316400009</xmin>
         <ymin>43.46034189883800281</ymin>
         <xmax>-3.76441937771400026</xmax>
@@ -1276,6 +1374,12 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
     </maplayer>
     <maplayer simplifyAlgorithm="0" minimumScale="100000" maximumScale="1e+08" simplifyDrawingHints="0" readOnly="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>-3.76921750039150005</xmin>
+        <ymin>43.4605944316105024</ymin>
+        <xmax>-3.76467191048649985</xmax>
+        <ymax>43.46514002151550216</ymax>
+      </extent>
       <id>vs_ptos20160811125704076</id>
       <datasource>./preparacion/porcion/aai/vs_ptos.geojson</datasource>
       <keywordList>
@@ -1511,6 +1615,7 @@ def my_form_open(dialog, layer, feature):
       <SingleCategoryDiagramRenderer diagramType="Histogram" sizeLegend="0" attributeLegend="1">
         <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" sizeScale="0,0,0,0,0,0" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" lineSizeScale="0,0,0,0,0,0" sizeType="MM" lineSizeType="MM" minScaleDenominator="100000">
           <fontProperties description="MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0" style=""/>
+          <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
         <symbol alpha="1" clip_to_extent="1" type="marker" name="sizeSymbol">
           <layer pass="0" class="SimpleMarker" locked="0">
