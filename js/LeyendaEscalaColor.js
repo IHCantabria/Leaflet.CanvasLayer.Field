@@ -37,7 +37,7 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
         });
 
         // div.contenedor > svg
-        let w = Math.floor(this.options.ancho / colorPorValor.length);
+        let w = this.options.ancho / colorPorValor.length;
         let d = document.createElement("div");
         let svg = d3.select(d).append("svg")
             .attr('width', this.options.ancho)

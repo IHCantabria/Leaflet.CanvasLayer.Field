@@ -1,7 +1,7 @@
 CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.cv = campoVectorial;
     let opcionesPorDefecto = {
-        trayectorias: 2000,
+        trayectorias: 3000,
         duracion: 40, // milisegundos - 'frame'
         edadMaxima: 1000,
         color: "white", // html-color o chromajs.scale
