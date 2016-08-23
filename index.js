@@ -41,7 +41,7 @@ d3.json("data/grid_BAHIA.json", function (d) {
     });
     //capa3.addTo(mapa);
 
-    // 4. Capa con color por velocidad y leyenda
+    // 4. Capa con color por velocidad y leyenda asociada
     var m = MapaColor.paraCorrientes([0, 1.1]);
     let capa4 = new L.CapaVectorAnimado(cv, {
         color: m.escala
@@ -49,16 +49,18 @@ d3.json("data/grid_BAHIA.json", function (d) {
     capa4.addTo(mapa);
 
     L.Control.leyendaEscalaColor(m).addTo(mapa);
-    //mapa.addControl(leyenda);
 
     // 5. Identificación con click
     capa4.on('click_vector', function (e) {
-        let html = `Velocity: ${e.vector.longitud()} @${e.latlng}`;
-        let popup = L.popup()
-            .setLatLng(e.latlng)
-            .setContent(html)
-            .openOn(mapa);
+        if (e.vector) {
+            let v = e.vector.longitud().toFixed(3);
+            //let html = (`Velocidad: ${v} m/s <br\> @${e.latlng}`);
+            let html = (`${v} m/s`);
+            let popup = L.popup()
+                .setLatLng(e.latlng)
+                .setContent(html)
+                .openOn(mapa);
+        }
+
     });
-
-
 });

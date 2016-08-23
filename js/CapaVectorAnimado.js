@@ -3,7 +3,7 @@
  */
 L.CapaVectorAnimado = L.CanvasLayer.extend({
     options: {
-        trayectorias: 2000,
+        trayectorias: 3000,
         duracion: 40, // milisegundos - 'frame'
         edadMaxima: 1000,
         color: "white", // html-color | chromajs.scale
@@ -22,6 +22,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
     onLayerDidMount: function () {
         this._map.on('movestart', this._detenerAnimacion, this);
         if (this.options.click) {
+            this._map.on('mouseover', this._activarCursorClick, this);
             this._map.on('click', this._consultarValor, this);
         }
     },
@@ -30,6 +31,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         // -- custom cleanup
         this._map.off('movestart', this._detenerAnimacion, this);
         if (this.options.click) {
+            this._map.off('mouseover', this._activarCursorClick, this);
             this._map.off('click', this._consultarValor, this);
         }
     },
@@ -146,16 +148,22 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         if (this.timer) this.timer.stop();
     },
 
+    _activarCursorClick: function () {
+        this._map.getContainer().style.cursor = 'default';
+    },
+
     _consultarValor: function (e) {
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
         let uv = this.cv.valorEn(lon, lat);
-        let vector = new Vector(uv[0], uv[1]);
+
         let resultado = {
             "latlng": e.latlng,
-            "vector": vector
+            "vector": null
         };
-        //console.log('Valor en vector: ', resultado);
+
+        if (uv !== null) resultado.vector = new Vector(uv[0], uv[1]);
+
         this.fireEvent('click_vector', resultado);
     }
 });
