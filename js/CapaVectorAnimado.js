@@ -6,9 +6,9 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         trayectorias: 2000,
         duracion: 40, // milisegundos - 'frame'
         edadMaxima: 1000,
-        color: "white", // html-color o chromajs.scale
+        color: "white", // html-color | chromajs.scale
         grosor: 2,
-        click: true
+        click: true // generar evento 'click_vector'
     },
 
     /*includes: L.Mixin.Events,*/
@@ -19,35 +19,19 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         this.timer = null;
     },
 
-
     onLayerDidMount: function () {
-        this._map.on('movestart', function (e) {
-            if (self.timer) self.timer.stop();
-        });
-
-        let self = this;
+        this._map.on('movestart', this._detenerAnimacion, this);
         if (this.options.click) {
-            this._map.on('click', function (e) {
-                let lon = e.latlng.lng;
-                let lat = e.latlng.lat;
-                let uv = self.cv.valorEn(lon, lat);
-                let vector = new Vector(uv[0], uv[1]);
-                let resultado = {
-                    "longitud": lon,
-                    "latitud": lat,
-                    "u": vector.u,
-                    "v": vector.v,
-                    "magnitud": vector.longitud(),
-                    "direccion": vector.anguloGrados()
-                };
-                //console.log('Valor en vector: ', resultado);
-                self.fireEvent('click_vector', resultado);
-            });
+            this._map.on('click', this._consultarValor, this);
         }
     },
 
     onLayerWillUnmount: function () {
         // -- custom cleanup
+        this._map.off('movestart', this._detenerAnimacion, this);
+        if (this.options.click) {
+            this._map.off('click', this._consultarValor, this);
+        }
     },
 
     setData: function (data) {
@@ -156,13 +140,26 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
 
     _edadAleatoria: function () {
         return Math.round(Math.random() * this.options.edadMaxima);
-    }
+    },
 
+    _detenerAnimacion: function () {
+        if (this.timer) this.timer.stop();
+    },
+
+    _consultarValor: function (e) {
+        let lon = e.latlng.lng;
+        let lat = e.latlng.lat;
+        let uv = this.cv.valorEn(lon, lat);
+        let vector = new Vector(uv[0], uv[1]);
+        let resultado = {
+            "latlng": e.latlng,
+            "vector": vector
+        };
+        //console.log('Valor en vector: ', resultado);
+        this.fireEvent('click_vector', resultado);
+    }
 });
 
-//CapaVectorAnimado.prototype = new L.CanvasLayer();
-/*
-capaVectorAnimado = function (campoVectorial, options) {
+L.capaVectorAnimado = function (campoVectorial, options) {
     return new L.CapaVectorAnimado(campoVectorial, options);
 }
-*/

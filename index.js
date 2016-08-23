@@ -53,7 +53,11 @@ d3.json("data/grid_BAHIA.json", function (d) {
 
     // 5. Identificación con click
     capa4.on('click_vector', function (e) {
-        console.log('has hecho click: ', e);
+        let html = `Velocity: ${e.vector.longitud()} @${e.latlng}`;
+        let popup = L.popup()
+            .setLatLng(e.latlng)
+            .setContent(html)
+            .openOn(mapa);
     });
 
 

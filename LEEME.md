@@ -12,8 +12,8 @@
 - *CapaPuntos*, para dibujar el grid de base
 
 ## preparando v0.4...
-- *CapaVectorAnimado* con capacidad para usar como color de línea una escala de color chroma
-- *L.Control.LeyendaEscalaColor* un control de leyenda dinámico, con una barra de colores gradual
+- *L.CapaVectorAnimado* con capacidad para usar como color de línea una escala de color chroma
+- *L.Control.LeyendaEscalaColor* un control de leyenda con una barra de colores
 
 ## Notas técnicas:
 - HTML5 & JS ECMAScript 2015 (ES6)
