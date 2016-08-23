@@ -1,5 +1,5 @@
 /**
- *   Control para mostrar en pantalla una barra con el mapa de color aplicado
+ *   Control para mostrar una barra con el mapa de color aplicado
  */
 L.Control.LeyendaEscalaColor = L.Control.extend({
     options: {
@@ -11,6 +11,11 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             pasos: 100,
             decimales: 2
         }
+    },
+
+    initialize: function (mapaColor, options) {
+        this.mapaColor = mapaColor; // función de escala 'chromajs'
+        L.Util.setOptions(this, options);
     },
 
     onAdd: function (map) {
@@ -27,7 +32,7 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
 
     paleta: function () {
         // preparación de datos
-        let m = this.options.mapaColor; // <<<
+        let m = this.mapaColor; // <<<
         let min = m.dominio[0];
         let max = m.dominio[1];
         let incremento = (max - min) / (this.options.leyenda.pasos);
@@ -57,11 +62,15 @@ L.Control.LeyendaEscalaColor = L.Control.extend({
             .attr('fill', (d) => d.color);
 
         cubos.append('title').text(
-            (d) => `${d.valor.toFixed(this.options.leyenda.decimales)} ${this.options.mapaColor.unidades}`
+            (d) => `${d.valor.toFixed(this.options.leyenda.decimales)} ${m.unidades}`
         );
         return d.innerHTML;
     }
 });
+
+L.Control.leyendaEscalaColor = function (mapaColor, options = {}) {
+    return new L.Control.LeyendaEscalaColor(mapaColor, options);
+};
 
 /*
     Referencias:
