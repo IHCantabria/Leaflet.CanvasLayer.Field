@@ -20,7 +20,7 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
     this.timer = null;
     let self = this;
 
-
+    /*includes: L.Mixin.Events,*/
 
     this.onLayerDidMount = function () {
         // -- prepare custom drawing
@@ -29,29 +29,25 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
         });
 
         if (this.opciones.click) {
-            /*L.DomEvent.on(this._canvas, 'click', function (e) {
-            // obtención del punto 'contenedor-canvas'
-            console.log(e);
-            let point = null;
-            let latlon = this._map.containerPointToLatLng(point);
+            this._map.on('click', function (e) {
+                let lon = e.latlng.lng;
+                let lat = e.latlng.lat;
+                let uv = self.cv.valorEn(lon, lat);
+                let vector = new Vector(uv[0], uv[1]);
+                let resultado = {
+                    "longitud": lon,
+                    "latitud": lat,
+                    "u": vector.u,
+                    "v": vector.v,
+                    "magnitud": vector.longitud(),
+                    "direccion": vector.anguloGrados()
+                };
+                //console.log('Valor en vector: ', resultado);
+                this.fireEvent('click_vector', resultado);
+            });
 
-            // consulta al origen de datos (campoVectorial)
-            let vector = this.cv.valorEn(latlon[1], latlon[0]);
-            console.log('Valor en vector: ', vector);
-        });
-*/
-            L.DomEvent.on(this._canvas, 'click', function (e) {
-                console.log(e);
-                /*console.log(e.clientX);
-                console.log(e.clientY);
-                console.log(e);*/
-                let point = e.getMousePosition();
-                let latlon = this._map.containerPointToLatLng(point);
-
-                // consulta al origen de datos (campoVectorial)
-                let vector = this.cv.valorEn(latlon[1], latlon[0]);
-                console.log('Valor en vector: ', vector);
-            })
+            /*            L.DomEvent.on(this._canvas, 'click', function (e) {
+                        })*/
         }
     };
     this.onLayerWillUnmount = function () {
@@ -171,3 +167,9 @@ CapaVectorAnimado = function (campoVectorial, opciones = {}) {
 }
 
 CapaVectorAnimado.prototype = new L.CanvasLayer();
+
+/*
+capaVectorAnimado = function (campoVectorial, options) {
+    return new CapaVectorAnimado(campoVectorial, options);
+};
+*/
