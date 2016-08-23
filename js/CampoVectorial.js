@@ -71,6 +71,9 @@ class CampoVectorial {
         return lonslats;
     }
 
+    limites(){
+        return [this.xllcorner, this.yllcorner, this.xurcorner, this.yurcorner];
+    }
 
     /**
      * Determina si unas coordenadas están dentro de la malla (se asume rectangular)

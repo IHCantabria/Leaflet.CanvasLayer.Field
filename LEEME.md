@@ -11,10 +11,12 @@
 - Se incluyen varios parámetros opcionales, para controlar el pintado de trayectorias
 - *CapaPuntos*, para dibujar el grid de base
 
-## v0.4...
+## v0.4
 - *L.CapaVectorAnimado* con capacidad para usar como color de línea una escala de color chroma
 - Evento 'click_vector', que permite identificar el vector en un punto
 - *L.Control.LeyendaEscalaColor* un control de leyenda con una barra de colores
+
+## para v0.5...
 
 ## Notas técnicas:
 - HTML5 & JS ECMAScript 2015 (ES6)

@@ -140,6 +140,11 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         }
     },
 
+    getBounds: function () {
+        throw Error('SIN IMPLEMENTAR') // TODO <<<< BREAK:
+        return this.cv.limites();
+    },
+
     _edadAleatoria: function () {
         return Math.round(Math.random() * this.options.edadMaxima);
     },

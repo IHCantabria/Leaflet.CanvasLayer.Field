@@ -14,7 +14,7 @@ L.tileLayer(url, {
 
 
 /* Capas animadas */
-d3.json("data/grid_BAHIA.json", function (d) {
+d3.json("data/grid_CANTABRIA.json", function (d) {
     let cv = CampoVectorial.desdeJson(d);
 
     // 0. Grid base
@@ -47,6 +47,7 @@ d3.json("data/grid_BAHIA.json", function (d) {
         color: m.escala
     });
     capa4.addTo(mapa);
+    //mapa.fitBounds(capa4.getBounds());
 
     L.Control.leyendaEscalaColor(m).addTo(mapa);
 
