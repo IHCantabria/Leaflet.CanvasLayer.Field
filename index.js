@@ -22,17 +22,17 @@ d3.json("data/grid_BAHIA.json", function (d) {
     //capaGrid.addTo(mapa);
 
     // 1. Básica
-    let capa = new CapaVectorAnimado(cv);
+    let capa = new L.CapaVectorAnimado(cv);
     //capa.addTo(mapa);
 
     // 2. Cambio de color
-    let capa2 = new CapaVectorAnimado(cv, {
+    let capa2 = new L.CapaVectorAnimado(cv, {
         color: "green"
     });
     //capa2.addTo(mapa);
 
     // 3. Más parámetros personalizados
-    let capa3 = new CapaVectorAnimado(cv, {
+    let capa3 = new L.CapaVectorAnimado(cv, {
         trayectorias: 150,
         duracion: 20,
         edadMaxima: 200,
@@ -43,7 +43,7 @@ d3.json("data/grid_BAHIA.json", function (d) {
 
     // 4. Capa con color por velocidad y leyenda
     var m = MapaColor.paraCorrientes([0, 1.1]);
-    let capa4 = new CapaVectorAnimado(cv, {
+    let capa4 = new L.CapaVectorAnimado(cv, {
         color: m.escala
     });
     capa4.addTo(mapa);
