@@ -11,8 +11,6 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         click: true // generar evento 'click_vector'
     },
 
-    /*includes: L.Mixin.Events,*/
-
     initialize: function (campoVectorial, options) {
         this.cv = campoVectorial;
         this.timer = null;
@@ -141,9 +139,11 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
     },
 
     getBounds: function () {
-        /*throw Error('SIN IMPLEMENTAR') // TODO <<<< BREAK:
-        return this.cv.limites();*/
-        return [];
+        let bb = this.cv.limites();
+        let southWest = L.latLng(bb[1], bb[0]),
+            northEast = L.latLng(bb[3], bb[2]);
+        let bounds = L.latLngBounds(southWest, northEast);
+        return bounds;
     },
 
     _edadAleatoria: function () {
@@ -170,7 +170,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
 
         if (uv !== null) resultado.vector = new Vector(uv[0], uv[1]);
 
-        this.fireEvent('click_vector', resultado);
+        this.fireEvent('click_vector', resultado); /*includes: L.Mixin.Events,*/
     }
 });
 

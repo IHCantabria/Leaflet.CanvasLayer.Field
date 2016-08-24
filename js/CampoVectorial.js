@@ -71,7 +71,11 @@ class CampoVectorial {
         return lonslats;
     }
 
-    limites(){
+    /**
+     * Encuadre de malla
+     * @returns {Array} [xmin, ymin, xmax, ymax]
+     */
+    limites() {
         return [this.xllcorner, this.yllcorner, this.xurcorner, this.yurcorner];
     }
 

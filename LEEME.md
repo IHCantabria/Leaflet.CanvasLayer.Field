@@ -16,8 +16,9 @@
 - Evento 'click_vector', que permite identificar el vector en un punto
 - *L.Control.LeyendaEscalaColor* un control de leyenda con una barra de colores
 
-## para v0.5...
+## v0.5
 - Registro tareas en Trello: https://trello.com/b/EY11B3wl/vector2anim
+- *L.CapaVectorAnimado* con getBounds
 
 ## Notas técnicas:
 - HTML5 & JS ECMAScript 2015 (ES6)
