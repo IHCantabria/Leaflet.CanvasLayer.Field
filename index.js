@@ -15,7 +15,7 @@ L.tileLayer(url, {
 
 /* Capas animadas */
 d3.json("data/grid_CANTABRIA.json", function (d) {
-    let cv = CampoVectorial.fromJson(d);
+    let cv = VectorField.fromJson(d);
 
     // 0. Grid base
     L.capaPuntos(cv.gridLonLatUV()); //.addTo(mapa);

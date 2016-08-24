@@ -45,6 +45,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
         // caracterìsticas de pintado de trayectorias que se desvanecen
+        // caracterìsticas de pintado de trayectorias que se desvanecen
         g.fillStyle = "rgba(0, 0, 0, 0.97)";
         g.lineWidth = this.options.grosor;
         g.strokeStyle = this.options.color;
@@ -53,7 +54,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
         let trayectorias = [];
 
         for (var i = 0; i < this.options.trayectorias; i++) {
-            let p = this.cv.posicionAleatoria();
+            let p = this.cv.randomPosition();
             p.edad = this._edadAleatoria();
             trayectorias.push(p)
         }
@@ -77,7 +78,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
                     self.cv.posicionAleatoria(par);
                 }
 
-                if (self.cv.noTieneValorEn(par.x, par.y)) {
+                if (self.cv.notHasValuesAt(par.x, par.y)) {
                     par.edad = self.options.edadMaxima;
                 } else {
                     // tiene vector...
