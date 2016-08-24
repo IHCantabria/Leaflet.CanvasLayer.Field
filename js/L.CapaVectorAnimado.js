@@ -86,7 +86,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
                     // ... y el siguiente punto sería
                     let xt = par.x + (vector.u * self.cv.dx);
                     let yt = par.y + (vector.v * self.cv.dy);
-                    let m = vector.longitud(); //magnitud en unidades de entrada (m/s?)
+                    let m = vector.magnitude(); //magnitud en unidades de entrada (m/s?)
 
                     if (self.cv.tieneValorEn(xt, yt)) {
                         par.xt = xt;
@@ -139,7 +139,7 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
     },
 
     getBounds: function () {
-        let bb = this.cv.limites();
+        let bb = this.cv.extent();
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);

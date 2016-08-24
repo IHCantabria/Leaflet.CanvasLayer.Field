@@ -15,10 +15,10 @@ L.tileLayer(url, {
 
 /* Capas animadas */
 d3.json("data/grid_CANTABRIA.json", function (d) {
-    let cv = CampoVectorial.desdeJson(d);
+    let cv = CampoVectorial.fromJson(d);
 
     // 0. Grid base
-    L.capaPuntos(cv.mallaLonLatUV()); //.addTo(mapa);
+    L.capaPuntos(cv.gridLonLatUV()); //.addTo(mapa);
 
     // 1. Básica
     L.capaVectorAnimado(cv); //.addTo(mapa);
@@ -49,7 +49,7 @@ d3.json("data/grid_CANTABRIA.json", function (d) {
     // 6. Identificación con click
     capa.on('click_vector', function (e) {
         if (e.vector) {
-            let v = e.vector.longitud().toFixed(3);
+            let v = e.vector.magnitude().toFixed(3);
             //let html = (`Velocidad: ${v} m/s <br\> @${e.latlng}`);
             let html = (`${v} m/s`);
             let popup = L.popup()

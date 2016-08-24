@@ -4,7 +4,7 @@ describe("CampoVectorial", function () {
     beforeEach(function (done) {
         // Porción de datos  IHCOAWST
         d3.json("../../data/porcion.json", function (d) {
-            cv = CampoVectorial.desdeJson(d);
+            cv = CampoVectorial.fromJson(d);
             done();
         });
     });
@@ -24,7 +24,7 @@ describe("CampoVectorial", function () {
             expect(cv.xurcorner).toBeCloseTo(xmax, 8);
             expect(cv.yurcorner).toBeCloseTo(ymax, 8);
 
-            expect(cv.numeroCeldas()).toEqual(100);
+            expect(cv.numCells()).toEqual(100);
         });
 
         it("tiene los datos organizados como malla (filas x columnas)", function () {
@@ -37,7 +37,7 @@ describe("CampoVectorial", function () {
         it("puede devolver una posición aleatoria dentro", function () {
             var pos = cv.posicionAleatoria();
             expect(pos).not.toBe(null);
-            expect(cv.contiene(pos.x, pos.y)).toBe(true);
+            expect(cv.contains(pos.x, pos.y)).toBe(true);
         });
 
         it("puede leer rango de magnitudes", function () {
@@ -85,7 +85,7 @@ describe("CampoVectorial", function () {
             expect(ultimo[1]).toBeCloseTo(43.460594431610502, 7);
 
 
-            // otro... 
+            // otro...
             var pto = cv.lonLatEnIndices(0, 8);
             expect(pto[0]).toBeCloseTo(-3.7692175001640003, 7);
             expect(pto[1]).toBeCloseTo(43.461099497838006, 7);

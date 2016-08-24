@@ -21,6 +21,11 @@
 - *L.CapaVectorAnimado* con getBounds
 - Refactoring y ajustes internos
 
+## en proceso de v0.6...
+
+
+
+
 ## Notas técnicas:
 - HTML5 & JS ECMAScript 2015 (ES6)
 - Libs vía CDN: 
