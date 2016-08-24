@@ -39,7 +39,7 @@ d3.json("data/grid_CANTABRIA.json", function (d) {
 
     // 4. Capa con color por velocidad y leyenda asociada
     var m = MapaColor.paraCorrientes([0, 1.1]);
-    let capa = new L.CapaVectorAnimado(cv, {
+    let capa = L.capaVectorAnimado(cv, {
         color: m.escala
     });
     capa.addTo(mapa);
@@ -58,6 +58,5 @@ d3.json("data/grid_CANTABRIA.json", function (d) {
                 .openOn(mapa);
         }
     });
-
     mapa.fitBounds(capa.getBounds());
 });
