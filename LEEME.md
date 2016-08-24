@@ -19,6 +19,7 @@
 ## v0.5
 - Registro tareas en Trello: https://trello.com/b/EY11B3wl/vector2anim
 - *L.CapaVectorAnimado* con getBounds
+- Refactoring y ajustes internos
 
 ## Notas técnicas:
 - HTML5 & JS ECMAScript 2015 (ES6)
