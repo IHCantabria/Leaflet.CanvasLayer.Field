@@ -1,28 +1,36 @@
 /**
  *  Capa para mostrar puntos de un color usando el canvas
  */
-CapaPuntos = function (lonslats, color = "rgba(255, 255, 255, 1)") {
-    this.lonslats = lonslats; // Array con puntos [lon, lat, xxxxx]
-    this.color = color;
+L.CapaPuntos = L.CanvasLayer.extend({
+    options: {
+        color: "gray", // html-color | chromajs.scale
+        /*grosor: 2,
+        click: true // generar evento 'click_vector'*/
+    },
 
-    this.onLayerDidMount = function () {
+    initialize: function (lonslats, options) {
+        this.lonslats = lonslats;
+        L.Util.setOptions(this, options);
+    },
+
+    onLayerDidMount: function () {
         // -- prepare custom drawing
-    };
-    this.onLayerWillUnmount = function () {
-        // -- custom cleanup
-    };
+    },
 
-    this.setData = function (data) {
+    onLayerWillUnmount: function () {
+        // -- custom cleanup
+    },
+
+    setData: function (data) {
         // -- custom data set
         this.needRedraw(); // -- call to drawLayer
-    };
+    },
 
-    this.onDrawLayer = function (viewInfo) {
+    onDrawLayer: function (viewInfo) {
         // preparación del canvas
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-        //g.strokeStyle = this.color; // html color code
-        g.fillStyle = this.color; // "rgba(255, 255, 255, 1)";
+        g.fillStyle = this.options.color;
 
         let ptos = this.lonslats;
 
@@ -40,5 +48,8 @@ CapaPuntos = function (lonslats, color = "rgba(255, 255, 255, 1)") {
             g.stroke();
         }
     }
+});
+
+L.capaPuntos = function (lonslats, options) {
+    return new L.CapaPuntos(lonslats, options);
 }
-CapaPuntos.prototype = new L.CanvasLayer();

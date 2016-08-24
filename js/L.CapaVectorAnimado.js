@@ -141,8 +141,9 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
     },
 
     getBounds: function () {
-        throw Error('SIN IMPLEMENTAR') // TODO <<<< BREAK:
-        return this.cv.limites();
+        /*throw Error('SIN IMPLEMENTAR') // TODO <<<< BREAK:
+        return this.cv.limites();*/
+        return [];
     },
 
     _edadAleatoria: function () {
