@@ -15,8 +15,8 @@ L.CapaVectorAnimado = L.CanvasLayer.extend({
 
     initialize: function (campoVectorial, options) {
         this.cv = campoVectorial;
-        L.Util.setOptions(this, options);
         this.timer = null;
+        L.Util.setOptions(this, options);
     },
 
     onLayerDidMount: function () {
