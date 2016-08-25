@@ -73,7 +73,7 @@ class VectorField {
 
     /**
      * Grid extent
-     * @returns {Array} [xmin, ymin, xmax, ymax]
+     * @returns {Number[]} [xmin, ymin, xmax, ymax]
      */
     extent() {
         return [this.xllcorner, this.yllcorner, this.xurcorner, this.yurcorner];
@@ -107,7 +107,7 @@ class VectorField {
      * Interpolated vector values at lon-lat coordinates
      * @param   {Number} lon - longitude
      * @param   {Number} lat - latitude
-     * @returns {Array} [u, v, magnitude]
+     * @returns {Number[]} [u, v, magnitude]
      */
     valuesAt(lon, lat) {
         if (this.notContains(lon, lat)) return null;
@@ -149,7 +149,7 @@ class VectorField {
 
     /**
      * Magnitude range
-     * @returns {Array} [min, max]
+     * @returns {Number[]} [min, max]
      */
     magnitudeRange() {
         let vectors = this.gridLonLatUV().map(pt => new Vector(pt[2], pt[3]));
@@ -191,7 +191,7 @@ class VectorField {
      * Vector values for grid indexes
      * @param   {Number} i - column index (integer)
      * @param   {Number} j - row index (integer)
-     * @returns {Array} [u, v]
+     * @returns {Number[]} [u, v]
      */
     _vector(i, j) {
         return this.grid[j][i]; // <-- j,i !!
@@ -201,7 +201,7 @@ class VectorField {
      * Lon-Lat for grid indexes
      * @param   {Number} i - column index (integer)
      * @param   {Number} j - row index (integer)
-     * @returns {Array} [lon, lat]
+     * @returns {Number[]} [lon, lat]
      */
     lonLatAtIndexes(i, j) {
         let lon = this._longitudeAtX(i);
@@ -235,7 +235,7 @@ class VectorField {
      * @private
      * @param {Number} lon - longitude
      * @param {Number} lat - latitude
-     * @returns {Array}  [u, v, magnitude]
+     * @returns {Number[]}  [u, v, magnitude]
      *
      * Source: https://github.com/cambecc/earth > product.js
      */
@@ -294,7 +294,7 @@ class VectorField {
      * @param   {Number[]} g10
      * @param   {Number[]} g01
      * @param   {Number[]} g11
-     * @returns {Array}    [u, v, magnitude]
+     * @returns {Number[]}    [u, v, magnitude]
      */
     _bilinearInterpolateVector(x, y, g00, g10, g01, g11) {
         var rx = (1 - x);
