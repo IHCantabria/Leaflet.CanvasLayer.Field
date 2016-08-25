@@ -3,10 +3,12 @@ describe("Vector", function () {
     beforeEach(function () {
         vector = new Vector(0.0, 0.1);
     });
+
     it("returns u & v values", function () {
         expect(vector.u).toEqual(0.0);
         expect(vector.v).toEqual(0.1);
     });
+
     it("calculates its magnitude", function () {
         expect(vector.magnitude()).toEqual(0.1);
 
@@ -15,9 +17,11 @@ describe("Vector", function () {
         expect(v.magnitude()).toBeCloseTo(0.215025, 6);
 
     });
+
     it("calculates its direction (radians)", function () {
         expect(vector.direction()).toBeCloseTo(1.57, 2);
     });
+
     it("calculates its direction (degrees)", function () {
         expect(vector.directionDeg()).toEqual(90.0);
     });
