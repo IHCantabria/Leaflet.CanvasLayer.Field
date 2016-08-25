@@ -1,5 +1,5 @@
 /**
- *  2D Vector (u | v)
+ *  2D Vector
  */
 class Vector {
     /**
@@ -7,7 +7,6 @@ class Vector {
      * @param {Number} v
      */
     constructor(u, v) {
-        this.u = u;
         this.u = u;
         this.v = v;
     }
