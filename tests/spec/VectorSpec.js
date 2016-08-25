@@ -15,7 +15,6 @@ describe("Vector", function () {
         // upper-right corner @ test.json
         let v = new Vector(0.215018898248672, -0.00158081843983382);
         expect(v.magnitude()).toBeCloseTo(0.215025, 6);
-
     });
 
     it("calculates its direction (radians)", function () {
