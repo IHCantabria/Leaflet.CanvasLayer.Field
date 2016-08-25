@@ -1,7 +1,7 @@
 /**
- *  A set of vectors assigned to regular 2D-grid (lon-lat)
+ *  A set of vectors assigned to a regular 2D-grid (lon-lat)
  *
- *  U & V values follow row-major order, as in ASCIIGrid (left->right & top ->down)
+ *  U & V values follow row-major order (left->right & top ->down)
  */
 class VectorField {
     constructor(params) {
@@ -52,8 +52,8 @@ class VectorField {
     }
 
     /**
-     * A list with every point in the grid, including [lon, lat, u, v]
-     * @returns {Array.<Number[]>} - grid values
+     * A list with every point in the grid, including coordinates and vector values
+     * @returns {Array.<Number[]>} - grid values [lon, lat, u, v]
      */
     gridLonLatUV() {
         let lonslatsUV = [];
@@ -104,10 +104,10 @@ class VectorField {
 
 
     /**
-     * Vector values at lon-lat coordinates (interpolated)
+     * Interpolated vector values at lon-lat coordinates
      * @param   {Number} lon - longitude
      * @param   {Number} lat - latitude
-     * @returns {Array} [u, v]
+     * @returns {Array} [u, v, magnitude]
      */
     valuesAt(lon, lat) {
         if (this.notContains(lon, lat)) return null;
@@ -134,9 +134,10 @@ class VectorField {
         return !this.hasValuesAt(lon, lat);
     }
 
-
     /**
-     * Gives random position to 'o', inside the grid
+     * Gives a random position to 'o' inside the grid
+     * @param {Object} [o] - an object (eg. a particle)
+     * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
      */
     randomPosition(o = {}) {
         let i = _.random(0, this.ncols - 1);
@@ -153,6 +154,7 @@ class VectorField {
     magnitudeRange() {
         let vectors = this.gridLonLatUV().map(pt => new Vector(pt[2], pt[3]));
         let magnitudes = vectors.map(v => v.magnitude());
+        // TODO memory crash!
         let min = Math.min(...magnitudes);
         let max = Math.max(...magnitudes);
 
@@ -165,7 +167,7 @@ class VectorField {
      * @private
      * @param   {Number[]} us - u values
      * @param   {Number[]} vs - v values
-     * @returns {Number[][][]} - grid[j][i] (rows/columns) with [u,v] values
+     * @returns {Array.<Array.<Number[]>>} - grid[row][column][u, v]
      */
     _buildGrid(us, vs) {
         let grid = [];
@@ -178,8 +180,7 @@ class VectorField {
                 let u = us[p],
                     v = vs[p];
                 let valid = (this._isValid(u) && this._isValid(v));
-                //row[i] = (valid) ? [u, v] : null;
-                row[i] = (valid) ? [u, v] : [null, null];
+                row[i] = (valid) ? [u, v] : [null, null]; // vs : null
             }
             grid[j] = row;
         }
@@ -193,11 +194,11 @@ class VectorField {
      * @returns {Array} [u, v]
      */
     _vector(i, j) {
-        return this.grid[j][i]; // <-- j,i !
+        return this.grid[j][i]; // <-- j,i !!
     }
 
     /**
-     * Lon-Lat fo grid indexes
+     * Lon-Lat for grid indexes
      * @param   {Number} i - column index (integer)
      * @param   {Number} j - row index (integer)
      * @returns {Array} [lon, lat]
@@ -212,7 +213,7 @@ class VectorField {
     /**
      * Longitude for grid-index
      * @param   {Number} i - column index (integer)
-     * @returns {Number} longitude at cell center
+     * @returns {Number} longitude at the center of the cell
      */
     _longitudeAtX(i) {
         let halfPixel = this.dx / 2.0;
@@ -222,7 +223,7 @@ class VectorField {
     /**
      * Latitude for grid-index
      * @param   {Number} j - row index (integer)
-     * @returns {Number} latitude at cell center
+     * @returns {Number} latitude at the center of the cell
      */
     _latitudeAtY(j) {
         let halfPixel = this.dy / 2.0;
@@ -287,12 +288,12 @@ class VectorField {
     /**
      * Bilinear interpolation
      * https://en.wikipedia.org/wiki/Bilinear_interpolation
-     * @param   {[[Type]]} x   [[Description]]
-     * @param   {[[Type]]} y   [[Description]]
-     * @param   {[[Type]]} g00 [[Description]]
-     * @param   {[[Type]]} g10 [[Description]]
-     * @param   {[[Type]]} g01 [[Description]]
-     * @param   {[[Type]]} g11 [[Description]]
+     * @param   {Number} x
+     * @param   {Number} y
+     * @param   {Number[]} g00
+     * @param   {Number[]} g10
+     * @param   {Number[]} g01
+     * @param   {Number[]} g11
      * @returns {Array}    [u, v, magnitude]
      */
     _bilinearInterpolateVector(x, y, g00, g10, g01, g11) {
