@@ -7,8 +7,8 @@
 - Pintado ágil de capa estática de 'puntos_bahia.csv' sobre el CANVAS, en su totalidad (aprox. 20.000 ptos)
 
 ## v0.3
-- *CapaVectorAnimado*, para el pintado de trayectorias "fluidas" sobre el canvas
-- Se incluyen varios parámetros opcionales, para controlar el pintado de trayectorias
+- *CapaVectorAnimado*, para el pintado de paths "fluidas" sobre el canvas
+- Se incluyen varios parámetros opcionales, para controlar el pintado de paths
 - *CapaPuntos*, para dibujar el grid de base
 
 ## v0.4

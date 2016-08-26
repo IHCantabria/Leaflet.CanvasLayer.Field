@@ -9,7 +9,7 @@ describe("ColorMap", function () {
             expect(m.units).not.toBe(null);
         });
 
-        it("has a default chroma function", function () {
+        it("has a default chromajs function", function () {
             let m = ColorMap.forCurrents();
 
             let f = m.scale;

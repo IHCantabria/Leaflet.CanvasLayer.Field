@@ -1,9 +1,9 @@
 /**
- *  Capa para mostrar puntos de un color usando el canvas
+ *  Simple lon-lat points layer with a color
  */
-L.CapaPuntos = L.CanvasLayer.extend({
+L.CanvasLayer.SimplePoints = L.CanvasLayer.extend({
     options: {
-        color: "gray", // html-color | chromajs.scale
+        color: "gray", // TODO: html-color | chromajs.scale
         /*grosor: 2,
         click: true // generar evento 'click_vector'*/
     },
@@ -27,13 +27,12 @@ L.CapaPuntos = L.CanvasLayer.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        // preparación del canvas
+        // canvas preparation
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
         g.fillStyle = this.options.color;
 
         let ptos = this.lonslats;
-
         for (var i = 0; i < ptos.length; i++) {
             let lonlat = ptos[i];
             let x = lonlat[0];
@@ -41,8 +40,8 @@ L.CapaPuntos = L.CanvasLayer.extend({
 
             let p = viewInfo.layer._map.latLngToContainerPoint([y, x]);
             g.beginPath();
-            //g.arc(p.x, p.y, 0.01, 0, Math.PI * 2); // circulo
-            g.fillRect(p.x, p.y, 1, 1); // punto
+            //g.arc(p.x, p.y, 0.01, 0, Math.PI * 2); // circle
+            g.fillRect(p.x, p.y, 1, 1); // point
             g.fill();
             g.closePath();
             g.stroke();
@@ -50,6 +49,6 @@ L.CapaPuntos = L.CanvasLayer.extend({
     }
 });
 
-L.capaPuntos = function (lonslats, options) {
-    return new L.CapaPuntos(lonslats, options);
+L.CanvasLayer.simplePoints = function (lonslats, options) {
+    return new L.CanvasLayer.SimplePoints(lonslats, options);
 }
