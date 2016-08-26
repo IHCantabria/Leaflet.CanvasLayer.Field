@@ -10,7 +10,7 @@ describe("VectorField", function () {
 
     describe("Grid", function () {
 
-        it("gives general info about their cells and extent", function () {
+        it("gives general info about its cells and extent", function () {
             expect(vf.ncols).toEqual(10);
             expect(vf.nrows).toEqual(10);
 
