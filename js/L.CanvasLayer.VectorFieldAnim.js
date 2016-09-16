@@ -81,14 +81,13 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                     par.age = self.options.maxAge;
                 } else {
                     // has a vector...
-                    let uv = self.vf.valuesAt(par.x, par.y);
-                    let vector = new Vector(uv[0], uv[1]);
+                    let vector = self.vf.valueAt(par.x, par.y);
                     // ... and the next point will be...
-                    let xt = par.x + (vector.u * self.vf.dx);
-                    let yt = par.y + (vector.v * self.vf.dy);
+                    let xt = par.x + (vector.u * self.vf.cellsize);
+                    let yt = par.y + (vector.v * self.vf.cellsize);
                     let m = vector.magnitude();
 
-                    if (self.vf.hasValuesAt(xt, yt)) {
+                    if (self.vf.hasValueAt(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
                         par.m = m;
@@ -161,14 +160,10 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
     _queryValue: function (e) {
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
-        let uv = this.vf.valuesAt(lon, lat);
-
         let result = {
             "latlng": e.latlng,
-            "vector": null
+            "vector": this.vf.valueAt(lon, lat)
         };
-
-        if (uv !== null) result.vector = new Vector(uv[0], uv[1]);
 
         this.fireEvent('click_vector', result); /*includes: L.Mixin.Events,*/
     }

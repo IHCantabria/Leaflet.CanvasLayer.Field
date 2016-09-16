@@ -22,8 +22,7 @@
 - Refactoring y ajustes internos
 
 ## en proceso de v0.6...
-
-
+- Refactoring de VectorField --> Field, para permitir después ScalarField
 
 
 ## Notas técnicas:

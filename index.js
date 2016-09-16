@@ -15,10 +15,10 @@ d3.json("data/grid_CANTABRIA.json", function (d) {
     let vf = VectorField.fromJson(d);
 
     // 0. Grid base
-    // L.CanvasLayer.simplePoints(vf.gridLonLatUV()).addTo(map);
+    //L.CanvasLayer.simplePoints(vf.gridLonLatValue()).addTo(map);
 
     // 1. Basic animation
-    // L.CanvasLayer.vectorFieldAnim(vf).addTo(map);
+    //L.CanvasLayer.vectorFieldAnim(vf).addTo(map);
 
     // 2. Color
     /*L.CanvasLayer.vectorFieldAnim(vf, {
@@ -55,5 +55,6 @@ d3.json("data/grid_CANTABRIA.json", function (d) {
                 .openOn(map);
         }
     });
+
     map.fitBounds(layer.getBounds());
 });
