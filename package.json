@@ -1,0 +1,26 @@
+{
+  "name": "leaflet-canvaslayer-vectorfield",
+  "version": "1.0.0",
+  "description": "An animated layer representing a vector field (wind, currents...) + some complements",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://VictorVelarde:IY6EX7Bc@bitbucket.org/VictorVelarde/vector2anim.git"
+  },
+  "keywords": [
+    "leaflet",
+    "vectorField",
+    "winds",
+    "currents",
+    "animation"
+  ],
+  "author": "Víctor Velarde Gutiérrez",
+  "license": "GPL-3.0",
+  "homepage": "https://bitbucket.org/VictorVelarde/vector2anim#readme"
+}
