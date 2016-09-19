@@ -1,9 +1,9 @@
 # L.CanvasLayer.VectorFieldAnim
 
 ## Description
-An animated layer representing a vector field, such as wind or ocean currents, based on [earth](https://github.com/cambecc/earth) by Cameron Becarrio and [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) by Sumbera.
+An animated layer representing a vector field, such as wind or ocean currents, based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio and [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera.
 
-![Example](https://url-to-image.png "Example")
+![Example](https://url-to-image.gif "Example")
 
 
 ## Requirements

@@ -27,12 +27,12 @@ d3.json("data/grid_CANTABRIA.json", function (d) {
 
     // 3. More parameters
     /*L.CanvasLayer.vectorFieldAnim(vf, {
-        paths: 150,
-        duration: 10,
-        maxAge: 200,
+        paths: 50,
         color: "#FF6699",
-        width: 8
-    }).addTo(map);*/
+        width: 8,
+        fade: "0.99",
+    }).addTo(map);
+    */
 
     // 4. Colormap for velocity (and associated legend)
     var m = ColorMap.forCurrents([0, 1.1]);

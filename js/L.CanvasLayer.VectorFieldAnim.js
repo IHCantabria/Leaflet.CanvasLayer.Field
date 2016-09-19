@@ -3,12 +3,13 @@
  */
 L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
     options: {
-        paths: 3000,
-        duration: 40, // milliseconds per 'frame'
-        maxAge: 1000,
+        paths: 1000,
         color: "white", // html-color | chromajs.scale
         width: 2,
-        click: true // 'click_vector' event
+        fade: "0.97", // 0 to 1
+        click: true, // 'click_vector' event
+        duration: 40, // milliseconds per 'frame'
+        maxAge: 50
     },
 
     initialize: function (vectorField, options) {
@@ -45,7 +46,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
         // fading paths...
-        g.fillStyle = "rgba(0, 0, 0, 0.97)";
+        g.fillStyle = `rgba(125, 255, 0, ${this.options.fade})`;
         g.lineWidth = this.options.width;
         g.strokeStyle = this.options.color;
 
