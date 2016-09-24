@@ -1,41 +1,23 @@
 /**
  *  A set of vectors assigned to a regular 2D-grid (lon-lat)
- *
- *  U & V values follow row-major order (left->right & top ->down)
+ *  (e.g. a raster representing winds for a region)
  */
 class VectorField extends Field {
-    /**
-     * TODO - Review... parse / etc.
-     * Constructor from .json file
-     * @param   {Object} d - data from a vectorgrid.json file
-     * @returns {VectorField}
-     */
-    static fromJson(d) {
-        let params = {
-            "ncols": d.ncols,
-            "nrows": d.nrows,
-            "xllcorner": d.xllcorner,
-            "yllcorner": d.yllcorner,
-            "cellsize": d.cellsize,
-            "us": d.us,
-            "vs": d.vs
-        };
 
-        let vf = new VectorField(params);
-        return vf;
+    constructor(params) {
+        super(params);
+        this.grid = this._buildGrid(params["us"], params["vs"]);
     }
 
     /**
-     * Builds a grid with a Vector at each point
-     * It assumes 'us' and 'vs' in params, following
-     * x-ascending & y-descending order (same as in ASCIIGrid)
+     * Builds a grid with a Vector at each point, from two arrays
+     * ('us' and 'vs'), following x-ascending & y-descending order
+     * (same as in ASCIIGrid)
      * @private
      * @param   {Object} params - with u & v values
      * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
      */
-    _buildGrid(params) {
-        let us = params["us"];
-        let vs = params["vs"];
+    _buildGrid(us, vs) {
         let grid = [];
         let p = 0;
 
@@ -130,7 +112,6 @@ class VectorField extends Field {
         var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
         return new Vector(u, v);
     }
-
 
     /**
      * TODO Check memory fail!

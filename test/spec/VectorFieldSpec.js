@@ -1,9 +1,10 @@
 describe("VectorField", function () {
     var vf;
+
     beforeEach(function (done) {
         // Test data from IH-COAWST
         d3.json("../../data/test.json", function (d) {
-            vf = VectorField.fromJson(d);
+            vf = new VectorField(d);
             done();
         });
     });

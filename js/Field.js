@@ -1,6 +1,5 @@
 /**
- *  Abstract class for a set of values (Vector | Scalar) assigned to a regular 2D-grid (lon-lat)
- *  U & V values follow row-major order (left->right & top ->down)
+ *  Abstract class for a set of values (Vector | Scalar) assigned to a regular 2D-grid (lon-lat), aka "a Raster layer"
  */
 class Field {
     constructor(params) {
@@ -20,8 +19,6 @@ class Field {
         this.yurcorner = params["yllcorner"] + params["nrows"] * params["cellsize"];
 
         this.cellsize = params["cellsize"];
-
-        this.grid = this._buildGrid(params); // <<
     }
 
     /**
@@ -138,6 +135,8 @@ class Field {
         o.y = this._latitudeAtY(j);
         return o;
     }
+
+
 
 
     /**

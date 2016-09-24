@@ -1,5 +1,6 @@
 describe("Vector", function () {
     var vector;
+
     beforeEach(function () {
         vector = new Vector(0.0, 0.1);
     });
@@ -24,4 +25,5 @@ describe("Vector", function () {
     it("calculates its direction (degrees)", function () {
         expect(vector.directionDeg()).toEqual(90.0);
     });
+
 });
