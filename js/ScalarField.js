@@ -5,7 +5,9 @@ class ScalarField extends Field {
 
     constructor(params) {
         super(params);
-        this.grid = this._buildGrid(params["zs"]);
+
+        this.zs = params["zs"];
+        this.grid = this._buildGrid();
     }
 
     /**
@@ -13,17 +15,16 @@ class ScalarField extends Field {
      * 'zs' following x-ascending & y-descending order
      * (same as in ASCIIGrid)
      * @private
-     * @param   {Array.Number} zs - z values
      * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
      */
-    _buildGrid(zs) {
+    _buildGrid() {
         let grid = [];
         let p = 0;
 
         for (var j = 0; j < this.nrows; j++) {
             var row = [];
             for (var i = 0; i < this.ncols; i++, p++) {
-                let z = zs[p];
+                let z = this.zs[p];
                 row[i] = (this._isValid(z)) ? z : null; // <<<
             }
             grid[j] = row;
@@ -31,10 +32,10 @@ class ScalarField extends Field {
         return grid;
     }
 
-
     /**
-     * [[Description]]
-     * @param {[[Type]]} asc [[Description]]
+     * Creates a ScalarField from the content of an ASCIIGrid file
+     * @param   {String}   asc
+     * @returns {ScalarField}
      */
     static fromASCIIGrid(asc) {
         let lines = asc.split('\n');
@@ -83,4 +84,5 @@ class ScalarField extends Field {
         var ry = (1 - y);
         return g00 * rx * ry + g10 * x * ry + g01 * rx * y + g11 * x * y;
     }
+
 }

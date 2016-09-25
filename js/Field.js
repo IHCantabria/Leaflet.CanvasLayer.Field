@@ -21,18 +21,19 @@ class Field {
         this.yurcorner = params["yllcorner"] + params["nrows"] * params["cellsize"];
 
         this.cellsize = params["cellsize"];
+
+        this.grid = null; // to be defined by subclasses
     }
 
     /**
      * Builds a grid with a value at each point (either Vector or Number)
-     * Params must include the required input values, following
+     * Original params must include the required input values, following
      * x-ascending & y-descending order (same as in ASCIIGrid)
      * @abstract
      * @private
-     * @param   {Object} params - with u & v values
      * @returns {Array.<Array.<Vector|Number>>} - grid[row][column]--> Vector|Number
      */
-    _buildGrid(params) {
+    _buildGrid() {
         throw new TypeError("Must be overriden");
     }
 

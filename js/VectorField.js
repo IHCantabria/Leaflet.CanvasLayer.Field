@@ -6,27 +6,27 @@ class VectorField extends Field {
 
     constructor(params) {
         super(params);
-        this.grid = this._buildGrid(params["us"], params["vs"]);
+
+        this.us = params["us"];
+        this.vs = params["vs"];
+        this.grid = this._buildGrid();
     }
 
     /**
      * Builds a grid with a Vector at each point, from two arrays
      * 'us' and 'vs' following x-ascending & y-descending order
      * (same as in ASCIIGrid)
-     * @private
-     * @param   {Array.Number}           us - values for u component
-     * @param   {Array.Number}           vs - values for v component
      * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
      */
-    _buildGrid(us, vs) {
+    _buildGrid() {
         let grid = [];
         let p = 0;
 
         for (var j = 0; j < this.nrows; j++) {
             var row = [];
             for (var i = 0; i < this.ncols; i++, p++) {
-                let u = us[p],
-                    v = vs[p];
+                let u = this.us[p],
+                    v = this.vs[p];
                 let valid = (this._isValid(u) && this._isValid(v));
                 row[i] = (valid) ? new Vector(u, v) : null; // <<<
             }
@@ -34,6 +34,31 @@ class VectorField extends Field {
         }
         return grid;
     }
+
+    /**
+     * Creates a VectorField from the content of two ASCIIGrid files
+     * @param   {String} ascU - with u-component
+     * @param   {String} ascV - with v-component
+     * @returns {VectorField}
+     */
+    static fromASCIIGrid(ascU, ascV) {
+        let u = ScalarField.fromASCIIGrid(ascU);
+        let v = ScalarField.fromASCIIGrid(ascV);
+
+        // TODO - check equal parameters for u|v
+
+        let p = {
+            ncols: u.ncols,
+            nrows: u.nrows,
+            xllcorner: u.xllcorner,
+            yllcorner: u.yllcorner,
+            cellsize: u.cellsize,
+            us: u.zs,
+            vs: v.zs
+        };
+        return new VectorField(p);
+    }
+
 
     /**
      * Bilinear interpolation for Vector

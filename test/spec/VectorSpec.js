@@ -1,4 +1,5 @@
 describe("Vector", function () {
+
     var vector;
 
     beforeEach(function () {
