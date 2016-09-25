@@ -7,7 +7,7 @@ describe("ScalarField", function () {
         });
     });
 
-    it("can be createad from ASCIIGrid text", function () {
+    it("can be created from ASCIIGrid text", function () {
         let g = ScalarField.fromASCIIGrid(asc);
         expect(g).not.toBe(null);
 
