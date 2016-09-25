@@ -5,32 +5,42 @@ class ScalarField extends Field {
 
     constructor(params) {
         super(params);
-        this.grid = this._buildGrid(params["z"]);
+        this.grid = this._buildGrid(params["zs"]);
     }
+
+    /**
+     * Builds a grid with a Number at each point, from an array
+     * 'zs' following x-ascending & y-descending order
+     * (same as in ASCIIGrid)
+     * @private
+     * @param   {Array.Number} zs - z values
+     * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
+     */
+    _buildGrid(zs) {
+        let grid = [];
+        let p = 0;
+
+        for (var j = 0; j < this.nrows; j++) {
+            var row = [];
+            for (var i = 0; i < this.ncols; i++, p++) {
+                let z = zs[p];
+                row[i] = (this._isValid(z)) ? z : null; // <<<
+            }
+            grid[j] = row;
+        }
+        return grid;
+    }
+
 
     /**
      * [[Description]]
      * @param {[[Type]]} asc [[Description]]
      */
     static fromASCIIGrid(asc) {
-        //throw Error('Not implemented');
-
-        // Header
-        /*
-        ncols        10
-        nrows        10
-        xllcorner    -3.769470033164
-        yllcorner    43.460341898838
-        cellsize     0.000505065545
-        NODATA_value  9.969209968386869e+036
-        */
-
         let lines = asc.split('\n');
 
         // Header
         let n = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/; // any number
-        let NODATA_value = lines[5].replace('NODATA_value', '').trim();
-
         let p = {
             ncols: parseInt(lines[0].match(n)),
             nrows: parseInt(lines[1].match(n)),
@@ -38,6 +48,7 @@ class ScalarField extends Field {
             yllcorner: parseFloat(lines[3].match(n)),
             cellsize: parseFloat(lines[4].match(n))
         };
+        let NODATA_value = lines[5].replace('NODATA_value', '').trim();
 
         // Data (left-right and top-down)
         let zs = []; //
@@ -46,16 +57,30 @@ class ScalarField extends Field {
             if (line === '') break;
 
             let items = line.split(' ');
-            let values = items.map(s => {
-                return (s !== NODATA_value) ? parseFloat(s) : null;
+            let values = items.map(it => {
+                return (it !== NODATA_value) ? parseFloat(it) : null;
             });
-
-            zs.push(...values); // es6
+            zs.push(...values);
         }
         p.zs = zs;
 
-        throw Error('Still implementing...');
+        return new ScalarField(p);
+    }
 
-        //return new ScalarField(p);
+    /**
+     * Bilinear interpolation for Number
+     * https://en.wikipedia.org/wiki/Bilinear_interpolation
+     * @param   {Number} x
+     * @param   {Number} y
+     * @param   {Number} g00
+     * @param   {Number} g10
+     * @param   {Number} g01
+     * @param   {Number} g11
+     * @returns {Number}
+     */
+    _doInterpolation(x, y, g00, g10, g01, g11) {
+        var rx = (1 - x);
+        var ry = (1 - y);
+        return g00 * rx * ry + g10 * x * ry + g01 * rx * y + g11 * x * y;
     }
 }
