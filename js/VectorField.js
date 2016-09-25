@@ -41,7 +41,7 @@ class VectorField extends Field {
      * @param   {String} ascV - with v-component
      * @returns {VectorField}
      */
-    static fromASCIIGrid(ascU, ascV) {
+    static fromASCIIGrids(ascU, ascV) {
         let u = ScalarField.fromASCIIGrid(ascU);
         let v = ScalarField.fromASCIIGrid(ascV);
 
@@ -58,7 +58,6 @@ class VectorField extends Field {
         };
         return new VectorField(p);
     }
-
 
     /**
      * Bilinear interpolation for Vector

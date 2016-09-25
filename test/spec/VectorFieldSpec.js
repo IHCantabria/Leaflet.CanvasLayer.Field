@@ -9,18 +9,28 @@ describe("VectorField", function () {
         });
     });
 
-    it("can be created from two ASCIIGrid files", function () {
-        d3.text("../../data/porcion-us.asc", function (ascU) {
-            d3.text("../../data/porcion-vs.asc", function (ascV) {
-                let v = VectorField.fromASCIIGrids(ascU, ascV);
-                expect(v).not.toBe(null);
-                expect(v.ncols).toEqual(10);
-                expect(v.nrows).toEqual(10);
-                expect(v.xllcorner).toEqual(-3.769470033164);
-                expect(v.yllcorner).toEqual(43.460341898838);
-                expect(v.cellsize).toEqual(0.000505065545);
-                expect(v.grid).not.toBe(null);
+    describe("ASCIIGrid", function () {
+        let ascU, ascV;
+
+        beforeEach(function (filesLoaded) {
+            d3.text("../../data/porcion-us.asc", function (u) {
+                d3.text("../../data/porcion-vs.asc", function (v) {
+                    ascU = u;
+                    ascV = v;
+                    filesLoaded();
+                });
             });
+        });
+
+        it("can be created from two ASCIIGrid files", function () {
+            let v = VectorField.fromASCIIGrids(ascU, ascV);
+            expect(v).not.toBe(null);
+            expect(v.ncols).toEqual(10);
+            expect(v.nrows).toEqual(10);
+            expect(v.xllcorner).toEqual(-3.769470033164);
+            expect(v.yllcorner).toEqual(43.460341898838);
+            expect(v.cellsize).toEqual(0.000505065545);
+            expect(v.grid).not.toBe(null);
         });
     });
 
