@@ -8,7 +8,7 @@ An animated layer representing a vector field, such as wind or ocean currents, b
 
 ## Requirements
 ### Leaflet version
-Tested on v1.x
+Tested on v1.0.0
 
 ### Dependencies
 - CDN

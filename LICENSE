@@ -1,3 +1,4 @@
+
 This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -10,3 +11,10 @@ This program is free software: you can redistribute it and/or modify
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+---
+
+This software uses:
+* gLayers.Leaflet [https://github.com/Sumbera/gLayers.Leaflet] - MIT License
+* chroma.js [https://github.com/gka/chroma.js] - See https://github.com/gka/chroma.js/blob/master/LICENSE
+

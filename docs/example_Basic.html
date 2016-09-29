@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Example - Basic</title>
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="examples.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>
+
+    <!-- CDN -->
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
+
+    <!-- Local -->
+    <script src="../lib/L.CanvasLayer.js"></script>
+    <script src="../lib/underscore-min.js"></script>
+    <script src="../lib/chroma.min.js"></script>
+
+    <!-- Plugin -->
+    <script src="../src/Vector.js"></script>
+    <script src="../src/Field.js"></script>
+    <script src="../src/VectorField.js"></script>
+    <script src="../src/ColorMap.js"></script>
+
+    <script src="../src/L.Control.ColorMapLegend.js"></script>
+    <script src="../src/L.CanvasLayer.VectorFieldAnim.js"></script>
+    <script src="../src/L.CanvasLayer.SimplePoints.js"></script>
+
+    <script>
+        "use strict";
+
+        const map = L.map("map");
+        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        L.tileLayer(url, {
+            attribution: 'OSM & Carto',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        /*
+            Default vectorfield animation, from json data
+        */
+        d3.json("data/grid_CANTABRIA.json", function (d) {
+            let vf = new VectorField(d);
+            let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+            map.fitBounds(layer.getBounds());
+        });
+    </script>
+</body>
+
+</html>
