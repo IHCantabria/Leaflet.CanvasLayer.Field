@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Example - Basic</title>
+    <title>Example - Grid points</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -12,7 +12,8 @@
 <body>
     <div id="map"></div>
 
-    <h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>
+    <!--<h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>-->
+    <h1 id="title">Grid points</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -43,12 +44,12 @@
         }).addTo(map);
 
         /*
-            Default vectorfield animation, from json data
+            Simple points layer with the vectorfield grid
         */
-        d3.json("data/grid_CANTABRIA.json", function (d) {
+        d3.json("data/grid_BAHIA.json", function (d) {
             let vf = new VectorField(d);
 
-            let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+            let layer = L.canvasLayer.simplePoints(vf.gridLonLatValue()).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });

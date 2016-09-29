@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>Example - Basic</title>
+    <!-- Title -->
+    <title>Example - Colomap</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -43,12 +44,16 @@
         }).addTo(map);
 
         /*
-            Default vectorfield animation, from json data
+            Vectorfield animation with a colormap for velocity + and associated legend
         */
         d3.json("data/grid_CANTABRIA.json", function (d) {
             let vf = new VectorField(d);
 
-            let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+            var m = ColorMap.forCurrents([0, 1.4]);
+            let layer = L.canvasLayer.vectorFieldAnim(vf, {
+                color: m.scale
+            }).addTo(map);
+            L.control.colorMapLegend(m).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });

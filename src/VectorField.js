@@ -88,7 +88,7 @@ class VectorField extends Field {
      * @returns {Number[]} [min, max]
      */
     magnitudeRange() {
-        let vectors = this.gridLonLatValue().map(pt => pt[2]);
+        let vectors = this.gridLonLatValue().map(pt => pt.value); //TODO Fix
         let magnitudes = vectors.map(v => v.magnitude());
         // TODO memory crash!
         let min = Math.min(...magnitudes);

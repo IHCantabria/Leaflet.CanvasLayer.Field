@@ -7,7 +7,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         color: "white", // html-color | chromajs.scale
         width: 2,
         fade: "0.96", // 0 to 1
-        click: false, // 'click_vector' event
+        click: true, // 'click_vector' event
         duration: 40, // milliseconds per 'frame'
         maxAge: 50
     },

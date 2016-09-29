@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>Example - Basic</title>
+    <!-- Title -->
+    <title>Example - Options</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -43,12 +44,23 @@
         }).addTo(map);
 
         /*
-            Default vectorfield animation, from json data
+            Vectorfield animations with custom parameters
         */
         d3.json("data/grid_CANTABRIA.json", function (d) {
             let vf = new VectorField(d);
 
-            let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+            let layer = L.canvasLayer.vectorFieldAnim(vf, {
+                paths: 10,
+                color: "cyan"
+            }).addTo(map);
+            L.canvasLayer.vectorFieldAnim(vf, {
+                paths: 200,
+                color: "#FF6699",
+                width: 6,
+                fade: "0.85",
+                duration: 500,
+                maxAge: 250
+            }).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });

@@ -47,7 +47,7 @@ class Field {
 
     /**
      * A list with every point in the grid, including coordinates and associated value
-     * @returns {Array} - grid values [lon, lat, value]
+     * @returns {Array} - grid values {lon, lat, value}
      */
     gridLonLatValue() {
         let lonslatsV = [];
@@ -56,7 +56,11 @@ class Field {
         for (var j = 0; j < this.nrows; j++) {
             for (var i = 0; i < this.ncols; i++) {
                 let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar)
-                lonslatsV.push([lon, lat, v]); // <<
+                lonslatsV.push({
+                    "lon": lon,
+                    "lat": lat,
+                    "value": v
+                }); // <<
                 lon += this.cellsize;
             }
             lat += this.cellsize;

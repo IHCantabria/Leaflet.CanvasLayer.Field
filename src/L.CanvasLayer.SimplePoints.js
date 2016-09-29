@@ -46,6 +46,21 @@ L.CanvasLayer.SimplePoints = L.CanvasLayer.extend({
             g.closePath();
             g.stroke();
         }
+    },
+
+    getBounds: function () {
+        let xs = this.lonslats.map(pt => pt.lon);
+        let ys = this.lonslats.map(pt => pt.lat);
+
+        let xmin = Math.min(...xs);
+        let ymin = Math.min(...ys);
+        let xmax = Math.max(...xs);
+        let ymax = Math.max(...ys);
+
+        let southWest = L.latLng(xmin, ymin),
+            northEast = L.latLng(xmax, ymax);
+        let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR
+        return bounds;
     }
 });
 

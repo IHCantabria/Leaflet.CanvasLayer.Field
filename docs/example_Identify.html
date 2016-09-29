@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>Example - Basic</title>
+    <!-- Title -->
+    <title>Example - Identify</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -43,12 +44,23 @@
         }).addTo(map);
 
         /*
-            Default vectorfield animation, from json data
+            Identify example
         */
         d3.json("data/grid_CANTABRIA.json", function (d) {
             let vf = new VectorField(d);
 
             let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+            layer.on('click_vector', function (e) {
+                if (e.vector) {
+                    let v = e.vector.magnitude().toFixed(3);
+                    let d = e.vector.directionDeg().toFixed(0);
+                    let html = (`${v} m/s ${d}º`);
+                    let popup = L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(html)
+                        .openOn(map);
+                }
+            });
 
             map.fitBounds(layer.getBounds());
         });
