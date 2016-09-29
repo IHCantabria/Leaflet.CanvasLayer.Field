@@ -71,6 +71,6 @@ L.Control.ColorMapLegend = L.Control.extend({
     }
 });
 
-L.Control.colorMapLegend = function (colorMap, options) {
+L.control.colorMapLegend = function (colorMap, options) {
     return new L.Control.ColorMapLegend(colorMap, options);
 };

@@ -49,6 +49,6 @@ L.CanvasLayer.SimplePoints = L.CanvasLayer.extend({
     }
 });
 
-L.CanvasLayer.simplePoints = function (lonslats, options) {
+L.canvasLayer.simplePoints = function (lonslats, options) {
     return new L.CanvasLayer.SimplePoints(lonslats, options);
 }

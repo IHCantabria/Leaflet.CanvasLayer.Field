@@ -170,6 +170,6 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
     }
 });
 
-L.CanvasLayer.vectorFieldAnim = function (vectorField, options) {
+L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
     return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
 }
