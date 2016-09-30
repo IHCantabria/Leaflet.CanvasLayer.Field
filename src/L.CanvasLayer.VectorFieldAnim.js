@@ -9,7 +9,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         fade: "0.96", // 0 to 1
         click: true, // 'click_vector' event
         duration: 40, // milliseconds per 'frame'
-        maxAge: 100
+        maxAge: 50, // number of maximum frames per path
+        velocityScale: 1 / 1000
     },
 
     initialize: function (vectorField, options) {
@@ -86,9 +87,13 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                     // ... and the next point will be...
                     let rate = (self.options.duration / 1000);
 
-                    /* OK */
+                    /* OK
                     let xt = par.x + (vector.u * self.vf.cellsize);
                     let yt = par.y + (vector.v * self.vf.cellsize);
+                    */
+
+                    let xt = par.x + (vector.u * self.options.velocityScale);
+                    let yt = par.y + (vector.v * self.options.velocityScale);
 
                     /*
                     let xt = par.x + (vector.u * rate);
