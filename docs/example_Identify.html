@@ -13,7 +13,7 @@
 <body>
     <div id="map"></div>
 
-    <h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>
+    <h1 id="title">Query vector at position</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -49,7 +49,9 @@
         d3.json("data/grid_CANTABRIA.json", function (d) {
             let vf = new VectorField(d);
 
-            let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+            let layer = L.canvasLayer.vectorFieldAnim(vf, {
+                color: 'yellow'
+            }).addTo(map);
             layer.on('click_vector', function (e) {
                 if (e.vector) {
                     let v = e.vector.magnitude().toFixed(3);

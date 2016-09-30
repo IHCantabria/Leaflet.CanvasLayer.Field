@@ -13,7 +13,7 @@
 <body>
     <div id="map"></div>
 
-    <h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>
+    <h1 id="title">VectorField animation with custom styles</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -46,17 +46,17 @@
         /*
             Vectorfield animations with custom parameters
         */
-        d3.json("data/grid_CANTABRIA.json", function (d) {
+        d3.json("data/grid_ATL.json", function (d) {
             let vf = new VectorField(d);
 
             let layer = L.canvasLayer.vectorFieldAnim(vf, {
-                paths: 10,
+                paths: 100,
                 color: "cyan"
             }).addTo(map);
             L.canvasLayer.vectorFieldAnim(vf, {
-                paths: 200,
+                paths: 5000,
                 color: "#FF6699",
-                width: 6,
+                width: 3,
                 fade: "0.85",
                 duration: 500,
                 maxAge: 250
