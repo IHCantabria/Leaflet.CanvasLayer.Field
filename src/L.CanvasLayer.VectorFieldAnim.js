@@ -84,14 +84,21 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                     // has a vector...
                     let vector = self.vf.valueAt(par.x, par.y);
                     // ... and the next point will be...
+                    let rate = (self.options.duration / 1000);
+
+                    /* OK */
                     let xt = par.x + (vector.u * self.vf.cellsize);
                     let yt = par.y + (vector.v * self.vf.cellsize);
-                    let m = vector.magnitude();
+
+                    /*
+                    let xt = par.x + (vector.u * rate);
+                    let yt = par.y + (vector.v * rate);
+                    */
 
                     if (self.vf.hasValueAt(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
-                        par.m = m;
+                        par.m = vector.magnitude();
                     } else {
                         // not visible... keep moving?
                         par.age = self.options.maxAge; // ??
