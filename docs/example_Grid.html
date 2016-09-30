@@ -13,7 +13,7 @@
     <div id="map"></div>
 
     <!--<h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>-->
-    <h1 id="title">Grid points</h1>
+    <h1 id="title">Grid of points from the VectorField</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -30,9 +30,9 @@
     <script src="../src/VectorField.js"></script>
     <script src="../src/ColorMap.js"></script>
 
-    <script src="../src/L.Control.ColorMapLegend.js"></script>
+    <script src="../src/L.Control.ColorBar.js"></script>
     <script src="../src/L.CanvasLayer.VectorFieldAnim.js"></script>
-    <script src="../src/L.CanvasLayer.SimplePoints.js"></script>
+    <script src="../src/L.CanvasLayer.SimpleLonLat.js"></script>
 
     <script>
         let map = L.map("map");
@@ -49,7 +49,9 @@
         d3.json("data/grid_BAHIA.json", function (d) {
             let vf = new VectorField(d);
 
-            let layer = L.canvasLayer.simplePoints(vf.gridLonLatValue()).addTo(map);
+            let layer = L.canvasLayer.simpleLonLat(vf.gridLonLatValue(), {
+                color: 'red'
+            }).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });

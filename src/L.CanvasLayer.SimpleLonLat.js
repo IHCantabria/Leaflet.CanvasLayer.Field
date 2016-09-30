@@ -1,11 +1,9 @@
 /**
- *  Simple lon-lat points layer with a color
+ *  Simple layer with lon-lat points
  */
-L.CanvasLayer.SimplePoints = L.CanvasLayer.extend({
+L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
     options: {
-        color: "gray", // TODO: html-color | chromajs.scale
-        /*grosor: 2,
-        click: true // generar evento 'click_vector'*/
+        color: "gray"
     },
 
     initialize: function (lonslats, options) {
@@ -35,13 +33,10 @@ L.CanvasLayer.SimplePoints = L.CanvasLayer.extend({
         let ptos = this.lonslats;
         for (var i = 0; i < ptos.length; i++) {
             let lonlat = ptos[i];
-            let x = lonlat[0];
-            let y = lonlat[1];
-
-            let p = viewInfo.layer._map.latLngToContainerPoint([y, x]);
+            let p = viewInfo.layer._map.latLngToContainerPoint([lonlat.lat, lonlat.lon]);
             g.beginPath();
-            //g.arc(p.x, p.y, 0.01, 0, Math.PI * 2); // circle
-            g.fillRect(p.x, p.y, 1, 1); // point
+            //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
+            g.fillRect(p.x, p.y, 2, 2); //simple point
             g.fill();
             g.closePath();
             g.stroke();
@@ -57,13 +52,13 @@ L.CanvasLayer.SimplePoints = L.CanvasLayer.extend({
         let xmax = Math.max(...xs);
         let ymax = Math.max(...ys);
 
-        let southWest = L.latLng(xmin, ymin),
-            northEast = L.latLng(xmax, ymax);
+        let southWest = L.latLng(ymin, xmin),
+            northEast = L.latLng(ymax, xmax);
         let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR
         return bounds;
     }
 });
 
-L.canvasLayer.simplePoints = function (lonslats, options) {
-    return new L.CanvasLayer.SimplePoints(lonslats, options);
+L.canvasLayer.simpleLonLat = function (lonslats, options) {
+    return new L.CanvasLayer.SimpleLonLat(lonslats, options);
 }

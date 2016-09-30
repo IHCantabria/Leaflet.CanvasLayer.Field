@@ -1,10 +1,10 @@
 /**
- *   Control for a simple legend with a colored bar
+ *   Control for a simple legend with a colorbar
  *   References:
  *      - http://jsfiddle.net/ramnathv/g8stqcf6/
  *      - http://jsfiddle.net/vis4/cYLZH/
  */
-L.Control.ColorMapLegend = L.Control.extend({
+L.Control.ColorBar = L.Control.extend({
     options: {
         position: 'bottomleft',
         width: 300,
@@ -71,6 +71,6 @@ L.Control.ColorMapLegend = L.Control.extend({
     }
 });
 
-L.control.colorMapLegend = function (colorMap, options) {
-    return new L.Control.ColorMapLegend(colorMap, options);
+L.control.colorBar = function (colorMap, options) {
+    return new L.Control.ColorBar(colorMap, options);
 };

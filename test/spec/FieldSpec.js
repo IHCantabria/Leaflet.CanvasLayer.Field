@@ -1,9 +1,10 @@
 describe("Field", function () {
-    var vf;
+    let dataFolder = "../../docs/data";
+    let vf;
 
     beforeEach(function (done) {
         // Test data from IH-COAWST
-        d3.json("../../data/testUV.json", function (d) {
+        d3.json(`${dataFolder}/testUV.json`, function (d) {
             vf = new VectorField(d);
             done();
         });
@@ -27,18 +28,18 @@ describe("Field", function () {
     });
 
     it("is a regular grid with ncols & nrows", function () {
-        var i = vf.grid.length;
-        var j = vf.grid[0].length;
+        let i = vf.grid.length;
+        let j = vf.grid[0].length;
         expect(i).toBe(vf.nrows);
         expect(j).toBe(vf.ncols);
     });
 
     it("can generate a random position inside", function () {
-        var pos = vf.randomPosition();
+        let pos = vf.randomPosition();
         expect(pos).not.toBe(null);
         expect(vf.contains(pos.x, pos.y)).toBe(true);
 
-        var pos2 = vf.randomPosition();
+        let pos2 = vf.randomPosition();
         expect(pos2).not.toBe(pos);
     });
 
@@ -58,16 +59,16 @@ describe("Field", function () {
         expect(yminCenter).toBeCloseTo(43.460594431610502, 6);
 
         //
-        var first = vf._lonLatAtIndexes(0, 0);
+        let first = vf._lonLatAtIndexes(0, 0);
         expect(first[0]).toBeCloseTo(-3.7692175003915001, 7);
         expect(first[1]).toBeCloseTo(43.465140021515502, 7);
 
-        var last = vf._lonLatAtIndexes(9, 9);
+        let last = vf._lonLatAtIndexes(9, 9);
         expect(last[0]).toBeCloseTo(-3.7646719104865003, 7);
         expect(last[1]).toBeCloseTo(43.460594431610502, 7);
 
         //
-        var p = vf._lonLatAtIndexes(0, 8);
+        let p = vf._lonLatAtIndexes(0, 8);
         expect(p[0]).toBeCloseTo(-3.7692175001640003, 7);
         expect(p[1]).toBeCloseTo(43.461099497838006, 7);
     });

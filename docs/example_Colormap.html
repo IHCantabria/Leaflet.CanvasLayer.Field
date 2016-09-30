@@ -13,7 +13,7 @@
 <body>
     <div id="map"></div>
 
-    <h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>
+    <h1 id="title">Colormap for currents velocity + colorbar</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -30,9 +30,9 @@
     <script src="../src/VectorField.js"></script>
     <script src="../src/ColorMap.js"></script>
 
-    <script src="../src/L.Control.ColorMapLegend.js"></script>
+    <script src="../src/L.Control.ColorBar.js"></script>
     <script src="../src/L.CanvasLayer.VectorFieldAnim.js"></script>
-    <script src="../src/L.CanvasLayer.SimplePoints.js"></script>
+    <script src="../src/L.CanvasLayer.SimpleLonLat.js"></script>
 
     <script>
         let map = L.map("map");
@@ -49,11 +49,11 @@
         d3.json("data/grid_CANTABRIA.json", function (d) {
             let vf = new VectorField(d);
 
-            var m = ColorMap.forCurrents([0, 1.4]);
+            let m = ColorMap.forCurrents([0, 1.4]);
             let layer = L.canvasLayer.vectorFieldAnim(vf, {
                 color: m.scale
             }).addTo(map);
-            L.control.colorMapLegend(m).addTo(map);
+            L.control.colorBar(m).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });
