@@ -9,7 +9,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         fade: "0.96", // 0 to 1
         click: true, // 'click_vector' event
         duration: 40, // milliseconds per 'frame'
-        maxAge: 50
+        maxAge: 100
     },
 
     initialize: function (vectorField, options) {
