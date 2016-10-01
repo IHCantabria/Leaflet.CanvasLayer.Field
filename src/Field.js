@@ -137,8 +137,11 @@ class Field {
      * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
      */
     randomPosition(o = {}) {
-        let i = _.random(0, this.ncols - 1);
-        let j = _.random(0, this.nrows - 1);
+        //let i = _.random(0, this.ncols - 1);
+        let i = Math.random() * this.ncols | 0;
+        // let j = _.random(0, this.nrows - 1);
+        let j = Math.random() * this.nrows | 0;
+
         o.x = this._longitudeAtX(i);
         o.y = this._latitudeAtY(j);
         return o;

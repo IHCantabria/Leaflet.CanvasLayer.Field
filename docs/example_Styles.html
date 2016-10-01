@@ -46,24 +46,26 @@
         /*
             Vectorfield animations with custom parameters
         */
-        d3.json("data/grid_ATL.json", function (d) {
+        d3.json("data/grid_ATL.json", function(d) {
             let vf = new VectorField(d);
 
             let layer = L.canvasLayer.vectorFieldAnim(vf, {
                 paths: 100,
-                color: "cyan"
+                color: "cyan",
+                velocityScale: 1 / 10
             }).addTo(map);
             L.canvasLayer.vectorFieldAnim(vf, {
-                paths: 5000,
+                paths: 2000,
                 color: "#FF6699",
-                width: 3,
-                fade: "0.85",
-                duration: 500,
-                maxAge: 250
+                width: 4,
+                fade: 0.92,
+                maxAge: 150,
+                velocityScale: 1 / 5
             }).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });
+
     </script>
 </body>
 

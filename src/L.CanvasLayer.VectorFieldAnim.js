@@ -3,13 +3,13 @@
  */
 L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
     options: {
-        paths: 500,
+        paths: 1000,
         color: "white", // html-color | chromajs.scale
         width: 2,
         fade: "0.96", // 0 to 1
         click: true, // 'click_vector' event
         duration: 40, // milliseconds per 'frame'
-        maxAge: 50, // number of maximum frames per path
+        maxAge: 200, // number of maximum frames per path
         velocityScale: 1 / 1000
     },
 
