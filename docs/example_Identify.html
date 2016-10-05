@@ -55,9 +55,9 @@
             }).addTo(map);
             layer.on('click_vector', function (e) {
                 if (e.vector) {
-                    let v = e.vector.magnitude().toFixed(3);
+                    let v = e.vector.magnitude().toFixed(2);
                     let d = e.vector.directionTo().toFixed(0);
-                    let html = (`${v} m/s (${d}º)`);
+                    let html = (`${v} m/s (${d}&deg)`);
                     let popup = L.popup()
                         .setLatLng(e.latlng)
                         .setContent(html)
