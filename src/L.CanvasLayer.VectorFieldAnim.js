@@ -5,7 +5,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
     options: {
         paths: 1000,
         color: "white", // html-color | chromajs.scale
-        width: 2,
+        width: 2, // path-width
         fade: "0.96", // 0 to 1
         click: true, // 'click_vector' event
         duration: 40, // milliseconds per 'frame'

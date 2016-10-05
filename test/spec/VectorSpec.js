@@ -15,24 +15,29 @@ describe("Vector", function () {
         expect(v.magnitude()).toBeCloseTo(0.215025, 6);
     });
 
-    it("calculates its direction (radians)", function () {
-        let vector = new Vector(0.0, 0.1);
-        expect(vector.direction()).toBeCloseTo(1.57, 2);
+    it("calculates its directionTo / directionFrom", function () {
+        expect(new Vector(0, 1).directionTo()).toEqual(0);
+        expect(new Vector(0, 1).directionFrom()).toEqual(180);
+
+        expect(new Vector(1, 1).directionTo()).toEqual(45);
+        expect(new Vector(1, 1).directionFrom()).toEqual(225);
+
+        expect(new Vector(1, 0).directionTo()).toEqual(90);
+        expect(new Vector(1, 0).directionFrom()).toEqual(270);
+
+        expect(new Vector(1, -1).directionTo()).toEqual(135);
+        expect(new Vector(1, -1).directionFrom()).toEqual(315);
+
+        expect(new Vector(0, -1).directionTo()).toEqual(180);
+        expect(new Vector(0, -1).directionFrom()).toEqual(0);
+
+        expect(new Vector(-1, -1).directionTo()).toEqual(225);
+        expect(new Vector(-1, -1).directionFrom()).toEqual(45);
+
+        expect(new Vector(-1, 0).directionTo()).toEqual(270);
+        expect(new Vector(-1, 0).directionFrom()).toEqual(90);
+
+        expect(new Vector(-1, 1).directionTo()).toEqual(315);
+        expect(new Vector(-1, 1).directionFrom()).toEqual(135);
     });
-
-    it("calculates its direction (degrees)", function () {
-        let vector = new Vector(0.0, 0.1);
-        expect(vector.directionDeg()).toEqual(90.0);
-
-        let vector2 = new Vector(-0.2975063419766429, -0.026444888334430344);
-        expect(vector2.directionDeg()).not.toBeCloseTo(-174.92, 2); // TODO
-        // http://stackoverflow.com/questions/1311049/how-to-map-atan2-to-degrees-0-360
-    });
-    /*
-
-
-
-
-
-    */
 });

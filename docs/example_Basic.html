@@ -45,14 +45,13 @@
         /*
             Default vectorfield animation, from json data
         */
-        d3.json("data/grid_CANTABRIA.json", function(d) {
+        d3.json("data/grid_CANTABRIA.json", function (d) {
             let vf = new VectorField(d);
 
             let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });
-
     </script>
 </body>
 

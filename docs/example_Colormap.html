@@ -46,7 +46,7 @@
         /*
             Vectorfield animation with a colormap for velocity + and associated legend
         */
-        d3.json("data/grid_CANTABRIA.json", function(d) {
+        d3.json("data/grid_CANTABRIA.json", function (d) {
             let vf = new VectorField(d);
 
             let m = ColorMap.forCurrents([0, 1.4]);
@@ -58,7 +58,6 @@
 
             map.fitBounds(layer.getBounds());
         });
-
     </script>
 </body>
 
