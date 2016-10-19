@@ -4,11 +4,11 @@
 L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     options: {
         click: true, // 'click_vector' event
-        color: "gray"
+        color: "yellow"
     },
 
-    initialize: function (vectorField, options) {
-        this.vf = vectorField;
+    initialize: function (scalarField, options) {
+        this.sf = scalarField;
         L.Util.setOptions(this, options);
     },
 
@@ -33,90 +33,34 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-
-
-
-        /*
-                                                        layer : this,
-                                                canvas: this._canvas,
-                                                bounds: bounds,
-                                                size: size,
-                                                zoom: zoom,
-                                                center : center,
-                                                corner : corner
-        */
-
-        let row = this.vf.nrows,
-            col = this.vf.ncols,
-            size = viewInfo.size;
-
-        //var bottomRightCorner = viewInfo.corner;
-        let [xmin, ymin, xmax, ymax] = this.vf.extent();
-
-        let topLeft = map.latLngToContainerPoint(new L.LatLng(ymax, xmin)),
-            botRight = map.latLngToContainerPoint(new L.LatLng(ymin, xmax));
-
-        var startX = topLeft.x,
-            startY = topLeft.y,
-            deltaX = (botRight.x - topLeft.x) / col,
-            deltaY = (botRight.y - topLeft.y) / row;
-
         // canvas preparation
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
+        g.fillStyle = this.options.color;
 
-        if (startX > size.x || startY > size.y || botRight.x < 0 || botRight.y < 0) {
-            return;
-        }
-        var sI = 0,
-            sJ = 0,
-            eI = row,
-            eJ = col;
-        if (startX < -deltaX) {
-            sJ = -Math.ceil(startX / deltaX);
-            startX += sJ * deltaX;
-        }
-        if (startY < -deltaY) {
-            sI = -Math.ceil(startY / deltaY);
-        }
-        if (botRight.x > size.x) {
-            eJ -= Math.floor((botRight.x - size.x) / deltaX);
-        }
-        if (botRight.y > size.y) {
-            eI -= Math.floor((botRight.y - size.y) / deltaY);
-        }
-        //var noDataValue = opt.noDataValue; //TODO
-        var noDataValue = -9999;
+        let cells = this.sf.gridLonLatValue();
+        let halfPixel = this.sf.cellsize;
+        for (var i = 0; i < cells.length; i++) {
+            let lonlat = cells[i];
+            let ll = viewInfo.layer._map.latLngToContainerPoint([lonlat[1] - halfPixel, lonlat[0] - halfPixel]);
+            let ur = viewInfo.layer._map.latLngToContainerPoint([lonlat[1] + halfPixel, lonlat[0] + halfPixel]);
+            g.beginPath();
+            //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
 
-        g.globalAlpha = 0.6;
-        console.time('process');
-        for (var i = sI; i < eI; i++) {
-            var x = startX - deltaX;
-            var y = startY + i * deltaY;
-            for (var j = sJ; j < eJ; j++) {
-                x += deltaX;
-                //var cell = data[i][j]; // TODO
-                var cell = 0;
-                if (cell === noDataValue)
-                    continue;
+            let width = Math.abs(ll.x - ur.x);
+            let height = Math.abs(ll.y - ur.y);
 
-                /* TODO colormap
-                var closest = legend.reduce(function (prev, curr) {
-                    return (Math.abs(curr.val - cell) < Math.abs(prev.val - cell) ? curr : prev);
-                });
-                g.fillStyle = closest.color;
-                */
-                g.fillStyle = 'red';
-
-                g.fillRect(x, y, deltaX, deltaY);
-            }
+            g.fillRect(ll.x, ll.y, width, height);
+            g.fill();
+            g.closePath();
+            g.stroke();
         }
-        console.timeEnd('process');
+
     },
 
 
     getBounds: function () {
-        let bb = this.vf.extent();
+        let bb = this.sf.extent();
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);
