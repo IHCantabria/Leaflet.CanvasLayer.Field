@@ -40,7 +40,7 @@ describe("ScalarField", function () {
         expect(sf._valueAtIndexes(9, 9)).toEqual(0.14851005375385284);
     });
 
-    it("can return the Vector for a Lon-Lat ", function () {
+    it("can return the Number for a Lon-Lat ", function () {
         // near the center of the LL cell [up & right]
         let pNearLL = sf.valueAt(-3.76921724303, 43.4605948227);
         expect(pNearLL).toBeCloseTo(0.00586759205907583, 4);

@@ -38,6 +38,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
 
     setData: function (data) {
         // -- custom data set
+        // TODO
         this.needRedraw(); // -- call to drawLayer
     },
 
@@ -85,20 +86,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                     // has a vector...
                     let vector = self.vf.valueAt(par.x, par.y);
                     // ... and the next point will be...
-                    let rate = (self.options.duration / 1000);
-
-                    /* OK
-                    let xt = par.x + (vector.u * self.vf.cellsize);
-                    let yt = par.y + (vector.v * self.vf.cellsize);
-                    */
-
                     let xt = par.x + (vector.u * self.options.velocityScale);
                     let yt = par.y + (vector.v * self.options.velocityScale);
-
-                    /*
-                    let xt = par.x + (vector.u * rate);
-                    let yt = par.y + (vector.v * rate);
-                    */
 
                     if (self.vf.hasValueAt(xt, yt)) {
                         par.xt = xt;
