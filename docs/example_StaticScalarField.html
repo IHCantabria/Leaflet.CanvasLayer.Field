@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Example - Static view of a ScalarField (aka 'Raster')</title>
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="examples.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <h1 id="title">ScalarField "raster"</h1>
+
+    <!-- CDN -->
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
+
+    <!-- Local -->
+    <script src="../lib/L.CanvasLayer.js"></script>
+    <script src="../lib/underscore-min.js"></script>
+    <script src="../lib/chroma.min.js"></script>
+
+    <!-- Plugin -->
+    <script src="../src/Vector.js"></script>
+    <script src="../src/Field.js"></script>
+    <script src="../src/ScalarField.js"></script>
+    <script src="../src/ColorMap.js"></script>
+
+    <script src="../src/L.CanvasLayer.ScalarField.js"></script>
+
+    <script>
+        let map = L.map("map");
+        //let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
+
+        L.tileLayer(url, {
+            attribution: 'Thunderforest Landscape',
+            subdomains: 'abc',
+            maxZoom: 19
+        }).addTo(map);
+
+        /*
+            Static ScalaField representation, aka a 'simple Raster', from json data
+        */
+        d3.json("data/testZ.json", function (d) {
+            let s = new ScalarField(d);
+
+            let layer = L.canvasLayer.scalarField(s).addTo(map);
+
+            map.fitBounds(layer.getBounds());
+        });
+    </script>
+</body>
+
+</html>

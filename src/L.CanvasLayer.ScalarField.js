@@ -1,7 +1,7 @@
 /**
- * VectorField on canvas || TODO
+ * ScalarField ('Raster') on canvas
  */
-L.CanvasLayer.VectorField = L.CanvasLayer.extend({
+L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     options: {
         click: true, // 'click_vector' event
         color: "gray"
@@ -106,7 +106,7 @@ L.CanvasLayer.VectorField = L.CanvasLayer.extend({
                 });
                 g.fillStyle = closest.color;
                 */
-                g.fillStyle = 'white';
+                g.fillStyle = 'red';
 
                 g.fillRect(x, y, deltaX, deltaY);
             }
@@ -139,6 +139,6 @@ L.CanvasLayer.VectorField = L.CanvasLayer.extend({
     }
 });
 
-L.canvasLayer.vectorField = function (vectorField, options) {
-    return new L.CanvasLayer.VectorField(vectorField, options);
+L.canvasLayer.scalarField = function (scalarField, options) {
+    return new L.CanvasLayer.ScalarField(scalarField, options);
 }
