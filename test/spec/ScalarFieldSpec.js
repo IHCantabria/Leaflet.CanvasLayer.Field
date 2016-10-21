@@ -11,13 +11,6 @@ describe("ScalarField", function () {
 
     it("can be created from an ASCIIGrid file", function () {
         expect(sf).not.toBe(null);
-        expect(sf.ncols).toEqual(10);
-        expect(sf.nrows).toEqual(10);
-        expect(sf.xllcorner).toEqual(-3.769470033164);
-        expect(sf.yllcorner).toEqual(43.460341898838);
-        expect(sf.cellsize).toEqual(0.000505065545);
-        expect(sf.grid).not.toBe(null);
-        expect(sf.range).toBe(null);
     });
 
     it("can return the Number for (i, j) indexes in the grid", function () {
@@ -46,4 +39,9 @@ describe("ScalarField", function () {
         expect(pNearLR).toBeCloseTo(0.148510053753853, 4);
     });
 
+    it("can calculate the Range of its values", function () {
+        expect(sf.range).not.toBe(null);
+        expect(sf.range.min).toBeCloseTo(0.0058675920590758, 8);
+        expect(sf.range.max).toBeCloseTo(0.21501889824867, 8);
+    });
 });

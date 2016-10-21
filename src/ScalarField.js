@@ -3,40 +3,6 @@
  */
 class ScalarField extends Field {
 
-    constructor(params) {
-        super(params);
-
-        this.zs = params["zs"];
-        this.grid = this._buildGrid();
-
-        this.range = {
-            min: Math.min.apply(null, this.zs),
-            max: Math.max.apply(null, this.zs)
-        }
-    }
-
-    /**
-     * Builds a grid with a Number at each point, from an array
-     * 'zs' following x-ascending & y-descending order
-     * (same as in ASCIIGrid)
-     * @private
-     * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
-     */
-    _buildGrid() {
-        let grid = [];
-        let p = 0;
-
-        for (var j = 0; j < this.nrows; j++) {
-            var row = [];
-            for (var i = 0; i < this.ncols; i++, p++) {
-                let z = this.zs[p];
-                row[i] = (this._isValid(z)) ? z : null; // <<<
-            }
-            grid[j] = row;
-        }
-        return grid;
-    }
-
     /**
      * Creates a ScalarField from the content of an ASCIIGrid file
      * @param   {String}   asc
@@ -71,6 +37,48 @@ class ScalarField extends Field {
         p.zs = zs;
 
         return new ScalarField(p);
+    }
+
+    constructor(params) {
+        super(params);
+        this.zs = params["zs"];
+
+        this.grid = this._buildGrid();
+        this.range = this._calculateRange();
+    }
+
+    /**
+     * Builds a grid with a Number at each point, from an array
+     * 'zs' following x-ascending & y-descending order
+     * (same as in ASCIIGrid)
+     * @private
+     * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
+     */
+    _buildGrid() {
+        let grid = [];
+        let p = 0;
+
+        for (var j = 0; j < this.nrows; j++) {
+            var row = [];
+            for (var i = 0; i < this.ncols; i++, p++) {
+                let z = this.zs[p];
+                row[i] = (this._isValid(z)) ? z : null; // <<<
+            }
+            grid[j] = row;
+        }
+        return grid;
+    }
+
+    /**
+     * Calculate min & max values
+     * @private
+     * @returns {object}
+     */
+    _calculateRange() {
+        return {
+            min: Math.min.apply(null, this.zs),
+            max: Math.max.apply(null, this.zs)
+        }
     }
 
     /**

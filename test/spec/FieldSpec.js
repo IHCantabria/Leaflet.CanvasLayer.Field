@@ -23,10 +23,13 @@ describe("Field", function () {
         expect(f.xurcorner).toBeCloseTo(xmax, 8);
         expect(f.yurcorner).toBeCloseTo(ymax, 8);
 
+        expect(f.cellsize).toEqual(0.000505065545);
         expect(f.numCells()).toEqual(100);
     });
 
     it("is a regular grid with ncols & nrows", function () {
+        expect(f.grid).not.toBe(null);
+
         let i = f.grid.length;
         let j = f.grid[0].length;
         expect(i).toBe(f.nrows);

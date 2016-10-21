@@ -15,12 +15,6 @@ describe("VectorField", function () {
 
     it("can be created from 2 ASCIIGrid files", function () {
         expect(vf).not.toBe(null);
-        expect(vf.ncols).toEqual(10);
-        expect(vf.nrows).toEqual(10);
-        expect(vf.xllcorner).toEqual(-3.769470033164);
-        expect(vf.yllcorner).toEqual(43.460341898838);
-        expect(vf.cellsize).toEqual(0.000505065545);
-        expect(vf.grid).not.toBe(null);
     });
 
     it("can return the Vector for (i, j) indexes in the grid", function () {
@@ -53,13 +47,9 @@ describe("VectorField", function () {
         expect(pNearLR.v).toBeCloseTo(-0.0152796721085906, 4);
     });
 
-    it("can calculate the range of its magnitudes", function () {
-        let range = vf.magnitudeRange();
-        expect(range).not.toBe(null);
-
-        // min-max velocity
-        expect(range[0]).toEqual(0.0067317434565905545);
-        expect(range[1]).toEqual(0.2150247092568961);
+    it("can calculate the Range of its values", function () {
+        expect(vf.range).not.toBe(null);
+        expect(vf.range.min).toEqual(0.0067317434565905545);
+        expect(vf.range.max).toEqual(0.2150247092568961);
     });
-
 });

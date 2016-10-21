@@ -4,12 +4,37 @@
  */
 class VectorField extends Field {
 
+    /**
+     * Creates a VectorField from the content of two ASCIIGrid files
+     * @param   {String} ascU - with u-component
+     * @param   {String} ascV - with v-component
+     * @returns {VectorField}
+     */
+    static fromASCIIGrids(ascU, ascV) {
+        let u = ScalarField.fromASCIIGrid(ascU);
+        let v = ScalarField.fromASCIIGrid(ascV);
+
+        // TODO - check equal parameters for u|v
+
+        let p = {
+            ncols: u.ncols,
+            nrows: u.nrows,
+            xllcorner: u.xllcorner,
+            yllcorner: u.yllcorner,
+            cellsize: u.cellsize,
+            us: u.zs,
+            vs: v.zs
+        };
+        return new VectorField(p);
+    }
+
     constructor(params) {
         super(params);
 
         this.us = params["us"];
         this.vs = params["vs"];
         this.grid = this._buildGrid();
+        this.range = this._calculateRange();
     }
 
     /**
@@ -36,27 +61,19 @@ class VectorField extends Field {
     }
 
     /**
-     * Creates a VectorField from the content of two ASCIIGrid files
-     * @param   {String} ascU - with u-component
-     * @param   {String} ascV - with v-component
-     * @returns {VectorField}
+     * Calculate min & max values (magnitude)
+     * @private
+     * @returns {object}
      */
-    static fromASCIIGrids(ascU, ascV) {
-        let u = ScalarField.fromASCIIGrid(ascU);
-        let v = ScalarField.fromASCIIGrid(ascV);
+    _calculateRange() {
+        let magnitudes = this.gridLonLatValue().map(pt => pt.value.magnitude());
+        // TODO memory crash!
+        let min = Math.min.apply(null, magnitudes);
+        let max = Math.max.apply(null, magnitudes);
 
-        // TODO - check equal parameters for u|v
-
-        let p = {
-            ncols: u.ncols,
-            nrows: u.nrows,
-            xllcorner: u.xllcorner,
-            yllcorner: u.yllcorner,
-            cellsize: u.cellsize,
-            us: u.zs,
-            vs: v.zs
-        };
-        return new VectorField(p);
+        return {
+            min, max
+        }
     }
 
     /**
@@ -80,21 +97,6 @@ class VectorField extends Field {
         var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
         var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
         return new Vector(u, v);
-    }
-
-    /**
-     * TODO Check memory fail!
-     * Magnitude range
-     * @returns {Number[]} [min, max]
-     */
-    magnitudeRange() {
-        let vectors = this.gridLonLatValue().map(pt => pt.value); //TODO Fix
-        let magnitudes = vectors.map(v => v.magnitude());
-        // TODO memory crash!
-        let min = Math.min(...magnitudes);
-        let max = Math.max(...magnitudes);
-
-        return [min, max];
     }
 
 }
