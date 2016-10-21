@@ -8,6 +8,11 @@ class ScalarField extends Field {
 
         this.zs = params["zs"];
         this.grid = this._buildGrid();
+
+        this.range = {
+            min: Math.min.apply(null, this.zs),
+            max: Math.max.apply(null, this.zs)
+        }
     }
 
     /**

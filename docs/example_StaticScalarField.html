@@ -29,6 +29,7 @@
     <script src="../src/ScalarField.js"></script>
     <script src="../src/ColorMap.js"></script>
 
+
     <script src="../src/L.CanvasLayer.ScalarField.js"></script>
 
     <script>
@@ -45,13 +46,15 @@
         /*
             Static ScalaField representation, aka a 'simple Raster', from json data
         */
-        d3.json("data/testZ.json", function (d) {
-            let s = new ScalarField(d);
+        d3.text("data/testU.asc", function(asc) {
+            //d3.text("data/us.asc", function(asc) {
+            let s = ScalarField.fromASCIIGrid(asc);
 
             let layer = L.canvasLayer.scalarField(s).addTo(map);
 
             map.fitBounds(layer.getBounds());
         });
+
     </script>
 </body>
 

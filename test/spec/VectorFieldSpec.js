@@ -2,37 +2,25 @@ describe("VectorField", function () {
     let dataFolder = "../../docs/data";
     let vf;
 
-    beforeEach(function (done) {
-        // Test data from IH-COAWST
-        d3.json(`${dataFolder}/testUV.json`, function (d) {
-            vf = new VectorField(d);
-            done();
+    beforeEach(function (filesLoaded) {
+        d3.text(`${dataFolder}/U.asc`, function (u) {
+            d3.text(`${dataFolder}/V.asc`, function (v) {
+                let ascU = u;
+                let ascV = v;
+                vf = VectorField.fromASCIIGrids(ascU, ascV);
+                filesLoaded();
+            });
         });
     });
 
-    describe("ASCIIGrid", function () {
-        let ascU, ascV;
-
-        beforeEach(function (filesLoaded) {
-            d3.text(`${dataFolder}/porcion-us.asc`, function (u) {
-                d3.text(`${dataFolder}/porcion-vs.asc`, function (v) {
-                    ascU = u;
-                    ascV = v;
-                    filesLoaded();
-                });
-            });
-        });
-
-        it("can be created from two ASCIIGrid files", function () {
-            let v = VectorField.fromASCIIGrids(ascU, ascV);
-            expect(v).not.toBe(null);
-            expect(v.ncols).toEqual(10);
-            expect(v.nrows).toEqual(10);
-            expect(v.xllcorner).toEqual(-3.769470033164);
-            expect(v.yllcorner).toEqual(43.460341898838);
-            expect(v.cellsize).toEqual(0.000505065545);
-            expect(v.grid).not.toBe(null);
-        });
+    it("can be created from 2 ASCIIGrid files", function () {
+        expect(vf).not.toBe(null);
+        expect(vf.ncols).toEqual(10);
+        expect(vf.nrows).toEqual(10);
+        expect(vf.xllcorner).toEqual(-3.769470033164);
+        expect(vf.yllcorner).toEqual(43.460341898838);
+        expect(vf.cellsize).toEqual(0.000505065545);
+        expect(vf.grid).not.toBe(null);
     });
 
     it("can return the Vector for (i, j) indexes in the grid", function () {

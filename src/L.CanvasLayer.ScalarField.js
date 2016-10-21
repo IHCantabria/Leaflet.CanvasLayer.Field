@@ -4,12 +4,20 @@
 L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     options: {
         click: true, // 'click_vector' event
-        color: "yellow"
+        color: null
     },
 
     initialize: function (scalarField, options) {
         this.sf = scalarField;
         L.Util.setOptions(this, options);
+        if (this.options.color === null) {
+            this.options.color = this.defaultColorScale();
+        };
+    },
+
+    defaultColorScale: function () {
+        let r = this.sf.range;
+        return chroma.scale(['white', 'black']).domain([r.min, r.max]);
     },
 
     onLayerDidMount: function () {
@@ -36,21 +44,36 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         // canvas preparation
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-        g.fillStyle = this.options.color;
 
         let cells = this.sf.gridLonLatValue();
-        let halfPixel = this.sf.cellsize;
+        let halfCell = this.sf.cellsize / 2.0;
         for (var i = 0; i < cells.length; i++) {
-            let lonlat = cells[i];
-            let ll = viewInfo.layer._map.latLngToContainerPoint([lonlat[1] - halfPixel, lonlat[0] - halfPixel]);
-            let ur = viewInfo.layer._map.latLngToContainerPoint([lonlat[1] + halfPixel, lonlat[0] + halfPixel]);
+            //TODO check in Bounds?
+            let {
+                lon, lat, value
+            } = cells[i];
+
+            if (value === null) {
+                continue;
+            }
+
+            // rectangle
+            let ul = viewInfo.layer._map.latLngToContainerPoint(
+                [lat + halfCell, lon - halfCell]);
+            let lr = viewInfo.layer._map.latLngToContainerPoint(
+                [lat - halfCell, lon + halfCell]);
+
+            console.log(ul, lr);
+            debugger;
+
+            let width = Math.abs(ul.x - lr.x);
+            let height = Math.abs(ul.y - lr.y);
+
+            // color
+            g.fillStyle = this.options.color(value);
+
             g.beginPath();
-            //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
-
-            let width = Math.abs(ll.x - ur.x);
-            let height = Math.abs(ll.y - ur.y);
-
-            g.fillRect(ll.x, ll.y, width, height);
+            g.fillRect(ul.x, ul.y, width, height);
             g.fill();
             g.closePath();
             g.stroke();

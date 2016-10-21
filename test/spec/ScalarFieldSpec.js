@@ -2,34 +2,22 @@ describe("ScalarField", function () {
     let dataFolder = "../../docs/data";
     let sf;
 
-    beforeEach(function (done) {
-        // Test data from IH-COAWST
-        d3.json(`${dataFolder}/testZ.json`, function (d) {
-            sf = new ScalarField(d);
-            done();
+    beforeEach(function (fileLoaded) {
+        d3.text(`${dataFolder}/U.asc`, function (z) {
+            sf = ScalarField.fromASCIIGrid(z);
+            fileLoaded();
         });
     });
 
-    describe("ASCIIGrid", function () {
-        let asc;
-
-        beforeEach(function (fileLoaded) {
-            d3.text(`${dataFolder}/porcion-us.asc`, function (z) {
-                asc = z;
-                fileLoaded();
-            });
-        });
-
-        it("can be created from an ASCIIGrid file", function () {
-            let s = ScalarField.fromASCIIGrid(asc);
-            expect(s).not.toBe(null);
-            expect(s.ncols).toEqual(10);
-            expect(s.nrows).toEqual(10);
-            expect(s.xllcorner).toEqual(-3.769470033164);
-            expect(s.yllcorner).toEqual(43.460341898838);
-            expect(s.cellsize).toEqual(0.000505065545);
-            expect(s.grid).not.toBe(null);
-        });
+    it("can be created from an ASCIIGrid file", function () {
+        expect(sf).not.toBe(null);
+        expect(sf.ncols).toEqual(10);
+        expect(sf.nrows).toEqual(10);
+        expect(sf.xllcorner).toEqual(-3.769470033164);
+        expect(sf.yllcorner).toEqual(43.460341898838);
+        expect(sf.cellsize).toEqual(0.000505065545);
+        expect(sf.grid).not.toBe(null);
+        expect(sf.range).toBe(null);
     });
 
     it("can return the Number for (i, j) indexes in the grid", function () {
