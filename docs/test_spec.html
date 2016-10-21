@@ -2,17 +2,24 @@
 <html>
 
 <head>
-    <title>Example - Static view of a VectorField</title>
+    <title>Test - DELETE</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
-    <link rel="stylesheet" href="examples.css" />
+    <style>
+        /* Deterministic positions */
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+        #map {
+            width: 400px;
+            height: 400px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+    </style>
 </head>
 
 <body>
     <div id="map"></div>
-
-    <h1 id="title">VectorField "raster"</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -26,29 +33,29 @@
     <!-- Plugin -->
     <script src="../src/Vector.js"></script>
     <script src="../src/Field.js"></script>
-    <script src="../src/VectorField.js"></script>
+    <script src="../src/ScalarField.js"></script>
     <script src="../src/ColorMap.js"></script>
 
-    <script src="../src/layers/L.CanvasLayer.VectorField.js"></script>
+
+    <script src="../src/layers/L.CanvasLayer.ScalarField.js"></script>
 
     <script>
         let map = L.map("map");
-        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        //let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
+
         L.tileLayer(url, {
-            attribution: 'OSM & Carto',
-            subdomains: 'abcd',
+            attribution: 'Thunderforest Landscape',
+            subdomains: 'abc',
             maxZoom: 19
         }).addTo(map);
 
         /*
-            Default vectorfield animation, from json data
+            ScalarField layer, aka a 'simple Raster', from an ASCIIGrid
         */
-        //d3.json("data/grid_CANTABRIA.json", function (d) {
-        d3.json("data/testUV.json", function(d) {
-            let vf = new VectorField(d);
-
-            let layer = L.canvasLayer.vectorField(vf).addTo(map);
-
+        d3.text("data/U.asc", function(asc) {
+            let s = ScalarField.fromASCIIGrid(asc);
+            let layer = L.canvasLayer.scalarField(s).addTo(map);
             map.fitBounds(layer.getBounds());
         });
 

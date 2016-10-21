@@ -66,7 +66,15 @@ class VectorField extends Field {
      * @returns {object}
      */
     _calculateRange() {
-        let magnitudes = this.gridLonLatValue().map(pt => pt.value.magnitude());
+	let vectors = this.gridLonLatValue().map(pt => pt.value).filter(function(v){
+return v !== null;});
+
+// TODO
+throw new Error();
+
+
+        let magnitudes = vectors.map(v => v.magnitude());
+
         // TODO memory crash!
         let min = Math.min.apply(null, magnitudes);
         let max = Math.max.apply(null, magnitudes);

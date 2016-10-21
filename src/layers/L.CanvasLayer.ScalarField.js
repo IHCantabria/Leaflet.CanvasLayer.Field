@@ -64,8 +64,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
                 [lat - halfCell, lon + halfCell]);
 
             console.log(ul, lr);
-            debugger;
-
             let width = Math.abs(ul.x - lr.x);
             let height = Math.abs(ul.y - lr.y);
 

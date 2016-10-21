@@ -2,7 +2,6 @@
 <html>
 
 <head>
-    <!-- Title -->
     <title>Example - Options</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
@@ -13,16 +12,16 @@
 <body>
     <div id="map"></div>
 
-    <h1 id="title">VectorField animation with custom styles</h1>
+    <h1 id="title">VectorField animation (2 layers with custom styles)</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
 
     <!-- Local -->
-    <script src="../lib/L.CanvasLayer.js"></script>
-    <script src="../lib/underscore-min.js"></script>
     <script src="../lib/chroma.min.js"></script>
+    <script src="../lib/underscore-min.js"></script>
+    <script src="../lib/L.CanvasLayer.js"></script>
 
     <!-- Plugin -->
     <script src="../src/Vector.js"></script>
@@ -31,8 +30,8 @@
     <script src="../src/ColorMap.js"></script>
 
     <script src="../src/L.Control.ColorBar.js"></script>
-    <script src="../src/L.CanvasLayer.VectorFieldAnim.js"></script>
-    <script src="../src/L.CanvasLayer.SimpleLonLat.js"></script>
+    <script src="../src/layers/L.CanvasLayer.VectorFieldAnim.js"></script>
+    <script src="../src/layers/L.CanvasLayer.SimpleLonLat.js"></script>
 
     <script>
         let map = L.map("map");
@@ -54,6 +53,7 @@
                 color: "cyan",
                 velocityScale: 1 / 10
             }).addTo(map);
+
             L.canvasLayer.vectorFieldAnim(vf, {
                 paths: 2000,
                 color: "#FF6699",

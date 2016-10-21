@@ -19,9 +19,9 @@
     <script src="//unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
 
     <!-- Local -->
-    <script src="../lib/L.CanvasLayer.js"></script>
-    <script src="../lib/underscore-min.js"></script>
     <script src="../lib/chroma.min.js"></script>
+    <script src="../lib/underscore-min.js"></script>
+    <script src="../lib/L.CanvasLayer.js"></script>
 
     <!-- Plugin -->
     <script src="../src/Vector.js"></script>
@@ -30,8 +30,8 @@
     <script src="../src/ColorMap.js"></script>
 
     <script src="../src/L.Control.ColorBar.js"></script>
-    <script src="../src/L.CanvasLayer.VectorFieldAnim.js"></script>
-    <script src="../src/L.CanvasLayer.SimpleLonLat.js"></script>
+    <script src="../src/layers/L.CanvasLayer.VectorFieldAnim.js"></script>
+    <script src="../src/layers/L.CanvasLayer.SimpleLonLat.js"></script>
 
     <script>
         let map = L.map("map");
@@ -45,13 +45,12 @@
         /*
             Default vectorfield animation, from json data
         */
-        d3.json("data/grid_CANTABRIA.json", function (d) {
+        d3.json("data/grid_CANTABRIA.json", function(d) {
             let vf = new VectorField(d);
-
             let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
-
             map.fitBounds(layer.getBounds());
         });
+
     </script>
 </body>
 
