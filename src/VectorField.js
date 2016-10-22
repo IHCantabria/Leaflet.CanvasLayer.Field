@@ -75,8 +75,8 @@ class VectorField extends Field {
         let magnitudes = vectors.map(v => v.magnitude());
 
         // TODO memory crash!
-        let min = Math.min.apply(null, magnitudes);
-        let max = Math.max.apply(null, magnitudes);
+        let min = d3.min(magnitudes);
+        let max = d3.max(magnitudes);
 
         return [min, max];
     }

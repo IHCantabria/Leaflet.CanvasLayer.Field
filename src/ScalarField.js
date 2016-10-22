@@ -93,10 +93,7 @@ class ScalarField extends Field {
      * @returns {Array}
      */
     _calculateRange() {
-        return [
-            Math.min.apply(null, this.zs),
-            Math.max.apply(null, this.zs)
-        ];
+        return [d3.min(this.zs), d3.max(this.zs)];
 
     }
 
