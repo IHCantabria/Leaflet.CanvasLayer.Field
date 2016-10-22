@@ -45,6 +45,24 @@ describe("VectorField", function () {
         expect(pNearLR.v).toBeCloseTo(-0.0152796721085906, 4);
     });
 
+    it("can return GridLonLatValues", function () {
+        let grid = vf.gridLonLatValue();
+        let p0 = grid[0];
+        let pN = grid[grid.length - 1];
+
+        console.log(p0, pN);
+        expect(p0).toEqual({
+            lon: -3.7692175003915,
+            lat: 43.4651400215155,
+            value: new Vector(0.011275325901806355, -0.003540651174262166)
+        });
+        expect(pN).toEqual({
+            lon: -3.7646719104864994,
+            lat: 43.46059443161051,
+            value: new Vector(0.14851005375385284, -0.015279672108590603)
+        });
+    });
+
     it("can calculate the Range of its values", function () {
         expect(vf.range).not.toBe(null);
         expect(vf.range.min).toEqual(0.0067317434565905545);

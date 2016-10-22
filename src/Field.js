@@ -46,13 +46,19 @@ class Field {
     }
 
     /**
-     * A list with every point in the grid, including coordinates and associated value
-     * @returns {Array} - grid values {lon, lat, value}
+     * A list with every point in the grid (center of the cell), including coordinates and associated value
+     * @returns {Array} - grid values {lon, lat, value}, x-ascending & y-descending
      */
     gridLonLatValue() {
         let lonslatsV = [];
-        let lon = this.xllcorner;
-        let lat = this.yllcorner;
+        let halfCell = this.cellsize / 2.0;
+
+        let centerLon = this.xllcorner + halfCell;
+        let centerLat = this.yurcorner - halfCell;
+
+        let lon = centerLon;
+        let lat = centerLat;
+
         for (var j = 0; j < this.nrows; j++) {
             for (var i = 0; i < this.ncols; i++) {
                 let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar)
@@ -63,8 +69,8 @@ class Field {
                 }); // <<
                 lon += this.cellsize;
             }
-            lat += this.cellsize;
-            lon = this.xllcorner;
+            lat -= this.cellsize;
+            lon = centerLon;
         }
         return lonslatsV;
     }

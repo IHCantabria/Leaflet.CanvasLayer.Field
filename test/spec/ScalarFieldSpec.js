@@ -39,6 +39,23 @@ describe("ScalarField", function () {
         expect(pNearLR).toBeCloseTo(0.148510053753853, 4);
     });
 
+    it("can return GridLonLatValues", function () {
+        let grid = sf.gridLonLatValue();
+        let p0 = grid[0];
+        let pN = grid[grid.length - 1];
+
+        expect(p0).toEqual({
+            lon: -3.7692175003915,
+            lat: 43.4651400215155,
+            value: 0.011275325901806355
+        });
+        expect(pN).toEqual({
+            lon: -3.7646719104864994,
+            lat: 43.46059443161051,
+            value: 0.14851005375385284
+        });
+    });
+
     it("can calculate the Range of its values", function () {
         expect(sf.range).not.toBe(null);
         expect(sf.range.min).toBeCloseTo(0.0058675920590758, 8);
