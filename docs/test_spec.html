@@ -37,22 +37,10 @@
     <script src="../src/ColorMap.js"></script>
 
 
-    <script src="../src/layers/L.CanvasLayer.ScalarField.js"></script>
+    <script src="../src/layer/L.CanvasLayer.ScalarField.js"></script>
 
     <script>
         let map = L.map("map");
-        //let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
-        let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
-
-        L.tileLayer(url, {
-            attribution: 'Thunderforest Landscape',
-            subdomains: 'abc',
-            maxZoom: 19
-        }).addTo(map);
-
-        /*
-            ScalarField layer, aka a 'simple Raster', from an ASCIIGrid
-        */
         d3.text("data/U.asc", function(asc) {
             let s = ScalarField.fromASCIIGrid(asc);
             let layer = L.canvasLayer.scalarField(s).addTo(map);
