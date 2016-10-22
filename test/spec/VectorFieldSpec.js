@@ -5,9 +5,7 @@ describe("VectorField", function () {
     beforeEach(function (filesLoaded) {
         d3.text(`${dataFolder}/U.asc`, function (u) {
             d3.text(`${dataFolder}/V.asc`, function (v) {
-                let ascU = u;
-                let ascV = v;
-                vf = VectorField.fromASCIIGrids(ascU, ascV);
+                vf = VectorField.fromASCIIGrids(u, v);
                 filesLoaded();
             });
         });

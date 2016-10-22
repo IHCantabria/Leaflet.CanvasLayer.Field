@@ -39,7 +39,7 @@ L.Control.ColorBar = L.Control.extend({
         let min = m.domain[0];
         let max = m.domain[1];
         let delta = (max - min) / (this.options.legend.steps);
-        let data = _.range(min, max + delta, delta);
+        let data = d3.range(min, max + delta, delta);
         let colorPerValue = data.map(d => {
             return {
                 "value": d,

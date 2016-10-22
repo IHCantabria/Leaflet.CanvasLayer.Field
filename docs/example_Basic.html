@@ -20,18 +20,14 @@
 
     <!-- Local -->
     <script src="../lib/chroma.min.js"></script>
-    <script src="../lib/underscore-min.js"></script>
     <script src="../lib/L.CanvasLayer.js"></script>
 
     <!-- Plugin -->
     <script src="../src/Vector.js"></script>
     <script src="../src/Field.js"></script>
-    <script src="../src/VectorField.js"></script>
-    <script src="../src/ColorMap.js"></script>
-
-    <script src="../src/L.Control.ColorBar.js"></script>
+    <script src="../src/ScalarField.js"></script>
+    <script src="../src/VectorField.js"></script>>
     <script src="../src/layer/L.CanvasLayer.VectorFieldAnim.js"></script>
-    <script src="../src/layer/L.CanvasLayer.SimpleLonLat.js"></script>
 
     <script>
         let map = L.map("map");
@@ -43,12 +39,14 @@
         }).addTo(map);
 
         /*
-            Default vectorfield animation, from json data
+            Default vectorfield animation, from two ASCIIGrid files
         */
-        d3.json("data/grid_CANTABRIA.json", function(d) {
-            let vf = new VectorField(d);
-            let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
-            map.fitBounds(layer.getBounds());
+        d3.text("data/BAHIA_U.asc", function(u) {
+            d3.text("data/BAHIA_V.asc", function(v) {
+                let vf = VectorField.fromASCIIGrids(u, v);
+                let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+                map.fitBounds(layer.getBounds());
+            });
         });
 
     </script>

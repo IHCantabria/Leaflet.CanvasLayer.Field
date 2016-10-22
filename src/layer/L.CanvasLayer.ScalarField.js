@@ -63,7 +63,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
             let lr = viewInfo.layer._map.latLngToContainerPoint(
                 [lat - halfCell, lon + halfCell]);
 
-            console.log(ul, lr);
             let width = Math.abs(ul.x - lr.x);
             let height = Math.abs(ul.y - lr.y);
 
@@ -86,6 +85,13 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);
         return bounds;
+    },
+
+    getPixel: function (x, y) {
+        let ctx = this._canvas.getContext('2d');
+        let pixel = ctx.getImageData(x, y, 1, 1);
+        // array [r, g, b, a]
+        return pixel;
     },
 
     _activateClick: function () {
