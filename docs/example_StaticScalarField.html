@@ -46,7 +46,7 @@
         /*
             A ScalarField layer (a 'Raster'), from an ASCIIGrid
         */
-        d3.text("data/U.asc", function(asc) {
+        d3.text("data/BAHIA_U.asc", function(asc) {
             let s = ScalarField.fromASCIIGrid(asc);
             let layer = L.canvasLayer.scalarField(s).addTo(map);
             map.fitBounds(layer.getBounds());
