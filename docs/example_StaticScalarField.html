@@ -50,6 +50,51 @@
             let s = ScalarField.fromASCIIGrid(asc);
             let layer = L.canvasLayer.scalarField(s).addTo(map);
             map.fitBounds(layer.getBounds());
+
+            layer.on('click', function(e) {
+                if (e.value) {
+                    let v = e.value.toFixed(3);
+                    let html = (`value: ${v}`);
+                    let popup = L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(html)
+                        .openOn(map);
+                }
+            });
+
+            let layer2 = L.canvasLayer.scalarField(s, {
+                color: chroma.scale('YlGnBu').domain(s.range)
+            }).addTo(map);
+
+            let layer3 = L.canvasLayer.scalarField(s, {
+                color: chroma.scale('OrRd').classes(
+                    [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2])
+            }).addTo(map);
+
+            var baseMaps = {
+                "Default (white-black)": layer,
+                "YlGnBu (from ColorBrewer2)": layer2,
+                "Some buckets (OrRd)": layer3
+            };
+
+            L.control.layers(baseMaps, {}, {
+                position: 'bottomleft',
+                collapsed: false
+            }).addTo(map);
+
+            /*
+                        let s3 = s.filterWith(function(v) {
+                            return (v > 0.5 && v     < 0.8);
+                        });
+                        let r = chroma.scale('RdYlBu').domain(s3.range);
+                        let layer2 = L.canvasLayer.scalarField(s3, {
+                            color: r
+                        }).addTo(map);
+            L.control.layers(layer, layer2).addTo(map);
+            */
+
+
+
         });
 
     </script>

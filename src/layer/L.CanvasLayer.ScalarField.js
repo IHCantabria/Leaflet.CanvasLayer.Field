@@ -3,12 +3,12 @@
  */
 L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     options: {
-        click: true, // 'click_vector' event
+        click: true, // 'click' event
         color: null
     },
 
     initialize: function (scalarField, options) {
-        this.sf = scalarField;
+        this.field = scalarField;
         L.Util.setOptions(this, options);
         if (this.options.color === null) {
             this.options.color = this.defaultColorScale();
@@ -16,8 +16,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     defaultColorScale: function () {
-        let r = this.sf.range;
-        return chroma.scale(['white', 'black']).domain([r.min, r.max]);
+        return chroma.scale(['white', 'black']).domain(this.field.range);
     },
 
     onLayerDidMount: function () {
@@ -45,8 +44,8 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
-        let cells = this.sf.gridLonLatValue();
-        let halfCell = this.sf.cellsize / 2.0;
+        let cells = this.field.gridLonLatValue();
+        let halfCell = this.field.cellsize / 2.0;
         for (var i = 0; i < cells.length; i++) {
             //TODO check in Bounds?
             let {
@@ -75,12 +74,10 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
             g.closePath();
             g.stroke();
         }
-
     },
 
-
     getBounds: function () {
-        let bb = this.sf.extent();
+        let bb = this.field.extent();
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);
@@ -102,11 +99,10 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
         let result = {
-            "latlng": e.latlng,
-            "vector": this.vf.valueAt(lon, lat)
+            latlng: e.latlng,
+            value: this.field.valueAt(lon, lat)
         };
-
-        this.fireEvent('click_vector', result); /*includes: L.Mixin.Events,*/
+        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
     }
 });
 

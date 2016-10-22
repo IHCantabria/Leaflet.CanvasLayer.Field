@@ -7,7 +7,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         color: "white", // html-color | chromajs.scale
         width: 2, // path-width
         fade: "0.96", // 0 to 1
-        click: true, // 'click_vector' event
+        click: true, // 'click' event
         duration: 40, // milliseconds per 'frame'
         maxAge: 200, // number of maximum frames per path
         velocityScale: 1 / 1000
@@ -169,7 +169,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
             "vector": this.vf.valueAt(lon, lat)
         };
 
-        this.fireEvent('click_vector', result); /*includes: L.Mixin.Events,*/
+        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
     }
 });
 

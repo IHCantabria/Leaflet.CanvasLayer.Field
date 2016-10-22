@@ -48,6 +48,24 @@ class ScalarField extends Field {
     }
 
     /**
+     * Filter the field, using a function
+     * @param   {Function} f boolean function to
+     *                       include in filter
+     * @returns {ScalarField}
+     */
+    filterWith(f) {
+        let p = this.params;
+        p.zs = p.zs.map(function (v) {
+            if (f(v)) {
+                return v;
+            }
+            return null;
+        });
+
+        return new ScalarField(p);
+    }
+
+    /**
      * Builds a grid with a Number at each point, from an array
      * 'zs' following x-ascending & y-descending order
      * (same as in ASCIIGrid)
@@ -72,13 +90,14 @@ class ScalarField extends Field {
     /**
      * Calculate min & max values
      * @private
-     * @returns {object}
+     * @returns {Array}
      */
     _calculateRange() {
-        return {
-            min: Math.min.apply(null, this.zs),
-            max: Math.max.apply(null, this.zs)
-        }
+        return [
+            Math.min.apply(null, this.zs),
+            Math.max.apply(null, this.zs)
+        ];
+
     }
 
     /**

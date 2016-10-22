@@ -8,6 +8,7 @@ class Field {
         if (new.target === Field) {
             throw new TypeError("Cannot construct Field instances directly (use VectorField or ScalarField)");
         }
+        this.params = params;
 
         this.ncols = params["ncols"];
         this.nrows = params["nrows"];

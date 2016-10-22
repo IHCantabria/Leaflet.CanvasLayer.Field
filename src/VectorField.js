@@ -63,7 +63,7 @@ class VectorField extends Field {
     /**
      * Calculate min & max values (magnitude)
      * @private
-     * @returns {object}
+     * @returns {Array}
      */
     _calculateRange() {
         let vectors = this.gridLonLatValue()
@@ -78,9 +78,7 @@ class VectorField extends Field {
         let min = Math.min.apply(null, magnitudes);
         let max = Math.max.apply(null, magnitudes);
 
-        return {
-            min, max
-        }
+        return [min, max];
     }
 
     /**
