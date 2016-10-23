@@ -21,7 +21,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     defaultColorScale: function () {
-        return chroma.scale(['black', 'white']).domain(this.field.range);
+        return chroma.scale(['white', 'black']).domain(this.field.range);
     },
 
     onLayerDidMount: function () {
@@ -80,8 +80,8 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
             let height = Math.abs(pixel_ul.y - pixel_lr.y);
 
             // color
-            g.fillStyle = 'blue'; //this.options.color(value); //TODO
-            //g.fillStyle = this.options.color(value);
+            //g.fillStyle = 'blue'; //this.options.color(value); //TODO
+            g.fillStyle = this.options.color(value);
             g.fillRect(pixel_ul.x, pixel_ul.y, width, height);
         }
         console.timeEnd('onDrawLayer');
@@ -95,11 +95,12 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         return bounds;
     },
 
-    getPixel: function (x, y) {
+    getPixelColor: function (x, y) {
         let ctx = this._canvas.getContext('2d');
-        let pixel = ctx.getImageData(x, y, 1, 1);
+        let pixel = ctx.getImageData(x, y, 1, 1).data;
+
         // array [r, g, b, a]
-        return pixel;
+        return chroma(pixel[0], pixel[1], pixel[2]);
     },
 
     _activateClick: function () {

@@ -46,14 +46,14 @@ describe('L.CanvasLayer.ScalarField', function () {
         let upperRight = L.latLng(
             sf.yurcorner - halfCell, sf.xurcorner - halfCell);
         let p = map.latLngToContainerPoint(upperRight);
-        let color = chroma(sfl.getPixel(p.x, p.y));
+        let color = sfl.getPixelColor(p.x, p.y);
         expect(color).toEqual(chroma('black'));
 
         // center of the lower-left cell... is white
         let lowerLeft = L.latLng(
             sf.yllcorner + halfCell, sf.xllcorner + halfCell);
         let p2 = map.latLngToContainerPoint(lowerLeft);
-        let color2 = chroma(sfl.getPixel(p2.x, p2.y));
+        let color2 = chroma(sfl.getPixelColor(p2.x, p2.y));
         expect(color2).toEqual(chroma('white'));
     });
 

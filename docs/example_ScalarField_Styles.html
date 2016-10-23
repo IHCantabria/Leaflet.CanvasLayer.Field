@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Example - ScalarField ("common raster")</title>
+    <title>Example - ScalarField styles</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -12,7 +12,7 @@
 <body>
     <div id="map"></div>
 
-    <h1 id="title">ScalarField ("common raster")</h1>
+    <h1 id="title">ScalarField styles</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -20,64 +20,49 @@
 
     <!-- Local -->
     <script src="../lib/chroma.min.js"></script>
-
     <script src="../lib/L.CanvasLayer.js"></script>
 
     <!-- Plugin -->
-    <script src="../src/Vector.js"></script>
     <script src="../src/Field.js"></script>
     <script src="../src/ScalarField.js"></script>
-    <script src="../src/ColorMap.js"></script>
-
-
     <script src="../src/layer/L.CanvasLayer.ScalarField.js"></script>
 
     <script>
         let map = L.map("map");
-        //let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
-        let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
+        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        //let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
 
         L.tileLayer(url, {
-            attribution: 'Thunderforest Landscape',
+            attribution: 'CartoDB & OSM',
             subdomains: 'abc',
             maxZoom: 19
         }).addTo(map);
 
         /*
-            A ScalarField layer (a 'Raster'), from an ASCIIGrid
+            Some ScalarField layers with custom renderers
         */
         d3.text("data/BAHIA_U.asc", function(asc) {
             let s = ScalarField.fromASCIIGrid(asc);
+
             let layer = L.canvasLayer.scalarField(s).addTo(map);
             map.fitBounds(layer.getBounds());
 
-            layer.on('click', function(e) {
-                if (e.value) {
-                    let v = e.value.toFixed(3);
-                    let html = (`value: ${v}`);
-                    let popup = L.popup()
-                        .setLatLng(e.latlng)
-                        .setContent(html)
-                        .openOn(map);
-                }
-            });
-
             let layer2 = L.canvasLayer.scalarField(s, {
                 color: chroma.scale('YlGnBu').domain(s.range)
-            }).addTo(map);
+            });
 
             let layer3 = L.canvasLayer.scalarField(s, {
                 color: chroma.scale('OrRd').classes(
                     [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2])
-            }).addTo(map);
+            });
 
-            var baseMaps = {
+            var layers = {
                 "Default (white-black)": layer,
                 "YlGnBu (from ColorBrewer2)": layer2,
                 "Some buckets (OrRd)": layer3
             };
 
-            L.control.layers(baseMaps, {}, {
+            L.control.layers(layers, {}, {
                 position: 'bottomleft',
                 collapsed: false
             }).addTo(map);

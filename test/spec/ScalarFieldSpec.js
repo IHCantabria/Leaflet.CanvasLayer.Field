@@ -61,4 +61,12 @@ describe("ScalarField", function () {
         expect(sf.range.min).toBeCloseTo(0.0058675920590758, 8);
         expect(sf.range.max).toBeCloseTo(0.21501889824867, 8);
     });
+
+    it("can be filtered", function () {
+        let filter = function (v) {
+            return (v > 0 && v < 0.01);
+        };
+
+        expect(sf.every(filter), true);
+    });
 });

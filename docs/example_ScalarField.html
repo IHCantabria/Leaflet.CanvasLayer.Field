@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Example - ScalarField ("common raster")</title>
+    <title>Example - ScalarField ("a Raster")</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -12,7 +12,7 @@
 <body>
     <div id="map"></div>
 
-    <h1 id="title">ScalarField ("common raster")</h1>
+    <h1 id="title">ScalarField ("a Raster") with default style</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -37,13 +37,23 @@
             maxZoom: 19
         }).addTo(map);
 
-        // A ScalarField layer (a 'Raster'), from an ASCIIGrid
-        d3.text("data/dtm.asc", function(asc) {
+        // A ScalarField layer (a 'Raster') from an ASCIIGrid
+        d3.text("data/BAHIA_U.asc", function(asc) {
+            //d3.text("data/dtm.asc", function(asc) {
             let s = ScalarField.fromASCIIGrid(asc);
-            console.time('addTo(map)');
             let layer = L.canvasLayer.scalarField(s).addTo(map);
-            console.timeEnd('addTo(map)');
             map.fitBounds(layer.getBounds());
+
+            layer.on('click', function(e) {
+                if (e.value) {
+                    let v = e.value.toFixed(3);
+                    let html = (`value: ${v}`);
+                    let popup = L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(html)
+                        .openOn(map);
+                }
+            });
         });
 
     </script>
