@@ -4,19 +4,24 @@
 L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     options: {
         click: true, // 'click' event
-        color: null
+        color: null // function colorFor(value);
     },
 
     initialize: function (scalarField, options) {
+        console.time('initialize');
+
         this.field = scalarField;
+        this.cells = this.field.gridLonLatValue();
         L.Util.setOptions(this, options);
         if (this.options.color === null) {
             this.options.color = this.defaultColorScale();
         };
+
+        console.timeEnd('initialize');
     },
 
     defaultColorScale: function () {
-        return chroma.scale(['white', 'black']).domain(this.field.range);
+        return chroma.scale(['black', 'white']).domain(this.field.range);
     },
 
     onLayerDidMount: function () {
@@ -40,40 +45,46 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     onDrawLayer: function (viewInfo) {
+        console.time('onDrawLayer');
+
         // canvas preparation
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
-        let cells = this.field.gridLonLatValue();
         let halfCell = this.field.cellsize / 2.0;
-        for (var i = 0; i < cells.length; i++) {
-            //TODO check in Bounds?
+        for (var i = 0; i < this.cells.length; i++) {
             let {
                 lon, lat, value
-            } = cells[i];
+            } = this.cells[i];
 
+            // no-data?
             if (value === null) {
                 continue;
             }
 
-            // rectangle
-            let ul = viewInfo.layer._map.latLngToContainerPoint(
-                [lat + halfCell, lon - halfCell]);
-            let lr = viewInfo.layer._map.latLngToContainerPoint(
-                [lat - halfCell, lon + halfCell]);
+            // pixel limits (upperLeft / lowerRight)
+            let ul = L.latLng([lat + halfCell, lon - halfCell]);
+            let lr = L.latLng([lat - halfCell, lon + halfCell]);
 
-            let width = Math.abs(ul.x - lr.x);
-            let height = Math.abs(ul.y - lr.y);
+            // not in bounds?
+            let cellBounds = L.latLngBounds(
+                L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+            if (!viewInfo.bounds.contains(cellBounds)) {
+                continue;
+            }
+
+            // rectangle drawing
+            let pixel_ul = viewInfo.layer._map.latLngToContainerPoint(ul);
+            let pixel_lr = viewInfo.layer._map.latLngToContainerPoint(lr);
+            let width = Math.abs(pixel_ul.x - pixel_lr.x);
+            let height = Math.abs(pixel_ul.y - pixel_lr.y);
 
             // color
-            g.fillStyle = this.options.color(value);
-
-            g.beginPath();
-            g.fillRect(ul.x, ul.y, width, height);
-            g.fill();
-            g.closePath();
-            g.stroke();
+            g.fillStyle = 'blue'; //this.options.color(value); //TODO
+            //g.fillStyle = this.options.color(value);
+            g.fillRect(pixel_ul.x, pixel_ul.y, width, height);
         }
+        console.timeEnd('onDrawLayer');
     },
 
     getBounds: function () {
