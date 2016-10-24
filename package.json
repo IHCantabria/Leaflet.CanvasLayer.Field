@@ -15,7 +15,8 @@
         "webpack": "^1.13.2"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "compile": "babel --presets es2015 src --out-file dist/leaflet.canvaslayer.vectorfield.js"
     },
     "repository": {
         "type": "git",
