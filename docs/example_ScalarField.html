@@ -23,12 +23,10 @@
 
     <script>
         let map = L.map("map");
-        let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
-
+        var url = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
         L.tileLayer(url, {
-            attribution: 'Thunderforest Landscape',
-            subdomains: 'abc',
-            maxZoom: 19
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd'
         }).addTo(map);
 
         // A ScalarField layer (a 'Raster') from an ASCIIGrid

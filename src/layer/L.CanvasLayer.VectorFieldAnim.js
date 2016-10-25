@@ -46,11 +46,6 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         let g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
-        // fading paths...
-        g.fillStyle = `rgba(125, 255, 0, ${this.options.fade})`;
-        g.lineWidth = this.options.width;
-        g.strokeStyle = this.options.color;
-
         // particle paths preparation
         let paths = [];
 
@@ -110,6 +105,10 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
             g.fillRect(0, 0, g.canvas.width, g.canvas.height);
             g.globalCompositeOperation = "source-over";
 
+            g.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`; // fading paths...
+            g.lineWidth = self.options.width;
+            g.strokeStyle = self.options.color;
+
             // New paths
             paths.forEach(function (par) {
                 let source = new L.latLng(par.y, par.x);
@@ -130,7 +129,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                     // colormap vs. simple color
                     let color = self.options.color;
                     if (typeof color == 'function') {
-                        g.strokeStyle = color(par.m).hex();
+                        //g.strokeStyle = color(par.m).hex();
+                        g.strokeStyle = color(par.m);
                     }
                     g.stroke();
                 }

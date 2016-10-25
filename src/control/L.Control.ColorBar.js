@@ -10,14 +10,14 @@ L.Control.ColorBar = L.Control.extend({
         width: 300,
         height: 15,
         background: 'transparent',
-        legend: {
-            steps: 100,
-            decimals: 2
-        }
+        steps: 100,
+        decimals: 2,
+        units: 'uds' // ej: m/s
     },
 
-    initialize: function (colorMap, options) {
-        this.colorMap = colorMap; // 'chromajs' scale function
+    initialize: function (color, range, options) {
+        this.color = color; // 'chromajs' scale function
+        this.range = range; // [min, max]
         L.Util.setOptions(this, options);
     },
 
@@ -35,15 +35,14 @@ L.Control.ColorBar = L.Control.extend({
 
     palette: function () {
         // data preparation
-        let m = this.colorMap; // <<<
-        let min = m.domain[0];
-        let max = m.domain[1];
-        let delta = (max - min) / (this.options.legend.steps);
+        let min = this.range[0];
+        let max = this.range[1];
+        let delta = (max - min) / (this.options.steps);
         let data = d3.range(min, max + delta, delta);
         let colorPerValue = data.map(d => {
             return {
                 "value": d,
-                "color": m.scale(d).css() //value --> css color
+                "color": this.color(d)
             }
         });
 
@@ -65,12 +64,12 @@ L.Control.ColorBar = L.Control.extend({
             .attr('fill', (d) => d.color);
 
         buckets.append('title').text(
-            (d) => `${d.value.toFixed(this.options.legend.decimals)} ${m.units}`
+            (d) => `${d.value.toFixed(this.options.decimals)} ${this.options.units}`
         );
         return d.innerHTML;
     }
 });
 
-L.control.colorBar = function (colorMap, options) {
-    return new L.Control.ColorBar(colorMap, options);
+L.control.colorBar = function (color, range, options) {
+    return new L.Control.ColorBar(color, range, options);
 };

@@ -1,61 +1,5 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Colormap based on chromajs (http://gka.github.io/chroma.js/)
- */
-var ColorMap = function () {
-    /**
-     * New colormap
-     * @param   {Function} scale   - chroma.scale function
-     * @param   {Array} domain - [min, max]
-     * @param   {String} units - short description, e.g. 'm/s'
-     * @returns {ColorMap}
-     */
-    function ColorMap(scale, domain, units) {
-        _classCallCheck(this, ColorMap);
-
-        this.scale = scale;
-        this.domain = domain;
-        this.units = units;
-    }
-
-    /**
-     * Default colormap for Ocean Currents Velocity (m/s)
-     * @param   {Array} domain - 0-2 m/s
-     * @returns {ColorMap}
-     */
-
-
-    _createClass(ColorMap, null, [{
-        key: 'forCurrents',
-        value: function forCurrents() {
-            var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [0, 2];
-
-            //let scale = chroma.scale(['#00008F', '#8C0000']).domain(domain); // similar to sst_36
-            var s = chroma.scale('OrRd').domain(domain);
-            //let scale = chroma.scale(['cyan', 'red']).domain(domain);
-            var m = new ColorMap(s, domain, 'm/s');
-            return m;
-        }
-
-        /*
-            ColorBrewer palettes
-            - Sequential:
-            Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
-             - Diverging:
-            BrBG PiYG PRGn PuOr RdBu RdGy RdYlBu RdYlGn Spectral
-        */
-
-    }]);
-
-    return ColorMap;
-}();
-'use strict';
-
 /**
  *   Control for a simple legend with a colorbar
  *   References:
@@ -68,14 +12,14 @@ L.Control.ColorBar = L.Control.extend({
         width: 300,
         height: 15,
         background: 'transparent',
-        legend: {
-            steps: 100,
-            decimals: 2
-        }
+        steps: 100,
+        decimals: 2,
+        units: 'uds' // ej: m/s
     },
 
-    initialize: function initialize(colorMap, options) {
-        this.colorMap = colorMap; // 'chromajs' scale function
+    initialize: function initialize(color, range, options) {
+        this.color = color; // 'chromajs' scale function
+        this.range = range; // [min, max]
         L.Util.setOptions(this, options);
     },
 
@@ -93,15 +37,14 @@ L.Control.ColorBar = L.Control.extend({
         var _this = this;
 
         // data preparation
-        var m = this.colorMap; // <<<
-        var min = m.domain[0];
-        var max = m.domain[1];
-        var delta = (max - min) / this.options.legend.steps;
+        var min = this.range[0];
+        var max = this.range[1];
+        var delta = (max - min) / this.options.steps;
         var data = d3.range(min, max + delta, delta);
         var colorPerValue = data.map(function (d) {
             return {
                 "value": d,
-                "color": m.scale(d).css() //value --> css color
+                "color": _this.color(d)
             };
         });
 
@@ -125,14 +68,14 @@ L.Control.ColorBar = L.Control.extend({
         });
 
         buckets.append('title').text(function (d) {
-            return d.value.toFixed(_this.options.legend.decimals) + ' ' + m.units;
+            return d.value.toFixed(_this.options.decimals) + ' ' + _this.options.units;
         });
         return d.innerHTML;
     }
 });
 
-L.control.colorBar = function (colorMap, options) {
-    return new L.Control.ColorBar(colorMap, options);
+L.control.colorBar = function (color, range, options) {
+    return new L.Control.ColorBar(color, range, options);
 };
 "use strict";
 
@@ -142,7 +85,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /**
  *  Abstract class for a set of values (Vector | Scalar)
- *  assigned to a regular 2D-grid (lon-lat), aka "a Raster layer"
+ *  assigned to a regular 2D-grid (lon-lat), aka "a Raster source"
  */
 var Field = function () {
     function Field(params) {
@@ -471,7 +414,6 @@ var Field = function () {
 
     return Field;
 }();
-"use strict";
 'use strict';
 
 /*
@@ -855,11 +797,6 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         var g = viewInfo.canvas.getContext('2d');
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 
-        // fading paths...
-        g.fillStyle = "rgba(125, 255, 0, " + this.options.fade + ")";
-        g.lineWidth = this.options.width;
-        g.strokeStyle = this.options.color;
-
         // particle paths preparation
         var paths = [];
 
@@ -919,6 +856,10 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
             g.fillRect(0, 0, g.canvas.width, g.canvas.height);
             g.globalCompositeOperation = "source-over";
 
+            g.fillStyle = "rgba(125, 255, 0, " + self.options.fade + ")"; // fading paths...
+            g.lineWidth = self.options.width;
+            g.strokeStyle = self.options.color;
+
             // New paths
             paths.forEach(function (par) {
                 var source = new L.latLng(par.y, par.x);
@@ -939,7 +880,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                     // colormap vs. simple color
                     var color = self.options.color;
                     if (typeof color == 'function') {
-                        g.strokeStyle = color(par.m).hex();
+                        //g.strokeStyle = color(par.m).hex();
+                        g.strokeStyle = color(par.m);
                     }
                     g.stroke();
                 }

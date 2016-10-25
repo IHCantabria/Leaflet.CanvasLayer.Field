@@ -1,17 +1,44 @@
 <html>
 
-<head></head>
+<head>
+    <title></title>
+    <link href="examples.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+</head>
 
 <body>
-    <h1>Hello Examples!</h1>
-    <hr/>
-    <ul>
-        <li><a href="example_Basic.html">VectorField animation (default style)</a></li>
-        <li><a href="example_Grid.html">Grid of points from the VectorField</a></li>
-        <li><a href="example_Styles.html">VectorField animation with custom styles</a></li>
-        <li><a href="example_Colormap.html">Colormap for currents velocity + colorbar</a></li>
-        <li><a href="example_Identify.html">Identifying a vector (velocity & direction)</a></li>
-    </ul>
+    <div id="examples">
+        <h1 id="title">Hello Examples!</h1>
+        <h2>ScalarField</h2>
+        <ul>
+            <li>
+                <a href="example_ScalarField.html">ScalarField with default style</a>
+            </li>
+            <li>
+                <a href="example_ScalarField_Styles.html">ScalarField layers with custom styles</a>
+            </li>
+        </ul>
+
+        <h2>VectorFieldAnim</h2>
+        <ul>
+            <li>
+                <a href="example_VectorFieldAnim.html">VectorField animation (default style)</a>
+            </li>
+            <li>
+                <a href="example_VectorFieldAnim_Styles.html">VectorField animation with custom styles</a>
+            </li>
+            <li>
+                <a href="example_VectorFieldAnim_ColorBar.html">VectorField animation with ColorBar control</a>
+            </li>
+
+
+        </ul>
+
+        <h2>Other</h2>
+        <ul>
+            <li><a href="example_Grid.html">Grid of points (from a VectorFieldAnim)</a></li>
+        </ul>
+    </div>
 </body>
 
 </html>

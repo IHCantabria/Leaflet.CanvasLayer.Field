@@ -1,6 +1,6 @@
 /**
  *  Abstract class for a set of values (Vector | Scalar)
- *  assigned to a regular 2D-grid (lon-lat), aka "a Raster layer"
+ *  assigned to a regular 2D-grid (lon-lat), aka "a Raster source"
  */
 class Field {
 

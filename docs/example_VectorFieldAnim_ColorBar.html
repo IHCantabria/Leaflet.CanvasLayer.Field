@@ -34,16 +34,24 @@
             Vectorfield animation with a colormap for velocity + and associated legend
         */
         d3.json("data/grid_CANTABRIA.json", function (d) {
-            let vf = new VectorField(d);
+            var vf = new VectorField(d);
 
-            let m = ColorMap.forCurrents([0, 1.4]);
-            let layer = L.canvasLayer.vectorFieldAnim(vf, {
-                color: m.scale,
+            var range = [0, 1.4];
+            var scale = chroma.scale('OrRd').domain(range);
+
+
+            // Layer
+            var layer = L.canvasLayer.vectorFieldAnim(vf, {
+                color: scale,
                 velocityScale: 1 / 500
             }).addTo(map);
-            L.control.colorBar(m).addTo(map);
-
             map.fitBounds(layer.getBounds());
+
+            // Simple colorbar
+            var bar = L.control.colorBar(scale, range, {
+                units: 'm/s',
+                steps: 100
+            }).addTo(map);
         });
     </script>
 </body>

@@ -43,7 +43,7 @@
                 velocityScale: 1 / 10
             }).addTo(map);
 
-            L.canvasLayer.vectorFieldAnim(vf, {
+            var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
                 paths: 2000,
                 color: "#FF6699",
                 width: 4,
@@ -53,6 +53,17 @@
             }).addTo(map);
 
             map.fitBounds(layer.getBounds());
+
+
+            // Change color of layer2, every 10 secs.
+            var colors = ['yellow', 'green', 'blue', 'red'];
+            setInterval(function () {
+                var r = Math.random() * colors.length | 0;
+                layer2.options.color = colors[r];
+                // REFRESH
+                throw Error();
+            }, 5000);
+
         });
     </script>
 </body>
