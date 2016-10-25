@@ -37,7 +37,9 @@
         d3.text("data/BAHIA_U.asc", function (asc) {
             let s = ScalarField.fromASCIIGrid(asc);
 
-            let layer = L.canvasLayer.scalarField(s).addTo(map);
+            let layer = L.canvasLayer.scalarField(s, {
+                color: chroma.scale(['black', 'white']).domain(s.range)
+            }).addTo(map);
             map.fitBounds(layer.getBounds());
 
             let layer2 = L.canvasLayer.scalarField(s, {
@@ -51,7 +53,7 @@
             });
 
             var layers = {
-                "Default": layer,
+                "Black to White": layer,
                 "YlGnBu (ColorBrewer2)": layer2,
                 "Some buckets (OrRd)": layer3
             };
