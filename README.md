@@ -17,12 +17,11 @@ Tested on v1.0.0
 
 ### Dependencies
 - CDN
-    * Leaflet (v1.0.0)
-    * D3 v4
-    * [chromajs](https://github.com/gka/chroma.js)(v1.2.1) - color and scales
-- Included: 
+    * [Leaflet](https://github.com/Leaflet/Leaflet) (v1.0.0)
+    * [D3](https://github.com/d3/d3) (v4) - dom, canvas, ajax...
+    * [chromajs](https://github.com/gka/chroma.js) (v1.2.1) - color and scales
+- Included in src: 
     * [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (v1.0.1) - full canvas layer
-    * 
     
 ### Dev-dependencies
 - Some tests with Jasmine (v2.4)

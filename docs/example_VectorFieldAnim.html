@@ -41,7 +41,7 @@
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
                         let d = vector.directionTo().toFixed(0);
-                        let html = (`${v} m/s (${d}&deg)`);
+                        let html = (`magnitude: ${v} | directionTo: ${d}&deg`);
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)

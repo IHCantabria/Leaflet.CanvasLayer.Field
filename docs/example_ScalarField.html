@@ -41,7 +41,7 @@
             layer.on('click', function (e) {
                 if (e.value) {
                     let v = e.value.toFixed(3);
-                    let html = (`value: ${v}`);
+                    let html = (`magnitude: ${v}`);
                     let popup = L.popup()
                         .setLatLng(e.latlng)
                         .setContent(html)

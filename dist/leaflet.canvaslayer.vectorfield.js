@@ -281,7 +281,7 @@ var Field = function () {
         }
 
         /**
-         * Returns whether or not the grid has value at the point
+         * Returns whether or not the grid has a value at the point
          * @param   {Number} lon - longitude
          * @param   {Number} lat - latitude
          * @returns {Boolean}
@@ -294,15 +294,15 @@ var Field = function () {
         }
 
         /**
-         * Returns if the grid has no vector values at the point
+         * Returns if the grid has no value at the point
          * @param   {Number} lon - longitude
          * @param   {Number} lat - latitude
          * @returns {Boolean}
          */
 
     }, {
-        key: "notHasValuesAt",
-        value: function notHasValuesAt(lon, lat) {
+        key: "notHasValueAt",
+        value: function notHasValueAt(lon, lat) {
             return !this.hasValueAt(lon, lat);
         }
 
@@ -819,7 +819,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         click: true, // 'click' event
         duration: 40, // milliseconds per 'frame'
         maxAge: 200, // number of maximum frames per path
-        velocityScale: 1 / 1000
+        velocityScale: 1 / 2000
     },
 
     initialize: function initialize(vectorField, options) {
@@ -885,19 +885,19 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                 if (par.age > self.options.maxAge) {
                     // restart, on a random x,y
                     par.age = 0;
-                    self.vf.randomPosition(par);
+                    self.field.randomPosition(par);
                 }
 
-                if (self.vf.notHasValuesAt(par.x, par.y)) {
+                if (self.field.notHasValueAt(par.x, par.y)) {
                     par.age = self.options.maxAge;
                 } else {
                     // has a vector...
-                    var vector = self.vf.valueAt(par.x, par.y);
+                    var vector = self.field.valueAt(par.x, par.y);
                     // ... and the next point will be...
                     var xt = par.x + vector.u * self.options.velocityScale;
                     var yt = par.y + vector.v * self.options.velocityScale;
 
-                    if (self.vf.hasValueAt(xt, yt)) {
+                    if (self.field.hasValueAt(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
                         par.m = vector.magnitude();

@@ -10,7 +10,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         click: true, // 'click' event
         duration: 40, // milliseconds per 'frame'
         maxAge: 200, // number of maximum frames per path
-        velocityScale: 1 / 1000
+        velocityScale: 1 / 2000
     },
 
     initialize: function (vectorField, options) {
@@ -76,19 +76,19 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
                 if (par.age > self.options.maxAge) {
                     // restart, on a random x,y
                     par.age = 0;
-                    self.vf.randomPosition(par);
+                    self.field.randomPosition(par);
                 }
 
-                if (self.vf.notHasValuesAt(par.x, par.y)) {
+                if (self.field.notHasValueAt(par.x, par.y)) {
                     par.age = self.options.maxAge;
                 } else {
                     // has a vector...
-                    let vector = self.vf.valueAt(par.x, par.y);
+                    let vector = self.field.valueAt(par.x, par.y);
                     // ... and the next point will be...
                     let xt = par.x + (vector.u * self.options.velocityScale);
                     let yt = par.y + (vector.v * self.options.velocityScale);
 
-                    if (self.vf.hasValueAt(xt, yt)) {
+                    if (self.field.hasValueAt(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
                         par.m = vector.magnitude();

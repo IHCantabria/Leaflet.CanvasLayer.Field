@@ -119,7 +119,7 @@ class Field {
     }
 
     /**
-     * Returns whether or not the grid has value at the point
+     * Returns whether or not the grid has a value at the point
      * @param   {Number} lon - longitude
      * @param   {Number} lat - latitude
      * @returns {Boolean}
@@ -129,12 +129,12 @@ class Field {
     }
 
     /**
-     * Returns if the grid has no vector values at the point
+     * Returns if the grid has no value at the point
      * @param   {Number} lon - longitude
      * @param   {Number} lat - latitude
      * @returns {Boolean}
      */
-    notHasValuesAt(lon, lat) {
+    notHasValueAt(lon, lat) {
         return !this.hasValueAt(lon, lat);
     }
 
