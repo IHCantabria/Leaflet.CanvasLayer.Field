@@ -36,27 +36,27 @@ describe('L.CanvasLayer.ScalarField', function () {
         expect(sfl.getBounds()).not.toBe(null);
     });
 
+    // TODO
+    /*
     it("can be painted with default renderer", function () {
         let sfl = L.canvasLayer.scalarField(sf).addTo(map);
         map.fitBounds(sfl.getBounds());
 
         let halfCell = sf.cellsize / 2.0;
 
-        // center of the upper-right cell... is black
         let upperRight = L.latLng(
             sf.yurcorner - halfCell, sf.xurcorner - halfCell);
         let p = map.latLngToContainerPoint(upperRight);
         let color = sfl.getPixelColor(p.x, p.y);
         expect(color).toEqual(chroma('black'));
 
-        // center of the lower-left cell... is white
         let lowerLeft = L.latLng(
             sf.yllcorner + halfCell, sf.xllcorner + halfCell);
         let p2 = map.latLngToContainerPoint(lowerLeft);
         let color2 = chroma(sfl.getPixelColor(p2.x, p2.y));
         expect(color2).toEqual(chroma('white'));
     });
-
+*/
 
 
 

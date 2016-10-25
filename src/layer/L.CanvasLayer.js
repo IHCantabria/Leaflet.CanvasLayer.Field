@@ -1,4 +1,6 @@
 /*
+  https://github.com/Sumbera/gLayers.Leaflet/releases/tag/v1.0.1
+
   Generic  Canvas Layer for leaflet 0.7 and 1.0-rc,
   copyright Stanislav Sumbera,  2016 , sumbera.com , license MIT
   originally created and motivated by L.CanvasOverlay  available here: https://gist.github.com/Sumbera/11114288

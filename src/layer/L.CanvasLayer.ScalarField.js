@@ -8,16 +8,12 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     initialize: function (scalarField, options) {
-        console.time('initialize');
-
         this.field = scalarField;
-        this.cells = this.field.gridLonLatValue();
         L.Util.setOptions(this, options);
         if (this.options.color === null) {
             this.options.color = this.defaultColorScale();
         };
-
-        console.timeEnd('initialize');
+        this.cells = this.field.gridLonLatValue();
     },
 
     defaultColorScale: function () {

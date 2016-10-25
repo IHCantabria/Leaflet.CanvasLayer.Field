@@ -14,26 +14,25 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
     },
 
     initialize: function (vectorField, options) {
-        this.vf = vectorField;
+        this.field = vectorField;
         this.timer = null;
         L.Util.setOptions(this, options);
     },
 
     onLayerDidMount: function () {
-        this._map.on('movestart resize', this._stopAnimation, this);
         if (this.options.click) {
             this._map.on('mouseover', this._activateClick, this);
             this._map.on('click', this._queryValue, this);
         }
+        this._map.on('movestart resize', this._stopAnimation, this);
     },
 
     onLayerWillUnmount: function () {
-        // -- custom cleanup
-        this._map.off('movestart resize', this._stopAnimation, this);
         if (this.options.click) {
             this._map.off('mouseover', this._activateClick, this);
             this._map.off('click', this._queryValue, this);
         }
+        this._map.off('movestart resize', this._stopAnimation, this);
     },
 
     setData: function (data) {
@@ -56,7 +55,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         let paths = [];
 
         for (var i = 0; i < this.options.paths; i++) {
-            let p = this.vf.randomPosition();
+            let p = this.field.randomPosition();
             p.age = this._randomAge();
             paths.push(p)
         }
@@ -140,7 +139,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
     },
 
     getBounds: function () {
-        let bb = this.vf.extent();
+        let bb = this.field.extent();
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);
@@ -166,7 +165,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
         let lat = e.latlng.lat;
         let result = {
             "latlng": e.latlng,
-            "vector": this.vf.valueAt(lon, lat)
+            "value": this.field.valueAt(lon, lat)
         };
 
         this.fireEvent('click', result); /*includes: L.Mixin.Events,*/

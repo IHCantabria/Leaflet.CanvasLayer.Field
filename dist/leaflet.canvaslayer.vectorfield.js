@@ -54,6 +54,86 @@ var ColorMap = function () {
 
     return ColorMap;
 }();
+'use strict';
+
+/**
+ *   Control for a simple legend with a colorbar
+ *   References:
+ *      - http://jsfiddle.net/ramnathv/g8stqcf6/
+ *      - http://jsfiddle.net/vis4/cYLZH/
+ */
+L.Control.ColorBar = L.Control.extend({
+    options: {
+        position: 'bottomleft',
+        width: 300,
+        height: 15,
+        background: 'transparent',
+        legend: {
+            steps: 100,
+            decimals: 2
+        }
+    },
+
+    initialize: function initialize(colorMap, options) {
+        this.colorMap = colorMap; // 'chromajs' scale function
+        L.Util.setOptions(this, options);
+    },
+
+    onAdd: function onAdd(map) {
+        this._map = map;
+        var div = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
+        L.DomEvent.addListener(div, 'click', L.DomEvent.stopPropagation).addListener(div, 'click', L.DomEvent.preventDefault);
+        div.style.backgroundColor = this.options.background;
+        div.style.cursor = 'text';
+        div.innerHTML = this.palette();
+        return div;
+    },
+
+    palette: function palette() {
+        var _this = this;
+
+        // data preparation
+        var m = this.colorMap; // <<<
+        var min = m.domain[0];
+        var max = m.domain[1];
+        var delta = (max - min) / this.options.legend.steps;
+        var data = d3.range(min, max + delta, delta);
+        var colorPerValue = data.map(function (d) {
+            return {
+                "value": d,
+                "color": m.scale(d).css() //value --> css color
+            };
+        });
+
+        // div.contenedor > svg
+        var w = this.options.width / colorPerValue.length;
+        var d = document.createElement("div");
+        var svg = d3.select(d).append("svg").attr('width', this.options.width).attr('height', this.options.height).style('padding', '10px'); //
+
+        // n color-bars
+        var buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
+        buckets.attr('x', function (d, i) {
+            return i * w;
+        }).attr('y', function (d) {
+            return 0;
+        }).attr('height', function (d) {
+            return _this.options.height;
+        } /*w * 4*/).attr('width', function (d) {
+            return w;
+        }).attr('fill', function (d) {
+            return d.color;
+        });
+
+        buckets.append('title').text(function (d) {
+            return d.value.toFixed(_this.options.legend.decimals) + ' ' + m.units;
+        });
+        return d.innerHTML;
+    }
+});
+
+L.control.colorBar = function (colorMap, options) {
+    return new L.Control.ColorBar(colorMap, options);
+};
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -391,6 +471,519 @@ var Field = function () {
 
     return Field;
 }();
+"use strict";
+'use strict';
+
+/*
+  https://github.com/Sumbera/gLayers.Leaflet/releases/tag/v1.0.1
+
+  Generic  Canvas Layer for leaflet 0.7 and 1.0-rc,
+  copyright Stanislav Sumbera,  2016 , sumbera.com , license MIT
+  originally created and motivated by L.CanvasOverlay  available here: https://gist.github.com/Sumbera/11114288
+
+*/
+
+L.CanvasLayer = L.Layer.extend({
+    // -- initialized is called on prototype
+    initialize: function initialize(options) {
+        this._map = null;
+        this._canvas = null;
+        this._frame = null;
+        this._delegate = null;
+        L.setOptions(this, options);
+    },
+
+    delegate: function delegate(del) {
+        this._delegate = del;
+        return this;
+    },
+
+    needRedraw: function needRedraw() {
+        if (!this._frame) {
+            this._frame = L.Util.requestAnimFrame(this.drawLayer, this);
+        }
+        return this;
+    },
+
+    //-------------------------------------------------------------
+    _onLayerDidResize: function _onLayerDidResize(resizeEvent) {
+        this._canvas.width = resizeEvent.newSize.x;
+        this._canvas.height = resizeEvent.newSize.y;
+    },
+    //-------------------------------------------------------------
+    _onLayerDidMove: function _onLayerDidMove() {
+        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+        L.DomUtil.setPosition(this._canvas, topLeft);
+        this.drawLayer();
+    },
+    //-------------------------------------------------------------
+    getEvents: function getEvents() {
+        var events = {
+            resize: this._onLayerDidResize,
+            moveend: this._onLayerDidMove
+        };
+        if (this._map.options.zoomAnimation && L.Browser.any3d) {
+            events.zoomanim = this._animateZoom;
+        }
+
+        return events;
+    },
+    //-------------------------------------------------------------
+    onAdd: function onAdd(map) {
+        this._map = map;
+        this._canvas = L.DomUtil.create('canvas', 'leaflet-layer');
+        this.tiles = {};
+
+        var size = this._map.getSize();
+        this._canvas.width = size.x;
+        this._canvas.height = size.y;
+
+        var animated = this._map.options.zoomAnimation && L.Browser.any3d;
+        L.DomUtil.addClass(this._canvas, 'leaflet-zoom-' + (animated ? 'animated' : 'hide'));
+
+        map._panes.overlayPane.appendChild(this._canvas);
+
+        map.on(this.getEvents(), this);
+
+        var del = this._delegate || this;
+        del.onLayerDidMount && del.onLayerDidMount(); // -- callback
+        this.needRedraw();
+    },
+
+    //-------------------------------------------------------------
+    onRemove: function onRemove(map) {
+        var del = this._delegate || this;
+        del.onLayerWillUnmount && del.onLayerWillUnmount(); // -- callback
+
+
+        map.getPanes().overlayPane.removeChild(this._canvas);
+
+        map.off(this.getEvents(), this);
+
+        this._canvas = null;
+    },
+
+    //------------------------------------------------------------
+    addTo: function addTo(map) {
+        map.addLayer(this);
+        return this;
+    },
+    // --------------------------------------------------------------------------------
+    LatLonToMercator: function LatLonToMercator(latlon) {
+        return {
+            x: latlon.lng * 6378137 * Math.PI / 180,
+            y: Math.log(Math.tan((90 + latlon.lat) * Math.PI / 360)) * 6378137
+        };
+    },
+
+    //------------------------------------------------------------------------------
+    drawLayer: function drawLayer() {
+        // -- todo make the viewInfo properties  flat objects.
+        var size = this._map.getSize();
+        var bounds = this._map.getBounds();
+        var zoom = this._map.getZoom();
+
+        var center = this.LatLonToMercator(this._map.getCenter());
+        var corner = this.LatLonToMercator(this._map.containerPointToLatLng(this._map.getSize()));
+
+        var del = this._delegate || this;
+        del.onDrawLayer && del.onDrawLayer({
+            layer: this,
+            canvas: this._canvas,
+            bounds: bounds,
+            size: size,
+            zoom: zoom,
+            center: center,
+            corner: corner
+        });
+        this._frame = null;
+    },
+
+    //------------------------------------------------------------------------------
+    _animateZoom: function _animateZoom(e) {
+        var scale = this._map.getZoomScale(e.zoom);
+        var offset = this._map._latLngToNewLayerPoint(this._map.getBounds().getNorthWest(), e.zoom, e.center);
+
+        L.DomUtil.setTransform(this._canvas, offset, scale);
+    }
+});
+
+L.canvasLayer = function () {
+    return new L.CanvasLayer();
+};
+'use strict';
+
+/**
+ * ScalarField ('Raster') on canvas
+ */
+L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
+    options: {
+        click: true, // 'click' event
+        color: null // function colorFor(value);
+    },
+
+    initialize: function initialize(scalarField, options) {
+        this.field = scalarField;
+        L.Util.setOptions(this, options);
+        if (this.options.color === null) {
+            this.options.color = this.defaultColorScale();
+        };
+        this.cells = this.field.gridLonLatValue();
+    },
+
+    defaultColorScale: function defaultColorScale() {
+        return chroma.scale(['white', 'black']).domain(this.field.range);
+    },
+
+    onLayerDidMount: function onLayerDidMount() {
+        if (this.options.click) {
+            this._map.on('mouseover', this._activateClick, this);
+            this._map.on('click', this._queryValue, this);
+        }
+    },
+
+    onLayerWillUnmount: function onLayerWillUnmount() {
+        if (this.options.click) {
+            this._map.off('mouseover', this._activateClick, this);
+            this._map.off('click', this._queryValue, this);
+        }
+    },
+
+    setData: function setData(data) {
+        // -- custom data set
+        // TODO
+        this.needRedraw(); // -- call to drawLayer
+    },
+
+    onDrawLayer: function onDrawLayer(viewInfo) {
+        console.time('onDrawLayer');
+
+        // canvas preparation
+        var g = viewInfo.canvas.getContext('2d');
+        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
+
+        var halfCell = this.field.cellsize / 2.0;
+        for (var i = 0; i < this.cells.length; i++) {
+            var _cells$i = this.cells[i];
+            var lon = _cells$i.lon;
+            var lat = _cells$i.lat;
+            var value = _cells$i.value;
+
+            // no-data?
+
+            if (value === null) {
+                continue;
+            }
+
+            // pixel limits (upperLeft / lowerRight)
+            var ul = L.latLng([lat + halfCell, lon - halfCell]);
+            var lr = L.latLng([lat - halfCell, lon + halfCell]);
+
+            // not in bounds?
+            var cellBounds = L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+            if (!viewInfo.bounds.contains(cellBounds)) {
+                continue;
+            }
+
+            // rectangle drawing
+            var pixel_ul = viewInfo.layer._map.latLngToContainerPoint(ul);
+            var pixel_lr = viewInfo.layer._map.latLngToContainerPoint(lr);
+            var width = Math.abs(pixel_ul.x - pixel_lr.x);
+            var height = Math.abs(pixel_ul.y - pixel_lr.y);
+
+            // color
+            //g.fillStyle = 'blue'; //this.options.color(value); //TODO
+            g.fillStyle = this.options.color(value);
+            g.fillRect(pixel_ul.x, pixel_ul.y, width, height);
+        }
+        console.timeEnd('onDrawLayer');
+    },
+
+    getBounds: function getBounds() {
+        var bb = this.field.extent();
+        var southWest = L.latLng(bb[1], bb[0]),
+            northEast = L.latLng(bb[3], bb[2]);
+        var bounds = L.latLngBounds(southWest, northEast);
+        return bounds;
+    },
+
+    getPixelColor: function getPixelColor(x, y) {
+        var ctx = this._canvas.getContext('2d');
+        var pixel = ctx.getImageData(x, y, 1, 1).data;
+
+        // array [r, g, b, a]
+        return chroma(pixel[0], pixel[1], pixel[2]);
+    },
+
+    _activateClick: function _activateClick() {
+        this._map.getContainer().style.cursor = 'default';
+    },
+
+    _queryValue: function _queryValue(e) {
+        var lon = e.latlng.lng;
+        var lat = e.latlng.lat;
+        var result = {
+            latlng: e.latlng,
+            value: this.field.valueAt(lon, lat)
+        };
+        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
+    }
+});
+
+L.canvasLayer.scalarField = function (scalarField, options) {
+    return new L.CanvasLayer.ScalarField(scalarField, options);
+};
+"use strict";
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ *  Simple layer with lon-lat points
+ */
+L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
+    options: {
+        color: "gray"
+    },
+
+    initialize: function initialize(lonslats, options) {
+        this.lonslats = lonslats;
+        L.Util.setOptions(this, options);
+    },
+
+    onLayerDidMount: function onLayerDidMount() {
+        // -- prepare custom drawing
+    },
+
+    onLayerWillUnmount: function onLayerWillUnmount() {
+        // -- custom cleanup
+    },
+
+    setData: function setData(data) {
+        // -- custom data set
+        this.needRedraw(); // -- call to drawLayer
+    },
+
+    onDrawLayer: function onDrawLayer(viewInfo) {
+        // canvas preparation
+        var g = viewInfo.canvas.getContext('2d');
+        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
+        g.fillStyle = this.options.color;
+
+        var ptos = this.lonslats;
+        for (var i = 0; i < ptos.length; i++) {
+            var lonlat = ptos[i];
+            var p = viewInfo.layer._map.latLngToContainerPoint([lonlat.lat, lonlat.lon]);
+            g.beginPath();
+            //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
+            g.fillRect(p.x, p.y, 2, 2); //simple point
+            g.fill();
+            g.closePath();
+            g.stroke();
+        }
+    },
+
+    getBounds: function getBounds() {
+        var xs = this.lonslats.map(function (pt) {
+            return pt.lon;
+        });
+        var ys = this.lonslats.map(function (pt) {
+            return pt.lat;
+        });
+
+        var xmin = Math.min.apply(Math, _toConsumableArray(xs));
+        var ymin = Math.min.apply(Math, _toConsumableArray(ys));
+        var xmax = Math.max.apply(Math, _toConsumableArray(xs));
+        var ymax = Math.max.apply(Math, _toConsumableArray(ys));
+
+        var southWest = L.latLng(ymin, xmin),
+            northEast = L.latLng(ymax, xmax);
+        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR
+        return bounds;
+    }
+});
+
+L.canvasLayer.simpleLonLat = function (lonslats, options) {
+    return new L.CanvasLayer.SimpleLonLat(lonslats, options);
+};
+"use strict";
+
+/**
+ * Animated VectorField on canvas
+ */
+L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
+    options: {
+        paths: 1000,
+        color: "white", // html-color | chromajs.scale
+        width: 2, // path-width
+        fade: "0.96", // 0 to 1
+        click: true, // 'click' event
+        duration: 40, // milliseconds per 'frame'
+        maxAge: 200, // number of maximum frames per path
+        velocityScale: 1 / 1000
+    },
+
+    initialize: function initialize(vectorField, options) {
+        this.field = vectorField;
+        this.timer = null;
+        L.Util.setOptions(this, options);
+    },
+
+    onLayerDidMount: function onLayerDidMount() {
+        if (this.options.click) {
+            this._map.on('mouseover', this._activateClick, this);
+            this._map.on('click', this._queryValue, this);
+        }
+        this._map.on('movestart resize', this._stopAnimation, this);
+    },
+
+    onLayerWillUnmount: function onLayerWillUnmount() {
+        if (this.options.click) {
+            this._map.off('mouseover', this._activateClick, this);
+            this._map.off('click', this._queryValue, this);
+        }
+        this._map.off('movestart resize', this._stopAnimation, this);
+    },
+
+    setData: function setData(data) {
+        // -- custom data set
+        // TODO
+        this.needRedraw(); // -- call to drawLayer
+    },
+
+    onDrawLayer: function onDrawLayer(viewInfo) {
+        // canvas preparation
+        var g = viewInfo.canvas.getContext('2d');
+        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
+
+        // fading paths...
+        g.fillStyle = "rgba(125, 255, 0, " + this.options.fade + ")";
+        g.lineWidth = this.options.width;
+        g.strokeStyle = this.options.color;
+
+        // particle paths preparation
+        var paths = [];
+
+        for (var i = 0; i < this.options.paths; i++) {
+            var p = this.field.randomPosition();
+            p.age = this._randomAge();
+            paths.push(p);
+        }
+
+        this.timer = d3.timer(function () {
+            moveParticles();
+            drawParticles();
+        }, this.options.duration);
+
+        var self = this;
+
+        /**
+         * Builds the paths, adding 'particles' on each animation step, considering
+         * their properties (age / position source > target)
+         */
+        function moveParticles() {
+            paths.forEach(function (par) {
+                if (par.age > self.options.maxAge) {
+                    // restart, on a random x,y
+                    par.age = 0;
+                    self.vf.randomPosition(par);
+                }
+
+                if (self.vf.notHasValuesAt(par.x, par.y)) {
+                    par.age = self.options.maxAge;
+                } else {
+                    // has a vector...
+                    var vector = self.vf.valueAt(par.x, par.y);
+                    // ... and the next point will be...
+                    var xt = par.x + vector.u * self.options.velocityScale;
+                    var yt = par.y + vector.v * self.options.velocityScale;
+
+                    if (self.vf.hasValueAt(xt, yt)) {
+                        par.xt = xt;
+                        par.yt = yt;
+                        par.m = vector.magnitude();
+                    } else {
+                        // not visible... keep moving?
+                        par.age = self.options.maxAge; // ??
+                    }
+                }
+                par.age += 1;
+            });
+        }
+
+        /**
+         * Draws the paths on each step
+         */
+        function drawParticles() {
+            // Previous paths...
+            g.globalCompositeOperation = "destination-in";
+            g.fillRect(0, 0, g.canvas.width, g.canvas.height);
+            g.globalCompositeOperation = "source-over";
+
+            // New paths
+            paths.forEach(function (par) {
+                var source = new L.latLng(par.y, par.x);
+                var target = new L.latLng(par.yt, par.xt);
+
+                if (viewInfo.bounds.contains(source) && par.age <= self.options.maxAge) {
+                    var pA = viewInfo.layer._map.latLngToContainerPoint(source);
+                    var pB = viewInfo.layer._map.latLngToContainerPoint(target);
+
+                    g.beginPath();
+                    g.moveTo(pA.x, pA.y);
+                    g.lineTo(pB.x, pB.y);
+
+                    // next-step movement
+                    par.x = par.xt;
+                    par.y = par.yt;
+
+                    // colormap vs. simple color
+                    var color = self.options.color;
+                    if (typeof color == 'function') {
+                        g.strokeStyle = color(par.m).hex();
+                    }
+                    g.stroke();
+                }
+            });
+        }
+    },
+
+    getBounds: function getBounds() {
+        var bb = this.field.extent();
+        var southWest = L.latLng(bb[1], bb[0]),
+            northEast = L.latLng(bb[3], bb[2]);
+        var bounds = L.latLngBounds(southWest, northEast);
+        return bounds;
+    },
+
+    _randomAge: function _randomAge() {
+        return Math.round(Math.random() * this.options.maxAge);
+    },
+
+    _stopAnimation: function _stopAnimation() {
+        if (this.timer) {
+            this.timer.stop();
+        }
+    },
+
+    _activateClick: function _activateClick() {
+        this._map.getContainer().style.cursor = 'default';
+    },
+
+    _queryValue: function _queryValue(e) {
+        var lon = e.latlng.lng;
+        var lat = e.latlng.lat;
+        var result = {
+            "latlng": e.latlng,
+            "value": this.field.valueAt(lon, lat)
+        };
+
+        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
+    }
+});
+
+L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
+    return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
+};
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -778,461 +1371,3 @@ var VectorField = function (_Field) {
 
     return VectorField;
 }(Field);
-'use strict';
-
-/**
- *   Control for a simple legend with a colorbar
- *   References:
- *      - http://jsfiddle.net/ramnathv/g8stqcf6/
- *      - http://jsfiddle.net/vis4/cYLZH/
- */
-L.Control.ColorBar = L.Control.extend({
-    options: {
-        position: 'bottomleft',
-        width: 300,
-        height: 15,
-        background: 'transparent',
-        legend: {
-            steps: 100,
-            decimals: 2
-        }
-    },
-
-    initialize: function initialize(colorMap, options) {
-        this.colorMap = colorMap; // 'chromajs' scale function
-        L.Util.setOptions(this, options);
-    },
-
-    onAdd: function onAdd(map) {
-        this._map = map;
-        var div = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
-        L.DomEvent.addListener(div, 'click', L.DomEvent.stopPropagation).addListener(div, 'click', L.DomEvent.preventDefault);
-        div.style.backgroundColor = this.options.background;
-        div.style.cursor = 'text';
-        div.innerHTML = this.palette();
-        return div;
-    },
-
-    palette: function palette() {
-        var _this = this;
-
-        // data preparation
-        var m = this.colorMap; // <<<
-        var min = m.domain[0];
-        var max = m.domain[1];
-        var delta = (max - min) / this.options.legend.steps;
-        var data = d3.range(min, max + delta, delta);
-        var colorPerValue = data.map(function (d) {
-            return {
-                "value": d,
-                "color": m.scale(d).css() //value --> css color
-            };
-        });
-
-        // div.contenedor > svg
-        var w = this.options.width / colorPerValue.length;
-        var d = document.createElement("div");
-        var svg = d3.select(d).append("svg").attr('width', this.options.width).attr('height', this.options.height).style('padding', '10px'); //
-
-        // n color-bars
-        var buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
-        buckets.attr('x', function (d, i) {
-            return i * w;
-        }).attr('y', function (d) {
-            return 0;
-        }).attr('height', function (d) {
-            return _this.options.height;
-        } /*w * 4*/).attr('width', function (d) {
-            return w;
-        }).attr('fill', function (d) {
-            return d.color;
-        });
-
-        buckets.append('title').text(function (d) {
-            return d.value.toFixed(_this.options.legend.decimals) + ' ' + m.units;
-        });
-        return d.innerHTML;
-    }
-});
-
-L.control.colorBar = function (colorMap, options) {
-    return new L.Control.ColorBar(colorMap, options);
-};
-'use strict';
-
-/**
- * ScalarField ('Raster') on canvas
- */
-L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
-    options: {
-        click: true, // 'click' event
-        color: null // function colorFor(value);
-    },
-
-    initialize: function initialize(scalarField, options) {
-        console.time('initialize');
-
-        this.field = scalarField;
-        this.cells = this.field.gridLonLatValue();
-        L.Util.setOptions(this, options);
-        if (this.options.color === null) {
-            this.options.color = this.defaultColorScale();
-        };
-
-        console.timeEnd('initialize');
-    },
-
-    defaultColorScale: function defaultColorScale() {
-        return chroma.scale(['white', 'black']).domain(this.field.range);
-    },
-
-    onLayerDidMount: function onLayerDidMount() {
-        if (this.options.click) {
-            this._map.on('mouseover', this._activateClick, this);
-            this._map.on('click', this._queryValue, this);
-        }
-    },
-
-    onLayerWillUnmount: function onLayerWillUnmount() {
-        if (this.options.click) {
-            this._map.off('mouseover', this._activateClick, this);
-            this._map.off('click', this._queryValue, this);
-        }
-    },
-
-    setData: function setData(data) {
-        // -- custom data set
-        // TODO
-        this.needRedraw(); // -- call to drawLayer
-    },
-
-    onDrawLayer: function onDrawLayer(viewInfo) {
-        console.time('onDrawLayer');
-
-        // canvas preparation
-        var g = viewInfo.canvas.getContext('2d');
-        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-
-        var halfCell = this.field.cellsize / 2.0;
-        for (var i = 0; i < this.cells.length; i++) {
-            var _cells$i = this.cells[i];
-            var lon = _cells$i.lon;
-            var lat = _cells$i.lat;
-            var value = _cells$i.value;
-
-            // no-data?
-
-            if (value === null) {
-                continue;
-            }
-
-            // pixel limits (upperLeft / lowerRight)
-            var ul = L.latLng([lat + halfCell, lon - halfCell]);
-            var lr = L.latLng([lat - halfCell, lon + halfCell]);
-
-            // not in bounds?
-            var cellBounds = L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
-            if (!viewInfo.bounds.contains(cellBounds)) {
-                continue;
-            }
-
-            // rectangle drawing
-            var pixel_ul = viewInfo.layer._map.latLngToContainerPoint(ul);
-            var pixel_lr = viewInfo.layer._map.latLngToContainerPoint(lr);
-            var width = Math.abs(pixel_ul.x - pixel_lr.x);
-            var height = Math.abs(pixel_ul.y - pixel_lr.y);
-
-            // color
-            //g.fillStyle = 'blue'; //this.options.color(value); //TODO
-            g.fillStyle = this.options.color(value);
-            g.fillRect(pixel_ul.x, pixel_ul.y, width, height);
-        }
-        console.timeEnd('onDrawLayer');
-    },
-
-    getBounds: function getBounds() {
-        var bb = this.field.extent();
-        var southWest = L.latLng(bb[1], bb[0]),
-            northEast = L.latLng(bb[3], bb[2]);
-        var bounds = L.latLngBounds(southWest, northEast);
-        return bounds;
-    },
-
-    getPixelColor: function getPixelColor(x, y) {
-        var ctx = this._canvas.getContext('2d');
-        var pixel = ctx.getImageData(x, y, 1, 1).data;
-
-        // array [r, g, b, a]
-        return chroma(pixel[0], pixel[1], pixel[2]);
-    },
-
-    _activateClick: function _activateClick() {
-        this._map.getContainer().style.cursor = 'default';
-    },
-
-    _queryValue: function _queryValue(e) {
-        var lon = e.latlng.lng;
-        var lat = e.latlng.lat;
-        var result = {
-            latlng: e.latlng,
-            value: this.field.valueAt(lon, lat)
-        };
-        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
-    }
-});
-
-L.canvasLayer.scalarField = function (scalarField, options) {
-    return new L.CanvasLayer.ScalarField(scalarField, options);
-};
-"use strict";
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/**
- *  Simple layer with lon-lat points
- */
-L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
-    options: {
-        color: "gray"
-    },
-
-    initialize: function initialize(lonslats, options) {
-        this.lonslats = lonslats;
-        L.Util.setOptions(this, options);
-    },
-
-    onLayerDidMount: function onLayerDidMount() {
-        // -- prepare custom drawing
-    },
-
-    onLayerWillUnmount: function onLayerWillUnmount() {
-        // -- custom cleanup
-    },
-
-    setData: function setData(data) {
-        // -- custom data set
-        this.needRedraw(); // -- call to drawLayer
-    },
-
-    onDrawLayer: function onDrawLayer(viewInfo) {
-        // canvas preparation
-        var g = viewInfo.canvas.getContext('2d');
-        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-        g.fillStyle = this.options.color;
-
-        var ptos = this.lonslats;
-        for (var i = 0; i < ptos.length; i++) {
-            var lonlat = ptos[i];
-            var p = viewInfo.layer._map.latLngToContainerPoint([lonlat.lat, lonlat.lon]);
-            g.beginPath();
-            //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
-            g.fillRect(p.x, p.y, 2, 2); //simple point
-            g.fill();
-            g.closePath();
-            g.stroke();
-        }
-    },
-
-    getBounds: function getBounds() {
-        var xs = this.lonslats.map(function (pt) {
-            return pt.lon;
-        });
-        var ys = this.lonslats.map(function (pt) {
-            return pt.lat;
-        });
-
-        var xmin = Math.min.apply(Math, _toConsumableArray(xs));
-        var ymin = Math.min.apply(Math, _toConsumableArray(ys));
-        var xmax = Math.max.apply(Math, _toConsumableArray(xs));
-        var ymax = Math.max.apply(Math, _toConsumableArray(ys));
-
-        var southWest = L.latLng(ymin, xmin),
-            northEast = L.latLng(ymax, xmax);
-        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR
-        return bounds;
-    }
-});
-
-L.canvasLayer.simpleLonLat = function (lonslats, options) {
-    return new L.CanvasLayer.SimpleLonLat(lonslats, options);
-};
-"use strict";
-
-/**
- * Animated VectorField on canvas
- */
-L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
-    options: {
-        paths: 1000,
-        color: "white", // html-color | chromajs.scale
-        width: 2, // path-width
-        fade: "0.96", // 0 to 1
-        click: true, // 'click' event
-        duration: 40, // milliseconds per 'frame'
-        maxAge: 200, // number of maximum frames per path
-        velocityScale: 1 / 1000
-    },
-
-    initialize: function initialize(vectorField, options) {
-        this.vf = vectorField;
-        this.timer = null;
-        L.Util.setOptions(this, options);
-    },
-
-    onLayerDidMount: function onLayerDidMount() {
-        this._map.on('movestart resize', this._stopAnimation, this);
-        if (this.options.click) {
-            this._map.on('mouseover', this._activateClick, this);
-            this._map.on('click', this._queryValue, this);
-        }
-    },
-
-    onLayerWillUnmount: function onLayerWillUnmount() {
-        // -- custom cleanup
-        this._map.off('movestart resize', this._stopAnimation, this);
-        if (this.options.click) {
-            this._map.off('mouseover', this._activateClick, this);
-            this._map.off('click', this._queryValue, this);
-        }
-    },
-
-    setData: function setData(data) {
-        // -- custom data set
-        // TODO
-        this.needRedraw(); // -- call to drawLayer
-    },
-
-    onDrawLayer: function onDrawLayer(viewInfo) {
-        // canvas preparation
-        var g = viewInfo.canvas.getContext('2d');
-        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-
-        // fading paths...
-        g.fillStyle = "rgba(125, 255, 0, " + this.options.fade + ")";
-        g.lineWidth = this.options.width;
-        g.strokeStyle = this.options.color;
-
-        // particle paths preparation
-        var paths = [];
-
-        for (var i = 0; i < this.options.paths; i++) {
-            var p = this.vf.randomPosition();
-            p.age = this._randomAge();
-            paths.push(p);
-        }
-
-        this.timer = d3.timer(function () {
-            moveParticles();
-            drawParticles();
-        }, this.options.duration);
-
-        var self = this;
-
-        /**
-         * Builds the paths, adding 'particles' on each animation step, considering
-         * their properties (age / position source > target)
-         */
-        function moveParticles() {
-            paths.forEach(function (par) {
-                if (par.age > self.options.maxAge) {
-                    // restart, on a random x,y
-                    par.age = 0;
-                    self.vf.randomPosition(par);
-                }
-
-                if (self.vf.notHasValuesAt(par.x, par.y)) {
-                    par.age = self.options.maxAge;
-                } else {
-                    // has a vector...
-                    var vector = self.vf.valueAt(par.x, par.y);
-                    // ... and the next point will be...
-                    var xt = par.x + vector.u * self.options.velocityScale;
-                    var yt = par.y + vector.v * self.options.velocityScale;
-
-                    if (self.vf.hasValueAt(xt, yt)) {
-                        par.xt = xt;
-                        par.yt = yt;
-                        par.m = vector.magnitude();
-                    } else {
-                        // not visible... keep moving?
-                        par.age = self.options.maxAge; // ??
-                    }
-                }
-                par.age += 1;
-            });
-        }
-
-        /**
-         * Draws the paths on each step
-         */
-        function drawParticles() {
-            // Previous paths...
-            g.globalCompositeOperation = "destination-in";
-            g.fillRect(0, 0, g.canvas.width, g.canvas.height);
-            g.globalCompositeOperation = "source-over";
-
-            // New paths
-            paths.forEach(function (par) {
-                var source = new L.latLng(par.y, par.x);
-                var target = new L.latLng(par.yt, par.xt);
-
-                if (viewInfo.bounds.contains(source) && par.age <= self.options.maxAge) {
-                    var pA = viewInfo.layer._map.latLngToContainerPoint(source);
-                    var pB = viewInfo.layer._map.latLngToContainerPoint(target);
-
-                    g.beginPath();
-                    g.moveTo(pA.x, pA.y);
-                    g.lineTo(pB.x, pB.y);
-
-                    // next-step movement
-                    par.x = par.xt;
-                    par.y = par.yt;
-
-                    // colormap vs. simple color
-                    var color = self.options.color;
-                    if (typeof color == 'function') {
-                        g.strokeStyle = color(par.m).hex();
-                    }
-                    g.stroke();
-                }
-            });
-        }
-    },
-
-    getBounds: function getBounds() {
-        var bb = this.vf.extent();
-        var southWest = L.latLng(bb[1], bb[0]),
-            northEast = L.latLng(bb[3], bb[2]);
-        var bounds = L.latLngBounds(southWest, northEast);
-        return bounds;
-    },
-
-    _randomAge: function _randomAge() {
-        return Math.round(Math.random() * this.options.maxAge);
-    },
-
-    _stopAnimation: function _stopAnimation() {
-        if (this.timer) {
-            this.timer.stop();
-        }
-    },
-
-    _activateClick: function _activateClick() {
-        this._map.getContainer().style.cursor = 'default';
-    },
-
-    _queryValue: function _queryValue(e) {
-        var lon = e.latlng.lng;
-        var lat = e.latlng.lat;
-        var result = {
-            "latlng": e.latlng,
-            "vector": this.vf.valueAt(lon, lat)
-        };
-
-        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
-    }
-});
-
-L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
-    return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
-};

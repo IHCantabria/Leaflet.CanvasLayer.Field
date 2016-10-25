@@ -1,7 +1,12 @@
 # L.CanvasLayer.VectorFieldAnim
 
 ## Description
-An animated layer representing a vector field, such as wind or ocean currents, based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio and [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera.
+A set of layers to visualize 'Raster' files (ASCIIGrid), based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera:
+
+* ScalarField: a Raster layer from scalars, such as DTM, temperature...
+TODO [[* VectorField: a Raster layer from vectors, such as wind or ocean currents, using arrows
+
+* VectorFieldAnim: an animated layer representing a vector field, based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio 
 
 ![Example](https://url-to-image.gif "Example")
 
@@ -12,16 +17,19 @@ Tested on v1.0.0
 
 ### Dependencies
 - CDN
+    * Leaflet (v1.0.0)
     * D3 v4
-    * Leaflet v1.0.0
+    * [chromajs](https://github.com/gka/chroma.js)(v1.2.1) - color and scales
 - Included: 
     * [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (v1.0.1) - full canvas layer
-    * [chromajs](https://github.com/gka/chroma.js)(v1.1.1) - color and scales
-    * [underscore](http://underscorejs.org/) (v1.8.3) - utilities
+    * 
+    
+### Dev-dependencies
 - Some tests with Jasmine (v2.4)
+- ES6 to ES5 with babel
 
 ### Browser / device compatibility
-- It uses HTML5 canvas & JS ECMAScript 2015 (ES6) for some classes
+- HTML5 canvas & ES5
 
 ## Demos
 See the included [examples](https://xxx.github.com)
@@ -38,8 +46,5 @@ TBD
 
 * * * 
 
-
-
-- Tests con Jasmine 
 
 

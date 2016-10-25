@@ -65,7 +65,7 @@ describe("VectorField", function () {
 
     it("can calculate the Range of its values", function () {
         expect(vf.range).not.toBe(null);
-        expect(vf.range.min).toEqual(0.0067317434565905545);
-        expect(vf.range.max).toEqual(0.2150247092568961);
+        expect(vf.range[0]).toEqual(0.0067317434565905545);
+        expect(vf.range[1]).toEqual(0.2150247092568961);
     });
 });

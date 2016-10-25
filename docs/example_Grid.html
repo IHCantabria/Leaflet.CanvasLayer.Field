@@ -10,27 +10,16 @@
 </head>
 
 <body>
-    <div id="map"></div>
-
-    <!--<h1 id="title">Ocean Currents in Cantabria | 2016-08-21 17:00h</h1>-->
     <h1 id="title">Grid of points from the VectorField</h1>
+    <div id="map"></div>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
-
-    <!-- Local -->
-    <script src="../lib/chroma.min.js"></script>
-    <script src="../lib/L.CanvasLayer.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
 
     <!-- Plugin -->
-    <script src="../src/Vector.js"></script>
-    <script src="../src/Field.js"></script>
-    <script src="../src/ScalarField.js"></script>
-    <script src="../src/VectorField.js"></script>
-    <script src="../src/ColorMap.js"></script>
-    <script src="../src/layer/L.CanvasLayer.VectorFieldAnim.js"></script>
-    <script src="../src/layer/L.CanvasLayer.SimpleLonLat.js"></script>
+    <script src="../dist/leaflet.canvaslayer.vectorfield.js"></script>
 
     <script>
         let map = L.map("map");
@@ -45,8 +34,8 @@
             Simple points layer with the vectorfield grid
         */
         //d3.json("data/grid_BAHIA.json", function(d) {
-        d3.text("data/BAHIA_U.asc", function(u) {
-            d3.text("data/BAHIA_V.asc", function(v) {
+        d3.text("data/BAHIA_U.asc", function (u) {
+            d3.text("data/BAHIA_V.asc", function (v) {
                 let vf = VectorField.fromASCIIGrids(u, v);
 
                 let layer = L.canvasLayer.simpleLonLat(vf.gridLonLatValue(), {
@@ -56,7 +45,6 @@
                 map.fitBounds(layer.getBounds());
             });
         });
-
     </script>
 </body>
 
