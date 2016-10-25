@@ -56,12 +56,10 @@
 
 
             // Change color of layer2, every 10 secs.
-            var colors = ['yellow', 'green', 'blue', 'red'];
+            var colors = ['cyan', 'yellow', 'green', 'blue', 'red'];
             setInterval(function () {
                 var r = Math.random() * colors.length | 0;
                 layer2.options.color = colors[r];
-                // REFRESH
-                throw Error();
             }, 5000);
 
         });
