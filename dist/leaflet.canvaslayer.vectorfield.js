@@ -556,7 +556,7 @@ L.canvasLayer = function () {
 'use strict';
 
 /**
- * ScalarField ('Raster') on canvas
+ * ScalarField on canvas (a 'Raster')
  */
 L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     options: {

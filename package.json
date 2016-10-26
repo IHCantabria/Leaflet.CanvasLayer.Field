@@ -16,7 +16,8 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "compile": "babel --presets es2015 src --out-file dist/leaflet.canvaslayer.vectorfield.js"
+        "build": "babel --presets es2015 src --out-file dist/leaflet.canvaslayer.vectorfield.js",
+        "watch": "npm run build -- -w"
     },
     "repository": {
         "type": "git",

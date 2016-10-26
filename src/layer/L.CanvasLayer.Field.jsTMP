@@ -1,6 +1,6 @@
 /**
  * Abstract class for a Field layer on canvas, aka "a Raster layer"
- * (ScalarField | VectorField)
+ * (ScalarField or a VectorField)
  */
 L.CanvasLayer.Field = L.CanvasLayer.extend({
     options: {
