@@ -12,12 +12,13 @@
     "devDependencies": {
         "babel-cli": "^6.16.0",
         "babel-preset-es2015": "^6.16.0",
+        "jasmine": "^2.5.2",
+        "jasmine-node": "^1.14.5",
         "webpack": "^1.13.2"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "babel --presets es2015 src --out-file dist/leaflet.canvaslayer.vectorfield.js",
-        "watch": "npm run build -- -w"
+        "build:es6": "babel --presets es2015 src --out-file dist/leaflet.canvaslayer.vectorfield.js",
+        "watch": "npm run build:es6 -- -w"
     },
     "repository": {
         "type": "git",

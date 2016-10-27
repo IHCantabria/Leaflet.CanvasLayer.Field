@@ -2,10 +2,7 @@
  *  2D Vector
  */
 class Vector {
-    /**
-     * @param {Number} u
-     * @param {Number} v
-     */
+
     constructor(u, v) {
         this.u = u;
         this.v = v;

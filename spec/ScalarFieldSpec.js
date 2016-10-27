@@ -1,4 +1,5 @@
 describe("ScalarField", function () {
+
     let dataFolder = "../../docs/data";
     let sf;
 

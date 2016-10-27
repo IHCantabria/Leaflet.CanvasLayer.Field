@@ -227,7 +227,6 @@ class Field {
         let ci = fi + 1;
         let fj = Math.floor(j);
         let cj = fj + 1;
-
         //console.log(fi, ci, fj, cj);
 
         // vector values for the 4-cells

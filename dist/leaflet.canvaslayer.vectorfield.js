@@ -358,7 +358,6 @@ var Field = function () {
             var ci = fi + 1;
             var fj = Math.floor(j);
             var cj = fj + 1;
-
             //console.log(fi, ci, fj, cj);
 
             // vector values for the 4-cells
@@ -1090,10 +1089,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  *  2D Vector
  */
 var Vector = function () {
-    /**
-     * @param {Number} u
-     * @param {Number} v
-     */
     function Vector(u, v) {
         _classCallCheck(this, Vector);
 
