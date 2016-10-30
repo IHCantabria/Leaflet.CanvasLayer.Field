@@ -1,7 +1,7 @@
 /**
  * Abstract class for a Field layer on canvas, aka "a Raster layer"
  * (ScalarField or a VectorField)
- */
+
 L.CanvasLayer.Field = L.CanvasLayer.extend({
     options: {
         click: true, // 'click' event
@@ -57,6 +57,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
             latlng: e.latlng,
             value: this.field.valueAt(lon, lat)
         };
-        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
-    }
+        this.fireEvent('click', result); //includes: L.Mixin.Events
+
+}
 });
+*/

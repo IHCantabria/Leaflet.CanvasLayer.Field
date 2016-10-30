@@ -62,3 +62,6 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
 L.canvasLayer.simpleLonLat = function (lonslats, options) {
     return new L.CanvasLayer.SimpleLonLat(lonslats, options);
 }
+
+module.exports = L.CanvasLayer.SimpleLonLat;
+module.exports = L.canvasLayer.simpleLonLat;

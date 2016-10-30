@@ -14,6 +14,7 @@
             top: 0;
             left: 0;
         }
+
     </style>
 </head>
 
@@ -30,11 +31,12 @@
 
     <script>
         let map = L.map("map");
-        d3.text("data/U.asc", function (asc) {
+        d3.text("data/U.asc", function(asc) {
             let s = ScalarField.fromASCIIGrid(asc);
             let layer = L.canvasLayer.scalarField(s).addTo(map);
             map.fitBounds(layer.getBounds());
         });
+
     </script>
 </body>
 

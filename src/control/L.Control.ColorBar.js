@@ -73,3 +73,6 @@ L.Control.ColorBar = L.Control.extend({
 L.control.colorBar = function (color, range, options) {
     return new L.Control.ColorBar(color, range, options);
 };
+
+module.exports = L.Control.ColorBar;
+module.exports = L.control.colorBar;

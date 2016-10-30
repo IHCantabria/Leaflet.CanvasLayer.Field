@@ -2,7 +2,7 @@
  *  Abstract class for a set of values (Vector | Scalar)
  *  assigned to a regular 2D-grid (lon-lat), aka "a Raster source"
  */
-class Field {
+export class Field {
 
     constructor(params) {
         if (new.target === Field) {
@@ -229,7 +229,7 @@ class Field {
         let cj = fj + 1;
         //console.log(fi, ci, fj, cj);
 
-        // vector values for the 4-cells
+        // values for the 4-cells
         var row;
 
         if ((row = this.grid[fj])) { // upper row ^^

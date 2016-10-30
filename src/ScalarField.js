@@ -1,7 +1,9 @@
+import Field from './Field';
+
 /**
  * Scalar Field
  */
-class ScalarField extends Field {
+export class ScalarField extends Field {
 
     /**
      * Creates a ScalarField from the content of an ASCIIGrid file

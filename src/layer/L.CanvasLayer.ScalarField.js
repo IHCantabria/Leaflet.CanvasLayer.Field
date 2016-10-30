@@ -12,7 +12,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         L.Util.setOptions(this, options);
         if (this.options.color === null) {
             this.options.color = this.defaultColorScale();
-        };
+        }
         this.cells = this.field.gridLonLatValue();
     },
 
@@ -22,15 +22,13 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
 
     onLayerDidMount: function () {
         if (this.options.click) {
-            this._map.on('mouseover', this._activateClick, this);
-            this._map.on('click', this._queryValue, this);
+            this._activateClick();
         }
     },
 
     onLayerWillUnmount: function () {
         if (this.options.click) {
-            this._map.off('mouseover', this._activateClick, this);
-            this._map.off('click', this._queryValue, this);
+            this._deactivateClick();
         }
     },
 
@@ -100,6 +98,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     _activateClick: function () {
+        this._map.on('mouseover', this._showClickCursor, this);
+        this._map.on('click', this._queryValue, this);
+    },
+
+    _deactivateClick: function () {
+        this._map.off('mouseover', this._showClickCursor, this);
+        this._map.off('click', this._queryValue, this);
+    },
+
+    _showClickCursor: function () {
         this._map.getContainer().style.cursor = 'default';
     },
 
@@ -117,3 +125,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
 L.canvasLayer.scalarField = function (scalarField, options) {
     return new L.CanvasLayer.ScalarField(scalarField, options);
 }
+
+module.exports = L.CanvasLayer.ScalarField;
+module.exports = L.canvasLayer.scalarField;

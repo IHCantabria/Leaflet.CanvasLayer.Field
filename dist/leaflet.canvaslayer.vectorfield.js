@@ -1,87 +1,168 @@
 'use strict';
 
-/**
- *   Control for a simple legend with a colorbar
- *   References:
- *      - http://jsfiddle.net/ramnathv/g8stqcf6/
- *      - http://jsfiddle.net/vis4/cYLZH/
- */
-L.Control.ColorBar = L.Control.extend({
-    options: {
-        position: 'bottomleft',
-        width: 300,
-        height: 15,
-        background: 'transparent',
-        steps: 100,
-        decimals: 2,
-        units: 'uds' // ej: m/s
+/*
+  https://github.com/Sumbera/gLayers.Leaflet/releases/tag/v1.0.1
+
+  Generic  Canvas Layer for leaflet 0.7 and 1.0-rc,
+  copyright Stanislav Sumbera,  2016 , sumbera.com , license MIT
+  originally created and motivated by L.CanvasOverlay  available here: https://gist.github.com/Sumbera/11114288
+
+*/
+
+L.CanvasLayer = L.Layer.extend({
+    // -- initialized is called on prototype
+    initialize: function initialize(options) {
+        this._map = null;
+        this._canvas = null;
+        this._frame = null;
+        this._delegate = null;
+        L.setOptions(this, options);
     },
 
-    initialize: function initialize(color, range, options) {
-        this.color = color; // 'chromajs' scale function
-        this.range = range; // [min, max]
-        L.Util.setOptions(this, options);
+    delegate: function delegate(del) {
+        this._delegate = del;
+        return this;
     },
 
+    needRedraw: function needRedraw() {
+        if (!this._frame) {
+            this._frame = L.Util.requestAnimFrame(this.drawLayer, this);
+        }
+        return this;
+    },
+
+    //-------------------------------------------------------------
+    _onLayerDidResize: function _onLayerDidResize(resizeEvent) {
+        this._canvas.width = resizeEvent.newSize.x;
+        this._canvas.height = resizeEvent.newSize.y;
+    },
+    //-------------------------------------------------------------
+    _onLayerDidMove: function _onLayerDidMove() {
+        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+        L.DomUtil.setPosition(this._canvas, topLeft);
+        this.drawLayer();
+    },
+    //-------------------------------------------------------------
+    getEvents: function getEvents() {
+        var events = {
+            resize: this._onLayerDidResize,
+            moveend: this._onLayerDidMove
+        };
+        if (this._map.options.zoomAnimation && L.Browser.any3d) {
+            events.zoomanim = this._animateZoom;
+        }
+
+        return events;
+    },
+    //-------------------------------------------------------------
     onAdd: function onAdd(map) {
         this._map = map;
-        var div = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
-        L.DomEvent.addListener(div, 'click', L.DomEvent.stopPropagation).addListener(div, 'click', L.DomEvent.preventDefault);
-        div.style.backgroundColor = this.options.background;
-        div.style.cursor = 'text';
-        div.innerHTML = this.palette();
-        return div;
+        this._canvas = L.DomUtil.create('canvas', 'leaflet-layer');
+        this.tiles = {};
+
+        var size = this._map.getSize();
+        this._canvas.width = size.x;
+        this._canvas.height = size.y;
+
+        var animated = this._map.options.zoomAnimation && L.Browser.any3d;
+        L.DomUtil.addClass(this._canvas, 'leaflet-zoom-' + (animated ? 'animated' : 'hide'));
+
+        map._panes.overlayPane.appendChild(this._canvas);
+
+        map.on(this.getEvents(), this);
+
+        var del = this._delegate || this;
+        del.onLayerDidMount && del.onLayerDidMount(); // -- callback
+        this.needRedraw();
     },
 
-    palette: function palette() {
-        var _this = this;
+    //-------------------------------------------------------------
+    onRemove: function onRemove(map) {
+        var del = this._delegate || this;
+        del.onLayerWillUnmount && del.onLayerWillUnmount(); // -- callback
 
-        // data preparation
-        var min = this.range[0];
-        var max = this.range[1];
-        var delta = (max - min) / this.options.steps;
-        var data = d3.range(min, max + delta, delta);
-        var colorPerValue = data.map(function (d) {
-            return {
-                "value": d,
-                "color": _this.color(d)
-            };
+
+        map.getPanes().overlayPane.removeChild(this._canvas);
+
+        map.off(this.getEvents(), this);
+
+        this._canvas = null;
+    },
+
+    //------------------------------------------------------------
+    addTo: function addTo(map) {
+        map.addLayer(this);
+        return this;
+    },
+    // --------------------------------------------------------------------------------
+    LatLonToMercator: function LatLonToMercator(latlon) {
+        return {
+            x: latlon.lng * 6378137 * Math.PI / 180,
+            y: Math.log(Math.tan((90 + latlon.lat) * Math.PI / 360)) * 6378137
+        };
+    },
+
+    //------------------------------------------------------------------------------
+    drawLayer: function drawLayer() {
+        // -- todo make the viewInfo properties  flat objects.
+        var size = this._map.getSize();
+        var bounds = this._map.getBounds();
+        var zoom = this._map.getZoom();
+
+        var center = this.LatLonToMercator(this._map.getCenter());
+        var corner = this.LatLonToMercator(this._map.containerPointToLatLng(this._map.getSize()));
+
+        var del = this._delegate || this;
+        del.onDrawLayer && del.onDrawLayer({
+            layer: this,
+            canvas: this._canvas,
+            bounds: bounds,
+            size: size,
+            zoom: zoom,
+            center: center,
+            corner: corner
         });
+        this._frame = null;
+    },
 
-        // div.contenedor > svg
-        var w = this.options.width / colorPerValue.length;
-        var d = document.createElement("div");
-        var svg = d3.select(d).append("svg").attr('width', this.options.width).attr('height', this.options.height).style('padding', '10px'); //
+    //------------------------------------------------------------------------------
+    _animateZoom: function _animateZoom(e) {
+        var scale = this._map.getZoomScale(e.zoom);
+        var offset = this._map._latLngToNewLayerPoint(this._map.getBounds().getNorthWest(), e.zoom, e.center);
 
-        // n color-bars
-        var buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
-        buckets.attr('x', function (d, i) {
-            return i * w;
-        }).attr('y', function (d) {
-            return 0;
-        }).attr('height', function (d) {
-            return _this.options.height;
-        } /*w * 4*/).attr('width', function (d) {
-            return w;
-        }).attr('fill', function (d) {
-            return d.color;
-        });
-
-        buckets.append('title').text(function (d) {
-            return d.value.toFixed(_this.options.decimals) + ' ' + _this.options.units;
-        });
-        return d.innerHTML;
+        L.DomUtil.setTransform(this._canvas, offset, scale);
     }
 });
 
-L.control.colorBar = function (color, range, options) {
-    return new L.Control.ColorBar(color, range, options);
+L.canvasLayer = function () {
+    return new L.CanvasLayer();
 };
+
+
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }
+    return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);
+        if (staticProps) defineProperties(Constructor, staticProps);
+        return Constructor;
+    };
+}();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
 /**
  *  Abstract class for a set of values (Vector | Scalar)
@@ -415,143 +496,633 @@ var Field = function () {
 }();
 'use strict';
 
-/*
-  https://github.com/Sumbera/gLayers.Leaflet/releases/tag/v1.0.1
-
-  Generic  Canvas Layer for leaflet 0.7 and 1.0-rc,
-  copyright Stanislav Sumbera,  2016 , sumbera.com , license MIT
-  originally created and motivated by L.CanvasOverlay  available here: https://gist.github.com/Sumbera/11114288
-
-*/
-
-L.CanvasLayer = L.Layer.extend({
-    // -- initialized is called on prototype
-    initialize: function initialize(options) {
-        this._map = null;
-        this._canvas = null;
-        this._frame = null;
-        this._delegate = null;
-        L.setOptions(this, options);
-    },
-
-    delegate: function delegate(del) {
-        this._delegate = del;
-        return this;
-    },
-
-    needRedraw: function needRedraw() {
-        if (!this._frame) {
-            this._frame = L.Util.requestAnimFrame(this.drawLayer, this);
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
         }
-        return this;
-    },
+    }
+    return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);
+        if (staticProps) defineProperties(Constructor, staticProps);
+        return Constructor;
+    };
+}();
 
-    //-------------------------------------------------------------
-    _onLayerDidResize: function _onLayerDidResize(resizeEvent) {
-        this._canvas.width = resizeEvent.newSize.x;
-        this._canvas.height = resizeEvent.newSize.y;
-    },
-    //-------------------------------------------------------------
-    _onLayerDidMove: function _onLayerDidMove() {
-        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
-        L.DomUtil.setPosition(this._canvas, topLeft);
-        this.drawLayer();
-    },
-    //-------------------------------------------------------------
-    getEvents: function getEvents() {
-        var events = {
-            resize: this._onLayerDidResize,
-            moveend: this._onLayerDidMove
-        };
-        if (this._map.options.zoomAnimation && L.Browser.any3d) {
-            events.zoomanim = this._animateZoom;
+function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+        for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+            arr2[i] = arr[i];
+        }
+        return arr2;
+    } else {
+        return Array.from(arr);
+    }
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+    return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+        constructor: {
+            value: subClass,
+            enumerable: false,
+            writable: true,
+            configurable: true
+        }
+    });
+    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+/**
+ * Scalar Field
+ */
+var ScalarField = function (_Field) {
+    _inherits(ScalarField, _Field);
+
+    _createClass(ScalarField, null, [{
+        key: 'fromASCIIGrid',
+
+
+        /**
+         * Creates a ScalarField from the content of an ASCIIGrid file
+         * @param   {String}   asc
+         * @returns {ScalarField}
+         */
+        value: function fromASCIIGrid(asc) {
+            console.time('ScalarField from ASC');
+            var lines = asc.split('\n');
+
+            // Header
+            var n = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/; // any number
+            var p = {
+                ncols: parseInt(lines[0].match(n)),
+                nrows: parseInt(lines[1].match(n)),
+                xllcorner: parseFloat(lines[2].match(n)),
+                yllcorner: parseFloat(lines[3].match(n)),
+                cellsize: parseFloat(lines[4].match(n))
+            };
+            var NODATA_value = lines[5].replace('NODATA_value', '').trim();
+
+            // Data (left-right and top-down)
+            var zs = []; //
+            for (var i = 6; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (line === '') break;
+
+                var items = line.split(' ');
+                var values = items.map(function (it) {
+                    return it !== NODATA_value ? parseFloat(it) : null;
+                });
+                zs.push.apply(zs, _toConsumableArray(values));
+            }
+            p.zs = zs;
+            console.timeEnd('ScalarField from ASC');
+            return new ScalarField(p);
+        }
+    }]);
+
+    function ScalarField(params) {
+        _classCallCheck(this, ScalarField);
+
+        var _this = _possibleConstructorReturn(this, (ScalarField.__proto__ || Object.getPrototypeOf(ScalarField)).call(this, params));
+
+        _this.zs = params["zs"];
+
+        _this.grid = _this._buildGrid();
+        _this.range = _this._calculateRange();
+        return _this;
+    }
+
+    /**
+     * Filter the field, using a function
+     * @param   {Function} f boolean function to
+     *                       include in filter
+     * @returns {ScalarField}
+     */
+
+
+    _createClass(ScalarField, [{
+        key: 'filterWith',
+        value: function filterWith(f) {
+            var p = this.params;
+            p.zs = p.zs.map(function (v) {
+                if (f(v)) {
+                    return v;
+                }
+                return null;
+            });
+
+            return new ScalarField(p);
         }
 
-        return events;
+        /**
+         * Builds a grid with a Number at each point, from an array
+         * 'zs' following x-ascending & y-descending order
+         * (same as in ASCIIGrid)
+         * @private
+         * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
+         */
+
+    }, {
+        key: '_buildGrid',
+        value: function _buildGrid() {
+            var grid = [];
+            var p = 0;
+
+            for (var j = 0; j < this.nrows; j++) {
+                var row = [];
+                for (var i = 0; i < this.ncols; i++, p++) {
+                    var z = this.zs[p];
+                    row[i] = this._isValid(z) ? z : null; // <<<
+                }
+                grid[j] = row;
+            }
+            return grid;
+        }
+
+        /**
+         * Calculate min & max values
+         * @private
+         * @returns {Array}
+         */
+
+    }, {
+        key: '_calculateRange',
+        value: function _calculateRange() {
+            return [d3.min(this.zs), d3.max(this.zs)];
+        }
+
+        /**
+         * Bilinear interpolation for Number
+         * https://en.wikipedia.org/wiki/Bilinear_interpolation
+         * @param   {Number} x
+         * @param   {Number} y
+         * @param   {Number} g00
+         * @param   {Number} g10
+         * @param   {Number} g01
+         * @param   {Number} g11
+         * @returns {Number}
+         */
+
+    }, {
+        key: '_doInterpolation',
+        value: function _doInterpolation(x, y, g00, g10, g01, g11) {
+            var rx = 1 - x;
+            var ry = 1 - y;
+            return g00 * rx * ry + g10 * x * ry + g01 * rx * y + g11 * x * y;
+        }
+    }]);
+
+    return ScalarField;
+}(Field);
+"use strict";
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }
+    return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);
+        if (staticProps) defineProperties(Constructor, staticProps);
+        return Constructor;
+    };
+}();
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+/**
+ *  2D Vector
+ */
+var Vector = function () {
+    function Vector(u, v) {
+        _classCallCheck(this, Vector);
+
+        this.u = u;
+        this.v = v;
+    }
+
+    /**
+     * Magnitude
+     * @returns {Number}
+     */
+
+
+    _createClass(Vector, [{
+        key: "magnitude",
+        value: function magnitude() {
+            return Math.sqrt(this.u * this.u + this.v * this.v);
+        }
+
+        /**
+         * Angle in degrees (0 to 360º) --> Towards
+         * N is 0º and E is 90º
+         * @returns {Number}
+         */
+
+    }, {
+        key: "directionTo",
+        value: function directionTo() {
+            var verticalAngle = Math.atan2(this.u, this.v);
+            var inDegrees = verticalAngle * (180.0 / Math.PI);
+            if (inDegrees < 0) {
+                inDegrees = inDegrees + 360.0;
+            }
+            return inDegrees;
+        }
+
+        /**
+         * Angle in degrees (0 to 360º) From x-->
+         * N is 0º and E is 90º
+         * @returns {Number}
+         */
+
+    }, {
+        key: "directionFrom",
+        value: function directionFrom() {
+            var a = this.directionTo();
+            var opposite = (a + 180.0) % 360.0;
+            return opposite;
+        }
+
+        /*
+            Degrees --> text
+            new Dictionary<int, string>
+            {
+                //{0, 23, 45, 68, 90, 113, 135, 158, 180, 203, 225, 248, 270, 293, 315, 338, 360};
+                {0, "N"},
+                {23, "NNE"},
+                {45, "NE"},
+                {68, "ENE"},
+                {90, "E"},
+                {113, "ESE"},
+                {135, "SE"},
+                {158, "SSE"},
+                {180, "S"},
+                {203, "SSW"},
+                {225, "SW"},
+                {248, "WSW"},
+                {270, "W"},
+                {293, "WNW"},
+                {315, "NW"},
+                {338, "NNW"},
+                {360, "N"}
+            };
+        */
+
+    }]);
+
+    return Vector;
+}();
+"use strict";
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }
+    return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);
+        if (staticProps) defineProperties(Constructor, staticProps);
+        return Constructor;
+    };
+}();
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+    return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+        constructor: {
+            value: subClass,
+            enumerable: false,
+            writable: true,
+            configurable: true
+        }
+    });
+    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+/**
+ *  A set of vectors assigned to a regular 2D-grid (lon-lat)
+ *  (e.g. a raster representing winds for a region)
+ */
+var VectorField = function (_Field) {
+    _inherits(VectorField, _Field);
+
+    _createClass(VectorField, null, [{
+        key: "fromASCIIGrids",
+
+
+        /**
+         * Creates a VectorField from the content of two ASCIIGrid files
+         * @param   {String} ascU - with u-component
+         * @param   {String} ascV - with v-component
+         * @returns {VectorField}
+         */
+        value: function fromASCIIGrids(ascU, ascV) {
+            var u = ScalarField.fromASCIIGrid(ascU);
+            var v = ScalarField.fromASCIIGrid(ascV);
+
+            // TODO - check equal parameters for u|v
+
+            var p = {
+                ncols: u.ncols,
+                nrows: u.nrows,
+                xllcorner: u.xllcorner,
+                yllcorner: u.yllcorner,
+                cellsize: u.cellsize,
+                us: u.zs,
+                vs: v.zs
+            };
+            return new VectorField(p);
+        }
+    }]);
+
+    function VectorField(params) {
+        _classCallCheck(this, VectorField);
+
+        var _this = _possibleConstructorReturn(this, (VectorField.__proto__ || Object.getPrototypeOf(VectorField)).call(this, params));
+
+        _this.us = params["us"];
+        _this.vs = params["vs"];
+        _this.grid = _this._buildGrid();
+        _this.range = _this._calculateRange();
+        return _this;
+    }
+
+    /**
+     * Builds a grid with a Vector at each point, from two arrays
+     * 'us' and 'vs' following x-ascending & y-descending order
+     * (same as in ASCIIGrid)
+     * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
+     */
+
+
+    _createClass(VectorField, [{
+        key: "_buildGrid",
+        value: function _buildGrid() {
+            var grid = [];
+            var p = 0;
+
+            for (var j = 0; j < this.nrows; j++) {
+                var row = [];
+                for (var i = 0; i < this.ncols; i++, p++) {
+                    var u = this.us[p],
+                        v = this.vs[p];
+                    var valid = this._isValid(u) && this._isValid(v);
+                    row[i] = valid ? new Vector(u, v) : null; // <<<
+                }
+                grid[j] = row;
+            }
+            return grid;
+        }
+
+        /**
+         * Calculate min & max values (magnitude)
+         * @private
+         * @returns {Array}
+         */
+
+    }, {
+        key: "_calculateRange",
+        value: function _calculateRange() {
+            var vectors = this.gridLonLatValue().map(function (pt) {
+                return pt.value;
+            }).filter(function (v) {
+                return v !== null;
+            });
+
+            var magnitudes = vectors.map(function (v) {
+                return v.magnitude();
+            });
+
+            // TODO memory crash!
+            var min = d3.min(magnitudes);
+            var max = d3.max(magnitudes);
+
+            return [min, max];
+        }
+
+        /**
+         * Bilinear interpolation for Vector
+         * https://en.wikipedia.org/wiki/Bilinear_interpolation
+         * @param   {Number} x
+         * @param   {Number} y
+         * @param   {Number[]} g00
+         * @param   {Number[]} g10
+         * @param   {Number[]} g01
+         * @param   {Number[]} g11
+         * @returns {Vector}
+         */
+
+    }, {
+        key: "_doInterpolation",
+        value: function _doInterpolation(x, y, g00, g10, g01, g11) {
+            var rx = 1 - x;
+            var ry = 1 - y;
+            var a = rx * ry,
+                b = x * ry,
+                c = rx * y,
+                d = x * y;
+            var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
+            var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
+            return new Vector(u, v);
+        }
+    }]);
+
+    return VectorField;
+}(Field);
+'use strict';
+
+/**
+ *   Control for a simple legend with a colorbar
+ *   References:
+ *      - http://jsfiddle.net/ramnathv/g8stqcf6/
+ *      - http://jsfiddle.net/vis4/cYLZH/
+ */
+L.Control.ColorBar = L.Control.extend({
+    options: {
+        position: 'bottomleft',
+        width: 300,
+        height: 15,
+        background: 'transparent',
+        steps: 100,
+        decimals: 2,
+        units: 'uds' // ej: m/s
     },
-    //-------------------------------------------------------------
+
+    initialize: function initialize(color, range, options) {
+        this.color = color; // 'chromajs' scale function
+        this.range = range; // [min, max]
+        L.Util.setOptions(this, options);
+    },
+
     onAdd: function onAdd(map) {
         this._map = map;
-        this._canvas = L.DomUtil.create('canvas', 'leaflet-layer');
-        this.tiles = {};
-
-        var size = this._map.getSize();
-        this._canvas.width = size.x;
-        this._canvas.height = size.y;
-
-        var animated = this._map.options.zoomAnimation && L.Browser.any3d;
-        L.DomUtil.addClass(this._canvas, 'leaflet-zoom-' + (animated ? 'animated' : 'hide'));
-
-        map._panes.overlayPane.appendChild(this._canvas);
-
-        map.on(this.getEvents(), this);
-
-        var del = this._delegate || this;
-        del.onLayerDidMount && del.onLayerDidMount(); // -- callback
-        this.needRedraw();
+        var div = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
+        L.DomEvent.addListener(div, 'click', L.DomEvent.stopPropagation).addListener(div, 'click', L.DomEvent.preventDefault);
+        div.style.backgroundColor = this.options.background;
+        div.style.cursor = 'text';
+        div.innerHTML = this.palette();
+        return div;
     },
 
-    //-------------------------------------------------------------
-    onRemove: function onRemove(map) {
-        var del = this._delegate || this;
-        del.onLayerWillUnmount && del.onLayerWillUnmount(); // -- callback
+    palette: function palette() {
+        var _this = this;
 
-
-        map.getPanes().overlayPane.removeChild(this._canvas);
-
-        map.off(this.getEvents(), this);
-
-        this._canvas = null;
-    },
-
-    //------------------------------------------------------------
-    addTo: function addTo(map) {
-        map.addLayer(this);
-        return this;
-    },
-    // --------------------------------------------------------------------------------
-    LatLonToMercator: function LatLonToMercator(latlon) {
-        return {
-            x: latlon.lng * 6378137 * Math.PI / 180,
-            y: Math.log(Math.tan((90 + latlon.lat) * Math.PI / 360)) * 6378137
-        };
-    },
-
-    //------------------------------------------------------------------------------
-    drawLayer: function drawLayer() {
-        // -- todo make the viewInfo properties  flat objects.
-        var size = this._map.getSize();
-        var bounds = this._map.getBounds();
-        var zoom = this._map.getZoom();
-
-        var center = this.LatLonToMercator(this._map.getCenter());
-        var corner = this.LatLonToMercator(this._map.containerPointToLatLng(this._map.getSize()));
-
-        var del = this._delegate || this;
-        del.onDrawLayer && del.onDrawLayer({
-            layer: this,
-            canvas: this._canvas,
-            bounds: bounds,
-            size: size,
-            zoom: zoom,
-            center: center,
-            corner: corner
+        // data preparation
+        var min = this.range[0];
+        var max = this.range[1];
+        var delta = (max - min) / this.options.steps;
+        var data = d3.range(min, max + delta, delta);
+        var colorPerValue = data.map(function (d) {
+            return {
+                "value": d,
+                "color": _this.color(d)
+            };
         });
-        this._frame = null;
-    },
 
-    //------------------------------------------------------------------------------
-    _animateZoom: function _animateZoom(e) {
-        var scale = this._map.getZoomScale(e.zoom);
-        var offset = this._map._latLngToNewLayerPoint(this._map.getBounds().getNorthWest(), e.zoom, e.center);
+        // div.contenedor > svg
+        var w = this.options.width / colorPerValue.length;
+        var d = document.createElement("div");
+        var svg = d3.select(d).append("svg").attr('width', this.options.width).attr('height', this.options.height).style('padding', '10px'); //
 
-        L.DomUtil.setTransform(this._canvas, offset, scale);
+        // n color-bars
+        var buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
+        buckets.attr('x', function (d, i) {
+            return i * w;
+        }).attr('y', function (d) {
+            return 0;
+        }).attr('height', function (d) {
+            return _this.options.height;
+        } /*w * 4*/ ).attr('width', function (d) {
+            return w;
+        }).attr('fill', function (d) {
+            return d.color;
+        });
+
+        buckets.append('title').text(function (d) {
+            return d.value.toFixed(_this.options.decimals) + ' ' + _this.options.units;
+        });
+        return d.innerHTML;
     }
 });
 
-L.canvasLayer = function () {
-    return new L.CanvasLayer();
+L.control.colorBar = function (color, range, options) {
+    return new L.Control.ColorBar(color, range, options);
 };
+/**
+ * Abstract class for a Field layer on canvas, aka "a Raster layer"
+ * (ScalarField or a VectorField)
+
+L.CanvasLayer.Field = L.CanvasLayer.extend({
+    options: {
+        click: true, // 'click' event
+    },
+
+    initialize: function (field, options) {
+        // TODO protect against direct instantiation!!
+
+        this.field = field;
+        L.Util.setOptions(this, options);
+    },
+
+    onLayerDidMount: function () {
+        if (this.options.click) {
+            this._map.on('mouseover', this._activateClick, this);
+            this._map.on('click', this._queryValue, this);
+        }
+    },
+
+    onLayerWillUnmount: function () {
+        if (this.options.click) {
+            this._map.off('mouseover', this._activateClick, this);
+            this._map.off('click', this._queryValue, this);
+        }
+    },
+
+    setData: function (data) {
+        // -- custom data set
+        // TODO
+        this.needRedraw(); // -- call to drawLayer
+    },
+
+    onDrawLayer: function (viewInfo) {
+        throw new TypeError("Must be overriden");
+    },
+
+    getBounds: function () {
+        let bb = this.field.extent();
+        let southWest = L.latLng(bb[1], bb[0]),
+            northEast = L.latLng(bb[3], bb[2]);
+        let bounds = L.latLngBounds(southWest, northEast);
+        return bounds;
+    },
+
+    _activateClick: function () {
+        this._map.getContainer().style.cursor = 'default';
+    },
+
+    _queryValue: function (e) {
+        let lon = e.latlng.lng;
+        let lat = e.latlng.lat;
+        let result = {
+            latlng: e.latlng,
+            value: this.field.valueAt(lon, lat)
+        };
+        this.fireEvent('click', result); //includes: L.Mixin.Events
+
+}
+});
+*/
+"use strict";
 'use strict';
 
 /**
@@ -568,7 +1139,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         L.Util.setOptions(this, options);
         if (this.options.color === null) {
             this.options.color = this.defaultColorScale();
-        };
+        }
         this.cells = this.field.gridLonLatValue();
     },
 
@@ -578,15 +1149,13 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
 
     onLayerDidMount: function onLayerDidMount() {
         if (this.options.click) {
-            this._map.on('mouseover', this._activateClick, this);
-            this._map.on('click', this._queryValue, this);
+            this._activateClick();
         }
     },
 
     onLayerWillUnmount: function onLayerWillUnmount() {
         if (this.options.click) {
-            this._map.off('mouseover', this._activateClick, this);
-            this._map.off('click', this._queryValue, this);
+            this._deactivateClick();
         }
     },
 
@@ -657,6 +1226,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     _activateClick: function _activateClick() {
+        this._map.on('mouseover', this._showClickCursor, this);
+        this._map.on('click', this._queryValue, this);
+    },
+
+    _deactivateClick: function _deactivateClick() {
+        this._map.off('mouseover', this._showClickCursor, this);
+        this._map.off('click', this._queryValue, this);
+    },
+
+    _showClickCursor: function _showClickCursor() {
         this._map.getContainer().style.cursor = 'default';
     },
 
@@ -676,7 +1255,16 @@ L.canvasLayer.scalarField = function (scalarField, options) {
 };
 "use strict";
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+        for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+            arr2[i] = arr[i];
+        }
+        return arr2;
+    } else {
+        return Array.from(arr);
+    }
+}
 
 /**
  *  Simple layer with lon-lat points
@@ -925,386 +1513,3 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
 L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
     return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
 };
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * Scalar Field
- */
-var ScalarField = function (_Field) {
-    _inherits(ScalarField, _Field);
-
-    _createClass(ScalarField, null, [{
-        key: 'fromASCIIGrid',
-
-
-        /**
-         * Creates a ScalarField from the content of an ASCIIGrid file
-         * @param   {String}   asc
-         * @returns {ScalarField}
-         */
-        value: function fromASCIIGrid(asc) {
-            console.time('ScalarField from ASC');
-            var lines = asc.split('\n');
-
-            // Header
-            var n = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/; // any number
-            var p = {
-                ncols: parseInt(lines[0].match(n)),
-                nrows: parseInt(lines[1].match(n)),
-                xllcorner: parseFloat(lines[2].match(n)),
-                yllcorner: parseFloat(lines[3].match(n)),
-                cellsize: parseFloat(lines[4].match(n))
-            };
-            var NODATA_value = lines[5].replace('NODATA_value', '').trim();
-
-            // Data (left-right and top-down)
-            var zs = []; //
-            for (var i = 6; i < lines.length; i++) {
-                var line = lines[i].trim();
-                if (line === '') break;
-
-                var items = line.split(' ');
-                var values = items.map(function (it) {
-                    return it !== NODATA_value ? parseFloat(it) : null;
-                });
-                zs.push.apply(zs, _toConsumableArray(values));
-            }
-            p.zs = zs;
-            console.timeEnd('ScalarField from ASC');
-            return new ScalarField(p);
-        }
-    }]);
-
-    function ScalarField(params) {
-        _classCallCheck(this, ScalarField);
-
-        var _this = _possibleConstructorReturn(this, (ScalarField.__proto__ || Object.getPrototypeOf(ScalarField)).call(this, params));
-
-        _this.zs = params["zs"];
-
-        _this.grid = _this._buildGrid();
-        _this.range = _this._calculateRange();
-        return _this;
-    }
-
-    /**
-     * Filter the field, using a function
-     * @param   {Function} f boolean function to
-     *                       include in filter
-     * @returns {ScalarField}
-     */
-
-
-    _createClass(ScalarField, [{
-        key: 'filterWith',
-        value: function filterWith(f) {
-            var p = this.params;
-            p.zs = p.zs.map(function (v) {
-                if (f(v)) {
-                    return v;
-                }
-                return null;
-            });
-
-            return new ScalarField(p);
-        }
-
-        /**
-         * Builds a grid with a Number at each point, from an array
-         * 'zs' following x-ascending & y-descending order
-         * (same as in ASCIIGrid)
-         * @private
-         * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
-         */
-
-    }, {
-        key: '_buildGrid',
-        value: function _buildGrid() {
-            var grid = [];
-            var p = 0;
-
-            for (var j = 0; j < this.nrows; j++) {
-                var row = [];
-                for (var i = 0; i < this.ncols; i++, p++) {
-                    var z = this.zs[p];
-                    row[i] = this._isValid(z) ? z : null; // <<<
-                }
-                grid[j] = row;
-            }
-            return grid;
-        }
-
-        /**
-         * Calculate min & max values
-         * @private
-         * @returns {Array}
-         */
-
-    }, {
-        key: '_calculateRange',
-        value: function _calculateRange() {
-            return [d3.min(this.zs), d3.max(this.zs)];
-        }
-
-        /**
-         * Bilinear interpolation for Number
-         * https://en.wikipedia.org/wiki/Bilinear_interpolation
-         * @param   {Number} x
-         * @param   {Number} y
-         * @param   {Number} g00
-         * @param   {Number} g10
-         * @param   {Number} g01
-         * @param   {Number} g11
-         * @returns {Number}
-         */
-
-    }, {
-        key: '_doInterpolation',
-        value: function _doInterpolation(x, y, g00, g10, g01, g11) {
-            var rx = 1 - x;
-            var ry = 1 - y;
-            return g00 * rx * ry + g10 * x * ry + g01 * rx * y + g11 * x * y;
-        }
-    }]);
-
-    return ScalarField;
-}(Field);
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- *  2D Vector
- */
-var Vector = function () {
-    function Vector(u, v) {
-        _classCallCheck(this, Vector);
-
-        this.u = u;
-        this.v = v;
-    }
-
-    /**
-     * Magnitude
-     * @returns {Number}
-     */
-
-
-    _createClass(Vector, [{
-        key: "magnitude",
-        value: function magnitude() {
-            return Math.sqrt(this.u * this.u + this.v * this.v);
-        }
-
-        /**
-         * Angle in degrees (0 to 360º) --> Towards
-         * N is 0º and E is 90º
-         * @returns {Number}
-         */
-
-    }, {
-        key: "directionTo",
-        value: function directionTo() {
-            var verticalAngle = Math.atan2(this.u, this.v);
-            var inDegrees = verticalAngle * (180.0 / Math.PI);
-            if (inDegrees < 0) {
-                inDegrees = inDegrees + 360.0;
-            }
-            return inDegrees;
-        }
-
-        /**
-         * Angle in degrees (0 to 360º) From x-->
-         * N is 0º and E is 90º
-         * @returns {Number}
-         */
-
-    }, {
-        key: "directionFrom",
-        value: function directionFrom() {
-            var a = this.directionTo();
-            var opposite = (a + 180.0) % 360.0;
-            return opposite;
-        }
-
-        /*
-            Degrees --> text
-            new Dictionary<int, string>
-            {
-                //{0, 23, 45, 68, 90, 113, 135, 158, 180, 203, 225, 248, 270, 293, 315, 338, 360};
-                {0, "N"},
-                {23, "NNE"},
-                {45, "NE"},
-                {68, "ENE"},
-                {90, "E"},
-                {113, "ESE"},
-                {135, "SE"},
-                {158, "SSE"},
-                {180, "S"},
-                {203, "SSW"},
-                {225, "SW"},
-                {248, "WSW"},
-                {270, "W"},
-                {293, "WNW"},
-                {315, "NW"},
-                {338, "NNW"},
-                {360, "N"}
-            };
-        */
-
-    }]);
-
-    return Vector;
-}();
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- *  A set of vectors assigned to a regular 2D-grid (lon-lat)
- *  (e.g. a raster representing winds for a region)
- */
-var VectorField = function (_Field) {
-    _inherits(VectorField, _Field);
-
-    _createClass(VectorField, null, [{
-        key: "fromASCIIGrids",
-
-
-        /**
-         * Creates a VectorField from the content of two ASCIIGrid files
-         * @param   {String} ascU - with u-component
-         * @param   {String} ascV - with v-component
-         * @returns {VectorField}
-         */
-        value: function fromASCIIGrids(ascU, ascV) {
-            var u = ScalarField.fromASCIIGrid(ascU);
-            var v = ScalarField.fromASCIIGrid(ascV);
-
-            // TODO - check equal parameters for u|v
-
-            var p = {
-                ncols: u.ncols,
-                nrows: u.nrows,
-                xllcorner: u.xllcorner,
-                yllcorner: u.yllcorner,
-                cellsize: u.cellsize,
-                us: u.zs,
-                vs: v.zs
-            };
-            return new VectorField(p);
-        }
-    }]);
-
-    function VectorField(params) {
-        _classCallCheck(this, VectorField);
-
-        var _this = _possibleConstructorReturn(this, (VectorField.__proto__ || Object.getPrototypeOf(VectorField)).call(this, params));
-
-        _this.us = params["us"];
-        _this.vs = params["vs"];
-        _this.grid = _this._buildGrid();
-        _this.range = _this._calculateRange();
-        return _this;
-    }
-
-    /**
-     * Builds a grid with a Vector at each point, from two arrays
-     * 'us' and 'vs' following x-ascending & y-descending order
-     * (same as in ASCIIGrid)
-     * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
-     */
-
-
-    _createClass(VectorField, [{
-        key: "_buildGrid",
-        value: function _buildGrid() {
-            var grid = [];
-            var p = 0;
-
-            for (var j = 0; j < this.nrows; j++) {
-                var row = [];
-                for (var i = 0; i < this.ncols; i++, p++) {
-                    var u = this.us[p],
-                        v = this.vs[p];
-                    var valid = this._isValid(u) && this._isValid(v);
-                    row[i] = valid ? new Vector(u, v) : null; // <<<
-                }
-                grid[j] = row;
-            }
-            return grid;
-        }
-
-        /**
-         * Calculate min & max values (magnitude)
-         * @private
-         * @returns {Array}
-         */
-
-    }, {
-        key: "_calculateRange",
-        value: function _calculateRange() {
-            var vectors = this.gridLonLatValue().map(function (pt) {
-                return pt.value;
-            }).filter(function (v) {
-                return v !== null;
-            });
-
-            var magnitudes = vectors.map(function (v) {
-                return v.magnitude();
-            });
-
-            // TODO memory crash!
-            var min = d3.min(magnitudes);
-            var max = d3.max(magnitudes);
-
-            return [min, max];
-        }
-
-        /**
-         * Bilinear interpolation for Vector
-         * https://en.wikipedia.org/wiki/Bilinear_interpolation
-         * @param   {Number} x
-         * @param   {Number} y
-         * @param   {Number[]} g00
-         * @param   {Number[]} g10
-         * @param   {Number[]} g01
-         * @param   {Number[]} g11
-         * @returns {Vector}
-         */
-
-    }, {
-        key: "_doInterpolation",
-        value: function _doInterpolation(x, y, g00, g10, g01, g11) {
-            var rx = 1 - x;
-            var ry = 1 - y;
-            var a = rx * ry,
-                b = x * ry,
-                c = rx * y,
-                d = x * y;
-            var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
-            var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
-            return new Vector(u, v);
-        }
-    }]);
-
-    return VectorField;
-}(Field);
