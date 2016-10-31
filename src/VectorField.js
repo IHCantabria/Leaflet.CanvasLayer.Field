@@ -1,11 +1,13 @@
+import Vector from './Vector';
 import Field from './Field';
 import ScalarField from './ScalarField';
+
 
 /**
  *  A set of vectors assigned to a regular 2D-grid (lon-lat)
  *  (e.g. a raster representing winds for a region)
  */
-export class VectorField extends Field {
+export default class VectorField extends Field {
 
     /**
      * Creates a VectorField from the content of two ASCIIGrid files

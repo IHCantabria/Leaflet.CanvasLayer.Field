@@ -1,4 +1,6 @@
 describe("VectorField", function () {
+    let Vector = L.Vector;
+    let VectorField = L.VectorField;
 
     let dataFolder = "../../docs/data";
     let vf;

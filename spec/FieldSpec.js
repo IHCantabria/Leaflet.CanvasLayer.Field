@@ -1,4 +1,6 @@
 describe("Field", function () {
+    let Field = L.Field;
+    let ScalarField = L.ScalarField;
 
     let dataFolder = "../../docs/data";
     let f;

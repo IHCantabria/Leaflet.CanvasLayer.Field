@@ -60,10 +60,10 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
             let ul = L.latLng([lat + halfCell, lon - halfCell]);
             let lr = L.latLng([lat - halfCell, lon + halfCell]);
 
-            // not in bounds?
+            // not visible?
             let cellBounds = L.latLngBounds(
                 L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
-            if (!viewInfo.bounds.contains(cellBounds)) {
+            if (!viewInfo.bounds.intersects(cellBounds)) {
                 continue;
             }
 
@@ -126,5 +126,7 @@ L.canvasLayer.scalarField = function (scalarField, options) {
     return new L.CanvasLayer.ScalarField(scalarField, options);
 }
 
+/*
 module.exports = L.CanvasLayer.ScalarField;
 module.exports = L.canvasLayer.scalarField;
+*/

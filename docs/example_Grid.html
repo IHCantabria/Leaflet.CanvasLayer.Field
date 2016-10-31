@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h1 id="title">Grid of points from the VectorField</h1>
+    <h1 id="title">Grid of points from a Field</h1>
     <div id="map"></div>
 
     <!-- CDN -->
@@ -19,10 +19,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
 
     <!-- Plugin -->
-    <script src="../dist/leaflet.canvaslayer.vectorfield.js"></script>
+    <script src="../dist/leaflet.canvaslayer.field.js"></script>
 
     <script>
-        let map = L.map("map");
+        let map = L.map('map');
         let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'OSM & Carto',
@@ -34,9 +34,9 @@
             Simple points layer with the vectorfield grid
         */
         //d3.json("data/grid_BAHIA.json", function(d) {
-        d3.text("data/BAHIA_U.asc", function (u) {
-            d3.text("data/BAHIA_V.asc", function (v) {
-                let vf = VectorField.fromASCIIGrids(u, v);
+        d3.text('data/BAHIA_U.asc', function (u) {
+            d3.text('data/BAHIA_V.asc', function (v) {
+                let vf = L.VectorField.fromASCIIGrids(u, v);
 
                 let layer = L.canvasLayer.simpleLonLat(vf.gridLonLatValue(), {
                     color: '#00FF48'

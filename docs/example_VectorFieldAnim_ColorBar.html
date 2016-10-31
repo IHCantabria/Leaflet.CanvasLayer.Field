@@ -19,7 +19,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
 
     <!-- Plugin -->
-    <script src="../dist/leaflet.canvaslayer.vectorfield.js"></script>
+    <script src="../dist/leaflet.canvaslayer.field.js"></script>
 
     <script>
         let map = L.map("map");
@@ -33,12 +33,11 @@
         /*
             Vectorfield animation with a colormap for velocity + and associated legend
         */
-        d3.json("data/grid_CANTABRIA.json", function (d) {
-            var vf = new VectorField(d);
+        d3.json('data/grid_CANTABRIA.json', function (d) {
+            var vf = new L.VectorField(d);
 
             var range = [0, 1.4];
             var scale = chroma.scale('OrRd').domain(range);
-
 
             // Layer
             var layer = L.canvasLayer.vectorFieldAnim(vf, {

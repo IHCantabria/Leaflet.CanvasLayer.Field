@@ -19,20 +19,22 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
 
     <!-- Plugin -->
-    <script src="../dist/leaflet.canvaslayer.vectorfield.js"></script>
+    <script src="../dist/leaflet.canvaslayer.field.js"></script>
 
     <script>
-        let map = L.map("map");
+        let map = L.map('map');
         var url = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd'
         }).addTo(map);
 
-        // A ScalarField layer (a 'Raster') from an ASCIIGrid
-        d3.text("data/BAHIA_U.asc", function (asc) {
+        /*
+            A ScalarField layer (a 'Raster') from an ASCIIGrid
+        */
+        d3.text('data/BAHIA_U.asc', function (asc) {
             //d3.text("data/dtm.asc", function(asc) {
-            let s = ScalarField.fromASCIIGrid(asc);
+            let s = L.ScalarField.fromASCIIGrid(asc);
             let layer = L.canvasLayer.scalarField(s).addTo(map);
             map.fitBounds(layer.getBounds());
 

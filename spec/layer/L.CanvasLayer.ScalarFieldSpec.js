@@ -1,4 +1,5 @@
 describe('L.CanvasLayer.ScalarField', function () {
+    let ScalarField = L.ScalarField;
 
     let dataFolder = "../../docs/data";
     let c, map, sf;

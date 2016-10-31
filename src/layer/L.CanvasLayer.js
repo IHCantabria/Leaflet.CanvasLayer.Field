@@ -138,5 +138,7 @@ L.canvasLayer = function () {
     return new L.CanvasLayer();
 };
 
+/*
 module.exports = L.CanvasLayer;
 module.exports = L.canvasLayer;
+*/

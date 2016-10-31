@@ -1,5 +1,5 @@
 describe("Vector", function () {
-
+    let Vector = L.Vector;
     it("returns u & v values", function () {
         let vector = new Vector(0.0, 0.1);
         expect(vector.u).toEqual(0.0);

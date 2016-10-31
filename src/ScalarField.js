@@ -3,7 +3,7 @@ import Field from './Field';
 /**
  * Scalar Field
  */
-export class ScalarField extends Field {
+export default class ScalarField extends Field {
 
     /**
      * Creates a ScalarField from the content of an ASCIIGrid file

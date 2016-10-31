@@ -20,7 +20,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
 
     <!-- Plugin -->
-    <script src="../dist/leaflet.canvaslayer.vectorfield.js"></script>
+    <script src="../dist/leaflet.canvaslayer.field.js"></script>
 
     <script>
         let map = L.map("map");
@@ -31,11 +31,9 @@
             maxZoom: 19
         }).addTo(map);
 
-        /*
-            Vectorfield animations with custom parameters
-        */
+        // Vectorfield animations with custom parameters
         d3.json("data/grid_ATL.json", function (d) {
-            let vf = new VectorField(d);
+            let vf = new L.VectorField(d);
 
             let layer = L.canvasLayer.vectorFieldAnim(vf, {
                 paths: 100,
@@ -46,9 +44,9 @@
             var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
                 paths: 2000,
                 color: "#FF6699",
-                width: 4,
+                width: 3,
                 fade: 0.92,
-                maxAge: 1000,
+                maxAge: 2000,
                 velocityScale: 1 / 100
             }).addTo(map);
 
@@ -56,7 +54,7 @@
 
 
             // Change color of layer2, every 10 secs.
-            var colors = ['cyan', 'yellow', 'green', 'blue', 'red'];
+            var colors = ['cyan', 'yellow', 'green', 'pink', 'red'];
             setInterval(function () {
                 var r = Math.random() * colors.length | 0;
                 layer2.options.color = colors[r];

@@ -176,5 +176,7 @@ L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
     return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
 }
 
+/*
 module.exports = L.CanvasLayer.VectorFieldAnim;
 module.exports = L.canvasLayer.vectorFieldAnim;
+*/

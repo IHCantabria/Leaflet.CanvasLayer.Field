@@ -2,7 +2,7 @@
  *  Abstract class for a set of values (Vector | Scalar)
  *  assigned to a regular 2D-grid (lon-lat), aka "a Raster source"
  */
-export class Field {
+export default class Field {
 
     constructor(params) {
         if (new.target === Field) {

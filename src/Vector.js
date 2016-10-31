@@ -1,7 +1,7 @@
 /**
  *  2D Vector
  */
-export class Vector {
+export default class Vector {
 
     constructor(u, v) {
         this.u = u;
