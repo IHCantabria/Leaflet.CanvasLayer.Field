@@ -1,19 +1,19 @@
 /**
  * ScalarField on canvas (a 'Raster')
  */
-L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
+L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     options: {
-        click: true, // 'click' event
-        color: null // function colorFor(value);
+        color: null // function colorFor(value) [e.g. chromajs.scale]
     },
 
     initialize: function (scalarField, options) {
-        this.field = scalarField;
+        L.CanvasLayer.Field.prototype.initialize.call(this, scalarField, options);
         L.Util.setOptions(this, options);
+
         if (this.options.color === null) {
             this.options.color = this.defaultColorScale();
         }
-        this.cells = this.field.gridLonLatValue();
+        this.cells = scalarField.gridLonLatValue();
     },
 
     defaultColorScale: function () {
@@ -21,15 +21,11 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
     },
 
     onLayerDidMount: function () {
-        if (this.options.click) {
-            this._activateClick();
-        }
+        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
     },
 
     onLayerWillUnmount: function () {
-        if (this.options.click) {
-            this._deactivateClick();
-        }
+        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
     },
 
     setData: function (data) {
@@ -38,58 +34,87 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         this.needRedraw(); // -- call to drawLayer
     },
 
+
     onDrawLayer: function (viewInfo) {
         console.time('onDrawLayer');
 
-        // canvas preparation
-        let g = viewInfo.canvas.getContext('2d');
-        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
+        let g = this._getDrawingContext();
 
-        let halfCell = this.field.cellsize / 2.0;
         for (var i = 0; i < this.cells.length; i++) {
-            let {
-                lon, lat, value
-            } = this.cells[i];
+            let cell = this.cells[i];
+            if (cell.value === null) {
+                continue; //no data
+            }
 
-            // no-data?
-            if (value === null) {
+            cell.bounds = this.getCellBounds(cell);
+            let cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
+            if (!cellIsVisible) {
                 continue;
             }
 
-            // pixel limits (upperLeft / lowerRight)
-            let ul = L.latLng([lat + halfCell, lon - halfCell]);
-            let lr = L.latLng([lat - halfCell, lon + halfCell]);
-
-            // not visible?
-            let cellBounds = L.latLngBounds(
-                L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
-            if (!viewInfo.bounds.intersects(cellBounds)) {
-                continue;
-            }
-
-            // rectangle drawing
-            let pixel_ul = viewInfo.layer._map.latLngToContainerPoint(ul);
-            let pixel_lr = viewInfo.layer._map.latLngToContainerPoint(lr);
-            let width = Math.abs(pixel_ul.x - pixel_lr.x);
-            let height = Math.abs(pixel_ul.y - pixel_lr.y);
-
-            // color
-            //g.fillStyle = 'blue'; //this.options.color(value); //TODO
-            g.fillStyle = this.options.color(value);
-            g.fillRect(pixel_ul.x, pixel_ul.y, width, height);
+            this.drawRectangle(g, cell);
         }
-        console.timeEnd('onDrawLayer');
+        console.timeEnd('onDrawLayerX');
     },
 
-    getBounds: function () {
-        let bb = this.field.extent();
-        let southWest = L.latLng(bb[1], bb[0]),
-            northEast = L.latLng(bb[3], bb[2]);
-        let bounds = L.latLngBounds(southWest, northEast);
-        return bounds;
+    /**
+     * Get clean context to draw on canvas
+     * @returns {CanvasRenderingContext2D}
+     */
+    _getDrawingContext: function () {
+        let g = this._canvas.getContext('2d');
+        g.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        return g;
+    },
+
+    /**
+     * Bounds for a cell (coordinates of its limits)
+     * @param   {Object}   cell
+     * @returns {LatLngBounds}
+     */
+    getCellBounds: function (cell) {
+        let half = this.field.cellsize / 2.0;
+        let ul = L.latLng([cell.lat + half, cell.lon - half]);
+        let lr = L.latLng([cell.lat - half, cell.lon + half]);
+
+        return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+    },
+
+    /**
+     * Draw a pixel on canvas
+     * @param {object} g    [[Description]]
+     * @param {object} cell [[Description]]
+     */
+    drawRectangle: function (g, cell) {
+        g.fillStyle = this.options.color(cell.value);
+        let r = this.getRectangle(cell.bounds);
+        g.fillRect(r.x, r.y, r.width, r.height);
+    },
+
+    /**
+     * Get rectangle to draw on canvas, aka 'pixel'
+     * @param   {LatLngBounds} cellBounds
+     * @returns {Object} {x, y, width, height}
+     */
+    getRectangle: function (cellBounds) {
+        let upperLeft = this._map.latLngToContainerPoint(
+            cellBounds.getNorthWest());
+        let lowerRight = this._map.latLngToContainerPoint(
+            cellBounds.getSouthEast());
+        let width = Math.abs(upperLeft.x - lowerRight.x);
+        let height = Math.abs(upperLeft.y - lowerRight.y);
+
+        let pixel = {
+            x: upperLeft.x,
+            y: upperLeft.y,
+            width,
+            height
+        };
+        return pixel;
     },
 
     getPixelColor: function (x, y) {
+        throw new Error('Not working!')
         let ctx = this._canvas.getContext('2d');
         let pixel = ctx.getImageData(x, y, 1, 1).data;
 
@@ -97,29 +122,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
         return chroma(pixel[0], pixel[1], pixel[2]);
     },
 
-    _activateClick: function () {
-        this._map.on('mouseover', this._showClickCursor, this);
-        this._map.on('click', this._queryValue, this);
-    },
-
-    _deactivateClick: function () {
-        this._map.off('mouseover', this._showClickCursor, this);
-        this._map.off('click', this._queryValue, this);
-    },
-
-    _showClickCursor: function () {
-        this._map.getContainer().style.cursor = 'default';
-    },
-
-    _queryValue: function (e) {
-        let lon = e.latlng.lng;
-        let lat = e.latlng.lat;
-        let result = {
-            latlng: e.latlng,
-            value: this.field.valueAt(lon, lat)
-        };
-        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
-    }
 });
 
 L.canvasLayer.scalarField = function (scalarField, options) {

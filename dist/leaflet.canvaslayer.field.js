@@ -64,29 +64,23 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	window.L.Vector = _Vector2.default;
-	//window.Vector = Vector; //TODO check window pollution!
-
-	// base
+	window.L.Vector = _Vector2.default; // base
 
 	window.L.Field = _Field2.default;
 
 	window.L.ScalarField = _ScalarField2.default;
-	//window.ScalarField = ScalarField;
 
 	window.L.VectorField = _VectorField2.default;
-	//window.VectorField = VectorField;
-
 
 	// layer
 	var L_CanvasLayer = __webpack_require__(5);
 	var L_CanvasLayer_SimpleLonLat = __webpack_require__(6);
-	// var L.CanvasLayer.Field = require('./layer/L.CanvasLayer.Field.js');
-	var L_CanvasLayer_ScalarField = __webpack_require__(7);
-	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(8);
+	var L_CanvasLayer_Field = __webpack_require__(7);
+	var L_CanvasLayer_ScalarField = __webpack_require__(8);
+	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(9);
 
 	// control
-	var L_Control_ColorBar = __webpack_require__(9);
+	var L_Control_ColorBar = __webpack_require__(10);
 
 	/*
 	(function (factory, window) {
@@ -1134,21 +1128,82 @@
 	'use strict';
 
 	/**
+	 * Abstract class for a Field layer on canvas, aka "a Raster layer"
+	 * (ScalarField or a VectorField)
+	 */
+	L.CanvasLayer.Field = L.CanvasLayer.extend({
+	    options: {
+	        click: true },
+
+	    initialize: function initialize(field, options) {
+	        this.field = field;
+	        L.Util.setOptions(this, options);
+	    },
+
+	    onLayerDidMount: function onLayerDidMount() {
+	        if (this.options.click) {
+	            this._map.on('click', this._queryValue, this);
+	        }
+	    },
+
+	    onLayerWillUnmount: function onLayerWillUnmount() {
+	        if (this.options.click) {
+	            this._map.off('click', this._queryValue, this);
+	        }
+	    },
+
+	    _queryValue: function _queryValue(e) {
+	        var lon = e.latlng.lng;
+	        var lat = e.latlng.lat;
+	        var result = {
+	            latlng: e.latlng,
+	            value: this.field.valueAt(lon, lat)
+	        };
+	        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
+	    },
+
+	    setData: function setData(data) {
+	        // -- custom data set
+	        // TODO
+	        this.needRedraw(); // -- call to drawLayer
+	    },
+
+	    onDrawLayer: function onDrawLayer(viewInfo) {
+	        throw new TypeError("Must be overriden");
+	    },
+
+	    getBounds: function getBounds() {
+	        var bb = this.field.extent();
+	        var southWest = L.latLng(bb[1], bb[0]),
+	            northEast = L.latLng(bb[3], bb[2]);
+	        var bounds = L.latLngBounds(southWest, northEast);
+	        return bounds;
+	    }
+
+	});
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
 	 * ScalarField on canvas (a 'Raster')
 	 */
-	L.CanvasLayer.ScalarField = L.CanvasLayer.extend({
+	L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 	    options: {
-	        click: true, // 'click' event
-	        color: null // function colorFor(value);
+	        color: null // function colorFor(value) [e.g. chromajs.scale]
 	    },
 
 	    initialize: function initialize(scalarField, options) {
-	        this.field = scalarField;
+	        L.CanvasLayer.Field.prototype.initialize.call(this, scalarField, options);
 	        L.Util.setOptions(this, options);
+
 	        if (this.options.color === null) {
 	            this.options.color = this.defaultColorScale();
 	        }
-	        this.cells = this.field.gridLonLatValue();
+	        this.cells = scalarField.gridLonLatValue();
 	    },
 
 	    defaultColorScale: function defaultColorScale() {
@@ -1156,15 +1211,11 @@
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
-	        if (this.options.click) {
-	            this._activateClick();
-	        }
+	        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
 	    },
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
-	        if (this.options.click) {
-	            this._deactivateClick();
-	        }
+	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
 	    },
 
 	    setData: function setData(data) {
@@ -1176,86 +1227,88 @@
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        console.time('onDrawLayer');
 
-	        // canvas preparation
-	        var g = viewInfo.canvas.getContext('2d');
-	        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
+	        var g = this._getDrawingContext();
 
-	        var halfCell = this.field.cellsize / 2.0;
 	        for (var i = 0; i < this.cells.length; i++) {
-	            var _cells$i = this.cells[i];
-	            var lon = _cells$i.lon;
-	            var lat = _cells$i.lat;
-	            var value = _cells$i.value;
+	            var cell = this.cells[i];
+	            if (cell.value === null) {
+	                continue; //no data
+	            }
 
-	            // no-data?
-
-	            if (value === null) {
+	            cell.bounds = this.getCellBounds(cell);
+	            var cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
+	            if (!cellIsVisible) {
 	                continue;
 	            }
 
-	            // pixel limits (upperLeft / lowerRight)
-	            var ul = L.latLng([lat + halfCell, lon - halfCell]);
-	            var lr = L.latLng([lat - halfCell, lon + halfCell]);
-
-	            // not visible?
-	            var cellBounds = L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
-	            if (!viewInfo.bounds.intersects(cellBounds)) {
-	                continue;
-	            }
-
-	            // rectangle drawing
-	            var pixel_ul = viewInfo.layer._map.latLngToContainerPoint(ul);
-	            var pixel_lr = viewInfo.layer._map.latLngToContainerPoint(lr);
-	            var width = Math.abs(pixel_ul.x - pixel_lr.x);
-	            var height = Math.abs(pixel_ul.y - pixel_lr.y);
-
-	            // color
-	            //g.fillStyle = 'blue'; //this.options.color(value); //TODO
-	            g.fillStyle = this.options.color(value);
-	            g.fillRect(pixel_ul.x, pixel_ul.y, width, height);
+	            this.drawRectangle(g, cell);
 	        }
-	        console.timeEnd('onDrawLayer');
+	        console.timeEnd('onDrawLayerX');
 	    },
 
-	    getBounds: function getBounds() {
-	        var bb = this.field.extent();
-	        var southWest = L.latLng(bb[1], bb[0]),
-	            northEast = L.latLng(bb[3], bb[2]);
-	        var bounds = L.latLngBounds(southWest, northEast);
-	        return bounds;
+	    /**
+	     * Get clean context to draw on canvas
+	     * @returns {CanvasRenderingContext2D}
+	     */
+	    _getDrawingContext: function _getDrawingContext() {
+	        var g = this._canvas.getContext('2d');
+	        g.clearRect(0, 0, this._canvas.width, this._canvas.height);
+	        return g;
+	    },
+
+	    /**
+	     * Bounds for a cell (coordinates of its limits)
+	     * @param   {Object}   cell
+	     * @returns {LatLngBounds}
+	     */
+	    getCellBounds: function getCellBounds(cell) {
+	        var half = this.field.cellsize / 2.0;
+	        var ul = L.latLng([cell.lat + half, cell.lon - half]);
+	        var lr = L.latLng([cell.lat - half, cell.lon + half]);
+
+	        return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+	    },
+
+	    /**
+	     * Draw a pixel on canvas
+	     * @param {object} g    [[Description]]
+	     * @param {object} cell [[Description]]
+	     */
+	    drawRectangle: function drawRectangle(g, cell) {
+	        g.fillStyle = this.options.color(cell.value);
+	        var r = this.getRectangle(cell.bounds);
+	        g.fillRect(r.x, r.y, r.width, r.height);
+	    },
+
+	    /**
+	     * Get rectangle to draw on canvas, aka 'pixel'
+	     * @param   {LatLngBounds} cellBounds
+	     * @returns {Object} {x, y, width, height}
+	     */
+	    getRectangle: function getRectangle(cellBounds) {
+	        var upperLeft = this._map.latLngToContainerPoint(cellBounds.getNorthWest());
+	        var lowerRight = this._map.latLngToContainerPoint(cellBounds.getSouthEast());
+	        var width = Math.abs(upperLeft.x - lowerRight.x);
+	        var height = Math.abs(upperLeft.y - lowerRight.y);
+
+	        var pixel = {
+	            x: upperLeft.x,
+	            y: upperLeft.y,
+	            width: width,
+	            height: height
+	        };
+	        return pixel;
 	    },
 
 	    getPixelColor: function getPixelColor(x, y) {
+	        throw new Error('Not working!');
 	        var ctx = this._canvas.getContext('2d');
 	        var pixel = ctx.getImageData(x, y, 1, 1).data;
 
 	        // array [r, g, b, a]
 	        return chroma(pixel[0], pixel[1], pixel[2]);
-	    },
-
-	    _activateClick: function _activateClick() {
-	        this._map.on('mouseover', this._showClickCursor, this);
-	        this._map.on('click', this._queryValue, this);
-	    },
-
-	    _deactivateClick: function _deactivateClick() {
-	        this._map.off('mouseover', this._showClickCursor, this);
-	        this._map.off('click', this._queryValue, this);
-	    },
-
-	    _showClickCursor: function _showClickCursor() {
-	        this._map.getContainer().style.cursor = 'default';
-	    },
-
-	    _queryValue: function _queryValue(e) {
-	        var lon = e.latlng.lng;
-	        var lat = e.latlng.lat;
-	        var result = {
-	            latlng: e.latlng,
-	            value: this.field.valueAt(lon, lat)
-	        };
-	        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
 	    }
+
 	});
 
 	L.canvasLayer.scalarField = function (scalarField, options) {
@@ -1268,7 +1321,7 @@
 	*/
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1276,22 +1329,22 @@
 	/**
 	 * Animated VectorField on canvas
 	 */
-	L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
+	L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
 	    options: {
 	        paths: 1000,
-	        color: "white", // html-color | chromajs.scale
+	        color: "white", // html-color | function colorFor(value) [e.g. chromajs.scale]
 	        width: 2, // path-width
 	        fade: "0.96", // 0 to 1
-	        click: true, // 'click' event
 	        duration: 40, // milliseconds per 'frame'
 	        maxAge: 200, // number of maximum frames per path
 	        velocityScale: 1 / 2000
 	    },
 
 	    initialize: function initialize(vectorField, options) {
-	        this.field = vectorField;
-	        this.timer = null;
+	        L.CanvasLayer.Field.prototype.initialize.call(this, vectorField, options);
 	        L.Util.setOptions(this, options);
+
+	        this.timer = null;
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
@@ -1299,6 +1352,7 @@
 	            this._map.on('mouseover', this._activateClick, this);
 	            this._map.on('click', this._queryValue, this);
 	        }
+
 	        this._map.on('movestart resize', this._stopAnimation, this);
 	    },
 
@@ -1457,7 +1511,7 @@
 	*/
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';

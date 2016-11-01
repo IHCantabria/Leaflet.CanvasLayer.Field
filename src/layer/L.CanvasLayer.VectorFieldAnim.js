@@ -1,22 +1,22 @@
 /**
  * Animated VectorField on canvas
  */
-L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
+L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     options: {
         paths: 1000,
-        color: "white", // html-color | chromajs.scale
+        color: "white", // html-color | function colorFor(value) [e.g. chromajs.scale]
         width: 2, // path-width
         fade: "0.96", // 0 to 1
-        click: true, // 'click' event
         duration: 40, // milliseconds per 'frame'
         maxAge: 200, // number of maximum frames per path
         velocityScale: 1 / 2000
     },
 
     initialize: function (vectorField, options) {
-        this.field = vectorField;
-        this.timer = null;
+        L.CanvasLayer.Field.prototype.initialize.call(this, vectorField, options);
         L.Util.setOptions(this, options);
+
+        this.timer = null;
     },
 
     onLayerDidMount: function () {
@@ -24,6 +24,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.extend({
             this._map.on('mouseover', this._activateClick, this);
             this._map.on('click', this._queryValue, this);
         }
+
         this._map.on('movestart resize', this._stopAnimation, this);
     },
 

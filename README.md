@@ -1,7 +1,7 @@
 # L.CanvasLayer.VectorFieldAnim
 
 ## Description
-A set of layers to visualize 'Raster' files (ASCIIGrid), based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera:
+A set of layers to visualize 'Raster' data from ASCIIGrid files, based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera:
 
 * ScalarField: a Raster layer from scalars, such as DTM, temperature...
 TODO [[* VectorField: a Raster layer from vectors, such as wind or ocean currents, using arrows
@@ -26,6 +26,7 @@ Tested on v1.0.0
 ### Dev-dependencies
 - Some tests with Jasmine (v2.4)
 - ES6 to ES5 with babel
+- Bundle with webpack
 
 ### Browser / device compatibility
 - HTML5 canvas & ES5

@@ -1,31 +1,37 @@
 /**
  * Abstract class for a Field layer on canvas, aka "a Raster layer"
  * (ScalarField or a VectorField)
-
+ */
 L.CanvasLayer.Field = L.CanvasLayer.extend({
     options: {
-        click: true, // 'click' event
+        click: true, // on('click') event enabled
     },
 
     initialize: function (field, options) {
-        // TODO protect against direct instantiation!!
-
         this.field = field;
         L.Util.setOptions(this, options);
     },
 
     onLayerDidMount: function () {
         if (this.options.click) {
-            this._map.on('mouseover', this._activateClick, this);
             this._map.on('click', this._queryValue, this);
         }
     },
 
     onLayerWillUnmount: function () {
         if (this.options.click) {
-            this._map.off('mouseover', this._activateClick, this);
             this._map.off('click', this._queryValue, this);
         }
+    },
+
+    _queryValue: function (e) {
+        let lon = e.latlng.lng;
+        let lat = e.latlng.lat;
+        let result = {
+            latlng: e.latlng,
+            value: this.field.valueAt(lon, lat)
+        };
+        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
     },
 
     setData: function (data) {
@@ -46,19 +52,4 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         return bounds;
     },
 
-    _activateClick: function () {
-        this._map.getContainer().style.cursor = 'default';
-    },
-
-    _queryValue: function (e) {
-        let lon = e.latlng.lng;
-        let lat = e.latlng.lat;
-        let result = {
-            latlng: e.latlng,
-            value: this.field.valueAt(lon, lat)
-        };
-        this.fireEvent('click', result); //includes: L.Mixin.Events
-
-}
 });
-*/
