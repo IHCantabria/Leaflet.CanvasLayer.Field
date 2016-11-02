@@ -44,6 +44,16 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         throw new TypeError("Must be overriden");
     },
 
+    /**
+     * Get clean context to draw on canvas
+     * @returns {CanvasRenderingContext2D}
+     */
+    _getDrawingContext: function () {
+        let g = this._canvas.getContext('2d');
+        g.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        return g;
+    },
+
     getBounds: function () {
         let bb = this.field.extent();
         let southWest = L.latLng(bb[1], bb[0]),

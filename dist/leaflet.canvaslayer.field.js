@@ -82,30 +82,7 @@
 	// control
 	var L_Control_ColorBar = __webpack_require__(10);
 
-	/*
-	(function (factory, window) {
-
-	    // define an AMD module that relies on 'leaflet'
-	    if (typeof define === 'function' && define.amd) {
-	        define(['leaflet'], factory);
-
-	    // define a Common JS module that relies on 'leaflet'
-	    } else if (typeof exports === 'object') {
-	        module.exports = factory(require('leaflet'));
-	    }
-
-	    // attach your plugin to the global 'L' variable
-	    if (typeof window !== 'undefined' && window.L) {
-	        window.L.YourPlugin = factory(L);
-	    }
-	}(function (L) {
-	    var L.Canvas = {};
-	    // implement your plugin
-
-	    // return your plugin when you are done
-	    return MyLeafletPlugin;
-	}, window));
-	*/
+	// TODO - umd pattern
 
 /***/ },
 /* 1 */
@@ -1034,11 +1011,6 @@
 	    return new L.CanvasLayer();
 	};
 
-	/*
-	module.exports = L.CanvasLayer;
-	module.exports = L.canvasLayer;
-	*/
-
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
@@ -1116,11 +1088,6 @@
 	    return new L.CanvasLayer.SimpleLonLat(lonslats, options);
 	};
 
-	/*
-	module.exports = L.CanvasLayer.SimpleLonLat;
-	module.exports = L.canvasLayer.simpleLonLat;
-	*/
-
 /***/ },
 /* 7 */
 /***/ function(module, exports) {
@@ -1172,6 +1139,16 @@
 	        throw new TypeError("Must be overriden");
 	    },
 
+	    /**
+	     * Get clean context to draw on canvas
+	     * @returns {CanvasRenderingContext2D}
+	     */
+	    _getDrawingContext: function _getDrawingContext() {
+	        var g = this._canvas.getContext('2d');
+	        g.clearRect(0, 0, this._canvas.width, this._canvas.height);
+	        return g;
+	    },
+
 	    getBounds: function getBounds() {
 	        var bb = this.field.extent();
 	        var southWest = L.latLng(bb[1], bb[0]),
@@ -1209,15 +1186,6 @@
 	    defaultColorScale: function defaultColorScale() {
 	        return chroma.scale(['white', 'black']).domain(this.field.range);
 	    },
-	    /*
-	        onLayerDidMount: function () {
-	            L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
-	        },
-
-	    onLayerWillUnmount: function () {
-	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
-	    },
-	    */
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        console.time('onDrawLayer');
@@ -1238,17 +1206,7 @@
 
 	            this.drawRectangle(g, cell);
 	        }
-	        console.timeEnd('onDrawLayerX');
-	    },
-
-	    /**
-	     * Get clean context to draw on canvas
-	     * @returns {CanvasRenderingContext2D}
-	     */
-	    _getDrawingContext: function _getDrawingContext() {
-	        var g = this._canvas.getContext('2d');
-	        g.clearRect(0, 0, this._canvas.width, this._canvas.height);
-	        return g;
+	        console.timeEnd('onDrawLayer');
 	    },
 
 	    /**
@@ -1310,11 +1268,6 @@
 	    return new L.CanvasLayer.ScalarField(scalarField, options);
 	};
 
-	/*
-	module.exports = L.CanvasLayer.ScalarField;
-	module.exports = L.canvasLayer.scalarField;
-	*/
-
 /***/ },
 /* 9 */
 /***/ function(module, exports) {
@@ -1343,41 +1296,18 @@
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
-	        if (this.options.click) {
-	            this._map.on('mouseover', this._activateClick, this);
-	            this._map.on('click', this._queryValue, this);
-	        }
-
+	        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
 	        this._map.on('movestart resize', this._stopAnimation, this);
 	    },
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
-	        if (this.options.click) {
-	            this._map.off('mouseover', this._activateClick, this);
-	            this._map.off('click', this._queryValue, this);
-	        }
+	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
 	        this._map.off('movestart resize', this._stopAnimation, this);
 	    },
 
-	    setData: function setData(data) {
-	        // -- custom data set
-	        // TODO
-	        this.needRedraw(); // -- call to drawLayer
-	    },
-
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        // canvas preparation
-	        var g = viewInfo.canvas.getContext('2d');
-	        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-
-	        // particle paths preparation
-	        var paths = [];
-
-	        for (var i = 0; i < this.options.paths; i++) {
-	            var p = this.field.randomPosition();
-	            p.age = this._randomAge();
-	            paths.push(p);
-	        }
+	        var g = this._getDrawingContext();
+	        var paths = this._prepareParticlePaths();
 
 	        this.timer = d3.timer(function () {
 	            moveParticles();
@@ -1453,7 +1383,6 @@
 	                    // colormap vs. simple color
 	                    var color = self.options.color;
 	                    if (typeof color == 'function') {
-	                        //g.strokeStyle = color(par.m).hex();
 	                        g.strokeStyle = color(par.m);
 	                    }
 	                    g.stroke();
@@ -1462,12 +1391,15 @@
 	        }
 	    },
 
-	    getBounds: function getBounds() {
-	        var bb = this.field.extent();
-	        var southWest = L.latLng(bb[1], bb[0]),
-	            northEast = L.latLng(bb[3], bb[2]);
-	        var bounds = L.latLngBounds(southWest, northEast);
-	        return bounds;
+	    _prepareParticlePaths: function _prepareParticlePaths() {
+	        var paths = [];
+
+	        for (var i = 0; i < this.options.paths; i++) {
+	            var p = this.field.randomPosition();
+	            p.age = this._randomAge();
+	            paths.push(p);
+	        }
+	        return paths;
 	    },
 
 	    _randomAge: function _randomAge() {
@@ -1478,32 +1410,13 @@
 	        if (this.timer) {
 	            this.timer.stop();
 	        }
-	    },
-
-	    _activateClick: function _activateClick() {
-	        this._map.getContainer().style.cursor = 'default';
-	    },
-
-	    _queryValue: function _queryValue(e) {
-	        var lon = e.latlng.lng;
-	        var lat = e.latlng.lat;
-	        var result = {
-	            "latlng": e.latlng,
-	            "value": this.field.valueAt(lon, lat)
-	        };
-
-	        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
 	    }
+
 	});
 
 	L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
 	    return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
 	};
-
-	/*
-	module.exports = L.CanvasLayer.VectorFieldAnim;
-	module.exports = L.canvasLayer.vectorFieldAnim;
-	*/
 
 /***/ },
 /* 10 */

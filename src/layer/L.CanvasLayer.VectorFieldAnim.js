@@ -20,41 +20,18 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     },
 
     onLayerDidMount: function () {
-        if (this.options.click) {
-            this._map.on('mouseover', this._activateClick, this);
-            this._map.on('click', this._queryValue, this);
-        }
-
+        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
         this._map.on('movestart resize', this._stopAnimation, this);
     },
 
     onLayerWillUnmount: function () {
-        if (this.options.click) {
-            this._map.off('mouseover', this._activateClick, this);
-            this._map.off('click', this._queryValue, this);
-        }
+        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
         this._map.off('movestart resize', this._stopAnimation, this);
     },
 
-    setData: function (data) {
-        // -- custom data set
-        // TODO
-        this.needRedraw(); // -- call to drawLayer
-    },
-
     onDrawLayer: function (viewInfo) {
-        // canvas preparation
-        let g = viewInfo.canvas.getContext('2d');
-        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
-
-        // particle paths preparation
-        let paths = [];
-
-        for (var i = 0; i < this.options.paths; i++) {
-            let p = this.field.randomPosition();
-            p.age = this._randomAge();
-            paths.push(p)
-        }
+        let g = this._getDrawingContext();
+        let paths = this._prepareParticlePaths();
 
         this.timer = d3.timer(function () {
             moveParticles();
@@ -130,7 +107,6 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                     // colormap vs. simple color
                     let color = self.options.color;
                     if (typeof color == 'function') {
-                        //g.strokeStyle = color(par.m).hex();
                         g.strokeStyle = color(par.m);
                     }
                     g.stroke();
@@ -139,12 +115,15 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
         }
     },
 
-    getBounds: function () {
-        let bb = this.field.extent();
-        let southWest = L.latLng(bb[1], bb[0]),
-            northEast = L.latLng(bb[3], bb[2]);
-        let bounds = L.latLngBounds(southWest, northEast);
-        return bounds;
+    _prepareParticlePaths: function () {
+        let paths = [];
+
+        for (var i = 0; i < this.options.paths; i++) {
+            let p = this.field.randomPosition();
+            p.age = this._randomAge();
+            paths.push(p)
+        }
+        return paths;
     },
 
     _randomAge: function () {
@@ -157,27 +136,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
         }
     },
 
-    _activateClick: function () {
-        this._map.getContainer().style.cursor = 'default';
-    },
-
-    _queryValue: function (e) {
-        let lon = e.latlng.lng;
-        let lat = e.latlng.lat;
-        let result = {
-            "latlng": e.latlng,
-            "value": this.field.valueAt(lon, lat)
-        };
-
-        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
-    }
 });
 
 L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
     return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
 }
-
-/*
-module.exports = L.CanvasLayer.VectorFieldAnim;
-module.exports = L.canvasLayer.vectorFieldAnim;
-*/

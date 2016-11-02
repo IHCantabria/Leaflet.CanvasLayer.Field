@@ -19,15 +19,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     defaultColorScale: function () {
         return chroma.scale(['white', 'black']).domain(this.field.range);
     },
-    /*
-        onLayerDidMount: function () {
-            L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
-        },
-
-    onLayerWillUnmount: function () {
-        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
-    },
-    */
 
     onDrawLayer: function (viewInfo) {
         console.time('onDrawLayer');
@@ -48,17 +39,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
             this.drawRectangle(g, cell);
         }
-        console.timeEnd('onDrawLayerX');
-    },
-
-    /**
-     * Get clean context to draw on canvas
-     * @returns {CanvasRenderingContext2D}
-     */
-    _getDrawingContext: function () {
-        let g = this._canvas.getContext('2d');
-        g.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        return g;
+        console.timeEnd('onDrawLayer');
     },
 
     /**
@@ -121,8 +102,3 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 L.canvasLayer.scalarField = function (scalarField, options) {
     return new L.CanvasLayer.ScalarField(scalarField, options);
 }
-
-/*
-module.exports = L.CanvasLayer.ScalarField;
-module.exports = L.canvasLayer.scalarField;
-*/
