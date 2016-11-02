@@ -1,7 +1,7 @@
-# L.CanvasLayer.VectorFieldAnim
+# L.CanvasLayer.Field
 
 ## Description
-A set of layers to visualize 'Raster' data from ASCIIGrid files, based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera:
+A set of layers to visualize 'Fields' (aka 'Rasters') from ASCIIGrid files, based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera:
 
 * ScalarField: a Raster layer from scalars, such as DTM, temperature...
 TODO [[* VectorField: a Raster layer from vectors, such as wind or ocean currents, using arrows

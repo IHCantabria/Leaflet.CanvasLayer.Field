@@ -19,21 +19,15 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     defaultColorScale: function () {
         return chroma.scale(['white', 'black']).domain(this.field.range);
     },
-
-    onLayerDidMount: function () {
-        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
-    },
+    /*
+        onLayerDidMount: function () {
+            L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
+        },
 
     onLayerWillUnmount: function () {
         L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
     },
-
-    setData: function (data) {
-        // -- custom data set
-        // TODO
-        this.needRedraw(); // -- call to drawLayer
-    },
-
+    */
 
     onDrawLayer: function (viewInfo) {
         console.time('onDrawLayer');
@@ -49,7 +43,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
             cell.bounds = this.getCellBounds(cell);
             let cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
             if (!cellIsVisible) {
-                continue;
+                continue; // TODO amend 'flicker' effect on map-pan
             }
 
             this.drawRectangle(g, cell);

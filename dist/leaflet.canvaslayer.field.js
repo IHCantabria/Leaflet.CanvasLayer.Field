@@ -1209,20 +1209,15 @@
 	    defaultColorScale: function defaultColorScale() {
 	        return chroma.scale(['white', 'black']).domain(this.field.range);
 	    },
+	    /*
+	        onLayerDidMount: function () {
+	            L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
+	        },
 
-	    onLayerDidMount: function onLayerDidMount() {
-	        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
-	    },
-
-	    onLayerWillUnmount: function onLayerWillUnmount() {
+	    onLayerWillUnmount: function () {
 	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
 	    },
-
-	    setData: function setData(data) {
-	        // -- custom data set
-	        // TODO
-	        this.needRedraw(); // -- call to drawLayer
-	    },
+	    */
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        console.time('onDrawLayer');
@@ -1238,7 +1233,7 @@
 	            cell.bounds = this.getCellBounds(cell);
 	            var cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
 	            if (!cellIsVisible) {
-	                continue;
+	                continue; // TODO amend 'flicker' effect on map-pan
 	            }
 
 	            this.drawRectangle(g, cell);
