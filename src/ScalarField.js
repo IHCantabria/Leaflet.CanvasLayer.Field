@@ -10,7 +10,7 @@ export default class ScalarField extends Field {
      * @param   {String}   asc
      * @returns {ScalarField}
      */
-    static fromASCIIGrid(asc) {
+    static fromASCIIGrid(asc, scaleFactor = 1) {
         console.time('ScalarField from ASC');
         let lines = asc.split('\n');
 
@@ -33,7 +33,7 @@ export default class ScalarField extends Field {
 
             let items = line.split(' ');
             let values = items.map(it => {
-                return (it !== NODATA_value) ? parseFloat(it) : null;
+                return (it !== NODATA_value) ? parseFloat(it * scaleFactor) : null;
             });
             zs.push(...values);
         }

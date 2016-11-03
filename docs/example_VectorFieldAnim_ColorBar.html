@@ -6,12 +6,20 @@
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+
+    <style>
+        .leaflet-control-colorBar-title {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 100;
+            font-size: large;
+        }
+    </style>
 </head>
 
 <body>
     <div id="map"></div>
 
-    <h1 id="title">Colormap for currents velocity + colorbar</h1>
+    <h1 id="title">Vectorfield animation with colormap + colorbar</h1>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -31,27 +39,29 @@
         }).addTo(map);
 
         /*
-            Vectorfield animation with a colormap for velocity + and associated legend
+            Vectorfield animation with a colormap for magnitude + and associated colorBar
         */
-        d3.json('data/grid_CANTABRIA.json', function (d) {
-            var vf = new L.VectorField(d);
+        d3.text('data/CANTABRIA_U.asc', function (u) {
+            d3.text('data/CANTABRIA_V.asc', function (v) {
+                let vf = L.VectorField.fromASCIIGrids(u, v, 0.001); // scalefactor to get units in m/s
 
-            var range = [0, 1.4];
-            var scale = chroma.scale('OrRd').domain(range);
+                var range = [0, 1.4];
+                var scale = chroma.scale('OrRd').domain(range);
 
-            // Layer
-            var layer = L.canvasLayer.vectorFieldAnim(vf, {
-                color: scale,
-                velocityScale: 1 / 500
-            }).addTo(map);
-            map.fitBounds(layer.getBounds());
+                // Layer
+                var layer = L.canvasLayer.vectorFieldAnim(vf, {
+                    color: scale,
+                    velocityScale: 1 / 500
+                }).addTo(map);
+                map.fitBounds(layer.getBounds());
 
-            // Simple colorbar
-            var bar = L.control.colorBar(scale, range, {
-                title: 'Currents surface velocity (m/s)',
-                units: 'm/s',
-                steps: 100
-            }).addTo(map);
+                // Simple colorbar
+                var bar = L.control.colorBar(scale, range, {
+                    title: 'Currents surface velocity (m/s)',
+                    units: 'm/s',
+                    steps: 100
+                }).addTo(map);
+            });
         });
     </script>
 </body>

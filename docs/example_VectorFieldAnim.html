@@ -32,8 +32,8 @@
         /*
             Default vectorfield animation, from two ASCIIGrid files
         */
-        d3.text('data/BAHIA_U.asc', function (u) {
-            d3.text('data/BAHIA_V.asc', function (v) {
+        d3.text('data/BAY_U.asc', function (u) {
+            d3.text('data/BAY_V.asc', function (v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v);
                 let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
                 map.fitBounds(layer.getBounds());

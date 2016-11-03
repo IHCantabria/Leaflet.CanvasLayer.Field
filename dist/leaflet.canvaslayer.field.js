@@ -573,6 +573,8 @@
 	         * @returns {ScalarField}
 	         */
 	        value: function fromASCIIGrid(asc) {
+	            var scaleFactor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
 	            console.time('ScalarField from ASC');
 	            var lines = asc.split('\n');
 
@@ -595,7 +597,7 @@
 
 	                var items = line.split(' ');
 	                var values = items.map(function (it) {
-	                    return it !== NODATA_value ? parseFloat(it) : null;
+	                    return it !== NODATA_value ? parseFloat(it * scaleFactor) : null;
 	                });
 	                zs.push.apply(zs, _toConsumableArray(values));
 	            }
@@ -752,8 +754,10 @@
 	         * @returns {VectorField}
 	         */
 	        value: function fromASCIIGrids(ascU, ascV) {
-	            var u = _ScalarField2.default.fromASCIIGrid(ascU);
-	            var v = _ScalarField2.default.fromASCIIGrid(ascV);
+	            var scaleFactor = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+
+	            var u = _ScalarField2.default.fromASCIIGrid(ascU, scaleFactor);
+	            var v = _ScalarField2.default.fromASCIIGrid(ascV, scaleFactor);
 
 	            // TODO - check equal parameters for u|v
 

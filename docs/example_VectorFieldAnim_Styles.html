@@ -32,34 +32,36 @@
         }).addTo(map);
 
         // Vectorfield animations with custom parameters
-        d3.json("data/grid_ATL.json", function (d) {
-            let vf = new L.VectorField(d);
+        d3.text('data/ATLANTIC_U.asc', function (u) {
+            d3.text('data/ATLANTIC_V.asc', function (v) {
+                let vf = L.VectorField.fromASCIIGrids(u, v, 0.001); // scalefactor to get units in m/s
 
-            let layer = L.canvasLayer.vectorFieldAnim(vf, {
-                paths: 100,
-                color: "cyan",
-                velocityScale: 1 / 10
-            }).addTo(map);
+                let layer = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 100,
+                    color: "cyan",
+                    velocityScale: 1 / 10
+                }).addTo(map);
 
-            var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
-                paths: 2000,
-                color: "#FF6699",
-                width: 3,
-                fade: 0.92,
-                maxAge: 2000,
-                velocityScale: 1 / 100
-            }).addTo(map);
+                var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 2000,
+                    color: "#FF6699",
+                    width: 3,
+                    fade: 0.92,
+                    maxAge: 2000,
+                    velocityScale: 1 / 100
+                }).addTo(map);
 
-            map.fitBounds(layer.getBounds());
+                map.fitBounds(layer.getBounds());
 
 
-            // Change color of layer2, every 10 secs.
-            var colors = ['cyan', 'yellow', 'green', 'pink', 'red'];
-            setInterval(function () {
-                var r = Math.random() * colors.length | 0;
-                layer2.options.color = colors[r];
-            }, 5000);
+                // Change color of layer2, every 10 secs.
+                var colors = ['cyan', 'yellow', 'green', 'pink', 'red'];
+                setInterval(function () {
+                    var r = Math.random() * colors.length | 0;
+                    layer2.options.color = colors[r];
+                }, 5000);
 
+            });
         });
     </script>
 </body>

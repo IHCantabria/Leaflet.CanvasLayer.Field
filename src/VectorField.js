@@ -15,9 +15,9 @@ export default class VectorField extends Field {
      * @param   {String} ascV - with v-component
      * @returns {VectorField}
      */
-    static fromASCIIGrids(ascU, ascV) {
-        let u = ScalarField.fromASCIIGrid(ascU);
-        let v = ScalarField.fromASCIIGrid(ascV);
+    static fromASCIIGrids(ascU, ascV, scaleFactor = 1) {
+        let u = ScalarField.fromASCIIGrid(ascU, scaleFactor);
+        let v = ScalarField.fromASCIIGrid(ascV, scaleFactor);
 
         // TODO - check equal parameters for u|v
 
