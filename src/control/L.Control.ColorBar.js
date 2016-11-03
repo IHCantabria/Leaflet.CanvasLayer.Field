@@ -12,7 +12,8 @@ L.Control.ColorBar = L.Control.extend({
         background: 'transparent',
         steps: 100,
         decimals: 2,
-        units: 'uds' // ej: m/s
+        units: 'uds', // ej: m/s
+        title: 'Legend', // ej: Ocean Currents
     },
 
     initialize: function (color, range, options) {
@@ -23,14 +24,23 @@ L.Control.ColorBar = L.Control.extend({
 
     onAdd: function (map) {
         this._map = map;
-        let div = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
+        let div = L.DomUtil.create('div', 'leaflet-control-colorBar leaflet-bar leaflet-control');
         L.DomEvent
             .addListener(div, 'click', L.DomEvent.stopPropagation)
             .addListener(div, 'click', L.DomEvent.preventDefault);
         div.style.backgroundColor = this.options.background;
         div.style.cursor = 'text';
-        div.innerHTML = this.palette();
+        div.innerHTML = this.title() + this.palette();
         return div;
+    },
+
+    title: function () {
+        let d = document.createElement('div');
+        d3.select(d).append('div')
+            .append('span')
+            .attr('class', 'leaflet-control-colorBar-title')
+            .text(this.options.title);
+        return d.innerHTML;
     },
 
     palette: function () {
@@ -41,15 +51,15 @@ L.Control.ColorBar = L.Control.extend({
         let data = d3.range(min, max + delta, delta);
         let colorPerValue = data.map(d => {
             return {
-                "value": d,
-                "color": this.color(d)
+                'value': d,
+                'color': this.color(d)
             }
         });
 
         // div.contenedor > svg
         let w = this.options.width / colorPerValue.length;
-        let d = document.createElement("div");
-        let svg = d3.select(d).append("svg")
+        let d = document.createElement('div');
+        let svg = d3.select(d).append('svg')
             .attr('width', this.options.width)
             .attr('height', this.options.height)
             .style('padding', '10px'); //

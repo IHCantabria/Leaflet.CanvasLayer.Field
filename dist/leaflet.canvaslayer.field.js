@@ -1438,8 +1438,8 @@
 	        background: 'transparent',
 	        steps: 100,
 	        decimals: 2,
-	        units: 'uds' // ej: m/s
-	    },
+	        units: 'uds', // ej: m/s
+	        title: 'Legend' },
 
 	    initialize: function initialize(color, range, options) {
 	        this.color = color; // 'chromajs' scale function
@@ -1449,12 +1449,18 @@
 
 	    onAdd: function onAdd(map) {
 	        this._map = map;
-	        var div = L.DomUtil.create('div', 'leaflet-control-leyendaEscalaColor leaflet-bar leaflet-control');
+	        var div = L.DomUtil.create('div', 'leaflet-control-colorBar leaflet-bar leaflet-control');
 	        L.DomEvent.addListener(div, 'click', L.DomEvent.stopPropagation).addListener(div, 'click', L.DomEvent.preventDefault);
 	        div.style.backgroundColor = this.options.background;
 	        div.style.cursor = 'text';
-	        div.innerHTML = this.palette();
+	        div.innerHTML = this.title() + this.palette();
 	        return div;
+	    },
+
+	    title: function title() {
+	        var d = document.createElement('div');
+	        d3.select(d).append('div').append('span').attr('class', 'leaflet-control-colorBar-title').text(this.options.title);
+	        return d.innerHTML;
 	    },
 
 	    palette: function palette() {
@@ -1467,15 +1473,15 @@
 	        var data = d3.range(min, max + delta, delta);
 	        var colorPerValue = data.map(function (d) {
 	            return {
-	                "value": d,
-	                "color": _this.color(d)
+	                'value': d,
+	                'color': _this.color(d)
 	            };
 	        });
 
 	        // div.contenedor > svg
 	        var w = this.options.width / colorPerValue.length;
-	        var d = document.createElement("div");
-	        var svg = d3.select(d).append("svg").attr('width', this.options.width).attr('height', this.options.height).style('padding', '10px'); //
+	        var d = document.createElement('div');
+	        var svg = d3.select(d).append('svg').attr('width', this.options.width).attr('height', this.options.height).style('padding', '10px'); //
 
 	        // n color-bars
 	        var buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
