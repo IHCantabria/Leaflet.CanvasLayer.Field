@@ -27,6 +27,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
         for (var i = 0; i < this.cells.length; i++) {
             let cell = this.cells[i];
+
             if (cell.value === null) {
                 continue; //no data
             }

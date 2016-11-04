@@ -760,7 +760,6 @@
 	            var v = _ScalarField2.default.fromASCIIGrid(ascV, scaleFactor);
 
 	            // TODO - check equal parameters for u|v
-
 	            var p = {
 	                ncols: u.ncols,
 	                nrows: u.nrows,
@@ -786,15 +785,57 @@
 	        return _this;
 	    }
 
-	    /**
-	     * Builds a grid with a Vector at each point, from two arrays
-	     * 'us' and 'vs' following x-ascending & y-descending order
-	     * (same as in ASCIIGrid)
-	     * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
-	     */
-
-
 	    _createClass(VectorField, [{
+	        key: 'getScalarField',
+	        value: function getScalarField(type) {
+	            var f = this._getFunctionFor(type);
+	            var p = {
+	                ncols: this.params.ncols,
+	                nrows: this.params.nrows,
+	                xllcorner: this.params.xllcorner,
+	                yllcorner: this.params.yllcorner,
+	                cellsize: this.params.cellsize,
+	                zs: this._applyOnField(f)
+	            };
+	            return new _ScalarField2.default(p);
+	        }
+	    }, {
+	        key: '_getFunctionFor',
+	        value: function _getFunctionFor(type) {
+	            switch (type) {
+	                case 'magnitude':
+	                case 'directionTo':
+	                case 'directionFrom':
+	                    return function (u, v) {
+	                        var uv = new _Vector2.default(u, v);
+	                        return uv[type]();
+	                    };
+	                    break;
+	                default:
+	                    throw TypeError('type not recognized: ' + type);
+	            }
+	        }
+	    }, {
+	        key: '_applyOnField',
+	        value: function _applyOnField(func) {
+	            var zs = [];
+	            var n = this.numCells();
+	            for (var i = 0; i < n; i++) {
+	                var u = this.us[i];
+	                var v = this.vs[i];
+	                zs.push(func(u, v));
+	            }
+	            return zs;
+	        }
+
+	        /**
+	         * Builds a grid with a Vector at each point, from two arrays
+	         * 'us' and 'vs' following x-ascending & y-descending order
+	         * (same as in ASCIIGrid)
+	         * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
+	         */
+
+	    }, {
 	        key: '_buildGrid',
 	        value: function _buildGrid() {
 	            var grid = [];
@@ -827,11 +868,9 @@
 	            }).filter(function (v) {
 	                return v !== null;
 	            });
-
 	            var magnitudes = vectors.map(function (v) {
 	                return v.magnitude();
 	            });
-
 	            // TODO memory crash!
 	            var min = d3.min(magnitudes);
 	            var max = d3.max(magnitudes);
@@ -1198,6 +1237,7 @@
 
 	        for (var i = 0; i < this.cells.length; i++) {
 	            var cell = this.cells[i];
+
 	            if (cell.value === null) {
 	                continue; //no data
 	            }

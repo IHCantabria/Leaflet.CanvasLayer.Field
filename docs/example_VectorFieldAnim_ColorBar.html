@@ -13,13 +13,13 @@
             font-weight: 100;
             font-size: large;
         }
+
     </style>
 </head>
 
 <body>
-    <div id="map"></div>
-
     <h1 id="title">Vectorfield animation with colormap + colorbar</h1>
+    <div id="map"></div>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -41,8 +41,8 @@
         /*
             Vectorfield animation with a colormap for magnitude + and associated colorBar
         */
-        d3.text('data/CANTABRIA_U.asc', function (u) {
-            d3.text('data/CANTABRIA_V.asc', function (v) {
+        d3.text('data/Cantabria_U.asc', function(u) {
+            d3.text('data/Cantabria_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v, 0.001); // scalefactor to get units in m/s
 
                 var range = [0, 1.4];
@@ -63,7 +63,7 @@
                 }).addTo(map);
 
                 // info
-                layer.on('click', function (e) {
+                layer.on('click', function(e) {
                     if (e.value) {
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
@@ -77,6 +77,7 @@
                 });
             });
         });
+
     </script>
 </body>
 

@@ -33,8 +33,8 @@
         /*
             Simple points layer with the vectorfield grid
         */
-        d3.text('data/BAY_U.asc', function (u) {
-            d3.text('data/BAY_V.asc', function (v) {
+        d3.text('data/Bay_U.asc', function(u) {
+            d3.text('data/Bay_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v);
 
                 let layer = L.canvasLayer.simpleLonLat(vf.gridLonLatValue(), {
@@ -44,6 +44,7 @@
                 map.fitBounds(layer.getBounds());
             });
         });
+
     </script>
 </body>
 

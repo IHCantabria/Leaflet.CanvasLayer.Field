@@ -20,7 +20,6 @@ export default class VectorField extends Field {
         let v = ScalarField.fromASCIIGrid(ascV, scaleFactor);
 
         // TODO - check equal parameters for u|v
-
         let p = {
             ncols: u.ncols,
             nrows: u.nrows,
@@ -40,6 +39,45 @@ export default class VectorField extends Field {
         this.vs = params["vs"];
         this.grid = this._buildGrid();
         this.range = this._calculateRange();
+    }
+
+    getScalarField(type) {
+        let f = this._getFunctionFor(type);
+        let p = {
+            ncols: this.params.ncols,
+            nrows: this.params.nrows,
+            xllcorner: this.params.xllcorner,
+            yllcorner: this.params.yllcorner,
+            cellsize: this.params.cellsize,
+            zs: this._applyOnField(f)
+        };
+        return new ScalarField(p);
+    }
+
+    _getFunctionFor(type) {
+        switch (type) {
+            case 'magnitude':
+            case 'directionTo':
+            case 'directionFrom':
+                return function (u, v) {
+                    let uv = new Vector(u, v);
+                    return uv[type]();
+                }
+                break;
+            default:
+                throw TypeError('type not recognized: ' + type);
+        }
+    }
+
+    _applyOnField(func) {
+        let zs = [];
+        let n = this.numCells();
+        for (var i = 0; i < n; i++) {
+            let u = this.us[i];
+            let v = this.vs[i];
+            zs.push(func(u, v));
+        }
+        return zs;
     }
 
     /**
@@ -76,9 +114,7 @@ export default class VectorField extends Field {
             .filter(function (v) {
                 return v !== null;
             });
-
         let magnitudes = vectors.map(v => v.magnitude());
-
         // TODO memory crash!
         let min = d3.min(magnitudes);
         let max = d3.max(magnitudes);
@@ -108,5 +144,4 @@ export default class VectorField extends Field {
         var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
         return new Vector(u, v);
     }
-
 }

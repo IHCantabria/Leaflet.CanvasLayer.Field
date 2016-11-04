@@ -67,7 +67,8 @@ describe("VectorField", function () {
     });
 
     it("can return a ScalarField with vector magnitudes", function () {
-        expect(0).toEqual(1, 'not implemented')
+        let s = vf.getScalarField('magnitude');
+        expect(s).not.toBe(null);
     });
 
     it("can calculate the Range of its values", function () {
