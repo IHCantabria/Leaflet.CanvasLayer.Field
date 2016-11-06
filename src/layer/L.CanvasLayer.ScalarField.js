@@ -25,6 +25,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
         let g = this._getDrawingContext();
 
+        //for (var i = 0; i < this.cells.length; i++) {
         for (var i = 0; i < this.cells.length; i++) {
             let cell = this.cells[i];
 

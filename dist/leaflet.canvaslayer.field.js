@@ -157,23 +157,23 @@
 	            new Dictionary<int, string>
 	            {
 	                //{0, 23, 45, 68, 90, 113, 135, 158, 180, 203, 225, 248, 270, 293, 315, 338, 360};
-	                {0, "N"},
-	                {23, "NNE"},
-	                {45, "NE"},
-	                {68, "ENE"},
-	                {90, "E"},
-	                {113, "ESE"},
-	                {135, "SE"},
-	                {158, "SSE"},
-	                {180, "S"},
-	                {203, "SSW"},
-	                {225, "SW"},
-	                {248, "WSW"},
-	                {270, "W"},
-	                {293, "WNW"},
-	                {315, "NW"},
-	                {338, "NNW"},
-	                {360, "N"}
+	                {0, 'N'},
+	                {23, 'NNE'},
+	                {45, 'NE'},
+	                {68, 'ENE'},
+	                {90, 'E'},
+	                {113, 'ESE'},
+	                {135, 'SE'},
+	                {158, 'SSE'},
+	                {180, 'S'},
+	                {203, 'SSW'},
+	                {225, 'SW'},
+	                {248, 'WSW'},
+	                {270, 'W'},
+	                {293, 'WNW'},
+	                {315, 'NW'},
+	                {338, 'NNW'},
+	                {360, 'N'}
 	            };
 	        */
 
@@ -188,7 +188,7 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -200,29 +200,29 @@
 
 	/**
 	 *  Abstract class for a set of values (Vector | Scalar)
-	 *  assigned to a regular 2D-grid (lon-lat), aka "a Raster source"
+	 *  assigned to a regular 2D-grid (lon-lat), aka 'a Raster source'
 	 */
 	var Field = function () {
 	    function Field(params) {
 	        _classCallCheck(this, Field);
 
 	        if (new.target === Field) {
-	            throw new TypeError("Cannot construct Field instances directly (use VectorField or ScalarField)");
+	            throw new TypeError('Cannot construct Field instances directly (use VectorField or ScalarField)');
 	        }
 	        this.params = params;
 
-	        this.ncols = params["ncols"];
-	        this.nrows = params["nrows"];
+	        this.ncols = params['ncols'];
+	        this.nrows = params['nrows'];
 
 	        // ll = lower-left
-	        this.xllcorner = params["xllcorner"];
-	        this.yllcorner = params["yllcorner"];
+	        this.xllcorner = params['xllcorner'];
+	        this.yllcorner = params['yllcorner'];
 
 	        // ur = upper-right
-	        this.xurcorner = params["xllcorner"] + params["ncols"] * params["cellsize"];
-	        this.yurcorner = params["yllcorner"] + params["nrows"] * params["cellsize"];
+	        this.xurcorner = params['xllcorner'] + params['ncols'] * params['cellsize'];
+	        this.yurcorner = params['yllcorner'] + params['nrows'] * params['cellsize'];
 
-	        this.cellsize = params["cellsize"];
+	        this.cellsize = params['cellsize'];
 
 	        this.grid = null; // to be defined by subclasses
 	    }
@@ -238,9 +238,9 @@
 
 
 	    _createClass(Field, [{
-	        key: "_buildGrid",
+	        key: '_buildGrid',
 	        value: function _buildGrid() {
-	            throw new TypeError("Must be overriden");
+	            throw new TypeError('Must be overriden');
 	        }
 
 	        /**
@@ -249,7 +249,7 @@
 	         */
 
 	    }, {
-	        key: "numCells",
+	        key: 'numCells',
 	        value: function numCells() {
 	            return this.nrows * this.ncols;
 	        }
@@ -260,7 +260,7 @@
 	         */
 
 	    }, {
-	        key: "gridLonLatValue",
+	        key: 'gridLonLatValue',
 	        value: function gridLonLatValue() {
 	            var lonslatsV = [];
 	            var halfCell = this.cellsize / 2.0;
@@ -275,9 +275,9 @@
 	                for (var i = 0; i < this.ncols; i++) {
 	                    var v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar)
 	                    lonslatsV.push({
-	                        "lon": lon,
-	                        "lat": lat,
-	                        "value": v
+	                        'lon': lon,
+	                        'lat': lat,
+	                        'value': v
 	                    }); // <<
 	                    lon += this.cellsize;
 	                }
@@ -293,7 +293,7 @@
 	         */
 
 	    }, {
-	        key: "extent",
+	        key: 'extent',
 	        value: function extent() {
 	            return [this.xllcorner, this.yllcorner, this.xurcorner, this.yurcorner];
 	        }
@@ -306,7 +306,7 @@
 	         */
 
 	    }, {
-	        key: "contains",
+	        key: 'contains',
 	        value: function contains(lon, lat) {
 	            return lon >= this.xllcorner && lon <= this.xurcorner && lat >= this.yllcorner && lat <= this.yurcorner;
 	        }
@@ -319,7 +319,7 @@
 	         */
 
 	    }, {
-	        key: "notContains",
+	        key: 'notContains',
 	        value: function notContains(lon, lat) {
 	            return !this.contains(lon, lat);
 	        }
@@ -332,7 +332,7 @@
 	         */
 
 	    }, {
-	        key: "valueAt",
+	        key: 'valueAt',
 	        value: function valueAt(lon, lat) {
 	            if (this.notContains(lon, lat)) return null;
 	            return this._interpolate(lon, lat);
@@ -346,7 +346,7 @@
 	         */
 
 	    }, {
-	        key: "hasValueAt",
+	        key: 'hasValueAt',
 	        value: function hasValueAt(lon, lat) {
 	            return this.valueAt(lon, lat) !== null;
 	        }
@@ -359,7 +359,7 @@
 	         */
 
 	    }, {
-	        key: "notHasValueAt",
+	        key: 'notHasValueAt',
 	        value: function notHasValueAt(lon, lat) {
 	            return !this.hasValueAt(lon, lat);
 	        }
@@ -371,7 +371,7 @@
 	         */
 
 	    }, {
-	        key: "randomPosition",
+	        key: 'randomPosition',
 	        value: function randomPosition() {
 	            var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -391,7 +391,7 @@
 	         */
 
 	    }, {
-	        key: "_valueAtIndexes",
+	        key: '_valueAtIndexes',
 	        value: function _valueAtIndexes(i, j) {
 	            return this.grid[j][i]; // <-- j,i !!
 	        }
@@ -404,7 +404,7 @@
 	         */
 
 	    }, {
-	        key: "_lonLatAtIndexes",
+	        key: '_lonLatAtIndexes',
 	        value: function _lonLatAtIndexes(i, j) {
 	            var lon = this._longitudeAtX(i);
 	            var lat = this._latitudeAtY(j);
@@ -419,7 +419,7 @@
 	         */
 
 	    }, {
-	        key: "_longitudeAtX",
+	        key: '_longitudeAtX',
 	        value: function _longitudeAtX(i) {
 	            var halfPixel = this.cellsize / 2.0;
 	            return this.xllcorner + halfPixel + i * this.cellsize;
@@ -432,7 +432,7 @@
 	         */
 
 	    }, {
-	        key: "_latitudeAtY",
+	        key: '_latitudeAtY',
 	        value: function _latitudeAtY(j) {
 	            var halfPixel = this.cellsize / 2.0;
 	            return this.yurcorner - halfPixel - j * this.cellsize;
@@ -449,10 +449,10 @@
 	         */
 
 	    }, {
-	        key: "_interpolate",
+	        key: '_interpolate',
 	        value: function _interpolate(lon, lat) {
 	            //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
-	            //        fi  i   ci          four points "G" that enclose point (i, j). These points are at the four
+	            //        fi  i   ci          four points 'G' that enclose point (i, j). These points are at the four
 	            //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
 	            //      ---G--|---G--- fj 8   i = 1.4 and j = 8.3, the four surrounding grid points are (1, 8), (2, 8),
 	            //    j ___|_ .   |           (1, 9) and (2, 9).
@@ -493,7 +493,7 @@
 	                    }
 	                }
 	            }
-	            // console.log("cannot interpolate: " + λ + "," + φ + ": " + fi + " " + ci + " " + fj + " " + cj);
+	            // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
 	            return null;
 	        }
 
@@ -507,9 +507,9 @@
 	         */
 
 	    }, {
-	        key: "_doInterpolation",
+	        key: '_doInterpolation',
 	        value: function _doInterpolation(lon, lat) {
-	            throw new TypeError("Must be overriden");
+	            throw new TypeError('Must be overriden');
 	        }
 
 	        /**
@@ -520,7 +520,7 @@
 	         */
 
 	    }, {
-	        key: "_isValid",
+	        key: '_isValid',
 	        value: function _isValid(x) {
 	            return x !== null && x !== undefined;
 	        }
@@ -612,7 +612,7 @@
 
 	        var _this = _possibleConstructorReturn(this, (ScalarField.__proto__ || Object.getPrototypeOf(ScalarField)).call(this, params));
 
-	        _this.zs = params["zs"];
+	        _this.zs = params['zs'];
 
 	        _this.grid = _this._buildGrid();
 	        _this.range = _this._calculateRange();
@@ -778,8 +778,8 @@
 
 	        var _this = _possibleConstructorReturn(this, (VectorField.__proto__ || Object.getPrototypeOf(VectorField)).call(this, params));
 
-	        _this.us = params["us"];
-	        _this.vs = params["vs"];
+	        _this.us = params['us'];
+	        _this.vs = params['vs'];
 	        _this.grid = _this._buildGrid();
 	        _this.range = _this._calculateRange();
 	        return _this;
@@ -1058,7 +1058,7 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -1067,7 +1067,7 @@
 	 */
 	L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
 	    options: {
-	        color: "gray"
+	        color: 'gray'
 	    },
 
 	    initialize: function initialize(lonslats, options) {
@@ -1122,7 +1122,7 @@
 
 	        var southWest = L.latLng(ymin, xmin),
 	            northEast = L.latLng(ymax, xmax);
-	        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR
+	        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pix?
 	        return bounds;
 	    }
 	});
@@ -1138,7 +1138,7 @@
 	'use strict';
 
 	/**
-	 * Abstract class for a Field layer on canvas, aka "a Raster layer"
+	 * Abstract class for a Field layer on canvas, aka 'a Raster layer'
 	 * (ScalarField or a VectorField)
 	 */
 	L.CanvasLayer.Field = L.CanvasLayer.extend({
@@ -1179,7 +1179,7 @@
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        throw new TypeError("Must be overriden");
+	        throw new TypeError('Must be overriden');
 	    },
 
 	    /**
@@ -1235,6 +1235,7 @@
 
 	        var g = this._getDrawingContext();
 
+	        //for (var i = 0; i < this.cells.length; i++) {
 	        for (var i = 0; i < this.cells.length; i++) {
 	            var cell = this.cells[i];
 
@@ -1316,7 +1317,7 @@
 /* 9 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	/**
 	 * Animated VectorField on canvas
@@ -1324,9 +1325,9 @@
 	L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
 	    options: {
 	        paths: 1000,
-	        color: "white", // html-color | function colorFor(value) [e.g. chromajs.scale]
+	        color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]
 	        width: 2, // path-width
-	        fade: "0.96", // 0 to 1
+	        fade: 0.96, // 0 to 1
 	        duration: 40, // milliseconds per 'frame'
 	        maxAge: 200, // number of maximum frames per path
 	        velocityScale: 1 / 2000
@@ -1399,11 +1400,11 @@
 	         */
 	        function drawParticles() {
 	            // Previous paths...
-	            g.globalCompositeOperation = "destination-in";
+	            g.globalCompositeOperation = 'destination-in';
 	            g.fillRect(0, 0, g.canvas.width, g.canvas.height);
-	            g.globalCompositeOperation = "source-over";
+	            g.globalCompositeOperation = 'source-over';
 
-	            g.fillStyle = "rgba(125, 255, 0, " + self.options.fade + ")"; // fading paths...
+	            g.fillStyle = 'rgba(125, 255, 0, ' + self.options.fade + ')'; // fading paths...
 	            g.lineWidth = self.options.width;
 	            g.strokeStyle = self.options.color;
 

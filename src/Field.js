@@ -1,27 +1,27 @@
 /**
  *  Abstract class for a set of values (Vector | Scalar)
- *  assigned to a regular 2D-grid (lon-lat), aka "a Raster source"
+ *  assigned to a regular 2D-grid (lon-lat), aka 'a Raster source'
  */
 export default class Field {
 
     constructor(params) {
         if (new.target === Field) {
-            throw new TypeError("Cannot construct Field instances directly (use VectorField or ScalarField)");
+            throw new TypeError('Cannot construct Field instances directly (use VectorField or ScalarField)');
         }
         this.params = params;
 
-        this.ncols = params["ncols"];
-        this.nrows = params["nrows"];
+        this.ncols = params['ncols'];
+        this.nrows = params['nrows'];
 
         // ll = lower-left
-        this.xllcorner = params["xllcorner"];
-        this.yllcorner = params["yllcorner"];
+        this.xllcorner = params['xllcorner'];
+        this.yllcorner = params['yllcorner'];
 
         // ur = upper-right
-        this.xurcorner = params["xllcorner"] + params["ncols"] * params["cellsize"];
-        this.yurcorner = params["yllcorner"] + params["nrows"] * params["cellsize"];
+        this.xurcorner = params['xllcorner'] + params['ncols'] * params['cellsize'];
+        this.yurcorner = params['yllcorner'] + params['nrows'] * params['cellsize'];
 
-        this.cellsize = params["cellsize"];
+        this.cellsize = params['cellsize'];
 
         this.grid = null; // to be defined by subclasses
     }
@@ -35,7 +35,7 @@ export default class Field {
      * @returns {Array.<Array.<Vector|Number>>} - grid[row][column]--> Vector|Number
      */
     _buildGrid() {
-        throw new TypeError("Must be overriden");
+        throw new TypeError('Must be overriden');
     }
 
     /**
@@ -64,9 +64,9 @@ export default class Field {
             for (var i = 0; i < this.ncols; i++) {
                 let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar)
                 lonslatsV.push({
-                    "lon": lon,
-                    "lat": lat,
-                    "value": v
+                    'lon': lon,
+                    'lat': lat,
+                    'value': v
                 }); // <<
                 lon += this.cellsize;
             }
@@ -206,7 +206,7 @@ export default class Field {
      */
     _interpolate(lon, lat) {
         //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
-        //        fi  i   ci          four points "G" that enclose point (i, j). These points are at the four
+        //        fi  i   ci          four points 'G' that enclose point (i, j). These points are at the four
         //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
         //      ---G--|---G--- fj 8   i = 1.4 and j = 8.3, the four surrounding grid points are (1, 8), (2, 8),
         //    j ___|_ .   |           (1, 9) and (2, 9).
@@ -245,7 +245,7 @@ export default class Field {
                 }
             }
         }
-        // console.log("cannot interpolate: " + λ + "," + φ + ": " + fi + " " + ci + " " + fj + " " + cj);
+        // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
         return null;
     }
 
@@ -258,7 +258,7 @@ export default class Field {
      * @returns {Vector|Number}
      */
     _doInterpolation(lon, lat) {
-        throw new TypeError("Must be overriden");
+        throw new TypeError('Must be overriden');
     }
 
     /**

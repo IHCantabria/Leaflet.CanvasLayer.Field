@@ -1,7 +1,7 @@
-describe("ScalarField", function () {
+describe('ScalarField', function () {
     let ScalarField = L.ScalarField;
 
-    let dataFolder = "../../docs/data";
+    let dataFolder = '../../docs/data';
     let sf;
 
     beforeEach(function (fileLoaded) {
@@ -11,11 +11,11 @@ describe("ScalarField", function () {
         });
     });
 
-    it("can be created from an ASCIIGrid file", function () {
+    it('can be created from an ASCIIGrid file', function () {
         expect(sf).not.toBe(null);
     });
 
-    it("can return the Number for (i, j) indexes in the grid", function () {
+    it('can return the Number for (i, j) indexes in the grid', function () {
         // top-left
         expect(sf._valueAtIndexes(0, 0)).toEqual(0.011275325901806355);
 
@@ -23,7 +23,7 @@ describe("ScalarField", function () {
         expect(sf._valueAtIndexes(9, 9)).toEqual(0.14851005375385284);
     });
 
-    it("can return the Number for a Lon-Lat ", function () {
+    it('can return the Number for a Lon-Lat ', function () {
         // near the center of the LL cell [up & right]
         let pNearLL = sf.valueAt(-3.76921724303, 43.4605948227);
         expect(pNearLL).toBeCloseTo(0.00586759205907583, 4);
@@ -41,7 +41,7 @@ describe("ScalarField", function () {
         expect(pNearLR).toBeCloseTo(0.148510053753853, 4);
     });
 
-    it("can return GridLonLatValues", function () {
+    it('can return GridLonLatValues', function () {
         let grid = sf.gridLonLatValue();
         let p0 = grid[0];
         let pN = grid[grid.length - 1];
@@ -58,14 +58,17 @@ describe("ScalarField", function () {
         });
     });
 
-    it("can calculate the Range of its values", function () {
+    it('can calculate the Range of its values', function () {
         expect(sf.range).not.toBe(null);
         expect(sf.range[0]).toBeCloseTo(0.0058675920590758, 8);
         expect(sf.range[1]).toBeCloseTo(0.21501889824867, 8);
     });
 
+    it('can be resampled (pyramids)', function () {
+
+    });
     /*
-    it("can be filtered", function () {
+    it('can be filtered', function () {
         let filter = function (v) {
             return (v > 0 && v < 0.01);
         };

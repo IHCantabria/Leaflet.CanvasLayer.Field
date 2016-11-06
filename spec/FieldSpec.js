@@ -1,8 +1,8 @@
-describe("Field", function () {
+describe('Field', function () {
     let Field = L.Field;
     let ScalarField = L.ScalarField;
 
-    let dataFolder = "../../docs/data";
+    let dataFolder = '../../docs/data';
     let f;
 
     beforeEach(function (fileLoaded) {
@@ -12,7 +12,7 @@ describe("Field", function () {
         });
     });
 
-    it("gives general info about its cells and extent", function () {
+    it('gives general info about its cells and extent', function () {
         expect(f.ncols).toEqual(10);
         expect(f.nrows).toEqual(10);
 
@@ -30,7 +30,7 @@ describe("Field", function () {
         expect(f.numCells()).toEqual(100);
     });
 
-    it("is a regular grid with ncols & nrows", function () {
+    it('is a regular grid with ncols & nrows', function () {
         expect(f.grid).not.toBe(null);
 
         let i = f.grid.length;
@@ -39,7 +39,7 @@ describe("Field", function () {
         expect(j).toBe(f.ncols);
     });
 
-    it("can generate a random position inside", function () {
+    it('can generate a random position inside', function () {
         let pos = f.randomPosition();
         expect(pos).not.toBe(null);
         expect(f.contains(pos.x, pos.y)).toBe(true);
@@ -48,7 +48,7 @@ describe("Field", function () {
         expect(pos2).not.toBe(pos);
     });
 
-    it("knows the Longitude & Latitude for each cell", function () {
+    it('knows the Longitude & Latitude for each cell', function () {
         // longitudes
         let xminCenter = f._longitudeAtX(0);
         expect(xminCenter).toBeCloseTo(-3.7692175003915001, 6);
@@ -78,10 +78,12 @@ describe("Field", function () {
         expect(p[1]).toBeCloseTo(43.461099497838006, 7);
     });
 
-    it("doesn't return a Value for a Lon-Lat outside of the grid", function () {
+    it('doesn'
+        t
+        return a Value
+        for a Lon - Lat outside of the grid ', function () {
         let lon = -3.710591474014617;
-        let lat = 43.47082043045964;
-        expect(f.hasValueAt(lon, lat)).toBe(false);
+        let lat = 43.47082043045964; expect(f.hasValueAt(lon, lat)).toBe(false);
     });
 
 });

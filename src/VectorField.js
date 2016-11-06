@@ -35,8 +35,8 @@ export default class VectorField extends Field {
     constructor(params) {
         super(params);
 
-        this.us = params["us"];
-        this.vs = params["vs"];
+        this.us = params['us'];
+        this.vs = params['vs'];
         this.grid = this._buildGrid();
         this.range = this._calculateRange();
     }

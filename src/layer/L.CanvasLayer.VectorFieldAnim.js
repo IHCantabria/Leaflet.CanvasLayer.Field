@@ -4,9 +4,9 @@
 L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     options: {
         paths: 1000,
-        color: "white", // html-color | function colorFor(value) [e.g. chromajs.scale]
+        color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]
         width: 2, // path-width
-        fade: "0.96", // 0 to 1
+        fade: 0.96, // 0 to 1
         duration: 40, // milliseconds per 'frame'
         maxAge: 200, // number of maximum frames per path
         velocityScale: 1 / 2000
@@ -79,9 +79,9 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
          */
         function drawParticles() {
             // Previous paths...
-            g.globalCompositeOperation = "destination-in";
+            g.globalCompositeOperation = 'destination-in';
             g.fillRect(0, 0, g.canvas.width, g.canvas.height);
-            g.globalCompositeOperation = "source-over";
+            g.globalCompositeOperation = 'source-over';
 
             g.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`; // fading paths...
             g.lineWidth = self.options.width;

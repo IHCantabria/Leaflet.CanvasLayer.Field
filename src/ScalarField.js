@@ -44,7 +44,7 @@ export default class ScalarField extends Field {
 
     constructor(params) {
         super(params);
-        this.zs = params["zs"];
+        this.zs = params['zs'];
 
         this.grid = this._buildGrid();
         this.range = this._calculateRange();

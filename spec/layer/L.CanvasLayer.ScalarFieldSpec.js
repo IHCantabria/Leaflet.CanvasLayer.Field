@@ -1,7 +1,7 @@
 describe('L.CanvasLayer.ScalarField', function () {
     let ScalarField = L.ScalarField;
 
-    let dataFolder = "../../docs/data";
+    let dataFolder = '../../docs/data';
     let c, map, sf;
 
     beforeEach(function (fileLoaded) {
@@ -28,19 +28,19 @@ describe('L.CanvasLayer.ScalarField', function () {
     });
 
 
-    it("can be added to the map", function () {
+    it('can be added to the map', function () {
         let sfl = L.canvasLayer.scalarField(sf).addTo(map);
         expect(map.hasLayer(sfl)).toBe(true);
     });
 
-    it("has bounds", function () {
+    it('has bounds', function () {
         let sfl = L.canvasLayer.scalarField(sf);
         expect(sfl.getBounds()).not.toBe(null);
     });
 
     // TODO
     /*
-    it("can be painted with default renderer", function () {
+    it('can be painted with default renderer', function () {
         let sfl = L.canvasLayer.scalarField(sf).addTo(map);
         map.fitBounds(sfl.getBounds());
 

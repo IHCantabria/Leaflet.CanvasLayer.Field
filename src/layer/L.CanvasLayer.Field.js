@@ -1,5 +1,5 @@
 /**
- * Abstract class for a Field layer on canvas, aka "a Raster layer"
+ * Abstract class for a Field layer on canvas, aka 'a Raster layer'
  * (ScalarField or a VectorField)
  */
 L.CanvasLayer.Field = L.CanvasLayer.extend({
@@ -41,7 +41,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        throw new TypeError("Must be overriden");
+        throw new TypeError('Must be overriden');
     },
 
     /**

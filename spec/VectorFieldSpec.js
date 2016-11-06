@@ -1,8 +1,8 @@
-describe("VectorField", function () {
+describe('VectorField', function () {
     let Vector = L.Vector;
     let VectorField = L.VectorField;
 
-    let dataFolder = "../../docs/data";
+    let dataFolder = '../../docs/data';
     let vf;
 
     beforeEach(function (filesLoaded) {
@@ -14,11 +14,11 @@ describe("VectorField", function () {
         });
     });
 
-    it("can be created from 2 ASCIIGrid files", function () {
+    it('can be created from 2 ASCIIGrid files', function () {
         expect(vf).not.toBe(null);
     });
 
-    it("can return the Vector for (i, j) indexes in the grid", function () {
+    it('can return the Vector for (i, j) indexes in the grid', function () {
         // top-left
         expect(vf._valueAtIndexes(0, 0)).toEqual(new Vector(0.011275325901806355, -0.003540651174262166));
 
@@ -26,7 +26,7 @@ describe("VectorField", function () {
         expect(vf._valueAtIndexes(9, 9)).toEqual(new Vector(0.14851005375385284, -0.015279672108590603));
     });
 
-    it("can return the Vector for a Lon-Lat ", function () {
+    it('can return the Vector for a Lon-Lat ', function () {
         // near the center of the LL cell [up & right]
         let pNearLL = vf.valueAt(-3.76921724303, 43.4605948227);
         expect(pNearLL.u).toBeCloseTo(0.00586759205907583, 4);
@@ -48,7 +48,7 @@ describe("VectorField", function () {
         expect(pNearLR.v).toBeCloseTo(-0.0152796721085906, 4);
     });
 
-    it("can return GridLonLatValues", function () {
+    it('can return GridLonLatValues', function () {
         let grid = vf.gridLonLatValue();
         let p0 = grid[0];
         let pN = grid[grid.length - 1];
@@ -66,14 +66,17 @@ describe("VectorField", function () {
         });
     });
 
-    it("can return a ScalarField with vector magnitudes", function () {
-        let s = vf.getScalarField('magnitude');
-        expect(s).not.toBe(null);
-    });
-
-    it("can calculate the Range of its values", function () {
+    it('can calculate the Range of its values', function () {
         expect(vf.range).not.toBe(null);
         expect(vf.range[0]).toEqual(0.0067317434565905545);
         expect(vf.range[1]).toEqual(0.2150247092568961);
+    });
+
+    it('can return a ScalarField with its Magnitude or Direction', function () {
+        let types = ['magnitude', 'directionTo', 'directionFrom'];
+        for (var i = 0; i < 3; i++) {
+            let s = vf.getScalarField(types[i]);
+            expect(s).not.toBe(null);
+        }
     });
 });

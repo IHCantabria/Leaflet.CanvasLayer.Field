@@ -32,9 +32,15 @@
         /*
             Vectorfield
         */
+        /*
         d3.text('data/Atlantic_U.asc', function(u) {
             d3.text('data/Atlantic_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v, 0.001);
+          */
+        d3.text('data/U.asc', function(u) {
+            d3.text('data/V.asc', function(v) {
+                let vf = L.VectorField.fromASCIIGrids(u, v);
+
                 let s = vf.getScalarField('magnitude');
                 var layer3 = L.canvasLayer.scalarField(s, {
                     color: chroma.scale('Spectral').domain([s.range[1], s.range[0]])

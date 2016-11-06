@@ -3,7 +3,7 @@
  */
 L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
     options: {
-        color: "gray"
+        color: 'gray'
     },
 
     initialize: function (lonslats, options) {
@@ -54,7 +54,7 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
 
         let southWest = L.latLng(ymin, xmin),
             northEast = L.latLng(ymax, xmax);
-        let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR
+        let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pix?
         return bounds;
     }
 });
