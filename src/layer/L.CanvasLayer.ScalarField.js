@@ -65,7 +65,9 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     drawRectangle: function (g, cell) {
         g.fillStyle = this.options.color(cell.value);
         let r = this.getRectangle(cell.bounds);
-        g.fillRect(r.x, r.y, r.width, r.height);
+        //g.fillRect(r.x, r.y, r.width, r.height); // TODO check drawing speed
+        g.fillRect(Math.round(r.x), Math.round(r.y), r.width, r.height);
+
     },
 
     /**

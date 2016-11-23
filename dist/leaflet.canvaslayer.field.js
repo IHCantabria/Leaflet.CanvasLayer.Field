@@ -73,16 +73,22 @@
 	window.L.VectorField = _VectorField2.default;
 
 	// layer
-	var L_CanvasLayer = __webpack_require__(5);
-	var L_CanvasLayer_SimpleLonLat = __webpack_require__(6);
-	var L_CanvasLayer_Field = __webpack_require__(7);
-	var L_CanvasLayer_ScalarField = __webpack_require__(8);
-	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(9);
+	//var L_CanvasLayer =
+	__webpack_require__(5);
+	//var L_CanvasLayer_SimpleLonLat =
+	__webpack_require__(6);
+	//var L_CanvasLayer_Field =
+	__webpack_require__(7);
+	//var L_CanvasLayer_ScalarField =
+	__webpack_require__(8);
+	//var L_CanvasLayer_VectorFieldAnim =
+	__webpack_require__(9);
 
 	// control
-	var L_Control_ColorBar = __webpack_require__(10);
+	//var L_Control_ColorBar =
+	__webpack_require__(10);
 
-	// TODO - umd pattern
+	// TODO - umd pattern?
 
 /***/ },
 /* 1 */
@@ -1275,7 +1281,8 @@
 	    drawRectangle: function drawRectangle(g, cell) {
 	        g.fillStyle = this.options.color(cell.value);
 	        var r = this.getRectangle(cell.bounds);
-	        g.fillRect(r.x, r.y, r.width, r.height);
+	        //g.fillRect(r.x, r.y, r.width, r.height); // TODO check drawing speed
+	        g.fillRect(Math.round(r.x), Math.round(r.y), r.width, r.height);
 	    },
 
 	    /**

@@ -1,39 +1,48 @@
 {
-    "name": "leaflet-canvaslayer-vectorfield",
-    "version": "1.0.0",
-    "description": "A set of layers including an animated layer representing a vector field (wind, currents...), a 'raster' layer from an ASCIIGRid file and more",
-    "main": "index.js",
-    "directories": {
-        "test": "test"
-    },
-    "dependencies": {
-        "npm": "^3.10.7"
-    },
-    "devDependencies": {
-        "babel-cli": "^6.16.0",
-        "babel-core": "^6.18.0",
-        "babel-loader": "^6.2.7",
-        "babel-preset-es2015": "^6.16.0",
-        "jasmine": "^2.5.2",
-        "jasmine-node": "^1.14.5",
-        "webpack": "^1.13.2"
-    },
-    "scripts": {
-        "build": "webpack",
-        "watch": "npm run build -- -w"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://VictorVelarde:IY6EX7Bc@bitbucket.org/VictorVelarde/vector2anim.git"
-    },
-    "keywords": [
+  "name": "leaflet-canvaslayer-vectorfield",
+  "version": "1.0.0",
+  "description": "A set of layers including an animated layer representing a vector field (wind, currents...), a 'raster' layer from an ASCIIGRid file and more",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "npm": "^3.10.7"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.18.0",
+    "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.16.0",
+    "eslint": "^3.10.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-react": "^6.7.1",
+    "eslint-plugin-standard": "^2.0.1",
+    "jasmine": "^2.5.2",
+    "jasmine-node": "^1.14.5",
+    "webpack": "^1.13.2"
+  },
+  "scripts": {
+    "build": "webpack --colors",
+    "watch": "npm run build -- -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://VictorVelarde:IY6EX7Bc@bitbucket.org/VictorVelarde/vector2anim.git"
+  },
+  "keywords": [
     "leaflet",
     "vectorField",
     "wind",
     "currents",
     "animation"
   ],
-    "author": "Víctor Velarde Gutiérrez",
-    "license": "GPL-3.0",
-    "homepage": "https://bitbucket.org/VictorVelarde/vector2anim#readme"
+  "author": "Víctor Velarde Gutiérrez",
+  "license": "GPL-3.0",
+  "homepage": "https://bitbucket.org/VictorVelarde/vector2anim#readme"
 }

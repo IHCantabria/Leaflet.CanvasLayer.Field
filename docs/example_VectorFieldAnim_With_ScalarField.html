@@ -31,31 +31,42 @@
 
         /*
             Vectorfield
-        */
-        /*
-        d3.text('data/Atlantic_U.asc', function(u) {
-            d3.text('data/Atlantic_V.asc', function(v) {
-                let vf = L.VectorField.fromASCIIGrids(u, v, 0.001);
-          */
-        d3.text('data/U.asc', function(u) {
-            d3.text('data/V.asc', function(v) {
-                let vf = L.VectorField.fromASCIIGrids(u, v);
 
+            Reference:
+
+        */
+
+        d3.text('data/Atlantic_U.asc', function (u) {
+            d3.text('data/Atlantic_V.asc', function (v) {
+                let vf = L.VectorField.fromASCIIGrids(u, v, 0.001);
+                /*
+                        d3.text('data/U.asc', function(u) {
+                            d3.text('data/V.asc', function(v) {
+                                let vf = L.VectorField.fromASCIIGrids(u, v);*/
                 let s = vf.getScalarField('magnitude');
+
+                /*  custom scale, taken from 'earth.nullschool.net'
+                        example:  https://earth.nullschool.net/#current/ocean/surface/currents/overlay=currents/equirectangular=-11.95,29.62,1112
+                */
+                let colorScale = chroma.scale(
+                    ['#1F263A', '#414AA9', '#44758C', '#399B58', 'DCD296', 'F2E899', 'A53E3C', '9C3333'], [.1, .2, .3, .4, .7, .9, 1.5, 2]
+                );
+
                 var layer3 = L.canvasLayer.scalarField(s, {
-                    color: chroma.scale('Spectral').domain([s.range[1], s.range[0]])
+                    color: colorScale
                 }).addTo(map);
 
+
                 let layer = L.canvasLayer.vectorFieldAnim(vf, {
-                    paths: 5000,
+                    paths: 10000,
                     fade: 0.92,
-                    maxAge: 500,
-                    velocityScale: 1 / 10
+                    maxAge: 100,
+                    velocityScale: 1 / 50,
+                    color: 'rgba(255, 255, 255, 0.5)'
                 }).addTo(map);
                 map.fitBounds(layer.getBounds());
             });
         });
-
     </script>
 </body>
 
