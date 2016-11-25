@@ -23,6 +23,14 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-unused-vars": "warn"
+    },
+    "globals": {
+        "require": true,
+        "window": true,
+        "L": true,
+        "d3": true,
+        "chroma": true
     }
 }

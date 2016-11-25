@@ -64,7 +64,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	window.L.Vector = _Vector2.default; // base
+	window.L.Vector = _Vector2.default; /* eslint global-require: "error" */
+
+	// base
 
 	window.L.Field = _Field2.default;
 
@@ -581,7 +583,7 @@
 	        value: function fromASCIIGrid(asc) {
 	            var scaleFactor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
-	            console.time('ScalarField from ASC');
+	            //console.time('ScalarField from ASC');
 	            var lines = asc.split('\n');
 
 	            // Header
@@ -608,7 +610,7 @@
 	                zs.push.apply(zs, _toConsumableArray(values));
 	            }
 	            p.zs = zs;
-	            console.timeEnd('ScalarField from ASC');
+	            //console.timeEnd('ScalarField from ASC');
 	            return new ScalarField(p);
 	        }
 	    }]);
@@ -816,7 +818,6 @@
 	                        var uv = new _Vector2.default(u, v);
 	                        return uv[type]();
 	                    };
-	                    break;
 	                default:
 	                    throw TypeError('type not recognized: ' + type);
 	            }
@@ -1237,7 +1238,7 @@
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        console.time('onDrawLayer');
+	        //console.time('onDrawLayer');
 
 	        var g = this._getDrawingContext();
 
@@ -1257,7 +1258,7 @@
 
 	            this.drawRectangle(g, cell);
 	        }
-	        console.timeEnd('onDrawLayer');
+	        //console.timeEnd('onDrawLayer');
 	    },
 
 	    /**
@@ -1306,12 +1307,11 @@
 	    },
 
 	    getPixelColor: function getPixelColor(x, y) {
-	        throw new Error('Not working!');
-	        var ctx = this._canvas.getContext('2d');
-	        var pixel = ctx.getImageData(x, y, 1, 1).data;
-
-	        // array [r, g, b, a]
-	        return chroma(pixel[0], pixel[1], pixel[2]);
+	        throw new Error('Not working!'); // TODO FIX
+	        /*let ctx = this._canvas.getContext('2d');
+	        let pixel = ctx.getImageData(x, y, 1, 1).data;
+	         // array [r, g, b, a]
+	        return chroma(pixel[0], pixel[1], pixel[2]);*/
 	    }
 
 	});
@@ -1539,11 +1539,11 @@
 	        var buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
 	        buckets.attr('x', function (d, i) {
 	            return i * w;
-	        }).attr('y', function (d) {
+	        }).attr('y', function () {
 	            return 0;
-	        }).attr('height', function (d) {
+	        }).attr('height', function () {
 	            return _this.options.height;
-	        } /*w * 4*/).attr('width', function (d) {
+	        } /*w * 4*/).attr('width', function () {
 	            return w;
 	        }).attr('fill', function (d) {
 	            return d.color;
@@ -1559,11 +1559,6 @@
 	L.control.colorBar = function (color, range, options) {
 	    return new L.Control.ColorBar(color, range, options);
 	};
-
-	/*
-	module.exports = L.Control.ColorBar;
-	module.exports = L.control.colorBar;
-	*/
 
 /***/ }
 /******/ ]);

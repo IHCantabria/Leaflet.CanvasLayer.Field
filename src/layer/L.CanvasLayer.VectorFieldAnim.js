@@ -121,7 +121,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
         for (var i = 0; i < this.options.paths; i++) {
             let p = this.field.randomPosition();
             p.age = this._randomAge();
-            paths.push(p)
+            paths.push(p);
         }
         return paths;
     },
@@ -140,4 +140,4 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
 
 L.canvasLayer.vectorFieldAnim = function (vectorField, options) {
     return new L.CanvasLayer.VectorFieldAnim(vectorField, options);
-}
+};

@@ -11,7 +11,7 @@ export default class ScalarField extends Field {
      * @returns {ScalarField}
      */
     static fromASCIIGrid(asc, scaleFactor = 1) {
-        console.time('ScalarField from ASC');
+        //console.time('ScalarField from ASC');
         let lines = asc.split('\n');
 
         // Header
@@ -38,7 +38,7 @@ export default class ScalarField extends Field {
             zs.push(...values);
         }
         p.zs = zs;
-        console.timeEnd('ScalarField from ASC');
+        //console.timeEnd('ScalarField from ASC');
         return new ScalarField(p);
     }
 

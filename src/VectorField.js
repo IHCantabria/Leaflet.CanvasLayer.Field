@@ -56,16 +56,15 @@ export default class VectorField extends Field {
 
     _getFunctionFor(type) {
         switch (type) {
-            case 'magnitude':
-            case 'directionTo':
-            case 'directionFrom':
-                return function (u, v) {
-                    let uv = new Vector(u, v);
-                    return uv[type]();
-                }
-                break;
-            default:
-                throw TypeError('type not recognized: ' + type);
+        case 'magnitude':
+        case 'directionTo':
+        case 'directionFrom':
+            return function (u, v) {
+                let uv = new Vector(u, v);
+                return uv[type]();
+            };
+        default:
+            throw TypeError('type not recognized: ' + type);
         }
     }
 

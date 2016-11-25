@@ -21,7 +21,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        console.time('onDrawLayer');
+        //console.time('onDrawLayer');
 
         let g = this._getDrawingContext();
 
@@ -41,7 +41,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
             this.drawRectangle(g, cell);
         }
-        console.timeEnd('onDrawLayer');
+        //console.timeEnd('onDrawLayer');
     },
 
     /**
@@ -93,16 +93,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     getPixelColor: function (x, y) {
-        throw new Error('Not working!')
-        let ctx = this._canvas.getContext('2d');
+        throw new Error('Not working!'); // TODO FIX
+        /*let ctx = this._canvas.getContext('2d');
         let pixel = ctx.getImageData(x, y, 1, 1).data;
 
         // array [r, g, b, a]
-        return chroma(pixel[0], pixel[1], pixel[2]);
+        return chroma(pixel[0], pixel[1], pixel[2]);*/
     },
 
 });
 
 L.canvasLayer.scalarField = function (scalarField, options) {
     return new L.CanvasLayer.ScalarField(scalarField, options);
-}
+};

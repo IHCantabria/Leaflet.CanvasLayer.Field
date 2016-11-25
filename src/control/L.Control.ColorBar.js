@@ -53,7 +53,7 @@ L.Control.ColorBar = L.Control.extend({
             return {
                 'value': d,
                 'color': this.color(d)
-            }
+            };
         });
 
         // div.contenedor > svg
@@ -68,9 +68,9 @@ L.Control.ColorBar = L.Control.extend({
         let buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
         buckets
             .attr('x', (d, i) => i * w)
-            .attr('y', (d) => 0)
-            .attr('height', (d) => this.options.height /*w * 4*/ )
-            .attr('width', (d) => w)
+            .attr('y', () => 0)
+            .attr('height', () => this.options.height /*w * 4*/ )
+            .attr('width', () => w)
             .attr('fill', (d) => d.color);
 
         buckets.append('title').text(
@@ -83,8 +83,3 @@ L.Control.ColorBar = L.Control.extend({
 L.control.colorBar = function (color, range, options) {
     return new L.Control.ColorBar(color, range, options);
 };
-
-/*
-module.exports = L.Control.ColorBar;
-module.exports = L.control.colorBar;
-*/
