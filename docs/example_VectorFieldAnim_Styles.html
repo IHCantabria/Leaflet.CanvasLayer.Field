@@ -31,20 +31,21 @@
         }).addTo(map);
 
         // Vectorfield animations with custom parameters
-        d3.text('data/Atlantic_U.asc', function(u) {
-            d3.text('data/Atlantic_V.asc', function(v) {
+        d3.text('data/Atlantic_U.asc', function (u) {
+            d3.text('data/Atlantic_V.asc', function (v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v, 0.001); // scalefactor to get units in m/s
 
                 let layer = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 100,
                     color: "cyan",
-                    velocityScale: 1 / 10
+                    width: 3,
+                    velocityScale: 1 / 100
                 }).addTo(map);
 
                 var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
-                    paths: 2000,
+                    paths: 10000,
                     color: "#FF6699",
-                    width: 3,
+                    width: 0.5,
                     fade: 0.92,
                     maxAge: 2000,
                     velocityScale: 1 / 100
@@ -53,16 +54,15 @@
                 map.fitBounds(layer.getBounds());
 
 
-                // Change color of layer2, every 10 secs.
-                var colors = ['cyan', 'yellow', 'green', 'pink', 'red'];
-                setInterval(function() {
+                // Change color of layer2, every n secs.
+                var colors = ['cyan', 'yellow', 'pink', 'aqua', 'DeepSkyBlue'];
+                setInterval(function () {
                     var r = Math.random() * colors.length | 0;
                     layer2.options.color = colors[r];
                 }, 5000);
 
             });
         });
-
     </script>
 </body>
 
