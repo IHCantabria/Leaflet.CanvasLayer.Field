@@ -270,7 +270,7 @@
 	    }, {
 	        key: 'gridWithStep',
 	        value: function gridWithStep(step) {
-	            console.time('gridWith');
+	            console.time('gridWithStep');
 
 	            var cellsize = this.cellsize * step;
 	            var lonslatsV = [];
@@ -297,7 +297,7 @@
 	                lon = centerLon;
 	            }
 
-	            console.timeEnd('gridWith');
+	            console.timeEnd('gridWithStep');
 	            return lonslatsV;
 	        }
 
@@ -1293,7 +1293,8 @@
 	    getCellBounds: function getCellBounds(cell) {
 	        //let factor = 2; //TODO Pyramids
 	        var factor = 1;
-	        var half = this.field.cellsize * factor / 2.0;
+	        var cellSize = this.field.cellsize * factor;
+	        var half = cellSize / 2.0;
 	        var ul = L.latLng([cell.lat + half, cell.lon - half]);
 	        var lr = L.latLng([cell.lat - half, cell.lon + half]);
 

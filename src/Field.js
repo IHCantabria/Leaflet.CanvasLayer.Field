@@ -56,7 +56,7 @@ export default class Field {
     }
 
     gridWithStep(step) {
-        console.time('gridWith');
+        console.time('gridWithStep');
 
         let cellsize = this.cellsize * step;
         let lonslatsV = [];
@@ -83,7 +83,7 @@ export default class Field {
             lon = centerLon;
         }
 
-        console.timeEnd('gridWith');
+        console.timeEnd('gridWithStep');
         return lonslatsV;
     }
 

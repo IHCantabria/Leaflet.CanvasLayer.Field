@@ -66,7 +66,8 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     getCellBounds: function (cell) {
         //let factor = 2; //TODO Pyramids
         let factor = 1;
-        let half = this.field.cellsize * factor / 2.0;
+        let cellSize = this.field.cellsize * factor;
+        let half = cellSize / 2.0;
         let ul = L.latLng([cell.lat + half, cell.lon - half]);
         let lr = L.latLng([cell.lat - half, cell.lon + half]);
 
