@@ -65,7 +65,11 @@ describe('ScalarField', function () {
     });
 
     it('can be resampled (pyramids)', function () {
+        var allCells = sf.gridLonLatValue();
+        expect(allCells.length).toBe(100);
 
+        var quarterCells = sf.gridLonLatValue(4);
+        expect(quarterCells.length).toBe(25);
     });
     /*
     it('can be filtered', function () {

@@ -264,28 +264,40 @@
 	    }, {
 	        key: 'gridLonLatValue',
 	        value: function gridLonLatValue() {
-	            var lonslatsV = [];
-	            var halfCell = this.cellsize / 2.0;
+	            return this.gridWithStep(1); // original
+	            //return this.gridWithStep(2); // simplified
+	        }
+	    }, {
+	        key: 'gridWithStep',
+	        value: function gridWithStep(step) {
+	            console.time('gridWith');
 
+	            var cellsize = this.cellsize * step;
+	            var lonslatsV = [];
+
+	            var halfCell = cellsize / 2.0;
 	            var centerLon = this.xllcorner + halfCell;
 	            var centerLat = this.yurcorner - halfCell;
 
 	            var lon = centerLon;
 	            var lat = centerLat;
 
-	            for (var j = 0; j < this.nrows; j++) {
-	                for (var i = 0; i < this.ncols; i++) {
-	                    var v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar)
+	            for (var j = 0; j < this.nrows / step; j++) {
+	                for (var i = 0; i < this.ncols / step; i++) {
+	                    //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+	                    var v = this._interpolate(lon, lat);
 	                    lonslatsV.push({
 	                        'lon': lon,
 	                        'lat': lat,
 	                        'value': v
 	                    }); // <<
-	                    lon += this.cellsize;
+	                    lon += cellsize;
 	                }
-	                lat -= this.cellsize;
+	                lat -= cellsize;
 	                lon = centerLon;
 	            }
+
+	            console.timeEnd('gridWith');
 	            return lonslatsV;
 	        }
 
@@ -654,13 +666,18 @@
 	    }, {
 	        key: '_buildGrid',
 	        value: function _buildGrid() {
+	            var grid = this._arrayTo2d(this.zs, this.nrows, this.ncols);
+	            return grid;
+	        }
+	    }, {
+	        key: '_arrayTo2d',
+	        value: function _arrayTo2d(array, nrows, ncols) {
 	            var grid = [];
 	            var p = 0;
-
-	            for (var j = 0; j < this.nrows; j++) {
+	            for (var j = 0; j < nrows; j++) {
 	                var row = [];
-	                for (var i = 0; i < this.ncols; i++, p++) {
-	                    var z = this.zs[p];
+	                for (var i = 0; i < ncols; i++, p++) {
+	                    var z = array[p];
 	                    row[i] = this._isValid(z) ? z : null; // <<<
 	                }
 	                grid[j] = row;
@@ -804,17 +821,10 @@
 	    }, {
 	        key: '_getFunctionFor',
 	        value: function _getFunctionFor(type) {
-	            switch (type) {
-	                case 'magnitude':
-	                case 'directionTo':
-	                case 'directionFrom':
-	                    return function (u, v) {
-	                        var uv = new _Vector2.default(u, v);
-	                        return uv[type]();
-	                    };
-	                default:
-	                    throw TypeError('type not recognized: ' + type);
-	            }
+	            return function (u, v) {
+	                var uv = new _Vector2.default(u, v);
+	                return uv[type](); // magnitude, directionTo, directionFrom
+	            };
 	        }
 	    }, {
 	        key: '_applyOnField',
@@ -839,14 +849,20 @@
 	    }, {
 	        key: '_buildGrid',
 	        value: function _buildGrid() {
+	            var grid = this._arraysTo2d(this.us, this.vs, this.nrows, this.ncols);
+	            return grid;
+	        }
+	    }, {
+	        key: '_arraysTo2d',
+	        value: function _arraysTo2d(us, vs, nrows, ncols) {
 	            var grid = [];
 	            var p = 0;
 
-	            for (var j = 0; j < this.nrows; j++) {
+	            for (var j = 0; j < nrows; j++) {
 	                var row = [];
-	                for (var i = 0; i < this.ncols; i++, p++) {
-	                    var u = this.us[p],
-	                        v = this.vs[p];
+	                for (var i = 0; i < ncols; i++, p++) {
+	                    var u = us[p],
+	                        v = vs[p];
 	                    var valid = this._isValid(u) && this._isValid(v);
 	                    row[i] = valid ? new _Vector2.default(u, v) : null; // <<<
 	                }
@@ -1224,7 +1240,6 @@
 	        if (this.options.color === null) {
 	            this.options.color = this.defaultColorScale();
 	        }
-	        this.cells = scalarField.gridLonLatValue();
 	    },
 
 	    defaultColorScale: function defaultColorScale() {
@@ -1232,27 +1247,42 @@
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        //console.time('onDrawLayer');
+	        console.time('onDrawLayer');
 
 	        var g = this._getDrawingContext();
 
-	        //for (var i = 0; i < this.cells.length; i++) {
-	        for (var i = 0; i < this.cells.length; i++) {
-	            var cell = this.cells[i];
-
-	            if (cell.value === null) {
-	                continue; //no data
-	            }
-
-	            cell.bounds = this.getCellBounds(cell);
-	            var cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
-	            if (!cellIsVisible) {
-	                continue; // TODO amend 'flicker' effect on map-pan
-	            }
-
-	            this.drawRectangle(g, cell);
+	        var cells = this.getDrawingCellsFor(viewInfo);
+	        for (var i = 0; i < cells.length; i++) {
+	            var c = cells[i];
+	            this.drawCellIfNeeded(g, c, viewInfo);
 	        }
-	        //console.timeEnd('onDrawLayer');
+	        console.timeEnd('onDrawLayer');
+	    },
+
+	    /**
+	     * Draw a cell if it has value and it is in bounds
+	     */
+	    drawCellIfNeeded: function drawCellIfNeeded(g, cell, viewInfo) {
+	        if (cell.value === null) return; //no data
+
+	        cell.bounds = this.getCellBounds(cell);
+	        var cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
+	        if (!cellIsVisible) return; // TODO amend 'flicker' effect on map-pan
+
+	        this.drawRectangle(g, cell);
+	    },
+
+	    /**
+	     * Get the
+	     * @param {[[Type]]} viewInfo [[Description]]
+	     */
+	    getDrawingCellsFor: function getDrawingCellsFor(viewInfo) {
+	        console.time('gridLonLatValue');
+
+	        var cells = this.field.gridLonLatValue();
+
+	        console.timeEnd('gridLonLatValue');
+	        return cells;
 	    },
 
 	    /**
@@ -1261,7 +1291,9 @@
 	     * @returns {LatLngBounds}
 	     */
 	    getCellBounds: function getCellBounds(cell) {
-	        var half = this.field.cellsize / 2.0;
+	        //let factor = 2; //TODO Pyramids
+	        var factor = 1;
+	        var half = this.field.cellsize * factor / 2.0;
 	        var ul = L.latLng([cell.lat + half, cell.lon - half]);
 	        var lr = L.latLng([cell.lat - half, cell.lon + half]);
 

@@ -76,13 +76,17 @@ export default class ScalarField extends Field {
      * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
      */
     _buildGrid() {
+        let grid = this._arrayTo2d(this.zs, this.nrows, this.ncols);
+        return grid;
+    }
+
+    _arrayTo2d(array, nrows, ncols) {
         let grid = [];
         let p = 0;
-
-        for (var j = 0; j < this.nrows; j++) {
+        for (var j = 0; j < nrows; j++) {
             var row = [];
-            for (var i = 0; i < this.ncols; i++, p++) {
-                let z = this.zs[p];
+            for (var i = 0; i < ncols; i++, p++) {
+                let z = array[p];
                 row[i] = (this._isValid(z)) ? z : null; // <<<
             }
             grid[j] = row;

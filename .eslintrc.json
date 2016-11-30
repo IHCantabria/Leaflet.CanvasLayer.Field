@@ -24,7 +24,8 @@
             "error",
             "always"
         ],
-        "no-unused-vars": "warn"
+        "no-unused-vars": "warn",
+        "no-console": "warn"
     },
     "globals": {
         "require": true,

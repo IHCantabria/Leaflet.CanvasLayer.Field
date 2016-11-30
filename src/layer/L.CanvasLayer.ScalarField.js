@@ -13,7 +13,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         if (this.options.color === null) {
             this.options.color = this.defaultColorScale();
         }
-        this.cells = scalarField.gridLonLatValue();
     },
 
     defaultColorScale: function () {
@@ -21,27 +20,42 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        //console.time('onDrawLayer');
+        console.time('onDrawLayer');
 
         let g = this._getDrawingContext();
 
-        //for (var i = 0; i < this.cells.length; i++) {
-        for (var i = 0; i < this.cells.length; i++) {
-            let cell = this.cells[i];
-
-            if (cell.value === null) {
-                continue; //no data
-            }
-
-            cell.bounds = this.getCellBounds(cell);
-            let cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
-            if (!cellIsVisible) {
-                continue; // TODO amend 'flicker' effect on map-pan
-            }
-
-            this.drawRectangle(g, cell);
+        let cells = this.getDrawingCellsFor(viewInfo);
+        for (var i = 0; i < cells.length; i++) {
+            let c = cells[i];
+            this.drawCellIfNeeded(g, c, viewInfo);
         }
-        //console.timeEnd('onDrawLayer');
+        console.timeEnd('onDrawLayer');
+    },
+
+    /**
+     * Draw a cell if it has value and it is in bounds
+     */
+    drawCellIfNeeded: function (g, cell, viewInfo) {
+        if (cell.value === null) return; //no data
+
+        cell.bounds = this.getCellBounds(cell);
+        let cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
+        if (!cellIsVisible) return; // TODO amend 'flicker' effect on map-pan
+
+        this.drawRectangle(g, cell);
+    },
+
+    /**
+     * Get the
+     * @param {[[Type]]} viewInfo [[Description]]
+     */
+    getDrawingCellsFor: function (viewInfo) {
+        console.time('gridLonLatValue');
+
+        var cells = this.field.gridLonLatValue();
+
+        console.timeEnd('gridLonLatValue');
+        return cells;
     },
 
     /**
@@ -50,7 +64,9 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * @returns {LatLngBounds}
      */
     getCellBounds: function (cell) {
-        let half = this.field.cellsize / 2.0;
+        //let factor = 2; //TODO Pyramids
+        let factor = 1;
+        let half = this.field.cellsize * factor / 2.0;
         let ul = L.latLng([cell.lat + half, cell.lon - half]);
         let lr = L.latLng([cell.lat - half, cell.lon + half]);
 

@@ -55,17 +55,10 @@ export default class VectorField extends Field {
     }
 
     _getFunctionFor(type) {
-        switch (type) {
-        case 'magnitude':
-        case 'directionTo':
-        case 'directionFrom':
-            return function (u, v) {
-                let uv = new Vector(u, v);
-                return uv[type]();
-            };
-        default:
-            throw TypeError('type not recognized: ' + type);
-        }
+        return function (u, v) {
+            let uv = new Vector(u, v);
+            return uv[type](); // magnitude, directionTo, directionFrom
+        };
     }
 
     _applyOnField(func) {
@@ -86,14 +79,19 @@ export default class VectorField extends Field {
      * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
      */
     _buildGrid() {
+        let grid = this._arraysTo2d(this.us, this.vs, this.nrows, this.ncols);
+        return grid;
+    }
+
+    _arraysTo2d(us, vs, nrows, ncols) {
         let grid = [];
         let p = 0;
 
-        for (var j = 0; j < this.nrows; j++) {
+        for (var j = 0; j < nrows; j++) {
             var row = [];
-            for (var i = 0; i < this.ncols; i++, p++) {
-                let u = this.us[p],
-                    v = this.vs[p];
+            for (var i = 0; i < ncols; i++, p++) {
+                let u = us[p],
+                    v = vs[p];
                 let valid = (this._isValid(u) && this._isValid(v));
                 row[i] = (valid) ? new Vector(u, v) : null; // <<<
             }

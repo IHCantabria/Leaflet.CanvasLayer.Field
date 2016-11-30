@@ -51,28 +51,39 @@ export default class Field {
      * @returns {Array} - grid values {lon, lat, value}, x-ascending & y-descending
      */
     gridLonLatValue() {
-        let lonslatsV = [];
-        let halfCell = this.cellsize / 2.0;
+        return this.gridWithStep(1); // original
+        //return this.gridWithStep(2); // simplified
+    }
 
+    gridWithStep(step) {
+        console.time('gridWith');
+
+        let cellsize = this.cellsize * step;
+        let lonslatsV = [];
+
+        let halfCell = cellsize / 2.0;
         let centerLon = this.xllcorner + halfCell;
         let centerLat = this.yurcorner - halfCell;
 
         let lon = centerLon;
         let lat = centerLat;
 
-        for (var j = 0; j < this.nrows; j++) {
-            for (var i = 0; i < this.ncols; i++) {
-                let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar)
+        for (var j = 0; j < this.nrows / step; j++) {
+            for (var i = 0; i < this.ncols / step; i++) {
+                //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+                let v = this._interpolate(lon, lat);
                 lonslatsV.push({
                     'lon': lon,
                     'lat': lat,
                     'value': v
                 }); // <<
-                lon += this.cellsize;
+                lon += cellsize;
             }
-            lat -= this.cellsize;
+            lat -= cellsize;
             lon = centerLon;
         }
+
+        console.timeEnd('gridWith');
         return lonslatsV;
     }
 
