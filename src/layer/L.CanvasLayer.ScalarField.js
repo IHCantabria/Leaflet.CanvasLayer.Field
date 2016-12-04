@@ -38,7 +38,26 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * @returns {Number} n of pyramid (1:all | 2:half resolution...)
      */
     _pyramidFor: function (viewInfo) {
-        return 1; // all
+
+        console.log(viewInfo);
+
+        // meters per pixel
+        /*
+        let mapResolution = 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
+        */
+
+        // let resolution = this.field.getResolution();
+
+        let pyramids = [1];
+        let p = 1;
+
+        while (this.field.ncols / p > 1) {
+            p = p * 2;
+            pyramids.push(p);
+        }
+        console.log(pyramids);
+
+        return 2; // allthis._map
 
         /*let steps = [];
         let n = this.field.ncols;

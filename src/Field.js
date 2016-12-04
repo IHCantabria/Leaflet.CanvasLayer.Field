@@ -60,6 +60,8 @@ export default class Field {
      * @returns {[[Type]]} [[Description]]
      */
     getCellsForPyramid(nPyramid) {
+        // TODO implement cache
+
         console.time('getCellsFor');
 
         let step = nPyramid; // 1 = all | 2 = half...
@@ -75,8 +77,8 @@ export default class Field {
 
         for (var j = 0; j < this.nrows / step; j++) {
             for (var i = 0; i < this.ncols / step; i++) {
-                let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
-                //let v = this._interpolate(lon, lat);
+                //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+                let v = this._interpolate(lon, lat);
                 let cell = {
                     'lon': lon,
                     'lat': lat,

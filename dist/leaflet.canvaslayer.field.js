@@ -276,6 +276,8 @@
 	    }, {
 	        key: 'getCellsForPyramid',
 	        value: function getCellsForPyramid(nPyramid) {
+	            // TODO implement cache
+
 	            console.time('getCellsFor');
 
 	            var step = nPyramid; // 1 = all | 2 = half...
@@ -291,8 +293,8 @@
 
 	            for (var j = 0; j < this.nrows / step; j++) {
 	                for (var i = 0; i < this.ncols / step; i++) {
-	                    var v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
-	                    //let v = this._interpolate(lon, lat);
+	                    //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+	                    var v = this._interpolate(lon, lat);
 	                    var cell = {
 	                        'lon': lon,
 	                        'lat': lat,
@@ -1294,7 +1296,26 @@
 	     * @returns {Number} n of pyramid (1:all | 2:half resolution...)
 	     */
 	    _pyramidFor: function _pyramidFor(viewInfo) {
-	        return 1; // all
+
+	        console.log(viewInfo);
+
+	        // meters per pixel
+	        /*
+	        let mapResolution = 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
+	        */
+
+	        // let resolution = this.field.getResolution();
+
+	        var pyramids = [1];
+	        var p = 1;
+
+	        while (this.field.ncols / p > 1) {
+	            p = p * 2;
+	            pyramids.push(p);
+	        }
+	        console.log(pyramids);
+
+	        return 2; // allthis._map
 
 	        /*let steps = [];
 	        let n = this.field.ncols;
