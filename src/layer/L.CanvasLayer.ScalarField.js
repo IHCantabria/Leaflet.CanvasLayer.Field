@@ -2,6 +2,7 @@
  * ScalarField on canvas (a 'Raster')
  */
 L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
+
     options: {
         color: null // function colorFor(value) [e.g. chromajs.scale]
     },
@@ -11,67 +12,57 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         L.Util.setOptions(this, options);
 
         if (this.options.color === null) {
-            this.options.color = this.defaultColorScale();
+            this.options.color = this._defaultColorScale();
         }
     },
 
-    defaultColorScale: function () {
+    _defaultColorScale: function () {
         return chroma.scale(['white', 'black']).domain(this.field.range);
     },
 
     onDrawLayer: function (viewInfo) {
         console.time('onDrawLayer');
 
-        let g = this._getDrawingContext();
+        let p = this._pyramidFor(viewInfo);
+        let cells = this.field.getCellsForPyramid(p);
+        let cellsOnScreen = cells.filter(c => viewInfo.bounds.intersects(c.bounds));
+        this._draw(cellsOnScreen);
 
-        let cells = this.getDrawingCellsFor(viewInfo);
-        for (var i = 0; i < cells.length; i++) {
-            let c = cells[i];
-            this.drawCellIfNeeded(g, c, viewInfo);
-        }
         console.timeEnd('onDrawLayer');
     },
 
+
     /**
-     * Draw a cell if it has value and it is in bounds
+     * Select the best raster pyramid level for the current view
+     * @param   {Object} viewInfo
+     * @returns {Number} n of pyramid (1:all | 2:half resolution...)
      */
-    drawCellIfNeeded: function (g, cell, viewInfo) {
-        if (cell.value === null) return; //no data
+    _pyramidFor: function (viewInfo) {
+        return 1; // all
 
-        cell.bounds = this.getCellBounds(cell);
-        let cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
-        if (!cellIsVisible) return; // TODO amend 'flicker' effect on map-pan
+        /*let steps = [];
+        let n = this.field.ncols;
+        console.log('ncols ', n);
 
-        this.drawRectangle(g, cell);
+        let i = 1;
+        while (n / i > 1) {
+            steps.push[i];
+            i = i * 2;
+            console.log(i);
+        }
+
+        console.log(viewInfo);
+        return steps[steps.length - 1]; // TODO fit resolution
+        */
     },
 
-    /**
-     * Get the
-     * @param {[[Type]]} viewInfo [[Description]]
-     */
-    getDrawingCellsFor: function (viewInfo) {
-        console.time('gridLonLatValue');
-
-        var cells = this.field.gridLonLatValue();
-
-        console.timeEnd('gridLonLatValue');
-        return cells;
-    },
-
-    /**
-     * Bounds for a cell (coordinates of its limits)
-     * @param   {Object}   cell
-     * @returns {LatLngBounds}
-     */
-    getCellBounds: function (cell) {
-        //let factor = 2; //TODO Pyramids
-        let factor = 1;
-        let cellSize = this.field.cellsize * factor;
-        let half = cellSize / 2.0;
-        let ul = L.latLng([cell.lat + half, cell.lon - half]);
-        let lr = L.latLng([cell.lat - half, cell.lon + half]);
-
-        return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+    _draw: function (cells) {
+        let g = this._getDrawingContext();
+        for (let c of cells) {
+            if (c.value !== null) {
+                this._drawRectangle(g, c);
+            }
+        }
     },
 
     /**
@@ -79,12 +70,11 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * @param {object} g    [[Description]]
      * @param {object} cell [[Description]]
      */
-    drawRectangle: function (g, cell) {
+    _drawRectangle: function (g, cell) {
         g.fillStyle = this.options.color(cell.value);
-        let r = this.getRectangle(cell.bounds);
+        let r = this._getRectangle(cell.bounds);
         //g.fillRect(r.x, r.y, r.width, r.height); // TODO check drawing speed
         g.fillRect(Math.round(r.x), Math.round(r.y), r.width, r.height);
-
     },
 
     /**
@@ -92,7 +82,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * @param   {LatLngBounds} cellBounds
      * @returns {Object} {x, y, width, height}
      */
-    getRectangle: function (cellBounds) {
+    _getRectangle: function (cellBounds) {
         let upperLeft = this._map.latLngToContainerPoint(
             cellBounds.getNorthWest());
         let lowerRight = this._map.latLngToContainerPoint(
@@ -100,16 +90,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         let width = Math.abs(upperLeft.x - lowerRight.x);
         let height = Math.abs(upperLeft.y - lowerRight.y);
 
-        let pixel = {
+        let r = {
             x: upperLeft.x,
             y: upperLeft.y,
             width,
             height
         };
-        return pixel;
+        return r;
     },
 
-    getPixelColor: function (x, y) {
+    _getPixelColor: function (x, y) {
         throw new Error('Not working!'); // TODO FIX
         /*let ctx = this._canvas.getContext('2d');
         let pixel = ctx.getImageData(x, y, 1, 1).data;

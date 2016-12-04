@@ -36,8 +36,8 @@
 
         */
 
-        d3.text('data/Atlantic_U.asc', function (u) {
-            d3.text('data/Atlantic_V.asc', function (v) {
+        d3.text('data/Atlantic_U.asc', function(u) {
+            d3.text('data/Atlantic_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v, 0.001);
                 /*
                         d3.text('data/U.asc', function(u) {
@@ -45,7 +45,7 @@
                                 let vf = L.VectorField.fromASCIIGrids(u, v);*/
                 let s = vf.getScalarField('magnitude');
 
-                /*  custom scale, taken from 'earth.nullschool.net'
+                /*  custom scale, based on 'earth.nullschool.net'
                         example:  https://earth.nullschool.net/#current/ocean/surface/currents/overlay=currents/equirectangular=-11.95,29.62,1112
                 */
                 let colorScale = chroma.scale(
@@ -67,6 +67,7 @@
                 map.fitBounds(layer.getBounds());
             });
         });
+
     </script>
 </body>
 

@@ -257,30 +257,22 @@
 	        }
 
 	        /**
-	         * A list with every cell, including its center, associated value and bounds
-	         * @returns {Array} - grid values {lon, lat, value, bounds}, x-ascending & y-descending
+	         * A list with every point in the grid (center of the cell), including coordinates and associated value
+	         * @returns {Array} - grid values {lon, lat, value}, x-ascending & y-descending
 	         */
 
 	    }, {
 	        key: 'gridLonLatValue',
 	        value: function gridLonLatValue() {
-	            return this.getCellsForPyramid(1); // original
+	            return this.gridWithStep(1); // original
 	        }
-
-	        /**
-	         * A subset of the cells, corresponding to nPyramid indicated level
-	         * @param   {[[Type]]} nPyramid [[Description]]
-	         * @returns {[[Type]]} [[Description]]
-	         */
-
 	    }, {
-	        key: 'getCellsForPyramid',
-	        value: function getCellsForPyramid(nPyramid) {
-	            console.time('getCellsFor');
+	        key: 'gridWithStep',
+	        value: function gridWithStep(step) {
+	            console.time('gridWithStep');
 
-	            var step = nPyramid; // 1 = all | 2 = half...
 	            var cellsize = this.cellsize * step;
-	            var cells = [];
+	            var lonslatsV = [];
 
 	            var halfCell = cellsize / 2.0;
 	            var centerLon = this.xllcorner + halfCell;
@@ -293,39 +285,19 @@
 	                for (var i = 0; i < this.ncols / step; i++) {
 	                    var v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
 	                    //let v = this._interpolate(lon, lat);
-	                    var cell = {
+	                    lonslatsV.push({
 	                        'lon': lon,
 	                        'lat': lat,
 	                        'value': v
-	                    };
-	                    cell.bounds = this._getBoundsFor(cell, nPyramid);
-	                    cells.push(cell); // <<
+	                    }); // <<
 	                    lon += cellsize;
 	                }
 	                lat -= cellsize;
 	                lon = centerLon;
 	            }
 
-	            console.timeEnd('getCellsFor');
-	            return cells;
-	        }
-
-	        /**
-	         * Bounds for a cell
-	         * @param   {Object}   cell
-	         * @paran {Number} nPyramid -  pixel = (1 / nPyramid) * original cellsize
-	         * @returns {LatLngBounds}
-	         */
-
-	    }, {
-	        key: '_getBoundsFor',
-	        value: function _getBoundsFor(cell, nPyramid) {
-	            var cellSize = this.cellsize * nPyramid;
-	            var half = cellSize / 2.0;
-	            var ul = L.latLng([cell.lat + half, cell.lon - half]);
-	            var lr = L.latLng([cell.lat - half, cell.lon + half]);
-
-	            return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+	            console.timeEnd('gridWithStep');
+	            return lonslatsV;
 	        }
 
 	        /**
@@ -1186,7 +1158,6 @@
 	 * (ScalarField or a VectorField)
 	 */
 	L.CanvasLayer.Field = L.CanvasLayer.extend({
-
 	    options: {
 	        click: true },
 
@@ -1207,24 +1178,6 @@
 	        }
 	    },
 
-	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        throw new TypeError('Must be overriden');
-	    },
-
-	    setData: function setData(data) {
-	        // -- custom data set
-	        // TODO
-	        this.needRedraw(); // -- call to drawLayer
-	    },
-
-	    getBounds: function getBounds() {
-	        var bb = this.field.extent();
-	        var southWest = L.latLng(bb[1], bb[0]),
-	            northEast = L.latLng(bb[3], bb[2]);
-	        var bounds = L.latLngBounds(southWest, northEast);
-	        return bounds;
-	    },
-
 	    _queryValue: function _queryValue(e) {
 	        var lon = e.latlng.lng;
 	        var lat = e.latlng.lat;
@@ -1235,6 +1188,16 @@
 	        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
 	    },
 
+	    setData: function setData(data) {
+	        // -- custom data set
+	        // TODO
+	        this.needRedraw(); // -- call to drawLayer
+	    },
+
+	    onDrawLayer: function onDrawLayer(viewInfo) {
+	        throw new TypeError('Must be overriden');
+	    },
+
 	    /**
 	     * Get clean context to draw on canvas
 	     * @returns {CanvasRenderingContext2D}
@@ -1243,6 +1206,14 @@
 	        var g = this._canvas.getContext('2d');
 	        g.clearRect(0, 0, this._canvas.width, this._canvas.height);
 	        return g;
+	    },
+
+	    getBounds: function getBounds() {
+	        var bb = this.field.extent();
+	        var southWest = L.latLng(bb[1], bb[0]),
+	            northEast = L.latLng(bb[3], bb[2]);
+	        var bounds = L.latLngBounds(southWest, northEast);
+	        return bounds;
 	    }
 
 	});
@@ -1257,7 +1228,6 @@
 	 * ScalarField on canvas (a 'Raster')
 	 */
 	L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
-
 	    options: {
 	        color: null // function colorFor(value) [e.g. chromajs.scale]
 	    },
@@ -1267,77 +1237,91 @@
 	        L.Util.setOptions(this, options);
 
 	        if (this.options.color === null) {
-	            this.options.color = this._defaultColorScale();
+	            this.options.color = this.defaultColorScale();
 	        }
 	    },
 
-	    _defaultColorScale: function _defaultColorScale() {
+	    defaultColorScale: function defaultColorScale() {
 	        return chroma.scale(['white', 'black']).domain(this.field.range);
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        console.time('onDrawLayer');
 
-	        var p = this._pyramidFor(viewInfo);
-	        var cells = this.field.getCellsForPyramid(p);
-	        var cellsOnScreen = cells.filter(function (c) {
-	            return viewInfo.bounds.intersects(c.bounds);
-	        });
-	        this._draw(cellsOnScreen);
+	        var g = this._getDrawingContext();
 
+	        var cells = this.getDrawingCellsFor(viewInfo);
+	        for (var i = 0; i < cells.length; i++) {
+	            var c = cells[i];
+	            this.drawCellIfNeeded(g, c, viewInfo);
+	        }
 	        console.timeEnd('onDrawLayer');
 	    },
 
 	    /**
-	     * Select the best raster pyramid level for the current view
-	     * @param   {Object} viewInfo
-	     * @returns {Number} n of pyramid (1:all | 2:half resolution...)
+	     * Get the
+	     * @param {[[Type]]} viewInfo [[Description]]
 	     */
-	    _pyramidFor: function _pyramidFor(viewInfo) {
-	        return 1; // all
+	    getDrawingCellsFor: function getDrawingCellsFor(viewInfo) {
+	        console.time('gridLonLatValue');
 
-	        /*let steps = [];
-	        let n = this.field.ncols;
+	        console.log(viewInfo);
+	        var s = this.getStepFor(viewInfo);
+	        var cells = this.field.gridWithStep(s);
+
+	        // << just subset inside the extent
+
+	        // << resolution!?
+
+	        console.timeEnd('gridLonLatValue');
+	        return cells;
+	    },
+
+	    getStepFor: function getStepFor(viewInfo) {
+	        //return 1; // all
+
+	        var steps = [];
+	        var n = this.field.ncols;
 	        console.log('ncols ', n);
-	         let i = 1;
+	        var i = 1;
 	        while (n / i > 1) {
 	            steps.push[i];
 	            i = i * 2;
 	            console.log(i);
 	        }
-	         console.log(viewInfo);
+
+	        console.log(viewInfo);
 	        return steps[steps.length - 1]; // TODO fit resolution
-	        */
 	    },
 
-	    _draw: function _draw(cells) {
-	        var g = this._getDrawingContext();
-	        var _iteratorNormalCompletion = true;
-	        var _didIteratorError = false;
-	        var _iteratorError = undefined;
 
-	        try {
-	            for (var _iterator = cells[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                var c = _step.value;
+	    /**
+	     * Draw a cell if it has value and it is in bounds
+	     */
+	    drawCellIfNeeded: function drawCellIfNeeded(g, cell, viewInfo) {
+	        if (cell.value === null) return; //no data
 
-	                if (c.value !== null) {
-	                    this._drawRectangle(g, c);
-	                }
-	            }
-	        } catch (err) {
-	            _didIteratorError = true;
-	            _iteratorError = err;
-	        } finally {
-	            try {
-	                if (!_iteratorNormalCompletion && _iterator.return) {
-	                    _iterator.return();
-	                }
-	            } finally {
-	                if (_didIteratorError) {
-	                    throw _iteratorError;
-	                }
-	            }
-	        }
+	        cell.bounds = this.getCellBounds(cell);
+	        var cellIsVisible = viewInfo.bounds.intersects(cell.bounds);
+	        if (!cellIsVisible) return; // TODO amend 'flicker' effect on map-pan
+
+	        this.drawRectangle(g, cell);
+	    },
+
+	    /**
+	     * Bounds for a cell (coordinates of its limits)
+	     * @param   {Object}   cell
+	     * @returns {LatLngBounds}
+	     */
+	    getCellBounds: function getCellBounds(cell) {
+	        //let factor = 2; //TODO Pyramids
+	        var factor = 1;
+	        var cellSize = this.field.cellsize * factor;
+	        var half = cellSize / 2.0;
+	        var ul = L.latLng([cell.lat + half, cell.lon - half]);
+	        var lr = L.latLng([cell.lat - half, cell.lon + half]);
+
+	        return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
 	    },
 
 	    /**
@@ -1345,9 +1329,9 @@
 	     * @param {object} g    [[Description]]
 	     * @param {object} cell [[Description]]
 	     */
-	    _drawRectangle: function _drawRectangle(g, cell) {
+	    drawRectangle: function drawRectangle(g, cell) {
 	        g.fillStyle = this.options.color(cell.value);
-	        var r = this._getRectangle(cell.bounds);
+	        var r = this.getRectangle(cell.bounds);
 	        //g.fillRect(r.x, r.y, r.width, r.height); // TODO check drawing speed
 	        g.fillRect(Math.round(r.x), Math.round(r.y), r.width, r.height);
 	    },
@@ -1357,22 +1341,22 @@
 	     * @param   {LatLngBounds} cellBounds
 	     * @returns {Object} {x, y, width, height}
 	     */
-	    _getRectangle: function _getRectangle(cellBounds) {
+	    getRectangle: function getRectangle(cellBounds) {
 	        var upperLeft = this._map.latLngToContainerPoint(cellBounds.getNorthWest());
 	        var lowerRight = this._map.latLngToContainerPoint(cellBounds.getSouthEast());
 	        var width = Math.abs(upperLeft.x - lowerRight.x);
 	        var height = Math.abs(upperLeft.y - lowerRight.y);
 
-	        var r = {
+	        var pixel = {
 	            x: upperLeft.x,
 	            y: upperLeft.y,
 	            width: width,
 	            height: height
 	        };
-	        return r;
+	        return pixel;
 	    },
 
-	    _getPixelColor: function _getPixelColor(x, y) {
+	    getPixelColor: function getPixelColor(x, y) {
 	        throw new Error('Not working!'); // TODO FIX
 	        /*let ctx = this._canvas.getContext('2d');
 	        let pixel = ctx.getImageData(x, y, 1, 1).data;
@@ -1396,7 +1380,6 @@
 	 * Animated VectorField on canvas
 	 */
 	L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
-
 	    options: {
 	        paths: 1000,
 	        color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]

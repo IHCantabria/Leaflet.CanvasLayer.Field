@@ -47,19 +47,24 @@ export default class Field {
     }
 
     /**
-     * A list with every point in the grid (center of the cell), including coordinates and associated value
-     * @returns {Array} - grid values {lon, lat, value}, x-ascending & y-descending
+     * A list with every cell, including its center, associated value and bounds
+     * @returns {Array} - grid values {lon, lat, value, bounds}, x-ascending & y-descending
      */
     gridLonLatValue() {
-        return this.gridWithStep(1); // original
-        //return this.gridWithStep(2); // simplified
+        return this.getCellsForPyramid(1); // original
     }
 
-    gridWithStep(step) {
-        console.time('gridWithStep');
+    /**
+     * A subset of the cells, corresponding to nPyramid indicated level
+     * @param   {[[Type]]} nPyramid [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    getCellsForPyramid(nPyramid) {
+        console.time('getCellsFor');
 
+        let step = nPyramid; // 1 = all | 2 = half...
         let cellsize = this.cellsize * step;
-        let lonslatsV = [];
+        let cells = [];
 
         let halfCell = cellsize / 2.0;
         let centerLon = this.xllcorner + halfCell;
@@ -70,21 +75,38 @@ export default class Field {
 
         for (var j = 0; j < this.nrows / step; j++) {
             for (var i = 0; i < this.ncols / step; i++) {
-                //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
-                let v = this._interpolate(lon, lat);
-                lonslatsV.push({
+                let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+                //let v = this._interpolate(lon, lat);
+                let cell = {
                     'lon': lon,
                     'lat': lat,
                     'value': v
-                }); // <<
+                };
+                cell.bounds = this._getBoundsFor(cell, nPyramid);
+                cells.push(cell); // <<
                 lon += cellsize;
             }
             lat -= cellsize;
             lon = centerLon;
         }
 
-        console.timeEnd('gridWithStep');
-        return lonslatsV;
+        console.timeEnd('getCellsFor');
+        return cells;
+    }
+
+    /**
+     * Bounds for a cell
+     * @param   {Object}   cell
+     * @paran {Number} nPyramid -  pixel = (1 / nPyramid) * original cellsize
+     * @returns {LatLngBounds}
+     */
+    _getBoundsFor(cell, nPyramid) {
+        let cellSize = this.cellsize * nPyramid;
+        let half = cellSize / 2.0;
+        let ul = L.latLng([cell.lat + half, cell.lon - half]);
+        let lr = L.latLng([cell.lat - half, cell.lon + half]);
+
+        return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
     }
 
     /**

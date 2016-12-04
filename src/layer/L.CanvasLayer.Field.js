@@ -3,6 +3,7 @@
  * (ScalarField or a VectorField)
  */
 L.CanvasLayer.Field = L.CanvasLayer.extend({
+
     options: {
         click: true, // on('click') event enabled
     },
@@ -24,6 +25,24 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         }
     },
 
+    onDrawLayer: function (viewInfo) {
+        throw new TypeError('Must be overriden');
+    },
+
+    setData: function (data) {
+        // -- custom data set
+        // TODO
+        this.needRedraw(); // -- call to drawLayer
+    },
+
+    getBounds: function () {
+        let bb = this.field.extent();
+        let southWest = L.latLng(bb[1], bb[0]),
+            northEast = L.latLng(bb[3], bb[2]);
+        let bounds = L.latLngBounds(southWest, northEast);
+        return bounds;
+    },
+
     _queryValue: function (e) {
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
@@ -34,16 +53,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
     },
 
-    setData: function (data) {
-        // -- custom data set
-        // TODO
-        this.needRedraw(); // -- call to drawLayer
-    },
-
-    onDrawLayer: function (viewInfo) {
-        throw new TypeError('Must be overriden');
-    },
-
     /**
      * Get clean context to draw on canvas
      * @returns {CanvasRenderingContext2D}
@@ -52,14 +61,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         let g = this._canvas.getContext('2d');
         g.clearRect(0, 0, this._canvas.width, this._canvas.height);
         return g;
-    },
-
-    getBounds: function () {
-        let bb = this.field.extent();
-        let southWest = L.latLng(bb[1], bb[0]),
-            northEast = L.latLng(bb[3], bb[2]);
-        let bounds = L.latLngBounds(southWest, northEast);
-        return bounds;
-    },
+    }
 
 });

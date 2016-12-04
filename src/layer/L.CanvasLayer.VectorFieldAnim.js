@@ -2,6 +2,7 @@
  * Animated VectorField on canvas
  */
 L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
+
     options: {
         paths: 1000,
         color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]

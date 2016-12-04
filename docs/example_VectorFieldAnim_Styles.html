@@ -37,14 +37,14 @@
 
                 let layer = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 100,
-                    color: "cyan",
+                    color: "#FF6699",
                     width: 3,
-                    velocityScale: 1 / 100
+                    velocityScale: 1 / 10
                 }).addTo(map);
 
                 var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 10000,
-                    color: "#FF6699",
+                    color: "cyan",
                     width: 0.5,
                     fade: 0.92,
                     maxAge: 2000,
@@ -58,7 +58,7 @@
                 var colors = ['cyan', 'yellow', 'pink', 'aqua', 'DeepSkyBlue'];
                 setInterval(function () {
                     var r = Math.random() * colors.length | 0;
-                    layer2.options.color = colors[r];
+                    layer.options.color = colors[r];
                 }, 5000);
 
             });
