@@ -18,7 +18,7 @@ describe('VectorField', function () {
         expect(vf).not.toBe(null);
     });
 
-    it('can return the Vector for (i, j) indexes in the grid', function () {
+    it('can return the value for (i, j) indexes', function () {
         // top-left
         expect(vf._valueAtIndexes(0, 0)).toEqual(new Vector(0.011275325901806355, -0.003540651174262166));
 
@@ -26,7 +26,7 @@ describe('VectorField', function () {
         expect(vf._valueAtIndexes(9, 9)).toEqual(new Vector(0.14851005375385284, -0.015279672108590603));
     });
 
-    it('can return the Vector for a Lon-Lat ', function () {
+    it('can return an interpolated value for a (lon, lat)', function () {
         // near the center of the LL cell [up & right]
         let pNearLL = vf.valueAt(-3.76921724303, 43.4605948227);
         expect(pNearLL.u).toBeCloseTo(0.00586759205907583, 4);
@@ -48,8 +48,8 @@ describe('VectorField', function () {
         expect(pNearLR.v).toBeCloseTo(-0.0152796721085906, 4);
     });
 
-    it('can return GridLonLatValues', function () {
-        let grid = vf.gridLonLatValue();
+    it('can return its cells', function () {
+        let grid = vf.getCells();
         let p0 = grid[0];
         let pN = grid[grid.length - 1];
 

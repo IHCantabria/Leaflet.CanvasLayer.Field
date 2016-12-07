@@ -17,11 +17,11 @@ export default class ScalarField extends Field {
         // Header
         let n = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/; // any number
         let p = {
-            ncols: parseInt(lines[0].match(n)),
-            nrows: parseInt(lines[1].match(n)),
-            xllcorner: parseFloat(lines[2].match(n)),
-            yllcorner: parseFloat(lines[3].match(n)),
-            cellsize: parseFloat(lines[4].match(n))
+            nCols: parseInt(lines[0].match(n)),
+            nRows: parseInt(lines[1].match(n)),
+            xllCorner: parseFloat(lines[2].match(n)),
+            yllCorner: parseFloat(lines[3].match(n)),
+            cellSize: parseFloat(lines[4].match(n))
         };
         let NODATA_value = lines[5].replace('NODATA_value', '').trim();
 
@@ -76,16 +76,16 @@ export default class ScalarField extends Field {
      * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
      */
     _buildGrid() {
-        let grid = this._arrayTo2d(this.zs, this.nrows, this.ncols);
+        let grid = this._arrayTo2d(this.zs, this.nRows, this.nCols);
         return grid;
     }
 
-    _arrayTo2d(array, nrows, ncols) {
+    _arrayTo2d(array, nRows, nCols) {
         let grid = [];
         let p = 0;
-        for (var j = 0; j < nrows; j++) {
+        for (var j = 0; j < nRows; j++) {
             var row = [];
-            for (var i = 0; i < ncols; i++, p++) {
+            for (var i = 0; i < nCols; i++, p++) {
                 let z = array[p];
                 row[i] = (this._isValid(z)) ? z : null; // <<<
             }

@@ -50,19 +50,19 @@
 
 	var _Vector2 = _interopRequireDefault(_Vector);
 
-	var _Cell = __webpack_require__(2);
+	var _Cell = __webpack_require__(11);
 
 	var _Cell2 = _interopRequireDefault(_Cell);
 
-	var _Field = __webpack_require__(3);
+	var _Field = __webpack_require__(2);
 
 	var _Field2 = _interopRequireDefault(_Field);
 
-	var _ScalarField = __webpack_require__(4);
+	var _ScalarField = __webpack_require__(3);
 
 	var _ScalarField2 = _interopRequireDefault(_ScalarField);
 
-	var _VectorField = __webpack_require__(5);
+	var _VectorField = __webpack_require__(4);
 
 	var _VectorField2 = _interopRequireDefault(_VectorField);
 
@@ -81,14 +81,14 @@
 	window.L.VectorField = _VectorField2.default;
 
 	// layer
-	var L_CanvasLayer = __webpack_require__(6);
-	var L_CanvasLayer_SimpleLonLat = __webpack_require__(7);
-	var L_CanvasLayer_Field = __webpack_require__(8);
-	var L_CanvasLayer_ScalarField = __webpack_require__(9);
-	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(10);
+	var L_CanvasLayer = __webpack_require__(5);
+	var L_CanvasLayer_SimpleLonLat = __webpack_require__(6);
+	var L_CanvasLayer_Field = __webpack_require__(7);
+	var L_CanvasLayer_ScalarField = __webpack_require__(8);
+	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(9);
 
 	// control
-	var L_Control_ColorBar = __webpack_require__(11);
+	var L_Control_ColorBar = __webpack_require__(10);
 
 	// TODO - umd pattern?
 
@@ -194,61 +194,6 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 *  Simple regular cell in a raster
-	 */
-	var Cell = function () {
-
-	  /**
-	   * A simple cell with value and size
-	   * @param {L.LatLng} center
-	   * @param {Number} value
-	   * @param {Number} size
-	   */
-	  function Cell(center, value, size) {
-	    _classCallCheck(this, Cell);
-
-	    this.center = center;
-	    this.value = value;
-	    this.size = size;
-	  }
-
-	  /**
-	   * Bounds for the cell
-	   * @returns {LatLngBounds}
-	   */
-
-
-	  _createClass(Cell, [{
-	    key: "getBounds",
-	    value: function getBounds() {
-	      var half = this.size / 2.0;
-	      var ul = L.latLng([this.center.lat + half, this.center.lon - half]);
-	      var lr = L.latLng([this.center.lat - half, this.center.lon + half]);
-
-	      return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
-	    }
-	  }]);
-
-	  return Cell;
-	}();
-
-	exports.default = Cell;
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -257,11 +202,9 @@
 	    value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Cell = __webpack_require__(2);
+	var _Cell = __webpack_require__(11);
 
 	var _Cell2 = _interopRequireDefault(_Cell);
 
@@ -593,21 +536,14 @@
 
 	            // indexes (decimals)
 	            var lon0 = this.xllCorner + this.cellSize / 2.0;
-	            var ii = (lon - lon0) / this.cellSize;
+	            var i = (lon - lon0) / this.cellSize;
 
 	            var lat0 = this.yurCorner - this.cellSize / 2.0;
-	            var jj = (lat0 - lat) / this.cellSize;
+	            var j = (lat0 - lat) / this.cellSize;
 
-	            console.log('pre', ii, jj);
-
-	            var _adjustIndexesIfNeede = this._adjustIndexesIfNeeded(ii, jj);
-
-	            var _adjustIndexesIfNeede2 = _slicedToArray(_adjustIndexesIfNeede, 2);
-
-	            var i = _adjustIndexesIfNeede2[0];
-	            var j = _adjustIndexesIfNeede2[1];
-
-	            console.log('post', i, j);
+	            console.log(i, j);
+	            _adjustToBordersIfNeeded(i, j);
+	            console.log(i, j);
 
 	            // indexes (integers), for the 4-surrounding cells to the point (i, j)...
 	            var fi = Math.floor(i);
@@ -643,31 +579,22 @@
 	         * Check the indexes are inside the field, 
 	         * adjusting to min or max when needed (+1 or -1 pixels)
 	         * @private
-	         * @param   {Number} ii decimal index
-	         * @param   {Number} jj decimal index
-	         * @returns {Array} (i, j) inside the allowed indexes
+	         * @param {[[Type]]} i [[Description]]
+	         * @param {[[Type]]} j [[Description]]
 	         */
 
 	    }, {
-	        key: '_adjustIndexesIfNeeded',
-	        value: function _adjustIndexesIfNeeded(ii, jj) {
-	            var i = ii;
-	            if (ii < 0) {
-	                i = ii + 1;
-	            }
-	            if (ii > this.nCols - 1) {
-	                i = ii - 1;
-	            }
+	        key: '_adjustToBordersIfNeeded',
+	        value: function _adjustToBordersIfNeeded(i, j) {
+	            // i
+	            if (i < 0) i = i + 1;
+	            var maxCol = this.nCols - 1;
+	            if (i > maxCol) i = i - 1;
 
-	            var j = jj;
-	            if (jj < 0) {
-	                j = jj + 1;
-	            }
-	            if (jj > this.nRows - 1) {
-	                j = jj - 1;
-	            }
-
-	            return [i, j];
+	            // j
+	            if (j < 0) j = j + 1;
+	            var maxRow = this.nRows - 1;
+	            if (j > maxRod) j = maxRow;
 	        }
 
 	        /**
@@ -705,7 +632,7 @@
 	exports.default = Field;
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -716,7 +643,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Field2 = __webpack_require__(3);
+	var _Field2 = __webpack_require__(2);
 
 	var _Field3 = _interopRequireDefault(_Field2);
 
@@ -883,7 +810,7 @@
 	exports.default = ScalarField;
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -898,11 +825,11 @@
 
 	var _Vector2 = _interopRequireDefault(_Vector);
 
-	var _Field2 = __webpack_require__(3);
+	var _Field2 = __webpack_require__(2);
 
 	var _Field3 = _interopRequireDefault(_Field2);
 
-	var _ScalarField = __webpack_require__(4);
+	var _ScalarField = __webpack_require__(3);
 
 	var _ScalarField2 = _interopRequireDefault(_ScalarField);
 
@@ -1087,7 +1014,7 @@
 	exports.default = VectorField;
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1231,7 +1158,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1308,7 +1235,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1380,7 +1307,7 @@
 	});
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1531,7 +1458,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1682,7 +1609,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1770,6 +1697,61 @@
 	L.control.colorBar = function (color, range, options) {
 	    return new L.Control.ColorBar(color, range, options);
 	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 *  Simple regular cell in a raster
+	 */
+	var Cell = function () {
+
+	  /**
+	   * A simple cell with value and size
+	   * @param {L.LatLng} center
+	   * @param {Number} value
+	   * @param {Number} size
+	   */
+	  function Cell(center, value, size) {
+	    _classCallCheck(this, Cell);
+
+	    this.center = center;
+	    this.value = value;
+	    this.size = size;
+	  }
+
+	  /**
+	   * Bounds for the cell
+	   * @returns {LatLngBounds}
+	   */
+
+
+	  _createClass(Cell, [{
+	    key: "getBounds",
+	    value: function getBounds() {
+	      var half = this.size / 2.0;
+	      var ul = L.latLng([this.center.lat + half, this.center.lon - half]);
+	      var lr = L.latLng([this.center.lat - half, this.center.lon + half]);
+
+	      return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+	    }
+	  }]);
+
+	  return Cell;
+	}();
+
+	exports.default = Cell;
 
 /***/ }
 /******/ ]);

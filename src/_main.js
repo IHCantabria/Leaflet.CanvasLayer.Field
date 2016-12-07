@@ -4,6 +4,9 @@
 import Vector from './Vector.js';
 window.L.Vector = Vector;
 
+import Cell from './Cell.js';
+window.L.Cell = Cell;
+
 import Field from './Field.js';
 window.L.Field = Field;
 

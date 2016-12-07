@@ -1,3 +1,5 @@
+import Cell from './Cell';
+
 /**
  *  Abstract class for a set of values (Vector | Scalar)
  *  assigned to a regular 2D-grid (lon-lat), aka 'a Raster source'
@@ -10,18 +12,18 @@ export default class Field {
         }
         this.params = params;
 
-        this.ncols = params['ncols'];
-        this.nrows = params['nrows'];
+        this.nCols = params['nCols'];
+        this.nRows = params['nRows'];
 
         // ll = lower-left
-        this.xllcorner = params['xllcorner'];
-        this.yllcorner = params['yllcorner'];
+        this.xllCorner = params['xllCorner'];
+        this.yllCorner = params['yllCorner'];
 
         // ur = upper-right
-        this.xurcorner = params['xllcorner'] + params['ncols'] * params['cellsize'];
-        this.yurcorner = params['yllcorner'] + params['nrows'] * params['cellsize'];
+        this.xurCorner = params['xllCorner'] + params['nCols'] * params['cellSize'];
+        this.yurCorner = params['yllCorner'] + params['nRows'] * params['cellSize'];
 
-        this.cellsize = params['cellsize'];
+        this.cellSize = params['cellSize'];
 
         this.grid = null; // to be defined by subclasses
     }
@@ -43,52 +45,44 @@ export default class Field {
      * @returns {Number}
      */
     numCells() {
-        return this.nrows * this.ncols;
+        return this.nRows * this.nCols;
     }
 
     /**
-     * A list with every cell, including its center, associated value and bounds
-     * @returns {Array} - grid values {lon, lat, value, bounds}, x-ascending & y-descending
+     * A list with every cell
+     * @returns {Array<Cell>} - cells (x-ascending & y-descending order)
      */
-    gridLonLatValue() {
-        return this.getCellsForPyramid(1); // original
+    getCells() {
+        return this.getPyramid(1); // full pyramid level
     }
 
     /**
-     * A subset of the cells, corresponding to nPyramid indicated level
-     * @param   {[[Type]]} nPyramid [[Description]]
-     * @returns {[[Type]]} [[Description]]
+     * A raster pyramid (a subset of the cells, corresponding to the pyramidLevel)
+     * @param   {Number} pyramidLevel
+     * @returns {Array<Cell>} - cells
      */
-    getCellsForPyramid(nPyramid) {
+    getPyramid(pyramidLevel) {
         // TODO implement cache
-
         console.time('getCellsFor');
 
-        let step = nPyramid; // 1 = all | 2 = half...
-        let cellsize = this.cellsize * step;
+        let step = pyramidLevel; // 1 = all | 2 = quarter part...
+
+        let cellSize = (this.cellSize * step);
         let cells = [];
 
-        let halfCell = cellsize / 2.0;
-        let centerLon = this.xllcorner + halfCell;
-        let centerLat = this.yurcorner - halfCell;
+        let halfCell = cellSize / 2.0;
+        let centerLon = this.xllCorner + halfCell;
+        let centerLat = this.yurCorner - halfCell;
 
         let lon = centerLon;
         let lat = centerLat;
 
-        for (var j = 0; j < this.nrows / step; j++) {
-            for (var i = 0; i < this.ncols / step; i++) {
-                //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
-                let v = this._interpolate(lon, lat);
-                let cell = {
-                    'lon': lon,
-                    'lat': lat,
-                    'value': v
-                };
-                cell.bounds = this._getBoundsFor(cell, nPyramid);
-                cells.push(cell); // <<
-                lon += cellsize;
+        for (var j = 0; j < this.nRows / step; j++) {
+            for (var i = 0; i < this.nCols / step; i++) {
+                cells.push(this._getCellFor(lat, lon, cellSize)); // <<
+                lon += cellSize;
             }
-            lat -= cellsize;
+            lat -= cellSize;
             lon = centerLon;
         }
 
@@ -96,19 +90,40 @@ export default class Field {
         return cells;
     }
 
-    /**
-     * Bounds for a cell
-     * @param   {Object}   cell
-     * @paran {Number} nPyramid -  pixel = (1 / nPyramid) * original cellsize
-     * @returns {LatLngBounds}
-     */
-    _getBoundsFor(cell, nPyramid) {
-        let cellSize = this.cellsize * nPyramid;
-        let half = cellSize / 2.0;
-        let ul = L.latLng([cell.lat + half, cell.lon - half]);
-        let lr = L.latLng([cell.lat - half, cell.lon + half]);
+    _getCellFor(lat, lon, cellSize) {
+        //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+        let center = L.latLng(lat, lon);
+        let value = this._interpolate(lon, lat);
+        let c = new Cell(center, value, cellSize);
+        return c;
+    }
 
-        return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+    /**
+     * A full list with possible pyramid levels
+     * @returns {[[Type]]} [[Description]]
+     */
+    getPyramidLevels() {
+        let pyramids = [];
+
+        let p = 1;
+        while (this.nCols / p > 1) {
+            pyramids.push(p);
+            p = p * 2;
+        }
+
+        return pyramids;
+    }
+
+    /**
+     * A list with all available resolutions (meters per pixel), one
+     * for each of the pyramid levels
+     */
+    getResolutions() {
+        return [];
+        /*
+                let resolutions = pyramids.map(this.resolutionForPyramid);
+                */
+
     }
 
     /**
@@ -116,7 +131,7 @@ export default class Field {
      * @returns {Number[]} [xmin, ymin, xmax, ymax]
      */
     extent() {
-        return [this.xllcorner, this.yllcorner, this.xurcorner, this.yurcorner];
+        return [this.xllCorner, this.yllCorner, this.xurCorner, this.yurCorner];
     }
 
     /**
@@ -126,10 +141,10 @@ export default class Field {
      * @returns {Boolean}
      */
     contains(lon, lat) {
-        return (lon >= this.xllcorner &&
-            lon <= this.xurcorner &&
-            lat >= this.yllcorner &&
-            lat <= this.yurcorner);
+        return (lon >= this.xllCorner &&
+            lon <= this.xurCorner &&
+            lat >= this.yllCorner &&
+            lat <= this.yurCorner);
     }
 
     /**
@@ -144,8 +159,8 @@ export default class Field {
 
     /**
      * Interpolated value at lon-lat coordinates
-     * @param   {Number} lon - longitude
-     * @param   {Number} lat - latitude
+     * @param   {Number} longitude
+     * @param   {Number} latitude
      * @returns {Vector|Number} [u, v, magnitude]
      */
     valueAt(lon, lat) {
@@ -179,8 +194,8 @@ export default class Field {
      * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
      */
     randomPosition(o = {}) {
-        let i = Math.random() * this.ncols | 0;
-        let j = Math.random() * this.nrows | 0;
+        let i = Math.random() * this.nCols | 0;
+        let j = Math.random() * this.nRows | 0;
 
         o.x = this._longitudeAtX(i);
         o.y = this._latitudeAtY(j);
@@ -216,8 +231,8 @@ export default class Field {
      * @returns {Number} longitude at the center of the cell
      */
     _longitudeAtX(i) {
-        let halfPixel = this.cellsize / 2.0;
-        return this.xllcorner + halfPixel + (i * this.cellsize);
+        let halfPixel = this.cellSize / 2.0;
+        return this.xllCorner + halfPixel + (i * this.cellSize);
     }
 
     /**
@@ -226,8 +241,8 @@ export default class Field {
      * @returns {Number} latitude at the center of the cell
      */
     _latitudeAtY(j) {
-        let halfPixel = this.cellsize / 2.0;
-        return this.yurcorner - halfPixel - (j * this.cellsize);
+        let halfPixel = this.cellSize / 2.0;
+        return this.yurCorner - halfPixel - (j * this.cellSize);
     }
 
     /**
@@ -238,6 +253,8 @@ export default class Field {
      * @returns {Vector|Number}
      *
      * Source: https://github.com/cambecc/earth > product.js
+     * 
+     * TODO --> lat, lon order
      */
     _interpolate(lon, lat) {
         //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
@@ -251,18 +268,23 @@ export default class Field {
 
 
         // indexes (decimals)
-        let lon0 = this.xllcorner + (this.cellsize / 2.0);
-        let i = (lon - lon0) / this.cellsize;
+        let lon0 = this.xllCorner + (this.cellSize / 2.0);
+        let ii = (lon - lon0) / this.cellSize;
 
-        let lat0 = this.yurcorner - (this.cellsize / 2.0);
-        let j = (lat0 - lat) / this.cellsize;
+        let lat0 = this.yurCorner - (this.cellSize / 2.0);
+        let jj = (lat0 - lat) / this.cellSize;
+
+        console.log('pre', ii, jj);
+        let [i, j] = this._adjustIndexesIfNeeded(ii, jj);
+        console.log('post', i, j);
 
         // indexes (integers), for the 4-surrounding cells to the point (i, j)...
         let fi = Math.floor(i);
         let ci = fi + 1;
         let fj = Math.floor(j);
         let cj = fj + 1;
-        //console.log(fi, ci, fj, cj);
+
+        console.log(fi, ci, fj, cj);
 
         // values for the 4-cells
         var row;
@@ -282,6 +304,34 @@ export default class Field {
         }
         // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
         return null;
+    }
+
+    /**
+     * Check the indexes are inside the field, 
+     * adjusting to min or max when needed (+1 or -1 pixels)
+     * @private
+     * @param   {Number} ii decimal index
+     * @param   {Number} jj decimal index
+     * @returns {Array} (i, j) inside the allowed indexes
+     */
+    _adjustIndexesIfNeeded(ii, jj) {
+        let i = ii;
+        if (ii < 0) {
+            i = ii + 1;
+        }
+        if (ii > (this.nCols - 1)) {
+            i = ii - 1;
+        }
+
+        let j = jj;
+        if (jj < 0) {
+            j = jj + 1;
+        }
+        if (jj > (this.nRows - 1)) {
+            j = jj - 1;
+        }
+
+        return [i, j];
     }
 
     /**

@@ -21,11 +21,11 @@ export default class VectorField extends Field {
 
         // TODO - check equal parameters for u|v
         let p = {
-            ncols: u.ncols,
-            nrows: u.nrows,
-            xllcorner: u.xllcorner,
-            yllcorner: u.yllcorner,
-            cellsize: u.cellsize,
+            nCols: u.nCols,
+            nRows: u.nRows,
+            xllCorner: u.xllCorner,
+            yllCorner: u.yllCorner,
+            cellSize: u.cellSize,
             us: u.zs,
             vs: v.zs
         };
@@ -44,11 +44,11 @@ export default class VectorField extends Field {
     getScalarField(type) {
         let f = this._getFunctionFor(type);
         let p = {
-            ncols: this.params.ncols,
-            nrows: this.params.nrows,
-            xllcorner: this.params.xllcorner,
-            yllcorner: this.params.yllcorner,
-            cellsize: this.params.cellsize,
+            nCols: this.params.nCols,
+            nRows: this.params.nRows,
+            xllCorner: this.params.xllCorner,
+            yllCorner: this.params.yllCorner,
+            cellSize: this.params.cellSize,
             zs: this._applyOnField(f)
         };
         return new ScalarField(p);
@@ -79,17 +79,17 @@ export default class VectorField extends Field {
      * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
      */
     _buildGrid() {
-        let grid = this._arraysTo2d(this.us, this.vs, this.nrows, this.ncols);
+        let grid = this._arraysTo2d(this.us, this.vs, this.nRows, this.nCols);
         return grid;
     }
 
-    _arraysTo2d(us, vs, nrows, ncols) {
+    _arraysTo2d(us, vs, nRows, nCols) {
         let grid = [];
         let p = 0;
 
-        for (var j = 0; j < nrows; j++) {
+        for (var j = 0; j < nRows; j++) {
             var row = [];
-            for (var i = 0; i < ncols; i++, p++) {
+            for (var i = 0; i < nCols; i++, p++) {
                 let u = us[p],
                     v = vs[p];
                 let valid = (this._isValid(u) && this._isValid(v));
@@ -106,7 +106,7 @@ export default class VectorField extends Field {
      * @returns {Array}
      */
     _calculateRange() {
-        let vectors = this.gridLonLatValue()
+        let vectors = this.getCells()
             .map(pt => pt.value)
             .filter(function (v) {
                 return v !== null;

@@ -257,8 +257,6 @@
 	    value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _Cell = __webpack_require__(2);
@@ -346,9 +344,10 @@
 	        key: 'getPyramid',
 	        value: function getPyramid(pyramidLevel) {
 	            // TODO implement cache
+
 	            console.time('getCellsFor');
 
-	            var step = pyramidLevel; // 1 = all | 2 = quarter part...
+	            var step = pyramidLevel; // 1 = all | 2 = half...
 
 	            var cellSize = this.cellSize * step;
 	            var cells = [];
@@ -362,7 +361,7 @@
 
 	            for (var j = 0; j < this.nRows / step; j++) {
 	                for (var i = 0; i < this.nCols / step; i++) {
-	                    cells.push(this._getCellFor(lat, lon, cellSize)); // <<
+	                    cells.push(c); // <<
 	                    lon += cellSize;
 	                }
 	                lat -= cellSize;
@@ -374,12 +373,11 @@
 	        }
 	    }, {
 	        key: '_getCellFor',
-	        value: function _getCellFor(lat, lon, cellSize) {
+	        value: function _getCellFor(lat, lon) {
 	            //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
 	            var center = L.latLng(lat, lon);
 	            var value = this._interpolate(lon, lat);
 	            var c = new _Cell2.default(center, value, cellSize);
-	            return c;
 	        }
 
 	        /**
@@ -454,8 +452,8 @@
 
 	        /**
 	         * Interpolated value at lon-lat coordinates
-	         * @param   {Number} longitude
-	         * @param   {Number} latitude
+	         * @param   {Number} lon - longitude
+	         * @param   {Number} lat - latitude
 	         * @returns {Vector|Number} [u, v, magnitude]
 	         */
 
@@ -574,8 +572,6 @@
 	         * @returns {Vector|Number}
 	         *
 	         * Source: https://github.com/cambecc/earth > product.js
-	         * 
-	         * TODO --> lat, lon order
 	         */
 
 	    }, {
@@ -593,29 +589,17 @@
 
 	            // indexes (decimals)
 	            var lon0 = this.xllCorner + this.cellSize / 2.0;
-	            var ii = (lon - lon0) / this.cellSize;
+	            var i = (lon - lon0) / this.cellSize;
 
 	            var lat0 = this.yurCorner - this.cellSize / 2.0;
-	            var jj = (lat0 - lat) / this.cellSize;
-
-	            console.log('pre', ii, jj);
-
-	            var _adjustIndexesIfNeede = this._adjustIndexesIfNeeded(ii, jj);
-
-	            var _adjustIndexesIfNeede2 = _slicedToArray(_adjustIndexesIfNeede, 2);
-
-	            var i = _adjustIndexesIfNeede2[0];
-	            var j = _adjustIndexesIfNeede2[1];
-
-	            console.log('post', i, j);
+	            var j = (lat0 - lat) / this.cellSize;
 
 	            // indexes (integers), for the 4-surrounding cells to the point (i, j)...
 	            var fi = Math.floor(i);
 	            var ci = fi + 1;
 	            var fj = Math.floor(j);
 	            var cj = fj + 1;
-
-	            console.log(fi, ci, fj, cj);
+	            //console.log(fi, ci, fj, cj);
 
 	            // values for the 4-cells
 	            var row;
@@ -637,37 +621,6 @@
 	            }
 	            // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
 	            return null;
-	        }
-
-	        /**
-	         * Check the indexes are inside the field, 
-	         * adjusting to min or max when needed (+1 or -1 pixels)
-	         * @private
-	         * @param   {Number} ii decimal index
-	         * @param   {Number} jj decimal index
-	         * @returns {Array} (i, j) inside the allowed indexes
-	         */
-
-	    }, {
-	        key: '_adjustIndexesIfNeeded',
-	        value: function _adjustIndexesIfNeeded(ii, jj) {
-	            var i = ii;
-	            if (ii < 0) {
-	                i = ii + 1;
-	            }
-	            if (ii > this.nCols - 1) {
-	                i = ii - 1;
-	            }
-
-	            var j = jj;
-	            if (jj < 0) {
-	                j = jj + 1;
-	            }
-	            if (jj > this.nRows - 1) {
-	                j = jj - 1;
-	            }
-
-	            return [i, j];
 	        }
 
 	        /**

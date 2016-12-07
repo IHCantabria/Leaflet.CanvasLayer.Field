@@ -25,7 +25,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
         let p = this._pyramidFor(viewInfo);
         let cells = this.field.getCellsForPyramid(p);
-        let cellsOnScreen = cells.filter(c => viewInfo.bounds.intersects(c.getBounds()));
+        let cellsOnScreen = cells.filter(c => viewInfo.bounds.intersects(c.bounds));
         this._draw(cellsOnScreen);
 
         console.timeEnd('onDrawLayer');
@@ -40,6 +40,8 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     _pyramidFor: function (viewInfo) {
         console.log(viewInfo);
 
+        let pyramids = [];
+
 
 
         // meters per pixel
@@ -51,7 +53,11 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
         let pyramids = [];
         let p = 1;
-
+        while (this.field.ncols / p > 1) {
+            pyramids.push(p);
+            p = p * 2;
+        }
+        console.log(pyramids);
 
         return 16; // allthis._map
 
@@ -87,7 +93,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      */
     _drawRectangle: function (g, cell) {
         g.fillStyle = this.options.color(cell.value);
-        let r = this._getRectangle(cell.getBounds());
+        let r = this._getRectangle(cell.bounds);
         //g.fillRect(r.x, r.y, r.width, r.height); // TODO check drawing speed
         g.fillRect(Math.round(r.x), Math.round(r.y), r.width, r.height);
     },
