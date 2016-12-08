@@ -73,15 +73,15 @@ describe('ScalarField', function () {
 
     it('can return a raster pyramid (resampled field)', function () {
         var allCells = sf.getPyramid(1);
-        expect(allCells.toBe(sf));
+        expect(allCells).toBe(sf);
         expect(allCells.getCells().length).toBe(100);
 
         var quarterCells = sf.getPyramid(2);
-        expect(quarterCells.not.equal(sf));
+        expect(quarterCells).not.toBe(sf);
         expect(quarterCells.getCells().length).toBe(25);
 
         var nCells = sf.getPyramid(4);
-        expect(nCells.not.equal(sf));
+        expect(nCells).not.toBe(sf);
         expect(nCells.getCells().length).toBe(9);
     });
 

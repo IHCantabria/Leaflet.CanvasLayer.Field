@@ -17,9 +17,18 @@ export default class Cell {
 
     equals(anotherCell) {
         return (this.center.equals(anotherCell.center) &&
-            this.value === anotherCell.value &&
+            this._equalValues(this.value, anotherCell.value) &&
             this.size === anotherCell.size
         );
+    }
+
+    _equalValues(value, anotherValue) {
+        let type = (value.constructor.name);        
+        let answerFor = {
+            'Number': (value === anotherValue),
+            'Vector': (value.u === anotherValue.u && value.v === anotherValue.v)
+        };        
+        return answerFor[type];
     }
 
     /**
