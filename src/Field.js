@@ -266,29 +266,24 @@ export default class Field {
         //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
         //         |      |           column, so the index ci can be used without taking a modulo.
 
-
         // indexes (decimals)
         let lon0 = this.xllCorner + (this.cellSize / 2.0);
         let ii = (lon - lon0) / this.cellSize;
+        let i = this._adjustColIndex(ii);
 
         let lat0 = this.yurCorner - (this.cellSize / 2.0);
         let jj = (lat0 - lat) / this.cellSize;
-
-        console.log('pre', ii, jj);
-        let [i, j] = this._adjustIndexesIfNeeded(ii, jj);
-        console.log('post', i, j);
+        let j = this._adjustRowIndex(jj);
 
         // indexes (integers), for the 4-surrounding cells to the point (i, j)...
-        let fi = Math.floor(i);
-        let ci = fi + 1;
-        let fj = Math.floor(j);
-        let cj = fj + 1;
-
+        let fi = this._adjustColIndex(Math.floor(i));
+        let ci = this._adjustRowIndex(fi + 1);
+        let fj = this._adjustColIndex(Math.floor(j));
+        let cj = this._adjustRowIndex(fj + 1);
         console.log(fi, ci, fj, cj);
 
         // values for the 4-cells
         var row;
-
         if ((row = this.grid[fj])) { // upper row ^^
             var g00 = row[fi]; // << left
             var g10 = row[ci]; // right >>
@@ -307,31 +302,43 @@ export default class Field {
     }
 
     /**
-     * Check the indexes are inside the field, 
+     * Check the column index is inside the field,
      * adjusting to min or max when needed (+1 or -1 pixels)
      * @private
-     * @param   {Number} ii decimal index
-     * @param   {Number} jj decimal index
-     * @returns {Array} (i, j) inside the allowed indexes
+     * @param   {Number} ii - decimal index
+     * @returns {Number} i - inside the allowed indexes
      */
-    _adjustIndexesIfNeeded(ii, jj) {
+    _adjustColIndex(ii) {
         let i = ii;
         if (ii < 0) {
-            i = ii + 1;
+            i = 0;
         }
-        if (ii > (this.nCols - 1)) {
-            i = ii - 1;
+        let maxCol = (this.nCols - 1);
+        if (ii > maxCol) {
+            i = maxCol;
         }
 
+        return i;
+    }
+
+    /**
+     * Check the row index is inside the field,
+     * adjusting to min or max when needed (+1 or -1 pixels)
+     * @private
+     * @param   {Number} jj decimal index
+     * @returns {Number} j - inside the allowed indexes
+     */
+    _adjustRowIndex(jj) {
         let j = jj;
         if (jj < 0) {
-            j = jj + 1;
+            j = 0;
         }
-        if (jj > (this.nRows - 1)) {
-            j = jj - 1;
+        let maxRow = (this.nRows - 1);
+        if (jj > maxRow) {
+            j = maxRow;
         }
 
-        return [i, j];
+        return j;
     }
 
     /**

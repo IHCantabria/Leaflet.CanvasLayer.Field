@@ -257,8 +257,6 @@
 	    value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _Cell = __webpack_require__(2);
@@ -590,36 +588,24 @@
 	            //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
 	            //         |      |           column, so the index ci can be used without taking a modulo.
 
-
 	            // indexes (decimals)
 	            var lon0 = this.xllCorner + this.cellSize / 2.0;
 	            var ii = (lon - lon0) / this.cellSize;
+	            var i = this._adjustColIndex(ii);
 
 	            var lat0 = this.yurCorner - this.cellSize / 2.0;
 	            var jj = (lat0 - lat) / this.cellSize;
-
-	            console.log('pre', ii, jj);
-
-	            var _adjustIndexesIfNeede = this._adjustIndexesIfNeeded(ii, jj);
-
-	            var _adjustIndexesIfNeede2 = _slicedToArray(_adjustIndexesIfNeede, 2);
-
-	            var i = _adjustIndexesIfNeede2[0];
-	            var j = _adjustIndexesIfNeede2[1];
-
-	            console.log('post', i, j);
+	            var j = this._adjustRowIndex(jj);
 
 	            // indexes (integers), for the 4-surrounding cells to the point (i, j)...
-	            var fi = Math.floor(i);
-	            var ci = fi + 1;
-	            var fj = Math.floor(j);
-	            var cj = fj + 1;
-
+	            var fi = this._adjustColIndex(Math.floor(i));
+	            var ci = this._adjustRowIndex(fi + 1);
+	            var fj = this._adjustColIndex(Math.floor(j));
+	            var cj = this._adjustRowIndex(fj + 1);
 	            console.log(fi, ci, fj, cj);
 
 	            // values for the 4-cells
 	            var row;
-
 	            if (row = this.grid[fj]) {
 	                // upper row ^^
 	                var g00 = row[fi]; // << left
@@ -640,34 +626,49 @@
 	        }
 
 	        /**
-	         * Check the indexes are inside the field, 
+	         * Check the column index is inside the field,
 	         * adjusting to min or max when needed (+1 or -1 pixels)
 	         * @private
-	         * @param   {Number} ii decimal index
-	         * @param   {Number} jj decimal index
-	         * @returns {Array} (i, j) inside the allowed indexes
+	         * @param   {Number} ii - decimal index
+	         * @returns {Number} i - inside the allowed indexes
 	         */
 
 	    }, {
-	        key: '_adjustIndexesIfNeeded',
-	        value: function _adjustIndexesIfNeeded(ii, jj) {
+	        key: '_adjustColIndex',
+	        value: function _adjustColIndex(ii) {
 	            var i = ii;
 	            if (ii < 0) {
-	                i = ii + 1;
+	                i = 0;
 	            }
-	            if (ii > this.nCols - 1) {
-	                i = ii - 1;
+	            var maxCol = this.nCols - 1;
+	            if (ii > maxCol) {
+	                i = maxCol;
 	            }
 
+	            return i;
+	        }
+
+	        /**
+	         * Check the row index is inside the field,
+	         * adjusting to min or max when needed (+1 or -1 pixels)
+	         * @private
+	         * @param   {Number} jj decimal index
+	         * @returns {Number} j - inside the allowed indexes
+	         */
+
+	    }, {
+	        key: '_adjustRowIndex',
+	        value: function _adjustRowIndex(jj) {
 	            var j = jj;
 	            if (jj < 0) {
-	                j = jj + 1;
+	                j = 0;
 	            }
-	            if (jj > this.nRows - 1) {
-	                j = jj - 1;
+	            var maxRow = this.nRows - 1;
+	            if (jj > maxRow) {
+	                j = maxRow;
 	            }
 
-	            return [i, j];
+	            return j;
 	        }
 
 	        /**
