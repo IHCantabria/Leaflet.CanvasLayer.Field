@@ -223,11 +223,11 @@ export default class Field {
         //         |      |           column, so the index ci can be used without taking a modulo.
 
         let [i, j] = this._getDecimalIndexes(lon, lat);
-        let surroundingIndexes = this._getFourSurroundingIndexes(i, j);
-        let surroundingValues = this._getFourSurroundingValues(surroundingIndexes);
-        if (surroundingValues) {
-            let [fi, ci, fj, cj] = surroundingIndexes;
-            let [g00, g10, g01, g11] = surroundingValues;
+        let indexes = this._getFourSurroundingIndexes(i, j);
+        let [fi, ci, fj, cj] = indexes;
+        let values = this._getFourSurroundingValues(fi, ci, fj, cj);
+        if (values) {
+            let [g00, g10, g01, g11] = values;
             return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
         }
         // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);

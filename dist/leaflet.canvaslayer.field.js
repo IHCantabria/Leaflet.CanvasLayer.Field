@@ -551,22 +551,23 @@
 	            var i = _getDecimalIndexes3[0];
 	            var j = _getDecimalIndexes3[1];
 
-	            var surroundingIndexes = this._getFourSurroundingIndexes(i, j);
-	            var surroundingValues = this._getFourSurroundingValues(surroundingIndexes);
-	            if (surroundingValues) {
-	                var _surroundingIndexes = _slicedToArray(surroundingIndexes, 4);
+	            var indexes = this._getFourSurroundingIndexes(i, j);
 
-	                var fi = _surroundingIndexes[0];
-	                var ci = _surroundingIndexes[1];
-	                var fj = _surroundingIndexes[2];
-	                var cj = _surroundingIndexes[3];
+	            var _indexes = _slicedToArray(indexes, 4);
 
-	                var _surroundingValues = _slicedToArray(surroundingValues, 4);
+	            var fi = _indexes[0];
+	            var ci = _indexes[1];
+	            var fj = _indexes[2];
+	            var cj = _indexes[3];
 
-	                var g00 = _surroundingValues[0];
-	                var g10 = _surroundingValues[1];
-	                var g01 = _surroundingValues[2];
-	                var g11 = _surroundingValues[3];
+	            var values = this._getFourSurroundingValues(fi, ci, fj, cj);
+	            if (values) {
+	                var _values = _slicedToArray(values, 4);
+
+	                var g00 = _values[0];
+	                var g10 = _values[1];
+	                var g01 = _values[2];
+	                var g11 = _values[3];
 
 	                return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
 	            }
@@ -1208,6 +1209,8 @@
 	    }, {
 	        key: '_pushValueToArrays',
 	        value: function _pushValueToArrays(params, value) {
+	            console.log(value);
+
 	            params['us'].push(value.u);
 	            params['vs'].push(value.v);
 	        }
