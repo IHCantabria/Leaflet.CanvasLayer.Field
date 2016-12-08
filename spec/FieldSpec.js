@@ -78,7 +78,7 @@ describe('Field', function () {
         expect(p[1]).toBeCloseTo(43.461099497838006, 7);
     });
 
-    it('does\'nt return a value for a lon-lat outside of the grid ', function () {
+    it('doesn\'t return a value for a lon-lat outside of the grid ', function () {
         let lon = -3.710591474014617;
         let lat = 43.47082043045964;
         expect(f.hasValueAt(lon, lat)).toBe(false);

@@ -50,19 +50,19 @@
 
 	var _Vector2 = _interopRequireDefault(_Vector);
 
-	var _Cell = __webpack_require__(2);
+	var _Cell = __webpack_require__(11);
 
 	var _Cell2 = _interopRequireDefault(_Cell);
 
-	var _Field = __webpack_require__(3);
+	var _Field = __webpack_require__(2);
 
 	var _Field2 = _interopRequireDefault(_Field);
 
-	var _ScalarField = __webpack_require__(4);
+	var _ScalarField = __webpack_require__(3);
 
 	var _ScalarField2 = _interopRequireDefault(_ScalarField);
 
-	var _VectorField = __webpack_require__(5);
+	var _VectorField = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./VectorField.js\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 	var _VectorField2 = _interopRequireDefault(_VectorField);
 
@@ -81,14 +81,14 @@
 	window.L.VectorField = _VectorField2.default;
 
 	// layer
-	var L_CanvasLayer = __webpack_require__(6);
-	var L_CanvasLayer_SimpleLonLat = __webpack_require__(7);
-	var L_CanvasLayer_Field = __webpack_require__(8);
-	var L_CanvasLayer_ScalarField = __webpack_require__(9);
-	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(10);
+	var L_CanvasLayer = __webpack_require__(5);
+	var L_CanvasLayer_SimpleLonLat = __webpack_require__(6);
+	var L_CanvasLayer_Field = __webpack_require__(7);
+	var L_CanvasLayer_ScalarField = __webpack_require__(8);
+	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(9);
 
 	// control
-	var L_Control_ColorBar = __webpack_require__(11);
+	var L_Control_ColorBar = __webpack_require__(10);
 
 	// TODO - umd pattern?
 
@@ -194,68 +194,6 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 *  Simple regular cell in a raster
-	 */
-	var Cell = function () {
-
-	    /**
-	     * A simple cell with value and size
-	     * @param {L.LatLng} center
-	     * @param {Number} value
-	     * @param {Number} size
-	     */
-	    function Cell(center, value, size) {
-	        _classCallCheck(this, Cell);
-
-	        this.center = center;
-	        this.value = value;
-	        this.size = size;
-	    }
-
-	    _createClass(Cell, [{
-	        key: "equals",
-	        value: function equals(anotherCell) {
-	            return this.center.equals(anotherCell.center) && this.value === anotherCell.value && this.size === anotherCell.size;
-	        }
-
-	        /**
-	         * Bounds for the cell
-	         * @returns {LatLngBounds}
-	         */
-
-	    }, {
-	        key: "getBounds",
-	        value: function getBounds() {
-	            var half = this.size / 2.0;
-	            var cLat = this.center.lat;
-	            var cLng = this.center.lng;
-	            var ul = L.latLng([cLat + half, cLng - half]);
-	            var lr = L.latLng([cLat - half, cLng + half]);
-
-	            return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
-	        }
-	    }]);
-
-	    return Cell;
-	}();
-
-	exports.default = Cell;
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -268,7 +206,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Cell = __webpack_require__(2);
+	var _Cell = __webpack_require__(11);
 
 	var _Cell2 = _interopRequireDefault(_Cell);
 
@@ -343,25 +281,19 @@
 	            var cells = [];
 	            for (var j = 0; j < this.nRows; j++) {
 	                for (var i = 0; i < this.nCols; i++) {
-	                    var _lonLatAtIndexes2 = this._lonLatAtIndexes(i, j);
-
-	                    var _lonLatAtIndexes3 = _slicedToArray(_lonLatAtIndexes2, 2);
-
-	                    var lon = _lonLatAtIndexes3[0];
-	                    var lat = _lonLatAtIndexes3[1];
-
-	                    var center = L.latLng(lat, lon);
-	                    var value = this._valueAtIndexes(i, j);
-	                    var c = new _Cell2.default(center, value, this.cellSize);
+	                    var c = this._getCellFor(lon, lat, this.valueAt);
 	                    cells.push(c); // <<
+	                    lon += cellSize;
 	                }
+	                lat -= cellSize;
+	                lon = centerLon;
 	            }
 	            return cells;
 	        }
 	    }, {
 	        key: 'getPyramid',
 	        value: function getPyramid(pyramidLevel) {
-	            if (pyramidLevel === 1) return this;
+	            if (pyramideLevel === 1) return this;
 
 	            var params = {};
 	            params['nCols'] = this.nCols / pyramidLevel;
@@ -384,18 +316,17 @@
 	            var lon = centerLon;
 	            var lat = centerLat;
 
-	            this._newDataArrays(params);
+	            this._newDataArrays();
 	            for (var j = 0; j < this.nRows / step; j++) {
 	                for (var i = 0; i < this.nCols / step; i++) {
 	                    var value = this.interpolatedValueAt(lon, lat);
-	                    this._pushValueToArrays(params, value);
-	                    lon += params['cellSize'];
+	                    this._pushValueToArrays(value);
+	                    lon += cellSize;
 	                }
-	                lat -= params['cellSize'];
+	                lat -= cellSize;
 	                lon = centerLon;
 	            }
-
-	            return this._makeNewFrom(params);
+	            return new ScalarField(params);
 	        }
 
 	        /**
@@ -439,6 +370,25 @@
 
 	            console.timeEnd('getCellsFor');
 	            return cells;
+	        }
+
+	        /**
+	         * Prepare a cell, taking its value with f method
+	         * @private
+	         * @param   {Number} lat     
+	         * @param   {Number} lon     
+	         * @param   {Function} f
+	         * @returns {Cell}
+	         */
+
+	    }, {
+	        key: '_getCellFor',
+	        value: function _getCellFor(lon, lat, f) {
+	            //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+	            var center = L.latLng(lat, lon);
+	            var value = f(lon, lat);
+	            var c = new _Cell2.default(center, value, this.cellSize);
+	            return c;
 	        }
 
 	        /**
@@ -842,7 +792,7 @@
 	exports.default = Field;
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -853,7 +803,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Field2 = __webpack_require__(3);
+	var _Field2 = __webpack_require__(2);
 
 	var _Field3 = _interopRequireDefault(_Field2);
 
@@ -982,18 +932,13 @@
 	        }
 	    }, {
 	        key: '_newDataArrays',
-	        value: function _newDataArrays(params) {
+	        value: function _newDataArrays() {
 	            params['zs'] = [];
 	        }
 	    }, {
 	        key: '_pushValueToArrays',
-	        value: function _pushValueToArrays(params, value) {
-	            params['zs'].push(value);
-	        }
-	    }, {
-	        key: '_makeNewFrom',
-	        value: function _makeNewFrom(params) {
-	            return new ScalarField(params);
+	        value: function _pushValueToArrays(value) {
+	            params['zs'].push(value); // push to array
 	        }
 
 	        /**
@@ -1035,236 +980,8 @@
 	exports.default = ScalarField;
 
 /***/ },
+/* 4 */,
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Vector = __webpack_require__(1);
-
-	var _Vector2 = _interopRequireDefault(_Vector);
-
-	var _Field2 = __webpack_require__(3);
-
-	var _Field3 = _interopRequireDefault(_Field2);
-
-	var _ScalarField = __webpack_require__(4);
-
-	var _ScalarField2 = _interopRequireDefault(_ScalarField);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 *  A set of vectors assigned to a regular 2D-grid (lon-lat)
-	 *  (e.g. a raster representing winds for a region)
-	 */
-	var VectorField = function (_Field) {
-	    _inherits(VectorField, _Field);
-
-	    _createClass(VectorField, null, [{
-	        key: 'fromASCIIGrids',
-
-
-	        /**
-	         * Creates a VectorField from the content of two ASCIIGrid files
-	         * @param   {String} ascU - with u-component
-	         * @param   {String} ascV - with v-component
-	         * @returns {VectorField}
-	         */
-	        value: function fromASCIIGrids(ascU, ascV) {
-	            var scaleFactor = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-
-	            var u = _ScalarField2.default.fromASCIIGrid(ascU, scaleFactor);
-	            var v = _ScalarField2.default.fromASCIIGrid(ascV, scaleFactor);
-
-	            // TODO - check equal parameters for u|v
-	            var p = {
-	                nCols: u.nCols,
-	                nRows: u.nRows,
-	                xllCorner: u.xllCorner,
-	                yllCorner: u.yllCorner,
-	                cellSize: u.cellSize,
-	                us: u.zs,
-	                vs: v.zs
-	            };
-	            return new VectorField(p);
-	        }
-	    }]);
-
-	    function VectorField(params) {
-	        _classCallCheck(this, VectorField);
-
-	        var _this = _possibleConstructorReturn(this, (VectorField.__proto__ || Object.getPrototypeOf(VectorField)).call(this, params));
-
-	        _this.us = params['us'];
-	        _this.vs = params['vs'];
-	        _this.grid = _this._buildGrid();
-	        _this.range = _this._calculateRange();
-	        return _this;
-	    }
-
-	    /**
-	     * Get a derived field, from a computation on 
-	     * the VectorField
-	     * @param   {String} type ['magnitude' | 'directionTo' | 'directionFrom']
-	     * @returns {ScalarField}
-	     */
-
-
-	    _createClass(VectorField, [{
-	        key: 'getScalarField',
-	        value: function getScalarField(type) {
-	            var f = this._getFunctionFor(type);
-	            var p = {
-	                nCols: this.params.nCols,
-	                nRows: this.params.nRows,
-	                xllCorner: this.params.xllCorner,
-	                yllCorner: this.params.yllCorner,
-	                cellSize: this.params.cellSize,
-	                zs: this._applyOnField(f)
-	            };
-	            return new _ScalarField2.default(p);
-	        }
-	    }, {
-	        key: '_getFunctionFor',
-	        value: function _getFunctionFor(type) {
-	            return function (u, v) {
-	                var uv = new _Vector2.default(u, v);
-	                return uv[type](); // magnitude, directionTo, directionFrom
-	            };
-	        }
-	    }, {
-	        key: '_applyOnField',
-	        value: function _applyOnField(func) {
-	            var zs = [];
-	            var n = this.numCells();
-	            for (var i = 0; i < n; i++) {
-	                var u = this.us[i];
-	                var v = this.vs[i];
-	                zs.push(func(u, v));
-	            }
-	            return zs;
-	        }
-
-	        /**
-	         * Builds a grid with a Vector at each point, from two arrays
-	         * 'us' and 'vs' following x-ascending & y-descending order
-	         * (same as in ASCIIGrid)
-	         * @returns {Array.<Array.<Vector>>} - grid[row][column]--> Vector
-	         */
-
-	    }, {
-	        key: '_buildGrid',
-	        value: function _buildGrid() {
-	            var grid = this._arraysTo2d(this.us, this.vs, this.nRows, this.nCols);
-	            return grid;
-	        }
-	    }, {
-	        key: '_arraysTo2d',
-	        value: function _arraysTo2d(us, vs, nRows, nCols) {
-	            var grid = [];
-	            var p = 0;
-
-	            for (var j = 0; j < nRows; j++) {
-	                var row = [];
-	                for (var i = 0; i < nCols; i++, p++) {
-	                    var u = us[p],
-	                        v = vs[p];
-	                    var valid = this._isValid(u) && this._isValid(v);
-	                    row[i] = valid ? new _Vector2.default(u, v) : null; // <<<
-	                }
-	                grid[j] = row;
-	            }
-	            return grid;
-	        }
-	    }, {
-	        key: '_newDataArrays',
-	        value: function _newDataArrays(params) {
-	            params['us'] = [];
-	            params['vs'] = [];
-	        }
-	    }, {
-	        key: '_pushValueToArrays',
-	        value: function _pushValueToArrays(params, value) {
-	            params['us'].push(value.u);
-	            params['vs'].push(value.v);
-	        }
-	    }, {
-	        key: '_makeNewFrom',
-	        value: function _makeNewFrom(params) {
-	            return new VectorField(params);
-	        }
-
-	        /**
-	         * Calculate min & max values (magnitude)
-	         * @private
-	         * @returns {Array}
-	         */
-
-	    }, {
-	        key: '_calculateRange',
-	        value: function _calculateRange() {
-	            var vectors = this.getCells().map(function (pt) {
-	                return pt.value;
-	            }).filter(function (v) {
-	                return v !== null;
-	            });
-	            var magnitudes = vectors.map(function (v) {
-	                return v.magnitude();
-	            });
-	            // TODO memory crash!
-	            var min = d3.min(magnitudes);
-	            var max = d3.max(magnitudes);
-
-	            return [min, max];
-	        }
-
-	        /**
-	         * Bilinear interpolation for Vector
-	         * https://en.wikipedia.org/wiki/Bilinear_interpolation
-	         * @param   {Number} x
-	         * @param   {Number} y
-	         * @param   {Number[]} g00
-	         * @param   {Number[]} g10
-	         * @param   {Number[]} g01
-	         * @param   {Number[]} g11
-	         * @returns {Vector}
-	         */
-
-	    }, {
-	        key: '_doInterpolation',
-	        value: function _doInterpolation(x, y, g00, g10, g01, g11) {
-	            var rx = 1 - x;
-	            var ry = 1 - y;
-	            var a = rx * ry,
-	                b = x * ry,
-	                c = rx * y,
-	                d = x * y;
-	            var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
-	            var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
-	            return new _Vector2.default(u, v);
-	        }
-	    }]);
-
-	    return VectorField;
-	}(_Field3.default);
-
-	exports.default = VectorField;
-
-/***/ },
-/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1408,7 +1125,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1485,7 +1202,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1557,7 +1274,7 @@
 	});
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1708,7 +1425,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1859,7 +1576,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1947,6 +1664,63 @@
 	L.control.colorBar = function (color, range, options) {
 	    return new L.Control.ColorBar(color, range, options);
 	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 *  Simple regular cell in a raster
+	 */
+	var Cell = function () {
+
+	  /**
+	   * A simple cell with value and size
+	   * @param {L.LatLng} center
+	   * @param {Number} value
+	   * @param {Number} size
+	   */
+	  function Cell(center, value, size) {
+	    _classCallCheck(this, Cell);
+
+	    this.center = center;
+	    this.value = value;
+	    this.size = size;
+	  }
+
+	  /**
+	   * Bounds for the cell
+	   * @returns {LatLngBounds}
+	   */
+
+
+	  _createClass(Cell, [{
+	    key: "getBounds",
+	    value: function getBounds() {
+	      var half = this.size / 2.0;
+	      var cLat = this.center.lat;
+	      var cLng = this.center.lng;
+	      var ul = L.latLng([cLat + half, cLng - half]);
+	      var lr = L.latLng([cLat - half, cLng + half]);
+
+	      return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+	    }
+	  }]);
+
+	  return Cell;
+	}();
+
+	exports.default = Cell;
 
 /***/ }
 /******/ ]);

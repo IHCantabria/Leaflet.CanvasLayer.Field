@@ -53,7 +53,54 @@ export default class Field {
      * @returns {Array<Cell>} - cells (x-ascending & y-descending order)
      */
     getCells() {
-        return this.getPyramid(1); // full pyramid level
+        let cells = [];
+        for (let j = 0; j < this.nRows; j++) {
+            for (let i = 0; i < this.nCols; i++) {
+                let [lon, lat] = this._lonLatAtIndexes(i, j);
+                let center = L.latLng(lat, lon);
+                let value = this._valueAtIndexes(i, j);
+                let c = new Cell(center, value, this.cellSize);
+                cells.push(c); // <<
+            }
+        }
+        return cells;
+    }
+
+    getPyramid(pyramidLevel) {
+        if (pyramidLevel === 1) return this;
+
+        let params = {};
+        params['nCols'] = this.nCols / pyramidLevel;
+        params['nRows'] = this.nRows / pyramidLevel;
+        params['xllCorner'] = this.xllCorner;
+        params['yllCorner'] = this.yllCorner;
+        params['cellSize'] = this.cellSize * pyramidLevel;
+
+        return this._completePyramidWithValues(pyramidLevel, params);
+    }
+
+    _completePyramidWithValues(pyramidLevel, params) {
+        let step = pyramidLevel; // 1 = all | 2 = a quarter...
+
+        let halfCell = params['cellSize'] / 2.0;
+        let centerLon = this.xllCorner + halfCell;
+        let centerLat = this.yurCorner - halfCell;
+
+        let lon = centerLon;
+        let lat = centerLat;
+
+        this._newDataArrays(params);
+        for (let j = 0; j < this.nRows / step; j++) {
+            for (let i = 0; i < this.nCols / step; i++) {
+                let value = this.interpolatedValueAt(lon, lat);
+                this._pushValueToArrays(params, value);
+                lon += params['cellSize'];
+            }
+            lat -= params['cellSize'];
+            lon = centerLon;
+        }
+
+        return this._makeNewFrom(params);
     }
 
     /**
@@ -61,15 +108,13 @@ export default class Field {
      * @param   {Number} pyramidLevel
      * @returns {Array<Cell>} - cells
      */
-    getPyramid(pyramidLevel) {
+    getOldPyramid(pyramidLevel) {
         // TODO implement cache
         console.time('getCellsFor');
 
         let step = pyramidLevel; // 1 = all | 2 = quarter part...
 
         let cellSize = (this.cellSize * step);
-        let cells = [];
-
         let halfCell = cellSize / 2.0;
         let centerLon = this.xllCorner + halfCell;
         let centerLat = this.yurCorner - halfCell;
@@ -77,9 +122,17 @@ export default class Field {
         let lon = centerLon;
         let lat = centerLat;
 
-        for (var j = 0; j < this.nRows / step; j++) {
-            for (var i = 0; i < this.nCols / step; i++) {
-                cells.push(this._getCellFor(lat, lon, cellSize)); // <<
+        let cells = [];
+        for (let j = 0; j < this.nRows / step; j++) {
+            for (let i = 0; i < this.nCols / step; i++) {
+                let f;
+                if (pyramidLevel === 1) {
+                    f = this.valueAt; // no interpolation
+                } else {
+                    f = this.interpolatedValueAt;
+                }
+                let c = this._getCellFor(lat, lon, cellSize, f);
+                cells.push(c); // <<
                 lon += cellSize;
             }
             lat -= cellSize;
@@ -88,14 +141,6 @@ export default class Field {
 
         console.timeEnd('getCellsFor');
         return cells;
-    }
-
-    _getCellFor(lat, lon, cellSize) {
-        //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
-        let center = L.latLng(lat, lon);
-        let value = this._interpolate(lon, lat);
-        let c = new Cell(center, value, cellSize);
-        return c;
     }
 
     /**
@@ -158,18 +203,116 @@ export default class Field {
     }
 
     /**
-     * Interpolated value at lon-lat coordinates
+     * Interpolated value at lon-lat coordinates (bilinear int.)
      * @param   {Number} longitude
      * @param   {Number} latitude
      * @returns {Vector|Number} [u, v, magnitude]
+     *                          
+     * Source: https://github.com/cambecc/earth > product.js
      */
-    valueAt(lon, lat) {
+    interpolatedValueAt(lon, lat) {
         if (this.notContains(lon, lat)) return null;
-        return this._interpolate(lon, lat);
+
+        //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
+        //        fi  i   ci          four points 'G' that enclose point (i, j). These points are at the four
+        //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
+        //      ---G--|---G--- fj 8   i = 1.4 and j = 8.3, the four surrounding grid points are (1, 8), (2, 8),
+        //    j ___|_ .   |           (1, 9) and (2, 9).
+        //  =8.3   |      |
+        //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
+        //         |      |           column, so the index ci can be used without taking a modulo.
+
+        let [i, j] = this._getDecimalIndexes(lon, lat);
+        let surroundingIndexes = this._getFourSurroundingIndexes(i, j);
+        let surroundingValues = this._getFourSurroundingValues(surroundingIndexes);
+        if (surroundingValues) {
+            let [fi, ci, fj, cj] = surroundingIndexes;
+            let [g00, g10, g01, g11] = surroundingValues;
+            return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
+        }
+        // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
+        return null;
     }
 
     /**
-     * Returns whether or not the grid has a value at the point
+     * Get decimal indexes, clampling on borders 
+     * @private
+     * @param {Number} lon
+     * @param {Number} lat
+     * @returns {Array}    [[Description]]
+     */
+    _getDecimalIndexes(lon, lat) {
+        let lon0 = this.xllCorner + (this.cellSize / 2.0);
+        let ii = (lon - lon0) / this.cellSize;
+        let i = this._clampColumnIndex(ii);
+
+        let lat0 = this.yurCorner - (this.cellSize / 2.0);
+        let jj = (lat0 - lat) / this.cellSize;
+        let j = this._clampRowIndex(jj);
+
+        return [i, j];
+    }
+
+    /**
+     * Get surrounding indexes (integer), clampling on borders
+     * @private
+     * @param   {Number} i - decimal index
+     * @param   {Number} j - decimal index
+     * @returns {Array} [fi, ci, fj, cj]
+     */
+    _getFourSurroundingIndexes(i, j) {
+        let fi = this._clampColumnIndex(Math.floor(i));
+        let ci = this._clampRowIndex(fi + 1);
+        let fj = this._clampColumnIndex(Math.floor(j));
+        let cj = this._clampRowIndex(fj + 1);
+        console.log(fi, ci, fj, cj);
+        return [fi, ci, fj, cj];
+    }
+
+    /**
+     * Get four surrounding values or null if not available,
+     * from 4 integer indexes
+     * @private
+     * @param   {Number} fi
+     * @param   {Number} ci
+     * @param   {Number} fj
+     * @param   {Number} cj
+     * @returns {Array} 
+     */
+    _getFourSurroundingValues(fi, ci, fj, cj) {
+        var row;
+        if ((row = this.grid[fj])) { // upper row ^^
+            var g00 = row[fi]; // << left
+            var g10 = row[ci]; // right >>
+            if (this._isValid(g00) && this._isValid(g10) && (row = this.grid[cj])) { // lower row vv
+                var g01 = row[fi]; // << left
+                var g11 = row[ci]; // right >>
+                if (this._isValid(g01) && this._isValid(g11)) {
+                    return [g00, g10, g01, g11]; // 4 values found!
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Nearest value at lon-lat coordinates
+     * @param   {Number} longitude
+     * @param   {Number} latitude
+     * @returns {Vector|Number}
+     */
+    valueAt(lon, lat) {
+        if (this.notContains(lon, lat)) return null;
+
+        let [i, j] = this._getDecimalIndexes(lon, lat);
+        let ii = Math.Floor(i);
+        let jj = Math.Floor(j);
+
+        return this._valueAtIndexes(ii, jj);
+    }
+
+    /**
+     * Returns whether or not the field has a value at the point
      * @param   {Number} lon - longitude
      * @param   {Number} lat - latitude
      * @returns {Boolean}
@@ -246,69 +389,25 @@ export default class Field {
     }
 
     /**
-     * Interpolate Value at a point
+     * Apply the interpolation
+     * @abstract
      * @private
      * @param {Number} lon - longitude
      * @param {Number} lat - latitude
      * @returns {Vector|Number}
-     *
-     * Source: https://github.com/cambecc/earth > product.js
-     * 
-     * TODO --> lat, lon order
      */
-    _interpolate(lon, lat) {
-        //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
-        //        fi  i   ci          four points 'G' that enclose point (i, j). These points are at the four
-        //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
-        //      ---G--|---G--- fj 8   i = 1.4 and j = 8.3, the four surrounding grid points are (1, 8), (2, 8),
-        //    j ___|_ .   |           (1, 9) and (2, 9).
-        //  =8.3   |      |
-        //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
-        //         |      |           column, so the index ci can be used without taking a modulo.
-
-        // indexes (decimals)
-        let lon0 = this.xllCorner + (this.cellSize / 2.0);
-        let ii = (lon - lon0) / this.cellSize;
-        let i = this._adjustColIndex(ii);
-
-        let lat0 = this.yurCorner - (this.cellSize / 2.0);
-        let jj = (lat0 - lat) / this.cellSize;
-        let j = this._adjustRowIndex(jj);
-
-        // indexes (integers), for the 4-surrounding cells to the point (i, j)...
-        let fi = this._adjustColIndex(Math.floor(i));
-        let ci = this._adjustRowIndex(fi + 1);
-        let fj = this._adjustColIndex(Math.floor(j));
-        let cj = this._adjustRowIndex(fj + 1);
-        console.log(fi, ci, fj, cj);
-
-        // values for the 4-cells
-        var row;
-        if ((row = this.grid[fj])) { // upper row ^^
-            var g00 = row[fi]; // << left
-            var g10 = row[ci]; // right >>
-            if (this._isValid(g00) && this._isValid(g10) && (row = this.grid[cj])) { // lower row vv
-                var g01 = row[fi]; // << left
-                var g11 = row[ci]; // right >>
-                if (this._isValid(g01) && this._isValid(g11)) {
-                    // 4 values found! --> interpolation
-                    //console.log(g00, g10, g01, g11);
-                    return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
-                }
-            }
-        }
-        // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
-        return null;
+    _doInterpolation(lon, lat) {
+        throw new TypeError('Must be overriden');
     }
 
     /**
      * Check the column index is inside the field,
-     * adjusting to min or max when needed (+1 or -1 pixels)
+     * adjusting to min or max when needed
      * @private
      * @param   {Number} ii - decimal index
      * @returns {Number} i - inside the allowed indexes
      */
-    _adjustColIndex(ii) {
+    _clampColumnIndex(ii) {
         let i = ii;
         if (ii < 0) {
             i = 0;
@@ -323,12 +422,12 @@ export default class Field {
 
     /**
      * Check the row index is inside the field,
-     * adjusting to min or max when needed (+1 or -1 pixels)
+     * adjusting to min or max when needed
      * @private
      * @param   {Number} jj decimal index
      * @returns {Number} j - inside the allowed indexes
      */
-    _adjustRowIndex(jj) {
+    _clampRowIndex(jj) {
         let j = jj;
         if (jj < 0) {
             j = 0;
@@ -339,18 +438,6 @@ export default class Field {
         }
 
         return j;
-    }
-
-    /**
-     * Interpolation method
-     * @abstract
-     * @private
-     * @param {Number} lon - longitude
-     * @param {Number} lat - latitude
-     * @returns {Vector|Number}
-     */
-    _doInterpolation(lon, lat) {
-        throw new TypeError('Must be overriden');
     }
 
     /**

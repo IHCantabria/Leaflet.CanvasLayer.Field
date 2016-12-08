@@ -48,7 +48,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         let lat = e.latlng.lat;
         let result = {
             latlng: e.latlng,
-            value: this.field.valueAt(lon, lat)
+            value: this.field.interpolatedValueAt(lon, lat)
         };
         this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
     },

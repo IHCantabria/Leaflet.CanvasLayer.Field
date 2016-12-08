@@ -41,6 +41,12 @@ export default class VectorField extends Field {
         this.range = this._calculateRange();
     }
 
+    /**
+     * Get a derived field, from a computation on 
+     * the VectorField
+     * @param   {String} type ['magnitude' | 'directionTo' | 'directionFrom']
+     * @returns {ScalarField}
+     */
     getScalarField(type) {
         let f = this._getFunctionFor(type);
         let p = {
@@ -98,6 +104,19 @@ export default class VectorField extends Field {
             grid[j] = row;
         }
         return grid;
+    }
+
+    _newDataArrays(params) {
+        params['us'] = [];
+        params['vs'] = [];
+
+    }
+    _pushValueToArrays(params, value) {
+        params['us'].push(value.u);
+        params['vs'].push(value.v);
+    }
+    _makeNewFrom(params) {
+        return new VectorField(params);
     }
 
     /**

@@ -50,19 +50,19 @@
 
 	var _Vector2 = _interopRequireDefault(_Vector);
 
-	var _Cell = __webpack_require__(2);
+	var _Cell = __webpack_require__(11);
 
 	var _Cell2 = _interopRequireDefault(_Cell);
 
-	var _Field = __webpack_require__(3);
+	var _Field = __webpack_require__(2);
 
 	var _Field2 = _interopRequireDefault(_Field);
 
-	var _ScalarField = __webpack_require__(4);
+	var _ScalarField = __webpack_require__(3);
 
 	var _ScalarField2 = _interopRequireDefault(_ScalarField);
 
-	var _VectorField = __webpack_require__(5);
+	var _VectorField = __webpack_require__(4);
 
 	var _VectorField2 = _interopRequireDefault(_VectorField);
 
@@ -81,14 +81,14 @@
 	window.L.VectorField = _VectorField2.default;
 
 	// layer
-	var L_CanvasLayer = __webpack_require__(6);
-	var L_CanvasLayer_SimpleLonLat = __webpack_require__(7);
-	var L_CanvasLayer_Field = __webpack_require__(8);
-	var L_CanvasLayer_ScalarField = __webpack_require__(9);
-	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(10);
+	var L_CanvasLayer = __webpack_require__(5);
+	var L_CanvasLayer_SimpleLonLat = __webpack_require__(6);
+	var L_CanvasLayer_Field = __webpack_require__(7);
+	var L_CanvasLayer_ScalarField = __webpack_require__(8);
+	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(9);
 
 	// control
-	var L_Control_ColorBar = __webpack_require__(11);
+	var L_Control_ColorBar = __webpack_require__(10);
 
 	// TODO - umd pattern?
 
@@ -194,68 +194,6 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 *  Simple regular cell in a raster
-	 */
-	var Cell = function () {
-
-	    /**
-	     * A simple cell with value and size
-	     * @param {L.LatLng} center
-	     * @param {Number} value
-	     * @param {Number} size
-	     */
-	    function Cell(center, value, size) {
-	        _classCallCheck(this, Cell);
-
-	        this.center = center;
-	        this.value = value;
-	        this.size = size;
-	    }
-
-	    _createClass(Cell, [{
-	        key: "equals",
-	        value: function equals(anotherCell) {
-	            return this.center.equals(anotherCell.center) && this.value === anotherCell.value && this.size === anotherCell.size;
-	        }
-
-	        /**
-	         * Bounds for the cell
-	         * @returns {LatLngBounds}
-	         */
-
-	    }, {
-	        key: "getBounds",
-	        value: function getBounds() {
-	            var half = this.size / 2.0;
-	            var cLat = this.center.lat;
-	            var cLng = this.center.lng;
-	            var ul = L.latLng([cLat + half, cLng - half]);
-	            var lr = L.latLng([cLat - half, cLng + half]);
-
-	            return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
-	        }
-	    }]);
-
-	    return Cell;
-	}();
-
-	exports.default = Cell;
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -264,11 +202,9 @@
 	    value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Cell = __webpack_require__(2);
+	var _Cell = __webpack_require__(11);
 
 	var _Cell2 = _interopRequireDefault(_Cell);
 
@@ -340,62 +276,7 @@
 	    }, {
 	        key: 'getCells',
 	        value: function getCells() {
-	            var cells = [];
-	            for (var j = 0; j < this.nRows; j++) {
-	                for (var i = 0; i < this.nCols; i++) {
-	                    var _lonLatAtIndexes2 = this._lonLatAtIndexes(i, j);
-
-	                    var _lonLatAtIndexes3 = _slicedToArray(_lonLatAtIndexes2, 2);
-
-	                    var lon = _lonLatAtIndexes3[0];
-	                    var lat = _lonLatAtIndexes3[1];
-
-	                    var center = L.latLng(lat, lon);
-	                    var value = this._valueAtIndexes(i, j);
-	                    var c = new _Cell2.default(center, value, this.cellSize);
-	                    cells.push(c); // <<
-	                }
-	            }
-	            return cells;
-	        }
-	    }, {
-	        key: 'getPyramid',
-	        value: function getPyramid(pyramidLevel) {
-	            if (pyramidLevel === 1) return this;
-
-	            var params = {};
-	            params['nCols'] = this.nCols / pyramidLevel;
-	            params['nRows'] = this.nRows / pyramidLevel;
-	            params['xllCorner'] = this.xllCorner;
-	            params['yllCorner'] = this.yllCorner;
-	            params['cellSize'] = this.cellSize * pyramidLevel;
-
-	            return this._completePyramidWithValues(pyramidLevel, params);
-	        }
-	    }, {
-	        key: '_completePyramidWithValues',
-	        value: function _completePyramidWithValues(pyramidLevel, params) {
-	            var step = pyramidLevel; // 1 = all | 2 = a quarter...
-
-	            var halfCell = params['cellSize'] / 2.0;
-	            var centerLon = this.xllCorner + halfCell;
-	            var centerLat = this.yurCorner - halfCell;
-
-	            var lon = centerLon;
-	            var lat = centerLat;
-
-	            this._newDataArrays(params);
-	            for (var j = 0; j < this.nRows / step; j++) {
-	                for (var i = 0; i < this.nCols / step; i++) {
-	                    var value = this.interpolatedValueAt(lon, lat);
-	                    this._pushValueToArrays(params, value);
-	                    lon += params['cellSize'];
-	                }
-	                lat -= params['cellSize'];
-	                lon = centerLon;
-	            }
-
-	            return this._makeNewFrom(params);
+	            return this.getPyramid(1); // full pyramid level
 	        }
 
 	        /**
@@ -405,14 +286,16 @@
 	         */
 
 	    }, {
-	        key: 'getOldPyramid',
-	        value: function getOldPyramid(pyramidLevel) {
+	        key: 'getPyramid',
+	        value: function getPyramid(pyramidLevel) {
 	            // TODO implement cache
 	            console.time('getCellsFor');
 
 	            var step = pyramidLevel; // 1 = all | 2 = quarter part...
 
 	            var cellSize = this.cellSize * step;
+	            var cells = [];
+
 	            var halfCell = cellSize / 2.0;
 	            var centerLon = this.xllCorner + halfCell;
 	            var centerLat = this.yurCorner - halfCell;
@@ -420,17 +303,9 @@
 	            var lon = centerLon;
 	            var lat = centerLat;
 
-	            var cells = [];
 	            for (var j = 0; j < this.nRows / step; j++) {
 	                for (var i = 0; i < this.nCols / step; i++) {
-	                    var f = void 0;
-	                    if (pyramidLevel === 1) {
-	                        f = this.valueAt; // no interpolation
-	                    } else {
-	                        f = this.interpolatedValueAt;
-	                    }
-	                    var c = this._getCellFor(lat, lon, cellSize, f);
-	                    cells.push(c); // <<
+	                    cells.push(this._getCellFor(lat, lon, cellSize)); // <<
 	                    lon += cellSize;
 	                }
 	                lat -= cellSize;
@@ -439,6 +314,15 @@
 
 	            console.timeEnd('getCellsFor');
 	            return cells;
+	        }
+	    }, {
+	        key: '_getCellFor',
+	        value: function _getCellFor(lat, lon, cellSize) {
+	            //let v = this._valueAtIndexes(i, j); // <<< valueAt i,j (vector or scalar) // TODO
+	            var center = L.latLng(lat, lon);
+	            var value = this._interpolate(lon, lat);
+	            var c = new _Cell2.default(center, value, cellSize);
+	            return c;
 	        }
 
 	        /**
@@ -512,154 +396,43 @@
 	        }
 
 	        /**
-	         * Interpolated value at lon-lat coordinates (bilinear int.)
+	         * Interpolated value at lon-lat coordinates
 	         * @param   {Number} longitude
 	         * @param   {Number} latitude
 	         * @returns {Vector|Number} [u, v, magnitude]
-	         *                          
-	         * Source: https://github.com/cambecc/earth > product.js
 	         */
 
 	    }, {
 	        key: 'interpolatedValueAt',
 	        value: function interpolatedValueAt(lon, lat) {
 	            if (this.notContains(lon, lat)) return null;
-
-	            //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
-	            //        fi  i   ci          four points 'G' that enclose point (i, j). These points are at the four
-	            //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
-	            //      ---G--|---G--- fj 8   i = 1.4 and j = 8.3, the four surrounding grid points are (1, 8), (2, 8),
-	            //    j ___|_ .   |           (1, 9) and (2, 9).
-	            //  =8.3   |      |
-	            //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
-	            //         |      |           column, so the index ci can be used without taking a modulo.
-
-	            var _getDecimalIndexes2 = this._getDecimalIndexes(lon, lat);
-
-	            var _getDecimalIndexes3 = _slicedToArray(_getDecimalIndexes2, 2);
-
-	            var i = _getDecimalIndexes3[0];
-	            var j = _getDecimalIndexes3[1];
-
-	            var surroundingIndexes = this._getFourSurroundingIndexes(i, j);
-	            var surroundingValues = this._getFourSurroundingValues(surroundingIndexes);
-	            if (surroundingValues) {
-	                var _surroundingIndexes = _slicedToArray(surroundingIndexes, 4);
-
-	                var fi = _surroundingIndexes[0];
-	                var ci = _surroundingIndexes[1];
-	                var fj = _surroundingIndexes[2];
-	                var cj = _surroundingIndexes[3];
-
-	                var _surroundingValues = _slicedToArray(surroundingValues, 4);
-
-	                var g00 = _surroundingValues[0];
-	                var g10 = _surroundingValues[1];
-	                var g01 = _surroundingValues[2];
-	                var g11 = _surroundingValues[3];
-
-	                return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
-	            }
-	            // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
-	            return null;
-	        }
-
-	        /**
-	         * Get decimal indexes, clampling on borders 
-	         * @private
-	         * @param {Number} lon
-	         * @param {Number} lat
-	         * @returns {Array}    [[Description]]
-	         */
-
-	    }, {
-	        key: '_getDecimalIndexes',
-	        value: function _getDecimalIndexes(lon, lat) {
-	            var lon0 = this.xllCorner + this.cellSize / 2.0;
-	            var ii = (lon - lon0) / this.cellSize;
-	            var i = this._clampColumnIndex(ii);
-
-	            var lat0 = this.yurCorner - this.cellSize / 2.0;
-	            var jj = (lat0 - lat) / this.cellSize;
-	            var j = this._clampRowIndex(jj);
-
-	            return [i, j];
-	        }
-
-	        /**
-	         * Get surrounding indexes (integer), clampling on borders
-	         * @private
-	         * @param   {Number} i - decimal index
-	         * @param   {Number} j - decimal index
-	         * @returns {Array} [fi, ci, fj, cj]
-	         */
-
-	    }, {
-	        key: '_getFourSurroundingIndexes',
-	        value: function _getFourSurroundingIndexes(i, j) {
-	            var fi = this._clampColumnIndex(Math.floor(i));
-	            var ci = this._clampRowIndex(fi + 1);
-	            var fj = this._clampColumnIndex(Math.floor(j));
-	            var cj = this._clampRowIndex(fj + 1);
-	            console.log(fi, ci, fj, cj);
-	            return [fi, ci, fj, cj];
-	        }
-
-	        /**
-	         * Get four surrounding values or null if not available,
-	         * from 4 integer indexes
-	         * @private
-	         * @param   {Number} fi
-	         * @param   {Number} ci
-	         * @param   {Number} fj
-	         * @param   {Number} cj
-	         * @returns {Array} 
-	         */
-
-	    }, {
-	        key: '_getFourSurroundingValues',
-	        value: function _getFourSurroundingValues(fi, ci, fj, cj) {
-	            var row;
-	            if (row = this.grid[fj]) {
-	                // upper row ^^
-	                var g00 = row[fi]; // << left
-	                var g10 = row[ci]; // right >>
-	                if (this._isValid(g00) && this._isValid(g10) && (row = this.grid[cj])) {
-	                    // lower row vv
-	                    var g01 = row[fi]; // << left
-	                    var g11 = row[ci]; // right >>
-	                    if (this._isValid(g01) && this._isValid(g11)) {
-	                        return [g00, g10, g01, g11]; // 4 values found!
-	                    }
-	                }
-	            }
-	            return null;
+	            return this._interpolate(lon, lat);
 	        }
 
 	        /**
 	         * Nearest value at lon-lat coordinates
 	         * @param   {Number} longitude
 	         * @param   {Number} latitude
-	         * @returns {Vector|Number}
+	         * @returns {Vector|Number} [u, v, magnitude]
 	         */
 
 	    }, {
 	        key: 'valueAt',
 	        value: function valueAt(lon, lat) {
 	            if (this.notContains(lon, lat)) return null;
-
-	            var _getDecimalIndexes4 = this._getDecimalIndexes(lon, lat);
-
-	            var _getDecimalIndexes5 = _slicedToArray(_getDecimalIndexes4, 2);
-
-	            var i = _getDecimalIndexes5[0];
-	            var j = _getDecimalIndexes5[1];
-
-	            var ii = Math.Floor(i);
-	            var jj = Math.Floor(j);
-
-	            return this._valueAtIndexes(ii, jj);
+	            return this._interpolate(lon, lat);
 	        }
+
+	        /**
+	         * Interpolated value at lon-lat coordinates
+	         * @param   {Number} longitude
+	         * @param   {Number} latitude
+	         * @returns {Vector|Number} [u, v, magnitude]
+	         */
+	        /*interpolatedValueAt(lon, lat) {
+	            if (this.notContains(lon, lat)) return null;
+	            return this._interpolate(lon, lat);
+	        }*/
 
 	        /**
 	         * Returns whether or not the field has a value at the point
@@ -671,7 +444,7 @@
 	    }, {
 	        key: 'hasValueAt',
 	        value: function hasValueAt(lon, lat) {
-	            return this.valueAt(lon, lat) !== null;
+	            return this.interpolatedValueAt(lon, lat) !== null;
 	        }
 
 	        /**
@@ -762,18 +535,64 @@
 	        }
 
 	        /**
-	         * Apply the interpolation
-	         * @abstract
+	         * Interpolate Value at a point
 	         * @private
 	         * @param {Number} lon - longitude
 	         * @param {Number} lat - latitude
 	         * @returns {Vector|Number}
+	         *
+	         * Source: https://github.com/cambecc/earth > product.js
+	         * 
+	         * TODO --> lat, lon order
 	         */
 
 	    }, {
-	        key: '_doInterpolation',
-	        value: function _doInterpolation(lon, lat) {
-	            throw new TypeError('Must be overriden');
+	        key: '_interpolate',
+	        value: function _interpolate(lon, lat) {
+	            //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
+	            //        fi  i   ci          four points 'G' that enclose point (i, j). These points are at the four
+	            //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
+	            //      ---G--|---G--- fj 8   i = 1.4 and j = 8.3, the four surrounding grid points are (1, 8), (2, 8),
+	            //    j ___|_ .   |           (1, 9) and (2, 9).
+	            //  =8.3   |      |
+	            //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
+	            //         |      |           column, so the index ci can be used without taking a modulo.
+
+	            // indexes (decimals)
+	            var lon0 = this.xllCorner + this.cellSize / 2.0;
+	            var ii = (lon - lon0) / this.cellSize;
+	            var i = this._clampColumnIndex(ii);
+
+	            var lat0 = this.yurCorner - this.cellSize / 2.0;
+	            var jj = (lat0 - lat) / this.cellSize;
+	            var j = this._clampRowIndex(jj);
+
+	            // indexes (integers), for the 4-surrounding cells to the point (i, j)...
+	            var fi = this._clampColumnIndex(Math.floor(i));
+	            var ci = this._clampRowIndex(fi + 1);
+	            var fj = this._clampColumnIndex(Math.floor(j));
+	            var cj = this._clampRowIndex(fj + 1);
+	            console.log(fi, ci, fj, cj);
+
+	            // values for the 4-cells
+	            var row;
+	            if (row = this.grid[fj]) {
+	                // upper row ^^
+	                var g00 = row[fi]; // << left
+	                var g10 = row[ci]; // right >>
+	                if (this._isValid(g00) && this._isValid(g10) && (row = this.grid[cj])) {
+	                    // lower row vv
+	                    var g01 = row[fi]; // << left
+	                    var g11 = row[ci]; // right >>
+	                    if (this._isValid(g01) && this._isValid(g11)) {
+	                        // 4 values found! --> interpolation
+	                        //console.log(g00, g10, g01, g11);
+	                        return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
+	                    }
+	                }
+	            }
+	            // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
+	            return null;
 	        }
 
 	        /**
@@ -823,6 +642,21 @@
 	        }
 
 	        /**
+	         * Apply an interpolation
+	         * @abstract
+	         * @private
+	         * @param {Number} lon - longitude
+	         * @param {Number} lat - latitude
+	         * @returns {Vector|Number}
+	         */
+
+	    }, {
+	        key: '_doInterpolation',
+	        value: function _doInterpolation(lon, lat) {
+	            throw new TypeError('Must be overriden');
+	        }
+
+	        /**
 	         * Is valid (not 'null' nor 'undefined')
 	         * @private
 	         * @param   {Object} x object
@@ -842,7 +676,7 @@
 	exports.default = Field;
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -853,7 +687,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Field2 = __webpack_require__(3);
+	var _Field2 = __webpack_require__(2);
 
 	var _Field3 = _interopRequireDefault(_Field2);
 
@@ -980,21 +814,6 @@
 	            }
 	            return grid;
 	        }
-	    }, {
-	        key: '_newDataArrays',
-	        value: function _newDataArrays(params) {
-	            params['zs'] = [];
-	        }
-	    }, {
-	        key: '_pushValueToArrays',
-	        value: function _pushValueToArrays(params, value) {
-	            params['zs'].push(value);
-	        }
-	    }, {
-	        key: '_makeNewFrom',
-	        value: function _makeNewFrom(params) {
-	            return new ScalarField(params);
-	        }
 
 	        /**
 	         * Calculate min & max values
@@ -1035,7 +854,7 @@
 	exports.default = ScalarField;
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1050,11 +869,11 @@
 
 	var _Vector2 = _interopRequireDefault(_Vector);
 
-	var _Field2 = __webpack_require__(3);
+	var _Field2 = __webpack_require__(2);
 
 	var _Field3 = _interopRequireDefault(_Field2);
 
-	var _ScalarField = __webpack_require__(4);
+	var _ScalarField = __webpack_require__(3);
 
 	var _ScalarField2 = _interopRequireDefault(_ScalarField);
 
@@ -1114,14 +933,6 @@
 	        _this.range = _this._calculateRange();
 	        return _this;
 	    }
-
-	    /**
-	     * Get a derived field, from a computation on 
-	     * the VectorField
-	     * @param   {String} type ['magnitude' | 'directionTo' | 'directionFrom']
-	     * @returns {ScalarField}
-	     */
-
 
 	    _createClass(VectorField, [{
 	        key: 'getScalarField',
@@ -1189,23 +1000,6 @@
 	            }
 	            return grid;
 	        }
-	    }, {
-	        key: '_newDataArrays',
-	        value: function _newDataArrays(params) {
-	            params['us'] = [];
-	            params['vs'] = [];
-	        }
-	    }, {
-	        key: '_pushValueToArrays',
-	        value: function _pushValueToArrays(params, value) {
-	            params['us'].push(value.u);
-	            params['vs'].push(value.v);
-	        }
-	    }, {
-	        key: '_makeNewFrom',
-	        value: function _makeNewFrom(params) {
-	            return new VectorField(params);
-	        }
 
 	        /**
 	         * Calculate min & max values (magnitude)
@@ -1264,7 +1058,7 @@
 	exports.default = VectorField;
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1408,7 +1202,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1485,7 +1279,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1557,7 +1351,7 @@
 	});
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1708,7 +1502,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1859,7 +1653,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1947,6 +1741,63 @@
 	L.control.colorBar = function (color, range, options) {
 	    return new L.Control.ColorBar(color, range, options);
 	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 *  Simple regular cell in a raster
+	 */
+	var Cell = function () {
+
+	  /**
+	   * A simple cell with value and size
+	   * @param {L.LatLng} center
+	   * @param {Number} value
+	   * @param {Number} size
+	   */
+	  function Cell(center, value, size) {
+	    _classCallCheck(this, Cell);
+
+	    this.center = center;
+	    this.value = value;
+	    this.size = size;
+	  }
+
+	  /**
+	   * Bounds for the cell
+	   * @returns {LatLngBounds}
+	   */
+
+
+	  _createClass(Cell, [{
+	    key: "getBounds",
+	    value: function getBounds() {
+	      var half = this.size / 2.0;
+	      var cLat = this.center.lat;
+	      var cLng = this.center.lng;
+	      var ul = L.latLng([cLat + half, cLng - half]);
+	      var lr = L.latLng([cLat - half, cLng + half]);
+
+	      return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
+	    }
+	  }]);
+
+	  return Cell;
+	}();
+
+	exports.default = Cell;
 
 /***/ }
 /******/ ]);

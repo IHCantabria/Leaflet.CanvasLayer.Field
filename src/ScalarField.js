@@ -94,6 +94,18 @@ export default class ScalarField extends Field {
         return grid;
     }
 
+    _newDataArrays(params) {
+        params['zs'] = [];
+    }
+
+    _pushValueToArrays(params, value) {
+        params['zs'].push(value);
+    }
+
+    _makeNewFrom(params) {
+        return new ScalarField(params);
+    }
+
     /**
      * Calculate min & max values
      * @private

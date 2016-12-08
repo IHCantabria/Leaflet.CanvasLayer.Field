@@ -29,22 +29,22 @@ describe('VectorField', function () {
 
     it('can return an interpolated value for a (lon, lat)', function () {
         // near the center of the LL cell [up & right]
-        let pNearLL = vf.valueAt(-3.76921724303, 43.4605948227);
+        let pNearLL = vf.interpolatedValueAt(-3.76921724303, 43.4605948227);
         expect(pNearLL.u).toBeCloseTo(0.00586759205907583, 4);
         expect(pNearLL.v).toBeCloseTo(-0.00329965655691922, 4);
 
         // near the center of the UL cell [down & right]
-        let pNearUL = vf.valueAt(-3.76921740247, 43.4651398993);
+        let pNearUL = vf.interpolatedValueAt(-3.76921740247, 43.4651398993);
         expect(pNearUL.u).toBeCloseTo(0.01127532590180643, 4);
         expect(pNearUL.v).toBeCloseTo(-0.00354065117426217, 4);
 
         // near the center of the UR cell [down & left]
-        let pNearUR = vf.valueAt(-3.76467191838, 43.4651400146);
+        let pNearUR = vf.interpolatedValueAt(-3.76467191838, 43.4651400146);
         expect(pNearUR.u).toBeCloseTo(0.215018898248672, 4);
         expect(pNearUR.v).toBeCloseTo(-0.00158081843983382, 4);
 
         // near the center of the LR cell [up & left]
-        let pNearLR = vf.valueAt(-3.76467191746, 43.4605944395);
+        let pNearLR = vf.interpolatedValueAt(-3.76467191746, 43.4605944395);
         expect(pNearLR.u).toBeCloseTo(0.148510053753853, 4);
         expect(pNearLR.v).toBeCloseTo(-0.0152796721085906, 4);
     });

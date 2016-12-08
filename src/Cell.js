@@ -15,14 +15,23 @@ export default class Cell {
         this.size = size;
     }
 
+    equals(anotherCell) {
+        return (this.center.equals(anotherCell.center) &&
+            this.value === anotherCell.value &&
+            this.size === anotherCell.size
+        );
+    }
+
     /**
      * Bounds for the cell
      * @returns {LatLngBounds}
      */
     getBounds() {
         let half = this.size / 2.0;
-        let ul = L.latLng([this.center.lat + half, this.center.lon - half]);
-        let lr = L.latLng([this.center.lat - half, this.center.lon + half]);
+        let cLat = this.center.lat;
+        let cLng = this.center.lng;
+        let ul = L.latLng([cLat + half, cLng - half]);
+        let lr = L.latLng([cLat - half, cLng + half]);
 
         return L.latLngBounds(L.latLng(lr.lat, ul.lng), L.latLng(ul.lat, lr.lng));
     }

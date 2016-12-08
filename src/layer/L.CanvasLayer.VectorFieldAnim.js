@@ -57,7 +57,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                     par.age = self.options.maxAge;
                 } else {
                     // has a vector...
-                    let vector = self.field.valueAt(par.x, par.y);
+                    let vector = self.field.interpolatedValueAt(par.x, par.y);
                     // ... and the next point will be...
                     let xt = par.x + (vector.u * self.options.velocityScale);
                     let yt = par.y + (vector.v * self.options.velocityScale);
