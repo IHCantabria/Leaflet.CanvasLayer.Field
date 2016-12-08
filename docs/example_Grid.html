@@ -36,8 +36,8 @@
         d3.text('data/Bay_U.asc', function(u) {
             d3.text('data/Bay_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v);
-
-                let layer = L.canvasLayer.simpleLonLat(vf.gridLonLatValue(), {
+                let points = vf.getCells().map(c=> c.center);
+                let layer = L.canvasLayer.simpleLonLat(points, {
                     color: '#00FF48'
                 }).addTo(map);
 

@@ -1,13 +1,15 @@
 /**
  *  Simple layer with lon-lat points
+ *
+ *  TODO rename to SimplePoint?
  */
 L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
     options: {
         color: 'gray'
     },
 
-    initialize: function (lonslats, options) {
-        this.lonslats = lonslats;
+    initialize: function (points, options) {
+        this.points = points;
         L.Util.setOptions(this, options);
     },
 
@@ -30,10 +32,8 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
         g.fillStyle = this.options.color;
 
-        let ptos = this.lonslats;
-        for (var i = 0; i < ptos.length; i++) {
-            let lonlat = ptos[i];
-            let p = viewInfo.layer._map.latLngToContainerPoint([lonlat.lat, lonlat.lon]);
+        for(let point of this.points){
+            let p = viewInfo.layer._map.latLngToContainerPoint(point);
             g.beginPath();
             //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
             g.fillRect(p.x, p.y, 2, 2); //simple point
@@ -44,8 +44,9 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
     },
 
     getBounds: function () {
-        let xs = this.lonslats.map(pt => pt.lon);
-        let ys = this.lonslats.map(pt => pt.lat);
+        // TODO: bounding with points...
+        let xs = this.points.map(pt => pt.lng);
+        let ys = this.points.map(pt => pt.lat);
 
         let xmin = Math.min(...xs);
         let ymin = Math.min(...ys);
@@ -54,7 +55,7 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
 
         let southWest = L.latLng(ymin, xmin),
             northEast = L.latLng(ymax, xmax);
-        let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pix?
+        let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pixel?
         return bounds;
     }
 });

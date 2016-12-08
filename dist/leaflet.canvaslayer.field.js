@@ -1430,14 +1430,16 @@
 
 	/**
 	 *  Simple layer with lon-lat points
+	 *
+	 *  TODO rename to SimplePoint?
 	 */
 	L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
 	    options: {
 	        color: 'gray'
 	    },
 
-	    initialize: function initialize(lonslats, options) {
-	        this.lonslats = lonslats;
+	    initialize: function initialize(points, options) {
+	        this.points = points;
 	        L.Util.setOptions(this, options);
 	    },
 
@@ -1460,24 +1462,44 @@
 	        g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
 	        g.fillStyle = this.options.color;
 
-	        var ptos = this.lonslats;
-	        for (var i = 0; i < ptos.length; i++) {
-	            var lonlat = ptos[i];
-	            var p = viewInfo.layer._map.latLngToContainerPoint([lonlat.lat, lonlat.lon]);
-	            g.beginPath();
-	            //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
-	            g.fillRect(p.x, p.y, 2, 2); //simple point
-	            g.fill();
-	            g.closePath();
-	            g.stroke();
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+
+	        try {
+	            for (var _iterator = this.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                var point = _step.value;
+
+	                var p = viewInfo.layer._map.latLngToContainerPoint(point);
+	                g.beginPath();
+	                //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
+	                g.fillRect(p.x, p.y, 2, 2); //simple point
+	                g.fill();
+	                g.closePath();
+	                g.stroke();
+	            }
+	        } catch (err) {
+	            _didIteratorError = true;
+	            _iteratorError = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion && _iterator.return) {
+	                    _iterator.return();
+	                }
+	            } finally {
+	                if (_didIteratorError) {
+	                    throw _iteratorError;
+	                }
+	            }
 	        }
 	    },
 
 	    getBounds: function getBounds() {
-	        var xs = this.lonslats.map(function (pt) {
-	            return pt.lon;
+	        // TODO: bounding with points...
+	        var xs = this.points.map(function (pt) {
+	            return pt.lng;
 	        });
-	        var ys = this.lonslats.map(function (pt) {
+	        var ys = this.points.map(function (pt) {
 	            return pt.lat;
 	        });
 
@@ -1488,7 +1510,7 @@
 
 	        var southWest = L.latLng(ymin, xmin),
 	            northEast = L.latLng(ymax, xmax);
-	        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pix?
+	        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pixel?
 	        return bounds;
 	    }
 	});
@@ -1601,8 +1623,8 @@
 	        console.time('onDrawLayer');
 
 	        var level = this._pyramidLevelFor(viewInfo);
-	        var cells = this.field.getPyramid(level);
-	        var cellsOnScreen = cells.filter(function (c) {
+	        var p = this.field.getPyramid(level);
+	        var cellsOnScreen = p.getCells().filter(function (c) {
 	            return viewInfo.bounds.intersects(c.getBounds());
 	        });
 	        this._draw(cellsOnScreen);

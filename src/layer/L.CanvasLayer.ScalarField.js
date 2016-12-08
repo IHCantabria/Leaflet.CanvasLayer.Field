@@ -24,8 +24,8 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         console.time('onDrawLayer');
 
         let level = this._pyramidLevelFor(viewInfo);
-        let cells = this.field.getPyramid(level);
-        let cellsOnScreen = cells.filter(c => viewInfo.bounds.intersects(c.getBounds()));
+        let p = this.field.getPyramid(level);
+        let cellsOnScreen = p.getCells().filter(c => viewInfo.bounds.intersects(c.getBounds()));
         this._draw(cellsOnScreen);
 
         console.timeEnd('onDrawLayer');
