@@ -24,35 +24,35 @@ describe('ScalarField', function () {
         expect(sf._valueAtIndexes(9, 9)).toEqual(0.14851005375385284);
     });
 
-    it('can return an interpolated value for a (lon, lat)', function () {
+    it('can return the value for a (lon, lat)', function () {
         /* Testing 2 points for each corner
             a) near the center of the cell
             b) near the edges
         */
 
         // LL
-        let pNearLL = sf.interpolatedValueAt(-3.76921724303, 43.4605948227);
-        let ll = sf.interpolatedValueAt(-3.76944, 43.46038);
+        let pNearLL = sf.valueAt(-3.76921724303, 43.4605948227);
+        let ll = sf.valueAt(-3.76944, 43.46038);
         let llValue = 0.00586759205907583;
         expect(pNearLL).toBeCloseTo(llValue, 4);
         expect(ll).toBeCloseTo(llValue, 4);
 
         // UL
-        let pNearUL = sf.interpolatedValueAt(-3.76921740247, 43.4651398993);
-        let ul = sf.interpolatedValueAt(-3.76945, 43.46537);
+        let pNearUL = sf.valueAt(-3.76921740247, 43.4651398993);
+        let ul = sf.valueAt(-3.76945, 43.46537);
         let ulValue = 0.01127532590180643;
         expect(pNearUL).toBeCloseTo(ulValue, 4);
         expect(ul).toBeCloseTo(ulValue, 4);
 
         // UR
-        let pNearUR = sf.interpolatedValueAt(-3.76467191838, 43.4651400146);
-        let ur = sf.interpolatedValueAt(-3.76447, 43.46534);
+        let pNearUR = sf.valueAt(-3.76467191838, 43.4651400146);
+        let ur = sf.valueAt(-3.76447, 43.46534);
         let urValue = 0.215018898248672;
         expect(pNearUR).toBeCloseTo(urValue, 4);
 
         // LR
-        let pNearLR = sf.interpolatedValueAt(-3.76467191746, 43.4605944395);
-        let lr = sf.interpolatedValueAt(-3.76443, 43.46036);
+        let pNearLR = sf.valueAt(-3.76467191746, 43.4605944395);
+        let lr = sf.valueAt(-3.76443, 43.46036);
         let lrValue = 0.148510053753853;
         expect(pNearLR).toBeCloseTo(lrValue, 4);
     });
