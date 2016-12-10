@@ -263,7 +263,7 @@ export default class Field {
         let ci = this._clampRowIndex(fi + 1);
         let fj = this._clampColumnIndex(Math.floor(j));
         let cj = this._clampRowIndex(fj + 1);
-        console.log(fi, ci, fj, cj);
+        //console.log(fi, ci, fj, cj);
         return [fi, ci, fj, cj];
     }
 

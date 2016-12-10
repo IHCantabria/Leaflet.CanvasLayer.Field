@@ -610,7 +610,7 @@
 	            var ci = this._clampRowIndex(fi + 1);
 	            var fj = this._clampColumnIndex(Math.floor(j));
 	            var cj = this._clampRowIndex(fj + 1);
-	            console.log(fi, ci, fj, cj);
+	            //console.log(fi, ci, fj, cj);
 	            return [fi, ci, fj, cj];
 	        }
 
@@ -1802,12 +1802,11 @@
 	                    self.field.randomPosition(par);
 	                }
 
-	                if (self.field.notHasValueAt(par.x, par.y)) {
+	                var vector = self.field.valueAt(par.x, par.y);
+	                if (vector === null) {
 	                    par.age = self.options.maxAge;
 	                } else {
-	                    // has a vector...
-	                    var vector = self.field.interpolatedValueAt(par.x, par.y);
-	                    // ... and the next point will be...
+	                    // the next point will be...
 	                    var xt = par.x + vector.u * self.options.velocityScale;
 	                    var yt = par.y + vector.v * self.options.velocityScale;
 
@@ -1816,8 +1815,8 @@
 	                        par.yt = yt;
 	                        par.m = vector.magnitude();
 	                    } else {
-	                        // not visible... keep moving?
-	                        par.age = self.options.maxAge; // ??
+	                        // not visible...
+	                        par.age = self.options.maxAge;
 	                    }
 	                }
 	                par.age += 1;

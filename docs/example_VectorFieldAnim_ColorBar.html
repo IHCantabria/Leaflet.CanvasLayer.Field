@@ -50,8 +50,9 @@
 
                 // Layer
                 var layer = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 2000,
                     color: scale,
-                    velocityScale: 1 / 500
+                    velocityScale: 1 / 400
                 }).addTo(map);
                 map.fitBounds(layer.getBounds());
 
