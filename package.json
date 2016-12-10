@@ -1,7 +1,7 @@
 {
-    "name": "leaflet-canvaslayer-vectorfield",
+    "name": "leaflet-canvaslayer-field",
     "version": "1.0.0",
-    "description": "A set of layers including an animated layer representing a vector field (wind, currents...), a 'raster' layer from an ASCIIGRid file and more",
+    "description": "A set of layers on canvas, including a 'raster' layer from an ASCIIGRid file, an animated layer representing a vector field (wind, currents...),  and more",
     "main": "index.js",
     "directories": {
         "test": "test"
