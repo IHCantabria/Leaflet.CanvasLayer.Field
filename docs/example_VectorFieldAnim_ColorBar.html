@@ -64,7 +64,7 @@
 
                 // info
                 layer.on('click', function(e) {
-                    if (e.value) {
+                    if (e.value !== null) {
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
                         let d = vector.directionTo().toFixed(0);

@@ -242,12 +242,10 @@ export default class Field {
      * @returns {Array}    [[Description]]
      */
     _getDecimalIndexes(lon, lat) {
-        let lon0 = this.xllCorner + (this.cellSize / 2.0);
-        let ii = (lon - lon0) / this.cellSize;
+        let ii = (lon - this.xllCorner) / this.cellSize;
         let i = this._clampColumnIndex(ii);
 
-        let lat0 = this.yurCorner - (this.cellSize / 2.0);
-        let jj = (lat0 - lat) / this.cellSize;
+        let jj = (this.yurCorner - lat) / this.cellSize;
         let j = this._clampRowIndex(jj);
 
         return [i, j];
@@ -305,8 +303,8 @@ export default class Field {
         if (this.notContains(lon, lat)) return null;
 
         let [i, j] = this._getDecimalIndexes(lon, lat);
-        let ii = Math.Floor(i);
-        let jj = Math.Floor(j);
+        let ii = Math.floor(i);
+        let jj = Math.floor(j);
 
         return this._valueAtIndexes(ii, jj);
     }
