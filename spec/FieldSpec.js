@@ -84,6 +84,15 @@ describe('Field', function () {
         expect(f.hasValueAt(lon, lat)).toBe(false);
     });
 
+    it('can return its resolutions (m/pixel)', function () {
+        let res = f.getResolutions();
+        expect(res).not.toBe(null);
+
+        let r1 = f.cellSize;
+        expect(res[0]).toBe(r1);
+
+    });
+
     it('can return its pyramids (max)', function () {
         let ps = f.getPyramidLevels();
         expect(ps.length).toBe(4);
@@ -91,5 +100,9 @@ describe('Field', function () {
         expect(ps[0]).toBe(1);
         expect(ps[1]).toBe(2);
     });
+
+    it('can return its resolutions', function () {
+
+    })
 
 });

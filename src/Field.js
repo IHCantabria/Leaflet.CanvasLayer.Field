@@ -66,6 +66,21 @@ export default class Field {
         return cells;
     }
 
+    /**
+     * A full list with possible pyramid levels
+     * @returns {[[Type]]} [[Description]]
+     */
+    getPyramidLevels() {
+        let pyramids = [];
+
+        let p = 1;
+        while (this.nCols / p > 1) {
+            pyramids.push(p);
+            p = p * 2;
+        }
+        return pyramids;
+    }
+
     getPyramid(pyramidLevel) {
         if (pyramidLevel === 1) return this;
 
@@ -77,6 +92,10 @@ export default class Field {
         params['cellSize'] = this.cellSize * pyramidLevel;
 
         return this._completePyramidWithValues(pyramidLevel, params);
+    }
+
+    _getResolutionForPyramid(pyramidLevel) {
+        return null;
     }
 
     _completePyramidWithValues(pyramidLevel, params) {
@@ -104,71 +123,13 @@ export default class Field {
     }
 
     /**
-     * A raster pyramid (a subset of the cells, corresponding to the pyramidLevel)
-     * @param   {Number} pyramidLevel
-     * @returns {Array<Cell>} - cells
-     */
-    getOldPyramid(pyramidLevel) {
-        // TODO implement cache
-        console.time('getCellsFor');
-
-        let step = pyramidLevel; // 1 = all | 2 = quarter part...
-
-        let cellSize = (this.cellSize * step);
-        let halfCell = cellSize / 2.0;
-        let centerLon = this.xllCorner + halfCell;
-        let centerLat = this.yurCorner - halfCell;
-
-        let lon = centerLon;
-        let lat = centerLat;
-
-        let cells = [];
-        for (let j = 0; j < this.nRows / step; j++) {
-            for (let i = 0; i < this.nCols / step; i++) {
-                let f;
-                if (pyramidLevel === 1) {
-                    f = this.valueAt; // no interpolation
-                } else {
-                    f = this.interpolatedValueAt;
-                }
-                let c = this._getCellFor(lat, lon, cellSize, f);
-                cells.push(c); // <<
-                lon += cellSize;
-            }
-            lat -= cellSize;
-            lon = centerLon;
-        }
-
-        console.timeEnd('getCellsFor');
-        return cells;
-    }
-
-    /**
-     * A full list with possible pyramid levels
-     * @returns {[[Type]]} [[Description]]
-     */
-    getPyramidLevels() {
-        let pyramids = [];
-
-        let p = 1;
-        while (this.nCols / p > 1) {
-            pyramids.push(p);
-            p = p * 2;
-        }
-
-        return pyramids;
-    }
-
-    /**
      * A list with all available resolutions (meters per pixel), one
      * for each of the pyramid levels
      */
     getResolutions() {
-        return [];
-        /*
-                let resolutions = pyramids.map(this.resolutionForPyramid);
-                */
-
+        let pyramids = this.getPyramidLevels();
+        let resolutions = pyramids.map(this._getResolutionForPyramid);
+        return resolutions;
     }
 
     /**

@@ -368,6 +368,24 @@
 	            }
 	            return cells;
 	        }
+
+	        /**
+	         * A full list with possible pyramid levels
+	         * @returns {[[Type]]} [[Description]]
+	         */
+
+	    }, {
+	        key: 'getPyramidLevels',
+	        value: function getPyramidLevels() {
+	            var pyramids = [];
+
+	            var p = 1;
+	            while (this.nCols / p > 1) {
+	                pyramids.push(p);
+	                p = p * 2;
+	            }
+	            return pyramids;
+	        }
 	    }, {
 	        key: 'getPyramid',
 	        value: function getPyramid(pyramidLevel) {
@@ -381,6 +399,11 @@
 	            params['cellSize'] = this.cellSize * pyramidLevel;
 
 	            return this._completePyramidWithValues(pyramidLevel, params);
+	        }
+	    }, {
+	        key: '_getResolutionForPyramid',
+	        value: function _getResolutionForPyramid(pyramidLevel) {
+	            return null;
 	        }
 	    }, {
 	        key: '_completePyramidWithValues',
@@ -409,68 +432,6 @@
 	        }
 
 	        /**
-	         * A raster pyramid (a subset of the cells, corresponding to the pyramidLevel)
-	         * @param   {Number} pyramidLevel
-	         * @returns {Array<Cell>} - cells
-	         */
-
-	    }, {
-	        key: 'getOldPyramid',
-	        value: function getOldPyramid(pyramidLevel) {
-	            // TODO implement cache
-	            console.time('getCellsFor');
-
-	            var step = pyramidLevel; // 1 = all | 2 = quarter part...
-
-	            var cellSize = this.cellSize * step;
-	            var halfCell = cellSize / 2.0;
-	            var centerLon = this.xllCorner + halfCell;
-	            var centerLat = this.yurCorner - halfCell;
-
-	            var lon = centerLon;
-	            var lat = centerLat;
-
-	            var cells = [];
-	            for (var j = 0; j < this.nRows / step; j++) {
-	                for (var i = 0; i < this.nCols / step; i++) {
-	                    var f = void 0;
-	                    if (pyramidLevel === 1) {
-	                        f = this.valueAt; // no interpolation
-	                    } else {
-	                        f = this.interpolatedValueAt;
-	                    }
-	                    var c = this._getCellFor(lat, lon, cellSize, f);
-	                    cells.push(c); // <<
-	                    lon += cellSize;
-	                }
-	                lat -= cellSize;
-	                lon = centerLon;
-	            }
-
-	            console.timeEnd('getCellsFor');
-	            return cells;
-	        }
-
-	        /**
-	         * A full list with possible pyramid levels
-	         * @returns {[[Type]]} [[Description]]
-	         */
-
-	    }, {
-	        key: 'getPyramidLevels',
-	        value: function getPyramidLevels() {
-	            var pyramids = [];
-
-	            var p = 1;
-	            while (this.nCols / p > 1) {
-	                pyramids.push(p);
-	                p = p * 2;
-	            }
-
-	            return pyramids;
-	        }
-
-	        /**
 	         * A list with all available resolutions (meters per pixel), one
 	         * for each of the pyramid levels
 	         */
@@ -478,10 +439,9 @@
 	    }, {
 	        key: 'getResolutions',
 	        value: function getResolutions() {
-	            return [];
-	            /*
-	                    let resolutions = pyramids.map(this.resolutionForPyramid);
-	                    */
+	            var pyramids = this.getPyramidLevels();
+	            var resolutions = pyramids.map(this._getResolutionForPyramid);
+	            return resolutions;
 	        }
 
 	        /**
@@ -1636,20 +1596,20 @@
 	     * @returns {Number} n of pyramid (1:all | 2:half resolution...)
 	     */
 	    _pyramidLevelFor: function _pyramidLevelFor(viewInfo) {
-	        //console.log(viewInfo);
-
-
+	        console.log(viewInfo);
 	        // meters per pixel
-	        /*
-	        let mapResolution = 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
-	        */
 
+	        var mres = this._mapResolution();
+	        console.log('Map resolution: ', mres);
+
+	        var plevels = this.field.getPyramidLevels();
+	        console.log('Get pyramid levels: ', plevels);
 	        // let resolution = this.field.getResolution();
 
 	        var pyramids = [];
 	        var p = 1;
 
-	        return 1; // allthis._map
+	        return 1; // allthis._map ||TODO
 
 	        /*let steps = [];
 	        let n = this.field.ncols;
@@ -1663,6 +1623,10 @@
 	         console.log(viewInfo);
 	        return steps[steps.length - 1]; // TODO fit resolution
 	        */
+	    },
+
+	    _mapResolution: function _mapResolution() {
+	        return 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
 	    },
 
 	    _draw: function _draw(cells) {

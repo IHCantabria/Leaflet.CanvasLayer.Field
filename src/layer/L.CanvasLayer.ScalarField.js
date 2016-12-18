@@ -31,29 +31,26 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         //console.timeEnd('onDrawLayer');
     },
 
-
     /**
      * Select the best raster pyramid level for the current view
      * @param   {Object} viewInfo
      * @returns {Number} n of pyramid (1:all | 2:half resolution...)
      */
     _pyramidLevelFor: function (viewInfo) {
-        //console.log(viewInfo);
-
-
-
+        console.log(viewInfo);
         // meters per pixel
-        /*
-        let mapResolution = 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
-        */
 
+        let mres = this._mapResolution();
+        console.log('Map resolution: ', mres);
+
+        let plevels = this.field.getPyramidLevels();
+        console.log('Get pyramid levels: ', plevels);
         // let resolution = this.field.getResolution();
 
         let pyramids = [];
         let p = 1;
 
-
-        return 1; // allthis._map
+        return 1; // allthis._map ||TODO
 
         /*let steps = [];
         let n = this.field.ncols;
@@ -69,6 +66,10 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         console.log(viewInfo);
         return steps[steps.length - 1]; // TODO fit resolution
         */
+    },
+
+    _mapResolution: function () {
+        return 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
     },
 
     _draw: function (cells) {
