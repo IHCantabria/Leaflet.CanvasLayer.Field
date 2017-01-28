@@ -21,14 +21,51 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        //console.time('onDrawLayer');
+        console.time('onDrawLayer');
 
-        let level = this._pyramidLevelFor(viewInfo);
-        let p = this.field.getPyramid(level);
-        let cellsOnScreen = p.getCells().filter(c => viewInfo.bounds.intersects(c.getBounds()));
-        this._draw(cellsOnScreen);
+        // Individual cell paint
+        //        let level = this._pyramidLevelFor(viewInfo);
+        //        let p = this.field.getPyramid(level);
+        //        let cellsOnScreen = p.getCells().filter(c => viewInfo.bounds.intersects(c.getBounds()));
+        //        this._draw(cellsOnScreen);
 
-        //console.timeEnd('onDrawLayer');
+        this._drawImage();
+
+        console.timeEnd('onDrawLayer');
+    },
+
+    _drawImage: function () {
+        let ctx = this._getDrawingContext();
+        /* Building an image and just one render */
+        /* taken from: http://geoexamples.com/d3-raster-tools-docs/code_samples/raster-pixels-page.html*/
+        let width = this._canvas.width;
+        let height = this._canvas.height;
+
+        let img = ctx.createImageData(width, height);
+        let data = img.data;
+
+        var pos = 0;
+        for (var j = 0; j < height; j++) {
+            for (var i = 0; i < width; i++) {
+                let pointCoords = this._map.containerPointToLatLng([i, j]);
+                let lon = pointCoords.lng;
+                let lat = pointCoords.lat;
+                if (this.field.hasValueAt(lon, lat)) {
+                    let v = this.field.valueAt(lon, lat);
+                    let color = this.options.color(v).rgb();
+                    let R = parseInt(color[0]);
+                    let G = parseInt(color[1]);
+                    let B = parseInt(color[2]);
+                    let A = 255; // TODO
+                    data[pos] = R;
+                    data[pos + 1] = G;
+                    data[pos + 2] = B;
+                    data[pos + 3] = A;
+                }
+                pos = pos + 4;
+            }
+        }
+        ctx.putImageData(img, 0, 0);
     },
 
     /**
@@ -73,10 +110,10 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     _draw: function (cells) {
-        let g = this._getDrawingContext();
+        let ctx = this._getDrawingContext();
         for (let c of cells) {
             if (c.value !== null) {
-                this._drawRectangle(g, c);
+                this._drawRectangle(ctx, c);
             }
         }
     },

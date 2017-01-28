@@ -23,7 +23,7 @@
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
-    <script src="//npmcdn.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
 
     <!-- Plugin -->
@@ -69,7 +69,7 @@
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
                         let d = vector.directionTo().toFixed(0);
-                        let html = (`magnitude: ${v} | directionTo: ${d}&deg`);
+                        let html = (`magnitude: ${v} & directionTo: ${d}&deg`);
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)

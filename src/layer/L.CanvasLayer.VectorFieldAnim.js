@@ -31,7 +31,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        let g = this._getDrawingContext();
+        let ctx = this._getDrawingContext();
         let paths = this._prepareParticlePaths();
 
         this.timer = d3.timer(function () {
@@ -79,13 +79,13 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
          */
         function drawParticles() {
             // Previous paths...
-            g.globalCompositeOperation = 'destination-in';
-            g.fillRect(0, 0, g.canvas.width, g.canvas.height);
-            g.globalCompositeOperation = 'source-over';
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.globalCompositeOperation = 'source-over';
 
-            g.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`; // fading paths...
-            g.lineWidth = self.options.width;
-            g.strokeStyle = self.options.color;
+            ctx.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`; // fading paths...
+            ctx.lineWidth = self.options.width;
+            ctx.strokeStyle = self.options.color;
 
             // New paths
             paths.forEach(function (par) {
@@ -96,9 +96,9 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                     let pA = viewInfo.layer._map.latLngToContainerPoint(source);
                     let pB = viewInfo.layer._map.latLngToContainerPoint(target);
 
-                    g.beginPath();
-                    g.moveTo(pA.x, pA.y);
-                    g.lineTo(pB.x, pB.y);
+                    ctx.beginPath();
+                    ctx.moveTo(pA.x, pA.y);
+                    ctx.lineTo(pB.x, pB.y);
 
                     // next-step movement
                     par.x = par.xt;
@@ -107,9 +107,9 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                     // colormap vs. simple color
                     let color = self.options.color;
                     if (typeof color == 'function') {
-                        g.strokeStyle = color(par.m);
+                        ctx.strokeStyle = color(par.m);
                     }
-                    g.stroke();
+                    ctx.stroke();
                 }
             });
         }

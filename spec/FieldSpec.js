@@ -103,6 +103,25 @@ describe('Field', function () {
 
     it('can return its resolutions', function () {
 
-    })
+    });
 
+    it('can easily transform their cells to imageData', function () {
+
+        var imageData = this.grid
+
+        var cells = f.getCells();
+        expect(cells.length).toEqual(100);
+
+        var rgba = [255, 0, 0, 0.5];
+        var data = [];
+
+        for c of cells {
+            data.push(rgba[0]);
+            data.push(rgba[1]);
+            data.push(rgba[2]);
+            data.push(rgba[3]);
+        }
+        colouredImage = data;
+        assert()
+    })
 });

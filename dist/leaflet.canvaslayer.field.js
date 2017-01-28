@@ -90,7 +90,7 @@
 	// control
 	var L_Control_ColorBar = __webpack_require__(11);
 
-	// TODO - umd pattern?
+	// TODO - check umd pattern
 
 /***/ },
 /* 1 */
@@ -1578,16 +1578,51 @@
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        //console.time('onDrawLayer');
+	        console.time('onDrawLayer');
 
-	        var level = this._pyramidLevelFor(viewInfo);
-	        var p = this.field.getPyramid(level);
-	        var cellsOnScreen = p.getCells().filter(function (c) {
-	            return viewInfo.bounds.intersects(c.getBounds());
-	        });
-	        this._draw(cellsOnScreen);
+	        // Individual cell paint
+	        //        let level = this._pyramidLevelFor(viewInfo);
+	        //        let p = this.field.getPyramid(level);
+	        //        let cellsOnScreen = p.getCells().filter(c => viewInfo.bounds.intersects(c.getBounds()));
+	        //        this._draw(cellsOnScreen);
 
-	        //console.timeEnd('onDrawLayer');
+	        this._drawImage();
+
+	        console.timeEnd('onDrawLayer');
+	    },
+
+	    _drawImage: function _drawImage() {
+	        var ctx = this._getDrawingContext();
+	        /* Building an image and just one render */
+	        /* taken from: http://geoexamples.com/d3-raster-tools-docs/code_samples/raster-pixels-page.html*/
+	        var width = this._canvas.width;
+	        var height = this._canvas.height;
+
+	        var img = ctx.createImageData(width, height);
+	        var data = img.data;
+
+	        var pos = 0;
+	        for (var j = 0; j < height; j++) {
+	            for (var i = 0; i < width; i++) {
+	                var pointCoords = this._map.containerPointToLatLng([i, j]);
+	                var lon = pointCoords.lng;
+	                var lat = pointCoords.lat;
+	                if (this.field.hasValueAt(lon, lat)) {
+	                    var v = this.field.valueAt(lon, lat);
+	                    var color = this.options.color(v).rgb();
+	                    var R = parseInt(color[0]);
+	                    var G = parseInt(color[1]);
+	                    var B = parseInt(color[2]);
+	                    var A = 255; // TODO
+	                    data[pos] = R;
+	                    data[pos + 1] = G;
+	                    data[pos + 2] = B;
+	                    data[pos + 3] = A;
+	                }
+	                pos = pos + 4;
+	            }
+	        }
+	        ctx.putImageData(img, 0, 0);
 	    },
 
 	    /**
@@ -1630,7 +1665,7 @@
 	    },
 
 	    _draw: function _draw(cells) {
-	        var g = this._getDrawingContext();
+	        var ctx = this._getDrawingContext();
 	        var _iteratorNormalCompletion = true;
 	        var _didIteratorError = false;
 	        var _iteratorError = undefined;
@@ -1640,7 +1675,7 @@
 	                var c = _step.value;
 
 	                if (c.value !== null) {
-	                    this._drawRectangle(g, c);
+	                    this._drawRectangle(ctx, c);
 	                }
 	            }
 	        } catch (err) {
@@ -1744,7 +1779,7 @@
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        var g = this._getDrawingContext();
+	        var ctx = this._getDrawingContext();
 	        var paths = this._prepareParticlePaths();
 
 	        this.timer = d3.timer(function () {
@@ -1792,13 +1827,13 @@
 	         */
 	        function drawParticles() {
 	            // Previous paths...
-	            g.globalCompositeOperation = 'destination-in';
-	            g.fillRect(0, 0, g.canvas.width, g.canvas.height);
-	            g.globalCompositeOperation = 'source-over';
+	            ctx.globalCompositeOperation = 'destination-in';
+	            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	            ctx.globalCompositeOperation = 'source-over';
 
-	            g.fillStyle = 'rgba(125, 255, 0, ' + self.options.fade + ')'; // fading paths...
-	            g.lineWidth = self.options.width;
-	            g.strokeStyle = self.options.color;
+	            ctx.fillStyle = 'rgba(125, 255, 0, ' + self.options.fade + ')'; // fading paths...
+	            ctx.lineWidth = self.options.width;
+	            ctx.strokeStyle = self.options.color;
 
 	            // New paths
 	            paths.forEach(function (par) {
@@ -1809,9 +1844,9 @@
 	                    var pA = viewInfo.layer._map.latLngToContainerPoint(source);
 	                    var pB = viewInfo.layer._map.latLngToContainerPoint(target);
 
-	                    g.beginPath();
-	                    g.moveTo(pA.x, pA.y);
-	                    g.lineTo(pB.x, pB.y);
+	                    ctx.beginPath();
+	                    ctx.moveTo(pA.x, pA.y);
+	                    ctx.lineTo(pB.x, pB.y);
 
 	                    // next-step movement
 	                    par.x = par.xt;
@@ -1820,9 +1855,9 @@
 	                    // colormap vs. simple color
 	                    var color = self.options.color;
 	                    if (typeof color == 'function') {
-	                        g.strokeStyle = color(par.m);
+	                        ctx.strokeStyle = color(par.m);
 	                    }
-	                    g.stroke();
+	                    ctx.stroke();
 	                }
 	            });
 	        }

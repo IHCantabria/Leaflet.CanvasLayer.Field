@@ -27,4 +27,4 @@ var L_CanvasLayer_VectorFieldAnim = require('./layer/L.CanvasLayer.VectorFieldAn
 var L_Control_ColorBar = require('./control/L.Control.ColorBar.js');
 
 
-// TODO - umd pattern?
+// TODO - check umd pattern

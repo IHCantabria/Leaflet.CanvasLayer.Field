@@ -14,7 +14,7 @@
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
-    <script src="//npmcdn.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
 
     <!-- Plugin -->
@@ -63,7 +63,7 @@
                     maxAge: 100,
                     velocityScale: 1 / 50,
                     color: 'rgba(255, 255, 255, 0.5)'
-                }); //.addTo(map);
+                }).addTo(map);
                 map.fitBounds(layer.getBounds());
             });
         });

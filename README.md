@@ -13,11 +13,11 @@ TODO [[* VectorField: a Raster layer from vectors, such as wind or ocean current
 
 ## Requirements
 ### Leaflet version
-Tested on v1.0.2 
+Tested on v1.0.3
 
 ### Dependencies
 - CDN
-    * [Leaflet](https://github.com/Leaflet/Leaflet) (v1.0.2)
+    * [Leaflet](https://github.com/Leaflet/Leaflet) (v1.0.3)
     * [D3](https://github.com/d3/d3) (v4) - dom, canvas, ajax...
     * [chromajs](https://github.com/gka/chroma.js) (v1.2.1) - color scales
 - Included in src: 
