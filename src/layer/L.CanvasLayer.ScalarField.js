@@ -23,18 +23,36 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     onDrawLayer: function (viewInfo) {
         console.time('onDrawLayer');
 
+        this._drawImage('valueAt');
+        //this._drawImage('interpolatedValueAt');
+        //this._drawCells();
+
+        console.timeEnd('onDrawLayer');
+    },
+
+    /**
+     * Draws the field one cell at a time, drawRectangle
+     */
+    _drawCells: function () {
         // Individual cell paint
         //        let level = this._pyramidLevelFor(viewInfo);
         //        let p = this.field.getPyramid(level);
         //        let cellsOnScreen = p.getCells().filter(c => viewInfo.bounds.intersects(c.getBounds()));
         //        this._draw(cellsOnScreen);
 
-        this._drawImage();
-
-        console.timeEnd('onDrawLayer');
+        const cells = this.field.getCells();
+        let ctx = this._getDrawingContext();
+        for (let c of cells) {
+            if (c.value !== null) {
+                this._drawRectangle(ctx, c);
+            }
+        }
     },
 
-    _drawImage: function () {
+    /**
+     * Draws the field in an ImageData
+     */
+    _drawImage: function (f) {
         let ctx = this._getDrawingContext();
         /* Building an image and just one render */
         /* taken from: http://geoexamples.com/d3-raster-tools-docs/code_samples/raster-pixels-page.html*/
@@ -51,12 +69,14 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                 let lon = pointCoords.lng;
                 let lat = pointCoords.lat;
                 if (this.field.hasValueAt(lon, lat)) {
-                    let v = this.field.valueAt(lon, lat);
+                    //let v = this.field.valueAt(lon, lat);
+                    let v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt'
+                    //let v = this.field.valueAt(lon, lat);
                     let color = this.options.color(v).rgb();
                     let R = parseInt(color[0]);
                     let G = parseInt(color[1]);
                     let B = parseInt(color[2]);
-                    let A = 255; // TODO
+                    let A = 255; // TODO accept alpha in color (0, 1) --> (0, 255)
                     data[pos] = R;
                     data[pos + 1] = G;
                     data[pos + 2] = B;
@@ -107,15 +127,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     _mapResolution: function () {
         return 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
-    },
-
-    _draw: function (cells) {
-        let ctx = this._getDrawingContext();
-        for (let c of cells) {
-            if (c.value !== null) {
-                this._drawRectangle(ctx, c);
-            }
-        }
     },
 
     /**
