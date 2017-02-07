@@ -30,44 +30,58 @@
         }).addTo(map);
 
         /*
-            Vectorfield
-
-            Reference:
-
+            ScalarField derived from a Vectorfield
         */
 
-        d3.text('data/Atlantic_U.asc', function(u) {
-            d3.text('data/Atlantic_V.asc', function(v) {
-                let vf = L.VectorField.fromASCIIGrids(u, v, 0.001);
-                /*
-                        d3.text('data/U.asc', function(u) {
-                            d3.text('data/V.asc', function(v) {
-                                let vf = L.VectorField.fromASCIIGrids(u, v);*/
-                let s = vf.getScalarField('magnitude');
+        d3.text('data/Atlantic_U.asc', function (u) {
+            d3.text('data/Atlantic_V.asc', function (v) {
+                const toMetersPerSecond = 0.001;
+                const vf = L.VectorField.fromASCIIGrids(u, v, toMetersPerSecond);
+                const s = vf.getScalarField('magnitude');
 
                 /*  custom scale, based on 'earth.nullschool.net'
                         example:  https://earth.nullschool.net/#current/ocean/surface/currents/overlay=currents/equirectangular=-11.95,29.62,1112
                 */
-                let colorScale = chroma.scale(
-                    ['#1F263A', '#414AA9', '#44758C', '#399B58', 'DCD296', 'F2E899', 'A53E3C', '9C3333'], [.1, .2, .3, .4, .7, .9, 1.5, 2]
-                );
 
-                var layer3 = L.canvasLayer.scalarField(s, {
-                    color: colorScale
+                /*
+                let colorScale = chroma.scale(
+                    [0, 0.15, 0.4, 0.65, 1.0, 1.5], [
+                        '#0A1944', '#0A19FA', '#18FF5D', '#FFE966', '#FFE90F', '#FF0F0F'
+                    ])
+                */
+                const magnitude = L.canvasLayer.scalarField(s, {
+                    color: chroma.scale(
+                        ['#1F263A', '#414AA9', '#44758C', '#399B58', 'DCD296', 'F2E899', 'A53E3C', '9C3333'], [.1, .2, .3, .4, .7, .9, 1.5, 2]
+                    )
                 }).addTo(map);
 
-
-                let layer = L.canvasLayer.vectorFieldAnim(vf, {
-                    paths: 10000,
-                    fade: 0.92,
+                const a = 'rgba(180,180,180,0.0)';
+                const b = 'rgba(255,255,255,1.0)';
+                const currentsColor = chroma.scale([a, b]).domain(s.range);
+                console.log(s.range);
+                const animation = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 5000,
+                    fade: 0.97,
                     maxAge: 100,
-                    velocityScale: 1 / 50,
-                    color: 'rgba(255, 255, 255, 0.5)'
-                }); //.addTo(map);
-                map.fitBounds(layer.getBounds());
+                    velocityScale: 1 / 40,
+                    color: currentsColor /*'rgba(255, 255, 255, 0.5)'*/
+                }).addTo(map);
+
+                map.fitBounds(animation.getBounds());
+
+
+                magnitude.on('click', function (e) {
+                    if (e.value !== null) {
+                        let v = e.value.toFixed(3);
+                        let html = (`magnitude: ${v}`);
+                        let popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(html)
+                            .openOn(map);
+                    }
+                });
             });
         });
-
     </script>
 </body>
 

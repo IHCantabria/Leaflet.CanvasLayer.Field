@@ -33,12 +33,12 @@
         /*
             A ScalarField layer (a 'Raster') from an ASCIIGrid
         */
-        d3.text('data/dtm.asc', function(asc) {
+        d3.text('data/Bay_U.asc', function (asc) {
             let s = L.ScalarField.fromASCIIGrid(asc);
             let layer = L.canvasLayer.scalarField(s).addTo(map);
             map.fitBounds(layer.getBounds());
 
-            layer.on('click', function(e) {
+            layer.on('click', function (e) {
                 if (e.value !== null) {
                     let v = e.value.toFixed(3);
                     let html = (`magnitude: ${v}`);
@@ -49,7 +49,6 @@
                 }
             });
         });
-
     </script>
 </body>
 

@@ -101,11 +101,12 @@ describe('Field', function () {
         expect(ps[1]).toBe(2);
     });
 
+    /*
     it('can return its resolutions', function () {
-
     });
+    */
 
-    it('can easily transform their cells to imageData', function () {
+    /*it('can easily transform their cells to imageData', function () {
 
         var imageData = this.grid
 
@@ -124,4 +125,5 @@ describe('Field', function () {
         colouredImage = data;
         assert()
     })
+    */
 });

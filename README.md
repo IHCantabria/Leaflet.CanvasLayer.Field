@@ -1,10 +1,11 @@
 # Leaflet.CanvasLayer.Field
 
 ## Description
-A set of layers to visualize 'Fields' (aka *Rasters*) from ASCIIGrid files, based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Sumbera:
+A set of layers to visualize 'Fields' (aka *Rasters*) from ASCIIGrid or GeoTIFF files, based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler
 
 * ScalarField: a Raster layer from scalars, such as DTM, temperature...
-TODO [[* VectorField: a Raster layer from vectors, such as wind or ocean currents, using arrows
+
+TODO * VectorField: a Raster layer from vectors, such as wind or ocean currents, using arrows
 
 * VectorFieldAnim: an animated layer representing a vector field, based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
 
@@ -18,6 +19,7 @@ Tested on v1.0.3
 ### Dependencies
 - CDN
     * [Leaflet](https://github.com/Leaflet/Leaflet) (v1.0.3)
+    * [geotiff.js](https://github.com/constantinius/geotiff.js) (v0.3.5)
     * [D3](https://github.com/d3/d3) (v4) - dom, canvas, ajax...
     * [chromajs](https://github.com/gka/chroma.js) (v1.2.1) - color scales
 - Included in src: 

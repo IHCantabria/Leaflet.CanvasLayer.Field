@@ -81,14 +81,14 @@
 	window.L.VectorField = _VectorField2.default;
 
 	// layer
-	var L_CanvasLayer = __webpack_require__(6);
-	var L_CanvasLayer_SimpleLonLat = __webpack_require__(7);
-	var L_CanvasLayer_Field = __webpack_require__(8);
-	var L_CanvasLayer_ScalarField = __webpack_require__(9);
-	var L_CanvasLayer_VectorFieldAnim = __webpack_require__(10);
+	__webpack_require__(6);
+	__webpack_require__(7);
+	__webpack_require__(8);
+	__webpack_require__(9);
+	__webpack_require__(10);
 
 	// control
-	var L_Control_ColorBar = __webpack_require__(11);
+	__webpack_require__(11);
 
 	// TODO - check umd pattern
 
@@ -353,12 +353,10 @@
 	            var cells = [];
 	            for (var j = 0; j < this.nRows; j++) {
 	                for (var i = 0; i < this.nCols; i++) {
-	                    var _lonLatAtIndexes2 = this._lonLatAtIndexes(i, j);
-
-	                    var _lonLatAtIndexes3 = _slicedToArray(_lonLatAtIndexes2, 2);
-
-	                    var lon = _lonLatAtIndexes3[0];
-	                    var lat = _lonLatAtIndexes3[1];
+	                    var _lonLatAtIndexes2 = this._lonLatAtIndexes(i, j),
+	                        _lonLatAtIndexes3 = _slicedToArray(_lonLatAtIndexes2, 2),
+	                        lon = _lonLatAtIndexes3[0],
+	                        lat = _lonLatAtIndexes3[1];
 
 	                    var center = L.latLng(lat, lon);
 	                    var value = this._valueAtIndexes(i, j);
@@ -504,30 +502,26 @@
 	            //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
 	            //         |      |           column, so the index ci can be used without taking a modulo.
 
-	            var _getDecimalIndexes2 = this._getDecimalIndexes(lon, lat);
-
-	            var _getDecimalIndexes3 = _slicedToArray(_getDecimalIndexes2, 2);
-
-	            var i = _getDecimalIndexes3[0];
-	            var j = _getDecimalIndexes3[1];
+	            var _getDecimalIndexes2 = this._getDecimalIndexes(lon, lat),
+	                _getDecimalIndexes3 = _slicedToArray(_getDecimalIndexes2, 2),
+	                i = _getDecimalIndexes3[0],
+	                j = _getDecimalIndexes3[1];
 
 	            var indexes = this._getFourSurroundingIndexes(i, j);
 
-	            var _indexes = _slicedToArray(indexes, 4);
-
-	            var fi = _indexes[0];
-	            var ci = _indexes[1];
-	            var fj = _indexes[2];
-	            var cj = _indexes[3];
+	            var _indexes = _slicedToArray(indexes, 4),
+	                fi = _indexes[0],
+	                ci = _indexes[1],
+	                fj = _indexes[2],
+	                cj = _indexes[3];
 
 	            var values = this._getFourSurroundingValues(fi, ci, fj, cj);
 	            if (values) {
-	                var _values = _slicedToArray(values, 4);
-
-	                var g00 = _values[0];
-	                var g10 = _values[1];
-	                var g01 = _values[2];
-	                var g11 = _values[3];
+	                var _values = _slicedToArray(values, 4),
+	                    g00 = _values[0],
+	                    g10 = _values[1],
+	                    g01 = _values[2],
+	                    g11 = _values[3];
 
 	                return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
 	            }
@@ -617,12 +611,10 @@
 	        value: function valueAt(lon, lat) {
 	            if (this.notContains(lon, lat)) return null;
 
-	            var _getDecimalIndexes4 = this._getDecimalIndexes(lon, lat);
-
-	            var _getDecimalIndexes5 = _slicedToArray(_getDecimalIndexes4, 2);
-
-	            var i = _getDecimalIndexes5[0];
-	            var j = _getDecimalIndexes5[1];
+	            var _getDecimalIndexes4 = this._getDecimalIndexes(lon, lat),
+	                _getDecimalIndexes5 = _slicedToArray(_getDecimalIndexes4, 2),
+	                i = _getDecimalIndexes5[0],
+	                j = _getDecimalIndexes5[1];
 
 	            var ii = Math.floor(i);
 	            var jj = Math.floor(j);
@@ -884,6 +876,45 @@
 	            //console.timeEnd('ScalarField from ASC');
 	            return new ScalarField(p);
 	        }
+
+	        /**
+	         * Creates a ScalarField from the content of a GeoTIFF file, as read by geotiff.js
+	         * @param   {ArrayBuffer}   data
+	         * @returns {ScalarField}
+	         */
+
+	    }, {
+	        key: 'fromGeoTIFF',
+	        value: function fromGeoTIFF(data) {
+	            var bandIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+	            console.time('ScalarField from GeoTIFF');
+
+	            var tiff = GeoTIFF.parse(data); // geotiff.js
+	            var image = tiff.getImage();
+	            var rasters = image.readRasters();
+	            var tiepoint = image.getTiePoints()[0];
+	            var pixelScale = image.getFileDirectory().ModelPixelScale;
+
+	            if (pixelScale[0] !== pixelScale[1]) {
+	                throw new Error('A raster without regular cells is not supported (different pixel scale on x and y)');
+	            }
+
+	            // TODO check no rotation, or else ... throw "Not supported raster"
+
+	            // Assume Data order = left-right and top-down
+	            var p = {
+	                nCols: image.getWidth(),
+	                nRows: image.getHeight(),
+	                xllCorner: tiepoint.x,
+	                yllCorner: tiepoint.y - image.getHeight() * pixelScale[0],
+	                cellSize: pixelScale[0],
+	                zs: rasters[bandIndex]
+	            };
+
+	            console.timeEnd('ScalarField from GeoTIFF');
+	            return new ScalarField(p);
+	        }
 	    }]);
 
 	    function ScalarField(params) {
@@ -899,36 +930,15 @@
 	    }
 
 	    /**
-	     * Filter the field, using a function
-	     * @param   {Function} f boolean function to
-	     *                       include in filter
-	     * @returns {ScalarField}
+	     * Builds a grid with a Number at each point, from an array
+	     * 'zs' following x-ascending & y-descending order
+	     * (same as in ASCIIGrid)
+	     * @private
+	     * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
 	     */
 
 
 	    _createClass(ScalarField, [{
-	        key: 'filterWith',
-	        value: function filterWith(f) {
-	            var p = this.params;
-	            p.zs = p.zs.map(function (v) {
-	                if (f(v)) {
-	                    return v;
-	                }
-	                return null;
-	            });
-
-	            return new ScalarField(p);
-	        }
-
-	        /**
-	         * Builds a grid with a Number at each point, from an array
-	         * 'zs' following x-ascending & y-descending order
-	         * (same as in ASCIIGrid)
-	         * @private
-	         * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
-	         */
-
-	    }, {
 	        key: '_buildGrid',
 	        value: function _buildGrid() {
 	            var grid = this._arrayTo2d(this.zs, this.nRows, this.nCols);
@@ -1167,8 +1177,7 @@
 	    }, {
 	        key: '_pushValueToArrays',
 	        value: function _pushValueToArrays(params, value) {
-	            console.log(value);
-
+	            //console.log(value);
 	            params['us'].push(value.u);
 	            params['vs'].push(value.v);
 	        }
@@ -1392,6 +1401,7 @@
 	 *  TODO rename to SimplePoint?
 	 */
 	L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
+
 	    options: {
 	        color: 'gray'
 	    },
@@ -1468,9 +1478,10 @@
 
 	        var southWest = L.latLng(ymin, xmin),
 	            northEast = L.latLng(ymax, xmax);
-	        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pixel?
+	        var bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? half-pixel?
 	        return bounds;
 	    }
+
 	});
 
 	L.canvasLayer.simpleLonLat = function (lonslats, options) {
@@ -1706,7 +1717,7 @@
 	    },
 
 	    /**
-	     * Draw a pixel on canvas
+	     * Draw a pixel on canvas as a Rectangle
 	     * @param {object} g    [[Description]]
 	     * @param {object} cell [[Description]]
 	     */
@@ -1763,13 +1774,13 @@
 	L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
 
 	    options: {
-	        paths: 1000,
+	        paths: 1500,
 	        color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]
-	        width: 2, // path-width
-	        fade: 0.96, // 0 to 1
+	        width: 1, // path-width
+	        fade: 0.97, // 0 to 1
 	        duration: 40, // milliseconds per 'frame'
-	        maxAge: 200, // number of maximum frames per path
-	        velocityScale: 1 / 2000
+	        maxAge: 100, // number of maximum frames per path
+	        velocityScale: 1 / 4000
 	    },
 
 	    initialize: function initialize(vectorField, options) {
@@ -1842,7 +1853,9 @@
 	            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	            ctx.globalCompositeOperation = 'source-over';
 
-	            ctx.fillStyle = 'rgba(125, 255, 0, ' + self.options.fade + ')'; // fading paths...
+	            //ctx.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`;
+	            ctx.fillStyle = 'rgba(0, 0, 0, ' + self.options.fade + ')';
+	            // fading paths...
 	            ctx.lineWidth = self.options.width;
 	            ctx.strokeStyle = self.options.color;
 

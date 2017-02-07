@@ -4,13 +4,13 @@
 L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
 
     options: {
-        paths: 1000,
+        paths: 1500,
         color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]
-        width: 2, // path-width
-        fade: 0.96, // 0 to 1
+        width: 1, // path-width
+        fade: 0.97, // 0 to 1
         duration: 40, // milliseconds per 'frame'
-        maxAge: 200, // number of maximum frames per path
-        velocityScale: 1 / 2000
+        maxAge: 100, // number of maximum frames per path
+        velocityScale: 1 / 4000
     },
 
     initialize: function (vectorField, options) {
@@ -83,7 +83,9 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             ctx.globalCompositeOperation = 'source-over';
 
-            ctx.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`; // fading paths...
+            //ctx.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`;
+            ctx.fillStyle = `rgba(0, 0, 0, ${self.options.fade})`;
+            // fading paths...
             ctx.lineWidth = self.options.width;
             ctx.strokeStyle = self.options.color;
 

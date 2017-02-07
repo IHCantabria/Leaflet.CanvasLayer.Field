@@ -130,7 +130,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     /**
-     * Draw a pixel on canvas
+     * Draw a pixel on canvas as a Rectangle
      * @param {object} g    [[Description]]
      * @param {object} cell [[Description]]
      */

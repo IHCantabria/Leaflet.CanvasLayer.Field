@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ScalarField from Geotiff </title>
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="examples.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+</head>
+
+<body>
+    <h1 id="title">Two different ScalarFields from multiband GeoTIFF</h1>
+    <div id="map"></div>
+
+    <!-- CDN -->
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/geotiff@0.3.5/dist/geotiff.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
+
+    <!-- Plugin -->
+    <script src="../dist/leaflet.canvaslayer.field.js"></script>
+
+    <script>
+        let map = L.map('map');
+
+        /* Dark basemap */
+        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        L.tileLayer(url, {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd'
+        }).addTo(map);
+
+        /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
+        d3.request("data/tz850.tiff").responseType('arraybuffer').get(
+            function(error, tiffData) {
+                // geopotential height (band 0)
+                let geo = L.ScalarField.fromGeoTIFF(tiffData.response);
+                let layerGeo = L.canvasLayer.scalarField(geo, {
+                    color: chroma.scale('Spectral').domain(geo.range)
+                });
+
+                // temperature
+                let t = L.ScalarField.fromGeoTIFF(tiffData.response, bandIndex = 1);
+                let layerT = L.canvasLayer.scalarField(t, {
+                    color: chroma.scale('OrRd').domain(t.range)
+                });
+
+                L.control.layers({}, {
+                    "Geopotential Height": layerGeo,
+                    "Temperature": layerT
+                }, {
+                    position: 'bottomleft',
+                    collapsed: false
+                }).addTo(map);
+
+                map.fitBounds(layerGeo.getBounds());
+
+                /*
+                layer2.on('click', function(e) {
+                    if (e.value !== null) {
+                        let v = e.value.toFixed(3);
+                        let html = (`temperature from 2: ${v}`);
+                        let popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(html)
+                            .openOn(map);
+                    }
+                });
+                */
+            });
+
+    </script>
+</body>
+
+</html>
