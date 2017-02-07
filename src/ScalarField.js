@@ -11,7 +11,8 @@ export default class ScalarField extends Field {
      * @returns {ScalarField}
      */
     static fromASCIIGrid(asc, scaleFactor = 1) {
-        //console.time('ScalarField from ASC');
+        console.time('ScalarField from ASC');
+
         let lines = asc.split('\n');
 
         // Header
@@ -38,7 +39,42 @@ export default class ScalarField extends Field {
             zs.push(...values);
         }
         p.zs = zs;
-        //console.timeEnd('ScalarField from ASC');
+
+        console.timeEnd('ScalarField from ASC');
+        return new ScalarField(p);
+    }
+
+    /**
+     * Creates a ScalarField from the content of a GeoTIFF file, as read by geotiff.js
+     * @param   {ArrayBuffer}   data
+     * @returns {ScalarField}
+     */
+    static fromGeoTIFF(data, bandIndex = 0) {
+        console.time('ScalarField from GeoTIFF');
+
+        var tiff = GeoTIFF.parse(data); // geotiff.js
+        var image = tiff.getImage();
+        var rasters = image.readRasters();
+        var tiepoint = image.getTiePoints()[0];
+        var pixelScale = image.getFileDirectory().ModelPixelScale;
+
+        if (pixelScale[0] !== pixelScale[1]) {
+            throw new Error('A raster without regular cells is not supported (different pixel scale on x and y)');
+        }
+
+        // TODO check no rotation, or else ... throw "Not supported raster"
+
+        // Assume Data order = left-right and top-down
+        let p = {
+            nCols: image.getWidth(),
+            nRows: image.getHeight(),
+            xllCorner: tiepoint.x,
+            yllCorner: tiepoint.y - (image.getHeight() * pixelScale[0]),
+            cellSize: pixelScale[0],
+            zs: rasters[bandIndex]
+        };
+
+        console.timeEnd('ScalarField from GeoTIFF');
         return new ScalarField(p);
     }
 
@@ -48,24 +84,6 @@ export default class ScalarField extends Field {
 
         this.grid = this._buildGrid();
         this.range = this._calculateRange();
-    }
-
-    /**
-     * Filter the field, using a function
-     * @param   {Function} f boolean function to
-     *                       include in filter
-     * @returns {ScalarField}
-     */
-    filterWith(f) {
-        let p = this.params;
-        p.zs = p.zs.map(function (v) {
-            if (f(v)) {
-                return v;
-            }
-            return null;
-        });
-
-        return new ScalarField(p);
     }
 
     /**

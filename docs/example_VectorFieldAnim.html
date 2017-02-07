@@ -32,13 +32,22 @@
         /*
             Default vectorfield animation, from two ASCIIGrid files
         */
-        d3.text('data/Bay_U.asc', function (u) {
-            d3.text('data/Bay_V.asc', function (v) {
+        d3.text('data/Bay_U.asc', function(u) {
+            d3.text('data/Bay_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v);
                 let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+
+                /*gradient: µ.segmentedColorScale([
+                                [0, [10, 25, 68]],
+                                [0.15, [10, 25, 250]],
+                                [0.4, [24, 255, 93]],
+                                [0.65, [255, 233, 102]],
+                                [1.0, [255, 233, 15]],
+                                [1.5, [255, 15, 15]]
+                */
                 map.fitBounds(layer.getBounds());
 
-                layer.on('click', function (e) {
+                layer.on('click', function(e) {
                     if (e.value !== null) {
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
@@ -52,6 +61,7 @@
                 });
             });
         });
+
     </script>
 </body>
 

@@ -17,14 +17,14 @@ import VectorField from './VectorField.js';
 window.L.VectorField = VectorField;
 
 // layer
-var L_CanvasLayer = require('./layer/L.CanvasLayer.js');
-var L_CanvasLayer_SimpleLonLat = require('./layer/L.CanvasLayer.SimpleLonLat.js');
-var L_CanvasLayer_Field = require('./layer/L.CanvasLayer.Field.js');
-var L_CanvasLayer_ScalarField = require('./layer/L.CanvasLayer.ScalarField.js');
-var L_CanvasLayer_VectorFieldAnim = require('./layer/L.CanvasLayer.VectorFieldAnim.js');
+require('./layer/L.CanvasLayer.js');
+require('./layer/L.CanvasLayer.SimpleLonLat.js');
+require('./layer/L.CanvasLayer.Field.js');
+require('./layer/L.CanvasLayer.ScalarField.js');
+require('./layer/L.CanvasLayer.VectorFieldAnim.js');
 
 // control
-var L_Control_ColorBar = require('./control/L.Control.ColorBar.js');
+require('./control/L.Control.ColorBar.js');
 
 
 // TODO - check umd pattern

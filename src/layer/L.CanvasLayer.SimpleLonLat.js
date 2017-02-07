@@ -4,6 +4,7 @@
  *  TODO rename to SimplePoint?
  */
 L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
+
     options: {
         color: 'gray'
     },
@@ -32,7 +33,7 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
         g.clearRect(0, 0, viewInfo.canvas.width, viewInfo.canvas.height);
         g.fillStyle = this.options.color;
 
-        for(let point of this.points){
+        for (let point of this.points) {
             let p = viewInfo.layer._map.latLngToContainerPoint(point);
             g.beginPath();
             //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
@@ -55,9 +56,10 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
 
         let southWest = L.latLng(ymin, xmin),
             northEast = L.latLng(ymax, xmax);
-        let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? hal-pixel?
+        let bounds = L.latLngBounds(southWest, northEast); // TODO FIX ERROR ? half-pixel?
         return bounds;
     }
+
 });
 
 L.canvasLayer.simpleLonLat = function (lonslats, options) {
