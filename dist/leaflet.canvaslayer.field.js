@@ -846,7 +846,8 @@
 	        value: function fromASCIIGrid(asc) {
 	            var scaleFactor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
-	            //console.time('ScalarField from ASC');
+	            console.time('ScalarField from ASC');
+
 	            var lines = asc.split('\n');
 
 	            // Header
@@ -873,7 +874,8 @@
 	                zs.push.apply(zs, _toConsumableArray(values));
 	            }
 	            p.zs = zs;
-	            //console.timeEnd('ScalarField from ASC');
+
+	            console.timeEnd('ScalarField from ASC');
 	            return new ScalarField(p);
 	        }
 
@@ -926,6 +928,8 @@
 
 	        _this.grid = _this._buildGrid();
 	        _this.range = _this._calculateRange();
+
+	        console.log('ScalarField created (' + _this.nCols + ' x ' + _this.nRows);
 	        return _this;
 	    }
 
@@ -1659,13 +1663,16 @@
 	                var lat = pointCoords.lat;
 	                if (this.field.hasValueAt(lon, lat)) {
 	                    //let v = this.field.valueAt(lon, lat);
-	                    var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt'
+	                    var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
 	                    //let v = this.field.valueAt(lon, lat);
-	                    var color = this.options.color(v).rgb();
-	                    var R = parseInt(color[0]);
-	                    var G = parseInt(color[1]);
-	                    var B = parseInt(color[2]);
-	                    var A = 255; // TODO accept alpha in color (0, 1) --> (0, 255)
+	                    //let color = this.options.color(v);
+	                    var c = this.options.color(v);
+	                    var color = chroma(c); // to be more flexible, a chroma color object is created || TODO check efficiency
+	                    var rgb = color.rgb();
+	                    var R = parseInt(rgb[0]);
+	                    var G = parseInt(rgb[1]);
+	                    var B = parseInt(rgb[2]);
+	                    var A = 255; // TODO accept alpha in color (0, 1) --> (0, 255) from color.alpha()
 	                    data[pos] = R;
 	                    data[pos + 1] = G;
 	                    data[pos + 2] = B;
