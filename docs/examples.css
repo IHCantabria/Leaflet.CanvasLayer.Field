@@ -3,14 +3,12 @@ body {
     margin: 0;
     background-color: black;
 }
-
 html,
 body,
 #map {
     height: 100%;
     width: 100%;
 }
-
 #title {
     color: white;
     position: absolute;
@@ -20,23 +18,40 @@ body,
     font-family: 'Roboto', sans-serif;
     font-weight: 100;
 }
-
 body {
     color: white;
     font-family: 'Roboto', sans-serif;
     font-weight: 100;
 }
-
 #examples {
     margin-top: 80px;
     margin-left: 80px;
 }
-
 h2 {
     font-weight: 100;
 }
-
 ul a {
     font-size: 16px;
     color: white;
+}
+
+/* Panel to interact with layers */
+
+#floating-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    background-color: #111;
+    padding: 2px;
+    opacity: 0.85;
+}
+#floating-panel ul {
+    list-style-type: none;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+#floating-panel ul li > label {
+    display: block;
+    margin: 2px;
 }
