@@ -11,6 +11,18 @@
 <body>
     <h1 id="title">VectorField animation with default style</h1>
     <div id="map"></div>
+    <div id="floating-panel">
+        <ul>
+            <li>
+                <label>Width</label>
+                <input id="width" type="range" min="0" max="5" step="0.2" value=0.8>
+            </li>
+            <li>
+                <label>Color</label>
+                <input id="color" type="color" value="#ffffff">
+            </li>
+        </ul>
+    </div>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -22,6 +34,8 @@
 
     <script>
         let map = L.map('map');
+
+        /* Basemap */
         let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'OSM & Carto',
@@ -29,13 +43,12 @@
             maxZoom: 19
         }).addTo(map);
 
-        /*
-            Default vectorfield animation, from two ASCIIGrid files
-        */
+        /* Default vectorfield animation, from two ASCIIGrid files with u|v current velocity */
+        let layer;
         d3.text('data/Bay_U.asc', function(u) {
             d3.text('data/Bay_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v);
-                let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+                layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
 
                 /*gradient: µ.segmentedColorScale([
                                 [0, [10, 25, 68]],
@@ -60,6 +73,17 @@
                     }
                 });
             });
+        });
+
+        /* Basic style adjustments with controls */
+        let width = document.getElementById('width');
+        width.addEventListener('input', function() {
+            layer.options.width = width.value;
+        });
+
+        let color = document.getElementById('color');
+        color.addEventListener('input', function() {
+            layer.options.color = color.value;
         });
 
     </script>

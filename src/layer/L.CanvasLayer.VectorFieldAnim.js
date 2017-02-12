@@ -4,13 +4,13 @@
 L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
 
     options: {
-        paths: 1500,
+        paths: 800,
         color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]
-        width: 1, // path-width
-        fade: 0.97, // 0 to 1
+        width: 0.8, // path-width
+        fade: 0.98, // 0 to 1
         duration: 40, // milliseconds per 'frame'
-        maxAge: 100, // number of maximum frames per path
-        velocityScale: 1 / 4000
+        maxAge: 400, // number of maximum frames per path
+        velocityScale: 1 / 5000
     },
 
     initialize: function (vectorField, options) {
