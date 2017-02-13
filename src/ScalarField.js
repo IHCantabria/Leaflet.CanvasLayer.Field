@@ -85,7 +85,7 @@ export default class ScalarField extends Field {
         this.grid = this._buildGrid();
         this.range = this._calculateRange();
 
-        console.log(`ScalarField created (${this.nCols} x ${this.nRows}`);
+        console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
     }
 
     /**
