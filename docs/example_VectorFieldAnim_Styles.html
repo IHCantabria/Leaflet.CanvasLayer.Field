@@ -43,7 +43,7 @@
                 }).addTo(map);
 
                 var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
-                    paths: 15000,
+                    paths: 10000,
                     color: "cyan",
                     width: 0.5,
                     fade: 0.92,
@@ -53,14 +53,12 @@
 
                 map.fitBounds(layer.getBounds());
 
-
                 // Change color of layer2, every n secs.
                 var colors = ['cyan', 'yellow', 'pink', 'aqua', 'DeepSkyBlue'];
                 setInterval(function() {
                     var r = Math.random() * colors.length | 0;
                     layer.options.color = colors[r];
                 }, 5000);
-
             });
         });
 

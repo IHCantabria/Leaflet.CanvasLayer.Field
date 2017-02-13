@@ -929,7 +929,7 @@
 	        _this.grid = _this._buildGrid();
 	        _this.range = _this._calculateRange();
 
-	        console.log('ScalarField created (' + _this.nCols + ' x ' + _this.nRows);
+	        console.log('ScalarField created (' + _this.nCols + ' x ' + _this.nRows + ')');
 	        return _this;
 	    }
 
@@ -1783,7 +1783,7 @@
 	    options: {
 	        paths: 800,
 	        color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]
-	        width: 0.8, // path-width
+	        width: 0.8, // number | function widthFor(value)
 	        fade: 0.98, // 0 to 1
 	        duration: 40, // milliseconds per 'frame'
 	        maxAge: 400, // number of maximum frames per path
@@ -1860,39 +1860,49 @@
 	            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	            ctx.globalCompositeOperation = 'source-over';
 
-	            //ctx.fillStyle = `rgba(125, 255, 0, ${self.options.fade})`;
-	            ctx.fillStyle = 'rgba(0, 0, 0, ' + self.options.fade + ')';
 	            // fading paths...
+	            ctx.fillStyle = 'rgba(0, 0, 0, ' + self.options.fade + ')';
 	            ctx.lineWidth = self.options.width;
 	            ctx.strokeStyle = self.options.color;
 
 	            // New paths
 	            paths.forEach(function (par) {
-	                var source = new L.latLng(par.y, par.x);
-	                var target = new L.latLng(par.yt, par.xt);
-
-	                if (viewInfo.bounds.contains(source) && par.age <= self.options.maxAge) {
-	                    var pA = viewInfo.layer._map.latLngToContainerPoint(source);
-	                    var pB = viewInfo.layer._map.latLngToContainerPoint(target);
-
-	                    ctx.beginPath();
-	                    ctx.moveTo(pA.x, pA.y);
-	                    ctx.lineTo(pB.x, pB.y);
-
-	                    // next-step movement
-	                    par.x = par.xt;
-	                    par.y = par.yt;
-
-	                    // colormap vs. simple color
-	                    var color = self.options.color;
-	                    if (typeof color == 'function') {
-	                        ctx.strokeStyle = color(par.m);
-	                    }
-	                    ctx.stroke();
-	                }
+	                self._drawParticle(viewInfo, ctx, par);
 	            });
 	        }
 	    },
+
+	    _drawParticle: function _drawParticle(viewInfo, ctx, par) {
+	        var source = new L.latLng(par.y, par.x);
+	        var target = new L.latLng(par.yt, par.xt);
+
+	        if (viewInfo.bounds.contains(source) && par.age <= this.options.maxAge) {
+	            var pA = viewInfo.layer._map.latLngToContainerPoint(source);
+	            var pB = viewInfo.layer._map.latLngToContainerPoint(target);
+
+	            ctx.beginPath();
+	            ctx.moveTo(pA.x, pA.y);
+	            ctx.lineTo(pB.x, pB.y);
+
+	            // next-step movement
+	            par.x = par.xt;
+	            par.y = par.yt;
+
+	            // colormap vs. simple color
+	            var color = this.options.color;
+	            if (typeof color == 'function') {
+	                ctx.strokeStyle = color(par.m);
+	            }
+
+	            var width = this.options.width;
+	            if (typeof width == 'function') {
+	                ctx.lineWidth = width(par.m);
+	            }
+
+	            ctx.stroke();
+	        }
+	    },
+
 
 	    _prepareParticlePaths: function _prepareParticlePaths() {
 	        var paths = [];

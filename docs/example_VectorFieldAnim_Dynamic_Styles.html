@@ -2,15 +2,32 @@
 <html>
 
 <head>
-    <title>VectorFieldAnim</title>
+    <title>VectorFieldAnim_Dynamic_Styles</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
+
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
 </head>
 
 <body>
-    <h1 id="title">VectorField animation with default style</h1>
+    <h1 id="title">A VectorField animation (dynamically changing styles)</h1>
     <div id="map"></div>
+    <div id="floating-panel">
+        <ul>
+            <li>
+                <label>Width</label>
+                <input id="width" type="range" min="0" max="5" step="0.2" value="0.8">
+            </li>
+            <li>
+                <label>Color</label>
+                <input id="color" type="color" value="#ffffff">
+            </li>
+            <li>
+                <label>Velocity</label>
+                <input id="velocityScale" type="range" min="1000" max="10000" value="5000" style="transform: rotateY(180deg);">
+            </li>
+        </ul>
+    </div>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -32,10 +49,11 @@
         }).addTo(map);
 
         /* Default vectorfield animation, from two ASCIIGrid files with u|v current velocity */
+        let layer;
         d3.text('data/Bay_U.asc', function(u) {
             d3.text('data/Bay_V.asc', function(v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v);
-                let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+                layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
                 map.fitBounds(layer.getBounds());
 
                 layer.on('click', function(e) {
@@ -43,7 +61,7 @@
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
                         let d = vector.directionTo().toFixed(0);
-                        let html = (`magnitude: ${v} | directionTo: ${d}&deg`);
+                        let html = (`magnitude: ${v} & directionTo: ${d}&deg`);
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)
@@ -51,6 +69,22 @@
                     }
                 });
             });
+        });
+
+        /* Basic style adjustments with controls */
+        let width = document.getElementById('width');
+        width.addEventListener('input', function() {
+            layer.options.width = width.value;
+        });
+
+        let color = document.getElementById('color');
+        color.addEventListener('input', function() {
+            layer.options.color = color.value;
+        });
+
+        let velocityScale = document.getElementById('velocityScale');
+        velocityScale.addEventListener('input', function() {
+            layer.options.velocityScale = 1 / velocityScale.value;
         });
 
     </script>
