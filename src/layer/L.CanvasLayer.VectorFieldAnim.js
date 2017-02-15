@@ -6,10 +6,10 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     options: {
         paths: 800,
         color: 'white', // html-color | function colorFor(value) [e.g. chromajs.scale]
-        width: 0.8, // number | function widthFor(value)
-        fade: 0.98, // 0 to 1
-        duration: 40, // milliseconds per 'frame'
-        maxAge: 400, // number of maximum frames per path
+        width: 1.0, // number | function widthFor(value)
+        fade: 0.96, // 0 to 1
+        duration: 20, // milliseconds per 'frame'
+        maxAge: 200, // number of maximum frames per path
         velocityScale: 1 / 5000
     },
 
@@ -66,7 +66,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                         par.yt = yt;
                         par.m = vector.magnitude();
                     } else {
-                        // not visible...
+                        // not visible anymore...
                         par.age = self.options.maxAge;
                     }
                 }
@@ -79,9 +79,11 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
          */
         function drawParticles() {
             // Previous paths...
+            let prev = ctx.globalCompositeOperation;
             ctx.globalCompositeOperation = 'destination-in';
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.globalCompositeOperation = 'source-over';
+            //ctx.globalCompositeOperation = 'source-over';
+            ctx.globalCompositeOperation = prev;
 
             // fading paths...
             ctx.fillStyle = `rgba(0, 0, 0, ${self.options.fade})`;
@@ -138,7 +140,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     },
 
     _randomAge: function () {
-        return Math.round(Math.random() * this.options.maxAge);
+        return Math.floor(Math.random() * this.options.maxAge);
     },
 
     _stopAnimation: function () {
