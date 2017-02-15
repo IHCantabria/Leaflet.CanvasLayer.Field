@@ -655,8 +655,8 @@
 	         */
 
 	    }, {
-	        key: 'randomPosition',
-	        value: function randomPosition() {
+	        key: 'randomPositionOld',
+	        value: function randomPositionOld() {
 	            var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 	            var i = Math.random() * this.nCols | 0;
@@ -664,6 +664,33 @@
 
 	            o.x = this._longitudeAtX(i);
 	            o.y = this._latitudeAtY(j);
+	            return o;
+	        }
+
+	        /**
+	         * Gives a random position to 'o' inside the grid, trying to have
+	         * a value in that position (several retries)
+	         * @param {Object} [o] - an object (eg. a particle)
+	         * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
+	         */
+
+	    }, {
+	        key: 'randomPosition',
+	        value: function randomPosition() {
+	            var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+	            var i = void 0,
+	                j = void 0;
+	            var safetyNet = 0;
+	            do {
+	                var _i = Math.random() * this.nCols | 0;
+	                var _j = Math.random() * this.nRows | 0;
+
+	                o.x = this._longitudeAtX(_i);
+	                o.y = this._latitudeAtY(_j);
+	            } while (this.notHasValueAt(o.x, o.y) && safetyNet++ < 30);
+
 	            return o;
 	        }
 
