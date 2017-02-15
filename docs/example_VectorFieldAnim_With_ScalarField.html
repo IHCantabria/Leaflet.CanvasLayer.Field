@@ -22,6 +22,8 @@
 
     <script>
         let map = L.map("map");
+
+        // Basemap
         let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'OSM & Carto',
@@ -29,12 +31,9 @@
             maxZoom: 19
         }).addTo(map);
 
-        /*
-            ScalarField derived from a Vectorfield
-        */
-
-        d3.text('data/Atlantic_U.asc', function (u) {
-            d3.text('data/Atlantic_V.asc', function (v) {
+        // ScalarField derived from a Vectorfield
+        d3.text('data/Atlantic_U.asc', function(u) {
+            d3.text('data/Atlantic_V.asc', function(v) {
                 const toMetersPerSecond = 0.001;
                 const vf = L.VectorField.fromASCIIGrids(u, v, toMetersPerSecond);
                 const s = vf.getScalarField('magnitude');
@@ -69,11 +68,11 @@
 
                 map.fitBounds(animation.getBounds());
 
-
-                magnitude.on('click', function (e) {
+                magnitude.on('click', function(e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(3);
-                        let html = (`magnitude: ${v}`);
+                        let html = (`<span class="popupText">${v} m/s</span>`);
+
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)
@@ -82,6 +81,7 @@
                 });
             });
         });
+
     </script>
 </body>
 
