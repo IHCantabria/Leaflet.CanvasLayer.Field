@@ -74,7 +74,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                     //let v = this.field.valueAt(lon, lat);
                     //let color = this.options.color(v);
                     let c = this.options.color(v);
-                    let color = chroma(c); // to be more flexible, a chroma color object is created || TODO check efficiency
+                    let color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
                     let rgb = color.rgb();
                     let R = parseInt(rgb[0]);
                     let G = parseInt(rgb[1]);
@@ -164,17 +164,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
             height
         };
         return r;
-    },
-
-    _getPixelColor: function (x, y) {
-        throw new Error('Not working!'); // TODO FIX
-        /*let ctx = this._canvas.getContext('2d');
-        let pixel = ctx.getImageData(x, y, 1, 1).data;
-
-        // array [r, g, b, a]
-        return chroma(pixel[0], pixel[1], pixel[2]);*/
-    },
-
+    }
 });
 
 L.canvasLayer.scalarField = function (scalarField, options) {

@@ -52,13 +52,15 @@ export default class ScalarField extends Field {
     static fromGeoTIFF(data, bandIndex = 0) {
         console.time('ScalarField from GeoTIFF');
 
-        var tiff = GeoTIFF.parse(data); // geotiff.js
-        var image = tiff.getImage();
-        var rasters = image.readRasters();
-        var tiepoint = image.getTiePoints()[0];
-        var pixelScale = image.getFileDirectory().ModelPixelScale;
+        let tiff = GeoTIFF.parse(data); // geotiff.js
+        let image = tiff.getImage();
+        let rasters = image.readRasters();
+        let tiepoint = image.getTiePoints()[0];
+        let pixelScale = image.getFileDirectory().ModelPixelScale;
 
-        if (pixelScale[0] !== pixelScale[1]) {
+        let regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
+        if (!regularGrid) {
+            console.log(`pixelScale: ${pixelScale}`);
             throw new Error('A raster without regular cells is not supported (different pixel scale on x and y)');
         }
 
