@@ -47,6 +47,7 @@ export default class ScalarField extends Field {
     /**
      * Creates a ScalarField from the content of a GeoTIFF file, as read by geotiff.js
      * @param   {ArrayBuffer}   data
+     * @param   {Number}   bandIndex
      * @returns {ScalarField}
      */
     static fromGeoTIFF(data, bandIndex = 0) {
@@ -56,24 +57,33 @@ export default class ScalarField extends Field {
         let image = tiff.getImage();
         let rasters = image.readRasters();
         let tiepoint = image.getTiePoints()[0];
-        let pixelScale = image.getFileDirectory().ModelPixelScale;
+        let fileDirectory = image.getFileDirectory();
+        let pixelScale = fileDirectory.ModelPixelScale;
 
         let regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
         if (!regularGrid) {
-            console.log(`pixelScale: ${pixelScale}`);
-            throw new Error('A raster without regular cells is not supported (different pixel scale on x and y)');
+            console.error(`pixelScale: ${pixelScale}`);
+            throw new Error('A raster without regular cells is not supported');
         }
 
         // TODO check no rotation, or else ... throw "Not supported raster"
+        let zs = rasters[bandIndex]; // left-right and top-down.
 
-        // Assume Data order = left-right and top-down
+        if (fileDirectory.GDAL_NODATA) {
+            let noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
+            console.log(noData);
+            zs = zs.map(function (z) {
+                return z === noData ? null : z;
+            });
+        }
+
         let p = {
             nCols: image.getWidth(),
             nRows: image.getHeight(),
             xllCorner: tiepoint.x,
             yllCorner: tiepoint.y - (image.getHeight() * pixelScale[0]),
             cellSize: pixelScale[0],
-            zs: rasters[bandIndex]
+            zs: zs
         };
 
         console.timeEnd('ScalarField from GeoTIFF');
