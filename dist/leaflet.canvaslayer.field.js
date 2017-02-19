@@ -909,6 +909,7 @@
 	        /**
 	         * Creates a ScalarField from the content of a GeoTIFF file, as read by geotiff.js
 	         * @param   {ArrayBuffer}   data
+	         * @param   {Number}   bandIndex
 	         * @returns {ScalarField}
 	         */
 
@@ -923,22 +924,35 @@
 	            var image = tiff.getImage();
 	            var rasters = image.readRasters();
 	            var tiepoint = image.getTiePoints()[0];
-	            var pixelScale = image.getFileDirectory().ModelPixelScale;
+	            var fileDirectory = image.getFileDirectory();
+	            var pixelScale = fileDirectory.ModelPixelScale;
 
-	            if (pixelScale[0] !== pixelScale[1]) {
-	                throw new Error('A raster without regular cells is not supported (different pixel scale on x and y)');
+	            var regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
+	            if (!regularGrid) {
+	                console.error('pixelScale: ' + pixelScale);
+	                throw new Error('A raster without regular cells is not supported');
 	            }
 
 	            // TODO check no rotation, or else ... throw "Not supported raster"
+	            var zs = rasters[bandIndex]; // left-right and top-down.
 
-	            // Assume Data order = left-right and top-down
+	            if (fileDirectory.GDAL_NODATA) {
+	                (function () {
+	                    var noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
+	                    console.log(noData);
+	                    zs = zs.map(function (z) {
+	                        return z === noData ? null : z;
+	                    });
+	                })();
+	            }
+
 	            var p = {
 	                nCols: image.getWidth(),
 	                nRows: image.getHeight(),
 	                xllCorner: tiepoint.x,
 	                yllCorner: tiepoint.y - image.getHeight() * pixelScale[0],
 	                cellSize: pixelScale[0],
-	                zs: rasters[bandIndex]
+	                zs: zs
 	            };
 
 	            console.timeEnd('ScalarField from GeoTIFF');
@@ -1694,7 +1708,7 @@
 	                    //let v = this.field.valueAt(lon, lat);
 	                    //let color = this.options.color(v);
 	                    var c = this.options.color(v);
-	                    var color = chroma(c); // to be more flexible, a chroma color object is created || TODO check efficiency
+	                    var color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
 	                    var rgb = color.rgb();
 	                    var R = parseInt(rgb[0]);
 	                    var G = parseInt(rgb[1]);
@@ -1780,16 +1794,7 @@
 	            height: height
 	        };
 	        return r;
-	    },
-
-	    _getPixelColor: function _getPixelColor(x, y) {
-	        throw new Error('Not working!'); // TODO FIX
-	        /*let ctx = this._canvas.getContext('2d');
-	        let pixel = ctx.getImageData(x, y, 1, 1).data;
-	         // array [r, g, b, a]
-	        return chroma(pixel[0], pixel[1], pixel[2]);*/
 	    }
-
 	});
 
 	L.canvasLayer.scalarField = function (scalarField, options) {
