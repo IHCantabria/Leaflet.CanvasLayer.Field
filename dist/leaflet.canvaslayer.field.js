@@ -889,7 +889,7 @@
 	            var NODATA_value = lines[5].replace('NODATA_value', '').trim();
 
 	            // Data (left-right and top-down)
-	            var zs = []; //
+	            var zs = []; // TODO Consider using TypedArray (& manage NO_DATA)
 	            for (var i = 6; i < lines.length; i++) {
 	                var line = lines[i].trim();
 	                if (line === '') break;
@@ -940,7 +940,8 @@
 	                (function () {
 	                    var noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
 	                    console.log(noData);
-	                    zs = zs.map(function (z) {
+	                    var simpleZS = Array.from(zs); // to simple array, so null is allowed
+	                    zs = simpleZS.map(function (z) {
 	                        return z === noData ? null : z;
 	                    });
 	                })();
