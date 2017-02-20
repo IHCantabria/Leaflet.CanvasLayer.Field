@@ -4,7 +4,8 @@
 L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     options: {
-        color: null // function colorFor(value) [e.g. chromajs.scale]
+        color: null, // function colorFor(value) [e.g. chromajs.scale],
+        interpolate: false
     },
 
     initialize: function (scalarField, options) {
@@ -23,8 +24,13 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     onDrawLayer: function (viewInfo) {
         console.time('onDrawLayer');
 
-        this._drawImage('valueAt');
-        //this._drawImage('interpolatedValueAt');
+        if (this.options.interpolate) {
+            this._drawImage('interpolatedValueAt');
+        } else {
+            this._drawImage('valueAt');
+        }
+
+        //
         //this._drawCells();
 
         console.timeEnd('onDrawLayer');
