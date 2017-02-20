@@ -26,13 +26,7 @@
     <script>
         let map = L.map('map');
 
-        /* Dark basemap */
-        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
-        L.tileLayer(url, {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd'
-        }).addTo(map);
-
+        /* PNOA Orthophoto */
         Spain_PNOA_Ortoimagen.addTo(map);
 
         /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
@@ -40,6 +34,8 @@
             function(error, tiffData) {
                 // DEM from LIDAR - PNOAA
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
+
+                console.log(dem);
                 let layerDem = L.canvasLayer.scalarField(dem, {
                     color: chroma.scale('OrRd').domain(dem.range)
                 }).addTo(map);

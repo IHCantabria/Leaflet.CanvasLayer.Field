@@ -27,7 +27,7 @@ export default class ScalarField extends Field {
         let NODATA_value = lines[5].replace('NODATA_value', '').trim();
 
         // Data (left-right and top-down)
-        let zs = []; //
+        let zs = []; // TODO Consider using TypedArray (& manage NO_DATA)
         for (let i = 6; i < lines.length; i++) {
             let line = lines[i].trim();
             if (line === '') break;
@@ -72,7 +72,8 @@ export default class ScalarField extends Field {
         if (fileDirectory.GDAL_NODATA) {
             let noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
             console.log(noData);
-            zs = zs.map(function (z) {
+            let simpleZS = Array.from(zs); // to simple array, so null is allowed
+            zs = simpleZS.map(function (z) {
                 return z === noData ? null : z;
             });
         }
