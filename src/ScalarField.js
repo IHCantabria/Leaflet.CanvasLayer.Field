@@ -65,8 +65,8 @@ export default class ScalarField extends Field {
             console.error(`pixelScale: ${pixelScale}`);
             throw new Error('A raster without regular cells is not supported');
         }
-
         // TODO check no rotation, or else ... throw "Not supported raster"
+
         let zs = rasters[bandIndex]; // left-right and top-down.
 
         if (fileDirectory.GDAL_NODATA) {

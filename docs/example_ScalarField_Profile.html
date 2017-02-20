@@ -34,10 +34,15 @@
             function(error, tiffData) {
                 // DEM from LIDAR - PNOAA
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
+                let range = [40, 0];
 
-                console.log(dem);
+                let baseScale = chroma.scale('Spectral').domain(range);
+                let colorFunc = function(v) {
+                    if (v > range[0] || v < range[1]) return 'red';
+                    return baseScale(v);
+                }
                 let layerDem = L.canvasLayer.scalarField(dem, {
-                    color: chroma.scale('OrRd').domain(dem.range)
+                    color: colorFunc
                 }).addTo(map);
 
                 map.fitBounds(layerDem.getBounds());

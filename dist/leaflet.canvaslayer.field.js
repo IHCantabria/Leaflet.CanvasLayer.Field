@@ -932,8 +932,8 @@
 	                console.error('pixelScale: ' + pixelScale);
 	                throw new Error('A raster without regular cells is not supported');
 	            }
-
 	            // TODO check no rotation, or else ... throw "Not supported raster"
+
 	            var zs = rasters[bandIndex]; // left-right and top-down.
 
 	            if (fileDirectory.GDAL_NODATA) {
@@ -1618,7 +1618,8 @@
 	L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
 	    options: {
-	        color: null // function colorFor(value) [e.g. chromajs.scale]
+	        color: null, // function colorFor(value) [e.g. chromajs.scale],
+	        interpolate: false
 	    },
 
 	    initialize: function initialize(scalarField, options) {
@@ -1637,8 +1638,13 @@
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        console.time('onDrawLayer');
 
-	        this._drawImage('valueAt');
-	        //this._drawImage('interpolatedValueAt');
+	        if (this.options.interpolate) {
+	            this._drawImage('interpolatedValueAt');
+	        } else {
+	            this._drawImage('valueAt');
+	        }
+
+	        //
 	        //this._drawCells();
 
 	        console.timeEnd('onDrawLayer');
