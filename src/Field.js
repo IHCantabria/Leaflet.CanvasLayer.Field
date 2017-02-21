@@ -26,6 +26,8 @@ export default class Field {
         this.cellSize = params['cellSize'];
 
         this.grid = null; // to be defined by subclasses
+
+        this.inFilter = null;
     }
 
     /**
@@ -67,72 +69,6 @@ export default class Field {
     }
 
     /**
-     * A full list with possible pyramid levels
-     * @returns {[[Type]]} [[Description]]
-     */
-    getPyramidLevels() {
-        let pyramids = [];
-
-        let p = 1;
-        while (this.nCols / p > 1) {
-            pyramids.push(p);
-            p = p * 2;
-        }
-        return pyramids;
-    }
-
-    getPyramid(pyramidLevel) {
-        if (pyramidLevel === 1) return this;
-
-        let params = {};
-        params['nCols'] = this.nCols / pyramidLevel;
-        params['nRows'] = this.nRows / pyramidLevel;
-        params['xllCorner'] = this.xllCorner;
-        params['yllCorner'] = this.yllCorner;
-        params['cellSize'] = this.cellSize * pyramidLevel;
-
-        return this._completePyramidWithValues(pyramidLevel, params);
-    }
-
-    _getResolutionForPyramid(pyramidLevel) {
-        return null;
-    }
-
-    _completePyramidWithValues(pyramidLevel, params) {
-        let step = pyramidLevel; // 1 = all | 2 = a quarter...
-
-        let halfCell = params['cellSize'] / 2.0;
-        let centerLon = this.xllCorner + halfCell;
-        let centerLat = this.yurCorner - halfCell;
-
-        let lon = centerLon;
-        let lat = centerLat;
-
-        this._newDataArrays(params);
-        for (let j = 0; j < this.nRows / step; j++) {
-            for (let i = 0; i < this.nCols / step; i++) {
-                let value = this.interpolatedValueAt(lon, lat);
-                this._pushValueToArrays(params, value);
-                lon += params['cellSize'];
-            }
-            lat -= params['cellSize'];
-            lon = centerLon;
-        }
-
-        return this._makeNewFrom(params);
-    }
-
-    /**
-     * A list with all available resolutions (meters per pixel), one
-     * for each of the pyramid levels
-     */
-    getResolutions() {
-        let pyramids = this.getPyramidLevels();
-        let resolutions = pyramids.map(this._getResolutionForPyramid);
-        return resolutions;
-    }
-
-    /**
      * Grid extent
      * @returns {Number[]} [xmin, ymin, xmax, ymax]
      */
@@ -164,7 +100,7 @@ export default class Field {
     }
 
     /**
-     * Interpolated value at lon-lat coordinates (bilinear int.)
+     * Interpolated value at lon-lat coordinates (bilinear method)
      * @param   {Number} longitude
      * @param   {Number} latitude
      * @returns {Vector|Number} [u, v, magnitude]
@@ -267,7 +203,12 @@ export default class Field {
         let ii = Math.floor(i);
         let jj = Math.floor(j);
 
-        return this._valueAtIndexes(ii, jj);
+        let value = this._valueAtIndexes(ii, jj);
+        if (this.inFilter) {
+            if (!this.inFilter(value)) return null;
+        }
+
+        return value;
     }
 
     /**
@@ -277,7 +218,14 @@ export default class Field {
      * @returns {Boolean}
      */
     hasValueAt(lon, lat) {
-        return this.valueAt(lon, lat) !== null;
+        let value = this.valueAt(lon, lat);
+        let hasValue = (value !== null);
+
+        let included = true;
+        if (this.inFilter) {
+            included = this.inFilter(value);
+        }
+        return (hasValue && included);
     }
 
     /**
@@ -291,27 +239,12 @@ export default class Field {
     }
 
     /**
-     * Gives a random position to 'o' inside the grid
-     * @param {Object} [o] - an object (eg. a particle)
-     * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
-     */
-    randomPositionOld(o = {}) {
-        let i = Math.random() * this.nCols | 0;
-        let j = Math.random() * this.nRows | 0;
-
-        o.x = this._longitudeAtX(i);
-        o.y = this._latitudeAtY(j);
-        return o;
-    }
-
-    /**
      * Gives a random position to 'o' inside the grid, trying to have
      * a value in that position (several retries)
      * @param {Object} [o] - an object (eg. a particle)
      * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
      */
     randomPosition(o = {}) {
-
         let i, j;
         let safetyNet = 0;
         do {

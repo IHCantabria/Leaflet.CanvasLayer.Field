@@ -313,6 +313,8 @@
 	        this.cellSize = params['cellSize'];
 
 	        this.grid = null; // to be defined by subclasses
+
+	        this.inFilter = null;
 	    }
 
 	    /**
@@ -368,81 +370,6 @@
 	        }
 
 	        /**
-	         * A full list with possible pyramid levels
-	         * @returns {[[Type]]} [[Description]]
-	         */
-
-	    }, {
-	        key: 'getPyramidLevels',
-	        value: function getPyramidLevels() {
-	            var pyramids = [];
-
-	            var p = 1;
-	            while (this.nCols / p > 1) {
-	                pyramids.push(p);
-	                p = p * 2;
-	            }
-	            return pyramids;
-	        }
-	    }, {
-	        key: 'getPyramid',
-	        value: function getPyramid(pyramidLevel) {
-	            if (pyramidLevel === 1) return this;
-
-	            var params = {};
-	            params['nCols'] = this.nCols / pyramidLevel;
-	            params['nRows'] = this.nRows / pyramidLevel;
-	            params['xllCorner'] = this.xllCorner;
-	            params['yllCorner'] = this.yllCorner;
-	            params['cellSize'] = this.cellSize * pyramidLevel;
-
-	            return this._completePyramidWithValues(pyramidLevel, params);
-	        }
-	    }, {
-	        key: '_getResolutionForPyramid',
-	        value: function _getResolutionForPyramid(pyramidLevel) {
-	            return null;
-	        }
-	    }, {
-	        key: '_completePyramidWithValues',
-	        value: function _completePyramidWithValues(pyramidLevel, params) {
-	            var step = pyramidLevel; // 1 = all | 2 = a quarter...
-
-	            var halfCell = params['cellSize'] / 2.0;
-	            var centerLon = this.xllCorner + halfCell;
-	            var centerLat = this.yurCorner - halfCell;
-
-	            var lon = centerLon;
-	            var lat = centerLat;
-
-	            this._newDataArrays(params);
-	            for (var j = 0; j < this.nRows / step; j++) {
-	                for (var i = 0; i < this.nCols / step; i++) {
-	                    var value = this.interpolatedValueAt(lon, lat);
-	                    this._pushValueToArrays(params, value);
-	                    lon += params['cellSize'];
-	                }
-	                lat -= params['cellSize'];
-	                lon = centerLon;
-	            }
-
-	            return this._makeNewFrom(params);
-	        }
-
-	        /**
-	         * A list with all available resolutions (meters per pixel), one
-	         * for each of the pyramid levels
-	         */
-
-	    }, {
-	        key: 'getResolutions',
-	        value: function getResolutions() {
-	            var pyramids = this.getPyramidLevels();
-	            var resolutions = pyramids.map(this._getResolutionForPyramid);
-	            return resolutions;
-	        }
-
-	        /**
 	         * Grid extent
 	         * @returns {Number[]} [xmin, ymin, xmax, ymax]
 	         */
@@ -480,7 +407,7 @@
 	        }
 
 	        /**
-	         * Interpolated value at lon-lat coordinates (bilinear int.)
+	         * Interpolated value at lon-lat coordinates (bilinear method)
 	         * @param   {Number} longitude
 	         * @param   {Number} latitude
 	         * @returns {Vector|Number} [u, v, magnitude]
@@ -619,7 +546,12 @@
 	            var ii = Math.floor(i);
 	            var jj = Math.floor(j);
 
-	            return this._valueAtIndexes(ii, jj);
+	            var value = this._valueAtIndexes(ii, jj);
+	            if (this.inFilter) {
+	                if (!this.inFilter(value)) return null;
+	            }
+
+	            return value;
 	        }
 
 	        /**
@@ -632,7 +564,14 @@
 	    }, {
 	        key: 'hasValueAt',
 	        value: function hasValueAt(lon, lat) {
-	            return this.valueAt(lon, lat) !== null;
+	            var value = this.valueAt(lon, lat);
+	            var hasValue = value !== null;
+
+	            var included = true;
+	            if (this.inFilter) {
+	                included = this.inFilter(value);
+	            }
+	            return hasValue && included;
 	        }
 
 	        /**
@@ -649,25 +588,6 @@
 	        }
 
 	        /**
-	         * Gives a random position to 'o' inside the grid
-	         * @param {Object} [o] - an object (eg. a particle)
-	         * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
-	         */
-
-	    }, {
-	        key: 'randomPositionOld',
-	        value: function randomPositionOld() {
-	            var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	            var i = Math.random() * this.nCols | 0;
-	            var j = Math.random() * this.nRows | 0;
-
-	            o.x = this._longitudeAtX(i);
-	            o.y = this._latitudeAtY(j);
-	            return o;
-	        }
-
-	        /**
 	         * Gives a random position to 'o' inside the grid, trying to have
 	         * a value in that position (several retries)
 	         * @param {Object} [o] - an object (eg. a particle)
@@ -678,7 +598,6 @@
 	        key: 'randomPosition',
 	        value: function randomPosition() {
 	            var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
 
 	            var i = void 0,
 	                j = void 0;
@@ -1547,7 +1466,8 @@
 	L.CanvasLayer.Field = L.CanvasLayer.extend({
 
 	    options: {
-	        click: true },
+	        click: true // 'onclick' event enabled
+	    },
 
 	    initialize: function initialize(field, options) {
 	        this.field = field;
@@ -1638,99 +1558,50 @@
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        console.time('onDrawLayer');
 
-	        if (this.options.interpolate) {
-	            this._drawImage('interpolatedValueAt');
-	        } else {
-	            this._drawImage('valueAt');
-	        }
-
-	        //
-	        //this._drawCells();
+	        this._drawImage();
 
 	        console.timeEnd('onDrawLayer');
 	    },
 
 	    /**
-	     * Draws the field one cell at a time, drawRectangle
+	     * Draws the field in an ImageData and applying it with putImageData.
+	     * Used as a reference: http://geoexamples.com/d3-raster-tools-docs/code_samples/raster-pixels-page.html
 	     */
-	    _drawCells: function _drawCells() {
-	        // Individual cell paint
-	        //        let level = this._pyramidLevelFor(viewInfo);
-	        //        let p = this.field.getPyramid(level);
-	        //        let cellsOnScreen = p.getCells().filter(c => viewInfo.bounds.intersects(c.getBounds()));
-	        //        this._draw(cellsOnScreen);
-
-	        var cells = this.field.getCells();
+	    _drawImage: function _drawImage() {
 	        var ctx = this._getDrawingContext();
-	        var _iteratorNormalCompletion = true;
-	        var _didIteratorError = false;
-	        var _iteratorError = undefined;
-
-	        try {
-	            for (var _iterator = cells[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                var c = _step.value;
-
-	                if (c.value !== null) {
-	                    this._drawRectangle(ctx, c);
-	                }
-	            }
-	        } catch (err) {
-	            _didIteratorError = true;
-	            _iteratorError = err;
-	        } finally {
-	            try {
-	                if (!_iteratorNormalCompletion && _iterator.return) {
-	                    _iterator.return();
-	                }
-	            } finally {
-	                if (_didIteratorError) {
-	                    throw _iteratorError;
-	                }
-	            }
-	        }
-	    },
-
-	    /**
-	     * Draws the field in an ImageData
-	     */
-	    _drawImage: function _drawImage(f) {
-	        var ctx = this._getDrawingContext();
-	        /* Building an image and just one render */
-	        /* taken from: http://geoexamples.com/d3-raster-tools-docs/code_samples/raster-pixels-page.html*/
 	        var width = this._canvas.width;
 	        var height = this._canvas.height;
-
 	        var img = ctx.createImageData(width, height);
 	        var data = img.data;
 
-	        var pos = 0;
-	        var alphaByte = function alphaByte(alphaPercent) {
-	            var scaledValue = d3.scaleLinear().domain([0, 1]).range([0, 255]);
-	            var v = Math.floor(scaledValue(alphaPercent));
-	            return v;
-	        };
+	        this._prepareImage(data, width, height);
 
+	        ctx.putImageData(img, 0, 0);
+	    },
+
+	    /**
+	     * Prepares the image in data, as RGBA array
+	     */
+	    _prepareImage: function _prepareImage(data, width, height) {
+	        var f = this.options.interpolate ? 'interpolatedValueAt' : 'valueAt';
+
+	        var pos = 0;
 	        for (var j = 0; j < height; j++) {
 	            for (var i = 0; i < width; i++) {
 	                var pointCoords = this._map.containerPointToLatLng([i, j]);
 	                var lon = pointCoords.lng;
 	                var lat = pointCoords.lat;
-	                if (this.field.hasValueAt(lon, lat)) {
-	                    //let v = this.field.valueAt(lon, lat);
-	                    var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
-	                    //let v = this.field.valueAt(lon, lat);
-	                    //let color = this.options.color(v);
-	                    var c = this.options.color(v);
 
-	                    var color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
+	                if (this.field.hasValueAt(lon, lat)) {
+	                    var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
+
+	                    var color = this._getColorFor(v);
+
 	                    var rgb = color.rgb();
 	                    var R = parseInt(rgb[0]);
 	                    var G = parseInt(rgb[1]);
 	                    var B = parseInt(rgb[2]);
-
-	                    //let A = alphaByte.call(this, color.alpha()); // TODO. too slow... it would be better to skip pixel
-	                    var A = 255;
-	                    //console.log(A);
+	                    var A = 255; // :(, no alpha
 	                    data[pos] = R;
 	                    data[pos + 1] = G;
 	                    data[pos + 2] = B;
@@ -1739,78 +1610,19 @@
 	                pos = pos + 4;
 	            }
 	        }
-	        ctx.putImageData(img, 0, 0);
 	    },
 
+
 	    /**
-	     * Select the best raster pyramid level for the current view
-	     * @param   {Object} viewInfo
-	     * @returns {Number} n of pyramid (1:all | 2:half resolution...)
+	     * Gets a chroma color for a pixel value, according to 'options.color'
 	     */
-	    _pyramidLevelFor: function _pyramidLevelFor(viewInfo) {
-	        console.log(viewInfo);
-	        // meters per pixel
-
-	        var mres = this._mapResolution();
-	        console.log('Map resolution: ', mres);
-
-	        var plevels = this.field.getPyramidLevels();
-	        console.log('Get pyramid levels: ', plevels);
-	        // let resolution = this.field.getResolution();
-
-	        var pyramids = [];
-	        var p = 1;
-
-	        return 1; // allthis._map ||TODO
-
-	        /*let steps = [];
-	        let n = this.field.ncols;
-	        console.log('ncols ', n);
-	         let i = 1;
-	        while (n / i > 1) {
-	            steps.push[i];
-	            i = i * 2;
-	            console.log(i);
+	    _getColorFor: function _getColorFor(v) {
+	        var c = this.options.color; // e.g. for a constant 'red'
+	        if (typeof c == 'function') {
+	            c = this.options.color(v);
 	        }
-	         console.log(viewInfo);
-	        return steps[steps.length - 1]; // TODO fit resolution
-	        */
-	    },
-
-	    _mapResolution: function _mapResolution() {
-	        return 40075016.686 * Math.abs(Math.cos(this._map.getCenter().lat * 180 / Math.PI)) / Math.pow(2, this._map.getZoom() + 8);
-	    },
-
-	    /**
-	     * Draw a pixel on canvas as a Rectangle
-	     * @param {object} g    [[Description]]
-	     * @param {object} cell [[Description]]
-	     */
-	    _drawRectangle: function _drawRectangle(g, cell) {
-	        g.fillStyle = this.options.color(cell.value);
-	        var r = this._getRectangle(cell.getBounds());
-	        //g.fillRect(r.x, r.y, r.width, r.height); // TODO check drawing speed
-	        g.fillRect(Math.round(r.x), Math.round(r.y), r.width, r.height);
-	    },
-
-	    /**
-	     * Get rectangle to draw on canvas, aka 'pixel'
-	     * @param   {LatLngBounds} cellBounds
-	     * @returns {Object} {x, y, width, height}
-	     */
-	    _getRectangle: function _getRectangle(cellBounds) {
-	        var upperLeft = this._map.latLngToContainerPoint(cellBounds.getNorthWest());
-	        var lowerRight = this._map.latLngToContainerPoint(cellBounds.getSouthEast());
-	        var width = Math.abs(upperLeft.x - lowerRight.x);
-	        var height = Math.abs(upperLeft.y - lowerRight.y);
-
-	        var r = {
-	            x: upperLeft.x,
-	            y: upperLeft.y,
-	            width: width,
-	            height: height
-	        };
-	        return r;
+	        var color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
+	        return color;
 	    }
 	});
 
