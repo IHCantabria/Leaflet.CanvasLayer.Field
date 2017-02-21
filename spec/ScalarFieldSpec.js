@@ -74,20 +74,6 @@ describe('ScalarField', function () {
             expect(pN.equals(last)).toBe(true);
         });
 
-        it('can return a raster pyramid (resampled field)', function () {
-            var allCells = sf.getPyramid(1);
-            expect(allCells).toBe(sf);
-            expect(allCells.getCells().length).toBe(100);
-
-            var quarterCells = sf.getPyramid(2);
-            expect(quarterCells).not.toBe(sf);
-            expect(quarterCells.getCells().length).toBe(25);
-
-            var nCells = sf.getPyramid(4);
-            expect(nCells).not.toBe(sf);
-            expect(nCells.getCells().length).toBe(9);
-        });
-
         it('can calculate the Range of its values', function () {
             expect(sf.range).not.toBe(null);
             expect(sf.range[0]).toBeCloseTo(0.0058675920590758, 8);
