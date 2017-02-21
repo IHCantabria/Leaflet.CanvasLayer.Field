@@ -27,23 +27,22 @@
         let map = L.map('map');
 
         /* PNOA Orthophoto */
-        Spain_PNOA_Ortoimagen.addTo(map);
+        Spain_PNOA_Ortoimagen.addTo(map).setOpacity(0.7);
 
         /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
         d3.request("data/castro_dem.tiff").responseType('arraybuffer').get(
             function (error, tiffData) {
                 // DEM from LIDAR - PNOAA
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
-                let range = [80, 30];
 
-                let baseScale = chroma.scale('Spectral').domain(range);
-                let colorFunc = function (v) {
-                    let outOfRange = v > range[0] || v < range[1];
-                    if (outOfRange) return chroma('rgba(0, 0, 0, 0)');
-                    return baseScale(v);
-                }
+                let min = 0;
+                let max = 5;
+                dem.inFilter = (function (v) {
+                    return v >= min && v <= max;
+                });
+
                 let layerDem = L.canvasLayer.scalarField(dem, {
-                    color: colorFunc
+                    color: 'darkBlue' /*chroma.scale('Spectral').domain([80, 30])*/
                 }).addTo(map);
 
                 map.fitBounds(layerDem.getBounds());
