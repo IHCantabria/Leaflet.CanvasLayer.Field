@@ -10,9 +10,24 @@
 </head>
 
 <body>
-    <h1 id="title">xxxxxx</h1>
+    <h1 id="title">Data filtering in a ScalarField</h1>
     <div id="map"></div>
-
+    <div id="floating-panel">
+        <ul>
+            <li>
+                <label>Width</label>
+                <input id="width" type="range" min="0" max="5" step="0.2" value="0.8">
+            </li>
+            <li>
+                <label>Color</label>
+                <input id="color" type="color" value="#ffffff">
+            </li>
+            <li>
+                <label>Velocity</label>
+                <input id="velocityScale" type="range" min="1000" max="10000" value="5000" style="transform: rotateY(180deg);">
+            </li>
+        </ul>
+    </div>
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
@@ -29,10 +44,9 @@
         /* PNOA Orthophoto */
         Spain_PNOA_Ortoimagen.addTo(map).setOpacity(0.7);
 
-        /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
+        /* DEM data from LIDAR - PNOA */
         d3.request("data/castro_dem.tiff").responseType('arraybuffer').get(
             function (error, tiffData) {
-                // DEM from LIDAR - PNOAA
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
                 let min = 0;
                 let max = 5;
