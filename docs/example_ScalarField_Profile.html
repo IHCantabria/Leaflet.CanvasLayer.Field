@@ -34,7 +34,6 @@
             function (error, tiffData) {
                 // DEM from LIDAR - PNOAA
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
-
                 let min = 0;
                 let max = 5;
                 dem.inFilter = (function (v) {
