@@ -5,7 +5,7 @@
 L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     options: {
-        click: true, // 'onclick' event enabled
+        click: true // 'onclick' event enabled
     },
 
     initialize: function (field, options) {
