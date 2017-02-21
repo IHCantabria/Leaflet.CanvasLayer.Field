@@ -1704,6 +1704,12 @@
 	        var data = img.data;
 
 	        var pos = 0;
+	        var alphaByte = function alphaByte(alphaPercent) {
+	            var scaledValue = d3.scaleLinear().domain([0, 1]).range([0, 255]);
+	            var v = Math.floor(scaledValue(alphaPercent));
+	            return v;
+	        };
+
 	        for (var j = 0; j < height; j++) {
 	            for (var i = 0; i < width; i++) {
 	                var pointCoords = this._map.containerPointToLatLng([i, j]);
@@ -1715,12 +1721,16 @@
 	                    //let v = this.field.valueAt(lon, lat);
 	                    //let color = this.options.color(v);
 	                    var c = this.options.color(v);
+
 	                    var color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
 	                    var rgb = color.rgb();
 	                    var R = parseInt(rgb[0]);
 	                    var G = parseInt(rgb[1]);
 	                    var B = parseInt(rgb[2]);
-	                    var A = 255; // TODO accept alpha in color (0, 1) --> (0, 255) from color.alpha()
+
+	                    //let A = alphaByte.call(this, color.alpha()); // TODO. too slow... it would be better to skip pixel
+	                    var A = 255;
+	                    //console.log(A);
 	                    data[pos] = R;
 	                    data[pos + 1] = G;
 	                    data[pos + 2] = B;

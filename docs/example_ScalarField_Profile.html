@@ -31,14 +31,15 @@
 
         /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
         d3.request("data/castro_dem.tiff").responseType('arraybuffer').get(
-            function(error, tiffData) {
+            function (error, tiffData) {
                 // DEM from LIDAR - PNOAA
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
-                let range = [40, 0];
+                let range = [80, 30];
 
                 let baseScale = chroma.scale('Spectral').domain(range);
-                let colorFunc = function(v) {
-                    if (v > range[0] || v < range[1]) return 'red';
+                let colorFunc = function (v) {
+                    let outOfRange = v > range[0] || v < range[1];
+                    if (outOfRange) return chroma('rgba(0, 0, 0, 0)');
                     return baseScale(v);
                 }
                 let layerDem = L.canvasLayer.scalarField(dem, {
@@ -47,7 +48,7 @@
 
                 map.fitBounds(layerDem.getBounds());
 
-                layerDem.on('click', function(e) {
+                layerDem.on('click', function (e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(1);
                         let html = (`<span class="popupText">${v} meters</span>`);
@@ -58,7 +59,6 @@
                     }
                 });
             });
-
     </script>
 </body>
 
