@@ -40,7 +40,7 @@
             layer.on('click', function (e) {
                 if (e.value !== null) {
                     let v = e.value.toFixed(3);
-                    let html = (`Surface current velocity: ${v} m/s`);
+                    let html = `<span class="popupText">Surface current velocity: ${v} m/s</span>`;
                     let popup = L.popup().setLatLng(e.latlng).setContent(html).openOn(map);
                 }
             });
