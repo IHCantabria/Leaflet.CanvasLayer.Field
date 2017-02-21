@@ -13,7 +13,6 @@
             font-weight: 100;
             font-size: large;
         }
-
     </style>
 </head>
 
@@ -41,9 +40,16 @@
         /*
             Vectorfield animation with a colormap for magnitude + and associated colorBar
         */
-        d3.text('data/Cantabria_U.asc', function(u) {
-            d3.text('data/Cantabria_V.asc', function(v) {
+        d3.text('data/Cantabria_U.asc', function (u) {
+            d3.text('data/Cantabria_V.asc', function (v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v, 0.001); // scalefactor to get units in m/s
+                vf.inFilter = function (vector) {
+                    return true;
+                    /*if (vector) {
+                        return vector.magnitude() > 0.5;
+                    }
+                    return false;*/
+                }
 
                 var range = [0, 1.4];
                 var scale = chroma.scale('OrRd').domain(range);
@@ -52,7 +58,7 @@
                 var layer = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 2000,
                     color: scale,
-                    velocityScale: 1 / 400
+                    velocityScale: 1 / 600
                 }).addTo(map);
                 map.fitBounds(layer.getBounds());
 
@@ -64,7 +70,7 @@
                 }).addTo(map);
 
                 // info
-                layer.on('click', function(e) {
+                layer.on('click', function (e) {
                     if (e.value !== null) {
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
@@ -78,7 +84,6 @@
                 });
             });
         });
-
     </script>
 </body>
 
