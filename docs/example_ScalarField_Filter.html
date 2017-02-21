@@ -15,16 +15,8 @@
     <div id="floating-panel">
         <ul>
             <li>
-                <label>Width</label>
-                <input id="width" type="range" min="0" max="5" step="0.2" value="0.8">
-            </li>
-            <li>
-                <label>Color</label>
-                <input id="color" type="color" value="#ffffff">
-            </li>
-            <li>
-                <label>Velocity</label>
-                <input id="velocityScale" type="range" min="1000" max="10000" value="5000" style="transform: rotateY(180deg);">
+                <label>Height</label>
+                <input id="height" type="range" min="0.5" max="80" step="1" value="1" class="verticalRange">
             </li>
         </ul>
     </div>
@@ -42,25 +34,29 @@
         let map = L.map('map');
 
         /* PNOA Orthophoto */
-        Spain_PNOA_Ortoimagen.addTo(map).setOpacity(0.7);
+        Spain_PNOA_Ortoimagen.addTo(map).setOpacity(0.6);
 
         /* DEM data from LIDAR - PNOA */
         d3.request("data/castro_dem.tiff").responseType('arraybuffer').get(
-            function (error, tiffData) {
+            function(error, tiffData) {
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
-                let min = 0;
-                let max = 5;
-                dem.inFilter = (function (v) {
-                    return v >= min && v <= max;
-                });
-
                 let layerDem = L.canvasLayer.scalarField(dem, {
-                    color: 'darkBlue' /*chroma.scale('Spectral').domain([80, 30])*/
+                    color: chroma.scale('Spectral').domain([80, 0])
                 }).addTo(map);
 
                 map.fitBounds(layerDem.getBounds());
 
-                layerDem.on('click', function (e) {
+                /* dynamic filtering */
+                let height = document.getElementById('height');
+                height.addEventListener('change', function() {
+                    dem.inFilter = (function(v) {
+                        return v >= 0 && v <= height.value;
+                    });
+                    layerDem.needRedraw();
+                });
+
+                /* popup */
+                layerDem.on('click', function(e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(1);
                         let html = (`<span class="popupText">${v} meters</span>`);
@@ -71,6 +67,7 @@
                     }
                 });
             });
+
     </script>
 </body>
 

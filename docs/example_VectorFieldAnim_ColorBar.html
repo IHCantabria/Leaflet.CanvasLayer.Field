@@ -43,7 +43,8 @@
         */
         d3.text('data/Cantabria_U.asc', function(u) {
             d3.text('data/Cantabria_V.asc', function(v) {
-                let vf = L.VectorField.fromASCIIGrids(u, v, 0.001); // scalefactor to get units in m/s
+                let scaleFactor = 0.001; // to m/s
+                let vf = L.VectorField.fromASCIIGrids(u, v, scaleFactor);
                 vf.inFilter = function(vector) {
                     return true;
                     /*if (vector) {
@@ -52,14 +53,14 @@
                     return false;*/
                 }
 
-                var range = [0, 1.4];
+                var range = vf.range;
                 var scale = chroma.scale('OrRd').domain(range);
 
                 // Layer
                 var layer = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 2000,
                     color: scale,
-                    velocityScale: 1 / 600
+                    velocityScale: 1 / 200
                 }).addTo(map);
                 map.fitBounds(layer.getBounds());
 
