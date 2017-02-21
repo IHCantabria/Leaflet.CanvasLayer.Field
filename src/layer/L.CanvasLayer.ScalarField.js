@@ -69,6 +69,12 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         let data = img.data;
 
         var pos = 0;
+        var alphaByte = (function (alphaPercent) {
+            let scaledValue = d3.scaleLinear().domain([0, 1]).range([0, 255]);
+            let v = Math.floor(scaledValue(alphaPercent));
+            return v;
+        });
+
         for (var j = 0; j < height; j++) {
             for (var i = 0; i < width; i++) {
                 let pointCoords = this._map.containerPointToLatLng([i, j]);
@@ -80,12 +86,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                     //let v = this.field.valueAt(lon, lat);
                     //let color = this.options.color(v);
                     let c = this.options.color(v);
+
                     let color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
                     let rgb = color.rgb();
                     let R = parseInt(rgb[0]);
                     let G = parseInt(rgb[1]);
                     let B = parseInt(rgb[2]);
-                    let A = 255; // TODO accept alpha in color (0, 1) --> (0, 255) from color.alpha()
+
+                    //let A = alphaByte.call(this, color.alpha()); // TODO. too slow... it would be better to skip pixel
+                    let A = 255;
+                    //console.log(A);
                     data[pos] = R;
                     data[pos + 1] = G;
                     data[pos + 2] = B;
