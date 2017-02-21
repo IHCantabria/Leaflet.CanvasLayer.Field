@@ -1486,7 +1486,8 @@
 	L.CanvasLayer.Field = L.CanvasLayer.extend({
 
 	    options: {
-	        click: true // 'onclick' event enabled
+	        click: true, // 'onclick' event enabled
+	        pointerOnHover: false
 	    },
 
 	    initialize: function initialize(field, options) {
@@ -1498,11 +1499,17 @@
 	        if (this.options.click) {
 	            this._map.on('click', this._queryValue, this);
 	        }
+	        if (this.options.pointerOnHover) {
+	            this._map.on('mousemove', this._showPointerOnValue, this);
+	        }
 	    },
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
 	        if (this.options.click) {
 	            this._map.off('click', this._queryValue, this);
+	        }
+	        if (this.options.pointerOnHover) {
+	            this._map.off('mousemove', this._showPointerOnValue, this);
 	        }
 	    },
 
@@ -1522,6 +1529,17 @@
 	            northEast = L.latLng(bb[3], bb[2]);
 	        var bounds = L.latLngBounds(southWest, northEast);
 	        return bounds;
+	    },
+
+	    _showPointerOnValue: function _showPointerOnValue(e) {
+	        var lon = e.latlng.lng;
+	        var lat = e.latlng.lat;
+
+	        if (this.field.hasValueAt(lon, lat)) {
+	            this._map.getContainer().style.cursor = 'pointer';
+	        } else {
+	            this._map.getContainer().style.cursor = 'default';
+	        }
 	    },
 
 	    _queryValue: function _queryValue(e) {
