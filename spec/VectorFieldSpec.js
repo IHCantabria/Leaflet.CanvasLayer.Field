@@ -63,20 +63,6 @@ describe('VectorField', function () {
         expect(pN.equals(last)).toBe(true);
     });
 
-    it('can return a raster pyramid (resampled field)', function () {
-        var allCells = vf.getPyramid(1);
-        expect(allCells).toBe(vf);
-        expect(allCells.getCells().length).toBe(100);
-
-        var quarterCells = vf.getPyramid(2);
-        expect(quarterCells).not.toBe(vf);
-        expect(quarterCells.getCells().length).toBe(25);
-
-        var nCells = vf.getPyramid(4);
-        expect(nCells).not.toBe(vf);
-        expect(nCells.getCells().length).toBe(9);
-    });
-
     it('can calculate the Range of its values', function () {
         expect(vf.range).not.toBe(null);
         expect(vf.range[0]).toEqual(0.0067317434565905545);
