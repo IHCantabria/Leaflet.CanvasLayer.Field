@@ -83,47 +83,4 @@ describe('Field', function () {
         let lat = 43.47082043045964;
         expect(f.hasValueAt(lon, lat)).toBe(false);
     });
-
-    it('can return its resolutions (m/pixel)', function () {
-        let res = f.getResolutions();
-        expect(res).not.toBe(null);
-
-        let r1 = f.cellSize;
-        expect(res[0]).toBe(r1);
-
-    });
-
-    it('can return its pyramids (max)', function () {
-        let ps = f.getPyramidLevels();
-        expect(ps.length).toBe(4);
-
-        expect(ps[0]).toBe(1);
-        expect(ps[1]).toBe(2);
-    });
-
-    /*
-    it('can return its resolutions', function () {
-    });
-    */
-
-    /*it('can easily transform their cells to imageData', function () {
-
-        var imageData = this.grid
-
-        var cells = f.getCells();
-        expect(cells.length).toEqual(100);
-
-        var rgba = [255, 0, 0, 0.5];
-        var data = [];
-
-        for c of cells {
-            data.push(rgba[0]);
-            data.push(rgba[1]);
-            data.push(rgba[2]);
-            data.push(rgba[3]);
-        }
-        colouredImage = data;
-        assert()
-    })
-    */
 });
