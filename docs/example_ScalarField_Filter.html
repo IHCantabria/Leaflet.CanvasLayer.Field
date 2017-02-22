@@ -16,7 +16,8 @@
         <ul>
             <li>
                 <label>Height</label>
-                <input id="height" type="range" min="0.5" max="80" step="1" value="1" class="verticalRange">
+                <input id="height" type="range" min="1" max="20" step="1" value="1" class="verticalRange">
+                <span id="meters" style="display:block;">&lt;1 m</span>
             </li>
         </ul>
     </div>
@@ -38,7 +39,7 @@
 
         /* DEM data from LIDAR - PNOA */
         d3.request("data/castro_dem.tiff").responseType('arraybuffer').get(
-            function(error, tiffData) {
+            function (error, tiffData) {
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
                 let layerDem = L.canvasLayer.scalarField(dem, {
                     color: chroma.scale('Spectral').domain([80, 0])
@@ -48,15 +49,17 @@
 
                 /* dynamic filtering */
                 let height = document.getElementById('height');
-                height.addEventListener('change', function() {
-                    dem.inFilter = (function(v) {
-                        return v >= 0 && v <= height.value;
+                height.addEventListener('change', function () {
+                    let h = height.value;
+                    dem.inFilter = (function (v) {
+                        return v >= 0 && v <= h;
                     });
                     layerDem.needRedraw();
+                    document.getElementById('meters').innerHTML = '< ' + h + ' m'
                 });
 
                 /* popup */
-                layerDem.on('click', function(e) {
+                layerDem.on('click', function (e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(1);
                         let html = (`<span class="popupText">${v} meters</span>`);
@@ -67,7 +70,6 @@
                     }
                 });
             });
-
     </script>
 </body>
 

@@ -14,7 +14,7 @@
     <div id="map"></div>
 
     <div id="floating-panel">
-        <h2>Add pre-defined scales</h2>
+        <h2>chromajs pre-defined scales</h2>
     </div>
 
     <!-- CDN -->
@@ -27,7 +27,7 @@
 
     <script>
         var map = L.map('map');
-        
+
         /* Basemap */
         var url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
         //let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
@@ -40,7 +40,7 @@
         /*
             Some ScalarField layers with custom styles
         */
-        d3.text('data/Bay_Speed.asc', function(asc) {
+        d3.text('data/Bay_Speed.asc', function (asc) {
             var s = L.ScalarField.fromASCIIGrid(asc);
 
             var layer1 = L.canvasLayer.scalarField(s, {
@@ -63,7 +63,7 @@
             });
 
             var layer5 = L.canvasLayer.scalarField(s, {
-                color: function(v) {
+                color: function (v) {
                     if (v > 0.75) {
                         if (v > 0.85) {
                             return 'Indigo';
@@ -88,7 +88,6 @@
                 collapsed: false
             }).addTo(map);
         });
-
     </script>
 </body>
 
