@@ -1,4 +1,5 @@
 # Leaflet.CanvasLayer.Field
+v0.81
 
 ## Description
 A set of layers to visualize 'Fields' (aka *Rasters*) from ASCIIGrid or GeoTIFF files, based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler
