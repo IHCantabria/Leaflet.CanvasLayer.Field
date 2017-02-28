@@ -1267,17 +1267,20 @@
 
 	    //-------------------------------------------------------------
 	    _onLayerDidResize: function _onLayerDidResize(resizeEvent) {
+	        console.log('_onLayerDidResize');
 	        this._canvas.width = resizeEvent.newSize.x;
 	        this._canvas.height = resizeEvent.newSize.y;
 	    },
 	    //-------------------------------------------------------------
 	    _onLayerDidMove: function _onLayerDidMove() {
+	        console.log('_onLayerDidMove');
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
 	        this.drawLayer();
 	    },
 	    //-------------------------------------------------------------
 	    getEvents: function getEvents() {
+	        console.log('getEvents');
 	        var events = {
 	            resize: this._onLayerDidResize,
 	            moveend: this._onLayerDidMove
@@ -1290,6 +1293,8 @@
 	    },
 	    //-------------------------------------------------------------
 	    onAdd: function onAdd(map) {
+	        console.log('onAdd');
+
 	        this._map = map;
 	        this._canvas = L.DomUtil.create('canvas', 'leaflet-layer');
 	        this.tiles = {};
@@ -1312,6 +1317,8 @@
 
 	    //-------------------------------------------------------------
 	    onRemove: function onRemove(map) {
+	        console.log('onRemove');
+
 	        var del = this._delegate || this;
 	        del.onLayerWillUnmount && del.onLayerWillUnmount(); // -- callback
 
@@ -1325,6 +1332,8 @@
 
 	    //------------------------------------------------------------
 	    addTo: function addTo(map) {
+	        console.log('addTo');
+
 	        map.addLayer(this);
 	        return this;
 	    },
@@ -1338,6 +1347,8 @@
 
 	    //------------------------------------------------------------------------------
 	    drawLayer: function drawLayer() {
+	        console.log('drawLayer');
+
 	        // -- todo make the viewInfo properties  flat objects.
 	        var size = this._map.getSize();
 	        var bounds = this._map.getBounds();
@@ -1361,10 +1372,13 @@
 
 	    //------------------------------------------------------------------------------
 	    _animateZoom: function _animateZoom(e) {
+	        console.log('_animateZoom');
+
 	        var scale = this._map.getZoomScale(e.zoom);
 	        var offset = this._map._latLngToNewLayerPoint(this._map.getBounds().getNorthWest(), e.zoom, e.center);
 
 	        L.DomUtil.setTransform(this._canvas, offset, scale);
+	        console.log('setTransform with offset: ', offset, ' and scale: ', scale);
 	    }
 	});
 
@@ -1496,6 +1510,7 @@
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
+	        console.log('onLayerDidMount');
 	        if (this.options.click) {
 	            this._map.on('click', this._queryValue, this);
 	        }
@@ -1505,12 +1520,16 @@
 	    },
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
+	        console.log('onLayerWillUnmount');
 	        if (this.options.click) {
 	            this._map.off('click', this._queryValue, this);
 	        }
 	        if (this.options.pointerOnHover) {
 	            this._map.off('mousemove', this._showPointerOnValue, this);
 	        }
+	        //this.needRedraw();
+	        //TODO
+	        //L.DomUtil.setPosition(this._canvas, topLeft);
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
