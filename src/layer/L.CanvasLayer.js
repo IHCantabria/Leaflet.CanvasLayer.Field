@@ -31,17 +31,20 @@ L.CanvasLayer = L.Layer.extend({
 
     //-------------------------------------------------------------
     _onLayerDidResize: function (resizeEvent) {
+        console.log('_onLayerDidResize');
         this._canvas.width = resizeEvent.newSize.x;
         this._canvas.height = resizeEvent.newSize.y;
     },
     //-------------------------------------------------------------
     _onLayerDidMove: function () {
+        console.log('_onLayerDidMove');
         var topLeft = this._map.containerPointToLayerPoint([0, 0]);
         L.DomUtil.setPosition(this._canvas, topLeft);
         this.drawLayer();
     },
     //-------------------------------------------------------------
     getEvents: function () {
+        console.log('getEvents');
         var events = {
             resize: this._onLayerDidResize,
             moveend: this._onLayerDidMove
@@ -54,6 +57,8 @@ L.CanvasLayer = L.Layer.extend({
     },
     //-------------------------------------------------------------
     onAdd: function (map) {
+        console.log('onAdd');
+
         this._map = map;
         this._canvas = L.DomUtil.create('canvas', 'leaflet-layer');
         this.tiles = {};
@@ -77,6 +82,8 @@ L.CanvasLayer = L.Layer.extend({
 
     //-------------------------------------------------------------
     onRemove: function (map) {
+        console.log('onRemove');
+
         var del = this._delegate || this;
         del.onLayerWillUnmount && del.onLayerWillUnmount(); // -- callback
 
@@ -91,6 +98,8 @@ L.CanvasLayer = L.Layer.extend({
 
     //------------------------------------------------------------
     addTo: function (map) {
+        console.log('addTo');
+
         map.addLayer(this);
         return this;
     },
@@ -104,6 +113,8 @@ L.CanvasLayer = L.Layer.extend({
 
     //------------------------------------------------------------------------------
     drawLayer: function () {
+        console.log('drawLayer');
+
         // -- todo make the viewInfo properties  flat objects.
         var size = this._map.getSize();
         var bounds = this._map.getBounds();
@@ -127,10 +138,13 @@ L.CanvasLayer = L.Layer.extend({
 
     //------------------------------------------------------------------------------
     _animateZoom: function (e) {
+        console.log('_animateZoom');
+
         var scale = this._map.getZoomScale(e.zoom);
         var offset = this._map._latLngToNewLayerPoint(this._map.getBounds().getNorthWest(), e.zoom, e.center);
 
         L.DomUtil.setTransform(this._canvas, offset, scale);
+        console.log('setTransform with offset: ', offset, ' and scale: ', scale);
     }
 });
 
