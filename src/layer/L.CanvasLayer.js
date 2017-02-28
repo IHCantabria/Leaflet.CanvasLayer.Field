@@ -40,6 +40,7 @@ L.CanvasLayer = L.Layer.extend({
         console.log('_onLayerDidMove');
         var topLeft = this._map.containerPointToLayerPoint([0, 0]);
         L.DomUtil.setPosition(this._canvas, topLeft);
+        console.log(this.visibility);
         this.drawLayer();
     },
     //-------------------------------------------------------------
