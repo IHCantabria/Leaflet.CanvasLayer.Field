@@ -40,7 +40,7 @@
         /*
             Some ScalarField layers with custom styles
         */
-        d3.text('data/Bay_Speed.asc', function (asc) {
+        d3.text('data/Bay_Speed.asc', function(asc) {
             var s = L.ScalarField.fromASCIIGrid(asc);
 
             var layer1 = L.canvasLayer.scalarField(s, {
@@ -63,7 +63,7 @@
             });
 
             var layer5 = L.canvasLayer.scalarField(s, {
-                color: function (v) {
+                color: function(v) {
                     if (v > 0.75) {
                         if (v > 0.85) {
                             return 'Indigo';
@@ -88,6 +88,7 @@
                 collapsed: false
             }).addTo(map);
         });
+
     </script>
 </body>
 
