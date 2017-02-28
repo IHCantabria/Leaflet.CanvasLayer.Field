@@ -15,6 +15,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     onLayerDidMount: function () {
+        console.log('onLayerDidMount');
         if (this.options.click) {
             this._map.on('click', this._queryValue, this);
         }
@@ -24,12 +25,16 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     onLayerWillUnmount: function () {
+        console.log('onLayerWillUnmount');
         if (this.options.click) {
             this._map.off('click', this._queryValue, this);
         }
         if (this.options.pointerOnHover) {
             this._map.off('mousemove', this._showPointerOnValue, this);
         }
+        //this.needRedraw();
+        //TODO
+        //L.DomUtil.setPosition(this._canvas, topLeft);
     },
 
     onDrawLayer: function (viewInfo) {
