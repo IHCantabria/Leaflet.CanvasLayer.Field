@@ -1,13 +1,14 @@
 {
     "name": "leaflet-canvaslayer-field",
     "version": "1.0.0",
-    "description": "A set of layers on canvas, including a 'raster' layer from an ASCIIGRid file, an animated layer representing a vector field (wind, currents...),  and more",
+    "description": "A set of layers using canvas to draw ASCIIGrid or GeoTIFF files. This includes a basic raster layer (*ScalaField*) and an animated layer for vector fields, such as wind or currents (*VectorFieldAnim*)",
     "main": "index.js",
     "directories": {
         "test": "test"
     },
     "dependencies": {
-        "npm": "^3.10.7"
+        "npm": "^3.10.7",
+        "leaflet": "^1.0.1"
     },
     "devDependencies": {
         "babel-cli": "^6.16.0",

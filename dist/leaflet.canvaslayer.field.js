@@ -1276,7 +1276,7 @@
 	        console.log('_onLayerDidMove');
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
-	        console.log(this.visibility);
+	        //console.log(this.visibility);
 	        this.drawLayer();
 	    },
 	    //-------------------------------------------------------------
@@ -1332,12 +1332,11 @@
 	    },
 
 	    //------------------------------------------------------------
-	    addTo: function addTo(map) {
+	    /*addTo: function (map) {
 	        console.log('addTo');
-
-	        map.addLayer(this);
+	         map.addLayer(this);
 	        return this;
-	    },
+	    },*/
 	    // --------------------------------------------------------------------------------
 	    LatLonToMercator: function LatLonToMercator(latlon) {
 	        return {
