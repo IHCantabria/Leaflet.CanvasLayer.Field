@@ -3,7 +3,7 @@
 
 <head>
     <title>ScalarField Profile</title>
-    <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
@@ -39,7 +39,7 @@
 
         /* DEM data from LIDAR - PNOA */
         d3.request("data/castro_dem.tiff").responseType('arraybuffer').get(
-            function (error, tiffData) {
+            function(error, tiffData) {
                 let dem = L.ScalarField.fromGeoTIFF(tiffData.response);
                 let layerDem = L.canvasLayer.scalarField(dem, {
                     color: chroma.scale('Spectral').domain([80, 0])
@@ -49,9 +49,9 @@
 
                 /* dynamic filtering */
                 let height = document.getElementById('height');
-                height.addEventListener('change', function () {
+                height.addEventListener('change', function() {
                     let h = height.value;
-                    dem.inFilter = (function (v) {
+                    dem.inFilter = (function(v) {
                         return v >= 0 && v <= h;
                     });
                     layerDem.needRedraw();
@@ -59,7 +59,7 @@
                 });
 
                 /* popup */
-                layerDem.on('click', function (e) {
+                layerDem.on('click', function(e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(1);
                         let html = (`<span class="popupText">${v} meters</span>`);
@@ -70,6 +70,7 @@
                     }
                 });
             });
+
     </script>
 </body>
 
