@@ -1235,8 +1235,6 @@
 	'use strict';
 
 	/*
-	  https://github.com/Sumbera/gLayers.Leaflet/releases/tag/v1.0.1
-
 	  Generic  Canvas Layer for leaflet 0.7 and 1.0-rc,
 	  copyright Stanislav Sumbera,  2016 , sumbera.com , license MIT
 	  originally created and motivated by L.CanvasOverlay  available here: https://gist.github.com/Sumbera/11114288
@@ -1267,21 +1265,17 @@
 
 	    //-------------------------------------------------------------
 	    _onLayerDidResize: function _onLayerDidResize(resizeEvent) {
-	        console.log('_onLayerDidResize');
 	        this._canvas.width = resizeEvent.newSize.x;
 	        this._canvas.height = resizeEvent.newSize.y;
 	    },
 	    //-------------------------------------------------------------
 	    _onLayerDidMove: function _onLayerDidMove() {
-	        console.log('_onLayerDidMove');
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
-	        //console.log(this.visibility);
 	        this.drawLayer();
 	    },
 	    //-------------------------------------------------------------
 	    getEvents: function getEvents() {
-	        console.log('getEvents');
 	        var events = {
 	            resize: this._onLayerDidResize,
 	            moveend: this._onLayerDidMove
@@ -1294,8 +1288,6 @@
 	    },
 	    //-------------------------------------------------------------
 	    onAdd: function onAdd(map) {
-	        console.log('onAdd');
-
 	        this._map = map;
 	        this._canvas = L.DomUtil.create('canvas', 'leaflet-layer');
 	        this.tiles = {};
@@ -1313,13 +1305,16 @@
 
 	        var del = this._delegate || this;
 	        del.onLayerDidMount && del.onLayerDidMount(); // -- callback
+
+	        /* MODIFIED!! */
+	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+	        L.DomUtil.setPosition(this._canvas, topLeft);
+	        /**/
 	        this.needRedraw();
 	    },
 
 	    //-------------------------------------------------------------
 	    onRemove: function onRemove(map) {
-	        console.log('onRemove');
-
 	        var del = this._delegate || this;
 	        del.onLayerWillUnmount && del.onLayerWillUnmount(); // -- callback
 
@@ -1332,11 +1327,10 @@
 	    },
 
 	    //------------------------------------------------------------
-	    /*addTo: function (map) {
-	        console.log('addTo');
-	         map.addLayer(this);
+	    addTo: function addTo(map) {
+	        map.addLayer(this);
 	        return this;
-	    },*/
+	    },
 	    // --------------------------------------------------------------------------------
 	    LatLonToMercator: function LatLonToMercator(latlon) {
 	        return {
@@ -1347,8 +1341,6 @@
 
 	    //------------------------------------------------------------------------------
 	    drawLayer: function drawLayer() {
-	        console.log('drawLayer');
-
 	        // -- todo make the viewInfo properties  flat objects.
 	        var size = this._map.getSize();
 	        var bounds = this._map.getBounds();
@@ -1372,13 +1364,10 @@
 
 	    //------------------------------------------------------------------------------
 	    _animateZoom: function _animateZoom(e) {
-	        console.log('_animateZoom');
-
 	        var scale = this._map.getZoomScale(e.zoom);
 	        var offset = this._map._latLngToNewLayerPoint(this._map.getBounds().getNorthWest(), e.zoom, e.center);
 
 	        L.DomUtil.setTransform(this._canvas, offset, scale);
-	        console.log('setTransform with offset: ', offset, ' and scale: ', scale);
 	    }
 	});
 
