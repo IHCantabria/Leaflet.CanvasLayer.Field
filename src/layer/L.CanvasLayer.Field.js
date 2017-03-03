@@ -6,7 +6,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     options: {
         click: true, // 'onclick' event enabled
-        pointerOnHover: false
+        pointerOnHover: false,
+        defaultCursor: 'default'
     },
 
     initialize: function (field, options) {
@@ -32,9 +33,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         if (this.options.pointerOnHover) {
             this._map.off('mousemove', this._showPointerOnValue, this);
         }
-        //this.needRedraw();
-        //TODO
-        //L.DomUtil.setPosition(this._canvas, topLeft);
     },
 
     onDrawLayer: function (viewInfo) {
@@ -62,7 +60,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         if (this.field.hasValueAt(lon, lat)) {
             this._map.getContainer().style.cursor = 'pointer';
         } else {
-            this._map.getContainer().style.cursor = 'default';
+            this._map.getContainer().style.cursor = this.options.defaultCursor;
         }
     },
 
