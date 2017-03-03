@@ -71,10 +71,6 @@ L.CanvasLayer = L.Layer.extend({
         var del = this._delegate || this;
         del.onLayerDidMount && del.onLayerDidMount(); // -- callback
 
-        /* MODIFIED!! */
-        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
-        L.DomUtil.setPosition(this._canvas, topLeft);
-        /**/
         this.needRedraw();
     },
 
