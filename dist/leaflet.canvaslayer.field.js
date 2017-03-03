@@ -1306,10 +1306,6 @@
 	        var del = this._delegate || this;
 	        del.onLayerDidMount && del.onLayerDidMount(); // -- callback
 
-	        /* MODIFIED!! */
-	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
-	        L.DomUtil.setPosition(this._canvas, topLeft);
-	        /**/
 	        this.needRedraw();
 	    },
 
@@ -1490,7 +1486,8 @@
 
 	    options: {
 	        click: true, // 'onclick' event enabled
-	        pointerOnHover: false
+	        pointerOnHover: false,
+	        defaultCursor: 'default'
 	    },
 
 	    initialize: function initialize(field, options) {
@@ -1516,9 +1513,6 @@
 	        if (this.options.pointerOnHover) {
 	            this._map.off('mousemove', this._showPointerOnValue, this);
 	        }
-	        //this.needRedraw();
-	        //TODO
-	        //L.DomUtil.setPosition(this._canvas, topLeft);
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
@@ -1546,7 +1540,7 @@
 	        if (this.field.hasValueAt(lon, lat)) {
 	            this._map.getContainer().style.cursor = 'pointer';
 	        } else {
-	            this._map.getContainer().style.cursor = 'default';
+	            this._map.getContainer().style.cursor = this.options.defaultCursor;
 	        }
 	    },
 
@@ -1617,13 +1611,20 @@
 	        var ctx = this._getDrawingContext();
 	        var width = this._canvas.width;
 	        var height = this._canvas.height;
+	        this._ensureCanvasAlignment();
+
 	        var img = ctx.createImageData(width, height);
 	        var data = img.data;
 
 	        this._prepareImage(data, width, height);
-
 	        ctx.putImageData(img, 0, 0);
 	    },
+
+	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
+	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+	        L.DomUtil.setPosition(this._canvas, topLeft);
+	    },
+
 
 	    /**
 	     * Prepares the image in data, as RGBA array
