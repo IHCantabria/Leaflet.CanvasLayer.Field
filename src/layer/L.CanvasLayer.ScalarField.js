@@ -37,12 +37,18 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         let ctx = this._getDrawingContext();
         let width = this._canvas.width;
         let height = this._canvas.height;
+        this._ensureCanvasAlignment();
+
         let img = ctx.createImageData(width, height);
         let data = img.data;
 
         this._prepareImage(data, width, height);
-
         ctx.putImageData(img, 0, 0);
+    },
+
+    _ensureCanvasAlignment() {
+        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+        L.DomUtil.setPosition(this._canvas, topLeft);
     },
 
     /**
