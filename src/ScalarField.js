@@ -11,7 +11,7 @@ export default class ScalarField extends Field {
      * @returns {ScalarField}
      */
     static fromASCIIGrid(asc, scaleFactor = 1) {
-        console.time('ScalarField from ASC');
+        //console.time('ScalarField from ASC');
 
         let lines = asc.split('\n');
 
@@ -40,7 +40,7 @@ export default class ScalarField extends Field {
         }
         p.zs = zs;
 
-        console.timeEnd('ScalarField from ASC');
+        //console.timeEnd('ScalarField from ASC');
         return new ScalarField(p);
     }
 
@@ -51,7 +51,7 @@ export default class ScalarField extends Field {
      * @returns {ScalarField}
      */
     static fromGeoTIFF(data, bandIndex = 0) {
-        console.time('ScalarField from GeoTIFF');
+        //console.time('ScalarField from GeoTIFF');
 
         let tiff = GeoTIFF.parse(data); // geotiff.js
         let image = tiff.getImage();
@@ -87,7 +87,7 @@ export default class ScalarField extends Field {
             zs: zs
         };
 
-        console.timeEnd('ScalarField from GeoTIFF');
+        //console.timeEnd('ScalarField from GeoTIFF');
         return new ScalarField(p);
     }
 
@@ -98,7 +98,7 @@ export default class ScalarField extends Field {
         this.grid = this._buildGrid();
         this.range = this._calculateRange();
 
-        console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
+        //console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
     }
 
     /**
@@ -164,5 +164,4 @@ export default class ScalarField extends Field {
         var ry = (1 - y);
         return g00 * rx * ry + g10 * x * ry + g01 * rx * y + g11 * x * y;
     }
-
 }
