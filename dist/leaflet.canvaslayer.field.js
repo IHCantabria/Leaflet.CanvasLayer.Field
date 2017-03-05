@@ -812,7 +812,7 @@
 	        value: function fromASCIIGrid(asc) {
 	            var scaleFactor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
-	            console.time('ScalarField from ASC');
+	            //console.time('ScalarField from ASC');
 
 	            var lines = asc.split('\n');
 
@@ -841,7 +841,7 @@
 	            }
 	            p.zs = zs;
 
-	            console.timeEnd('ScalarField from ASC');
+	            //console.timeEnd('ScalarField from ASC');
 	            return new ScalarField(p);
 	        }
 
@@ -857,7 +857,7 @@
 	        value: function fromGeoTIFF(data) {
 	            var bandIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
-	            console.time('ScalarField from GeoTIFF');
+	            //console.time('ScalarField from GeoTIFF');
 
 	            var tiff = GeoTIFF.parse(data); // geotiff.js
 	            var image = tiff.getImage();
@@ -895,7 +895,7 @@
 	                zs: zs
 	            };
 
-	            console.timeEnd('ScalarField from GeoTIFF');
+	            //console.timeEnd('ScalarField from GeoTIFF');
 	            return new ScalarField(p);
 	        }
 	    }]);
@@ -910,7 +910,7 @@
 	        _this.grid = _this._buildGrid();
 	        _this.range = _this._calculateRange();
 
-	        console.log('ScalarField created (' + _this.nCols + ' x ' + _this.nRows + ')');
+	        //console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
 	        return _this;
 	    }
 
@@ -1486,7 +1486,7 @@
 
 	    options: {
 	        click: true, // 'onclick' event enabled
-	        pointerOnHover: false,
+	        pointerOnHover: true,
 	        defaultCursor: 'default'
 	    },
 
@@ -1496,17 +1496,24 @@
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
-	        console.log('onLayerDidMount');
+	        //console.log('onLayerDidMount');
 	        if (this.options.click) {
 	            this._map.on('click', this._queryValue, this);
 	        }
 	        if (this.options.pointerOnHover) {
 	            this._map.on('mousemove', this._showPointerOnValue, this);
 	        }
+	        this._ensureCanvasAlignment();
 	    },
 
+	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
+	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+	        L.DomUtil.setPosition(this._canvas, topLeft);
+	    },
+
+
 	    onLayerWillUnmount: function onLayerWillUnmount() {
-	        console.log('onLayerWillUnmount');
+	        //console.log('onLayerWillUnmount');
 	        if (this.options.click) {
 	            this._map.off('click', this._queryValue, this);
 	        }
@@ -1537,10 +1544,11 @@
 	        var lon = e.latlng.lng;
 	        var lat = e.latlng.lat;
 
+	        var style = this._map.getContainer().style;
 	        if (this.field.hasValueAt(lon, lat)) {
-	            this._map.getContainer().style.cursor = 'pointer';
+	            style.cursor = 'pointer';
 	        } else {
-	            this._map.getContainer().style.cursor = this.options.defaultCursor;
+	            style.cursor = this.options.defaultCursor;
 	        }
 	    },
 
@@ -1572,6 +1580,8 @@
 
 	'use strict';
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	/**
 	 * ScalarField on canvas (a 'Raster')
 	 */
@@ -1596,11 +1606,9 @@
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        console.time('onDrawLayer');
-
+	        //console.time('onDrawLayer');
 	        this._drawImage();
-
-	        console.timeEnd('onDrawLayer');
+	        //console.timeEnd('onDrawLayer');
 	    },
 
 	    /**
@@ -1611,25 +1619,24 @@
 	        var ctx = this._getDrawingContext();
 	        var width = this._canvas.width;
 	        var height = this._canvas.height;
-	        this._ensureCanvasAlignment();
 
 	        var img = ctx.createImageData(width, height);
 	        var data = img.data;
 
-	        this._prepareImage(data, width, height);
+	        this._prepareImageIn(data, width, height);
 	        ctx.putImageData(img, 0, 0);
 	    },
 
-	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
-	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
-	        L.DomUtil.setPosition(this._canvas, topLeft);
-	    },
-
-
 	    /**
-	     * Prepares the image in data, as RGBA array
+	     * Prepares the image in data, as array with RGBAs
+	     * [R1, G1, B1, A1, R2, G2, B2, A2...]
+	     * @private
+	     * @param {[[Type]]} data   [[Description]]
+	     * @param {Numver} width
+	     * @param {Number} height
 	     */
-	    _prepareImage: function _prepareImage(data, width, height) {
+	    _prepareImageIn: function _prepareImageIn(data, width, height) {
+	        console.time('prepareImageIn');
 	        var f = this.options.interpolate ? 'interpolatedValueAt' : 'valueAt';
 
 	        var pos = 0;
@@ -1639,16 +1646,15 @@
 	                var lon = pointCoords.lng;
 	                var lat = pointCoords.lat;
 
-	                if (this.field.hasValueAt(lon, lat)) {
-	                    var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
+	                var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
+	                if (v) {
+	                    var _getRGBAFor = this._getRGBAFor(v),
+	                        _getRGBAFor2 = _slicedToArray(_getRGBAFor, 4),
+	                        R = _getRGBAFor2[0],
+	                        G = _getRGBAFor2[1],
+	                        B = _getRGBAFor2[2],
+	                        A = _getRGBAFor2[3];
 
-	                    var color = this._getColorFor(v);
-
-	                    var rgb = color.rgb();
-	                    var R = parseInt(rgb[0]);
-	                    var G = parseInt(rgb[1]);
-	                    var B = parseInt(rgb[2]);
-	                    var A = 255; // :(, no alpha
 	                    data[pos] = R;
 	                    data[pos + 1] = G;
 	                    data[pos + 2] = B;
@@ -1657,6 +1663,24 @@
 	                pos = pos + 4;
 	            }
 	        }
+	        console.timeEnd('prepareImageIn');
+	    },
+
+
+	    /**
+	     * Gets RGBA components for a value
+	     * @private
+	     * @param   {Number} v - value
+	     * @returns {Array}    [R, G, B, A]
+	     */
+	    _getRGBAFor: function _getRGBAFor(v) {
+	        var color = this._getColorFor(v);
+	        var rgb = color.rgb();
+	        var R = parseInt(rgb[0]);
+	        var G = parseInt(rgb[1]);
+	        var B = parseInt(rgb[2]);
+	        var A = 255; // :(, no alpha
+	        return [R, G, B, A];
 	    },
 
 
