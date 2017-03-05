@@ -34,7 +34,7 @@
         }).addTo(map);
 
         /* Simple layer with points at the center of ScalarField cells */
-        d3.text('data/Bay_Speed.asc', function (s) {
+        d3.text('data/Bay_Speed.asc', function(s) {
             let f = L.ScalarField.fromASCIIGrid(s);
             let points = f.getCells().map(c => c.center); // es6! TODO
             let layer = L.canvasLayer.simpleLonLat(points, {
@@ -45,6 +45,7 @@
 
             map.fitBounds(layer.getBounds());
         });
+
     </script>
 </body>
 
