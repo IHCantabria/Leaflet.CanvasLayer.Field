@@ -22,11 +22,9 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        console.time('onDrawLayer');
-
+        //console.time('onDrawLayer');
         this._drawImage();
-
-        console.timeEnd('onDrawLayer');
+        //console.timeEnd('onDrawLayer');
     },
 
     /**
@@ -37,24 +35,24 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         let ctx = this._getDrawingContext();
         let width = this._canvas.width;
         let height = this._canvas.height;
-        this._ensureCanvasAlignment();
 
         let img = ctx.createImageData(width, height);
         let data = img.data;
 
-        this._prepareImage(data, width, height);
+        this._prepareImageIn(data, width, height);
         ctx.putImageData(img, 0, 0);
     },
 
-    _ensureCanvasAlignment() {
-        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
-        L.DomUtil.setPosition(this._canvas, topLeft);
-    },
-
     /**
-     * Prepares the image in data, as RGBA array
+     * Prepares the image in data, as array with RGBAs
+     * [R1, G1, B1, A1, R2, G2, B2, A2...]
+     * @private
+     * @param {[[Type]]} data   [[Description]]
+     * @param {Numver} width
+     * @param {Number} height
      */
-    _prepareImage(data, width, height) {
+    _prepareImageIn(data, width, height) {
+        console.time('prepareImageIn');
         let f = (this.options.interpolate) ? 'interpolatedValueAt' : 'valueAt';
 
         let pos = 0;
@@ -64,16 +62,9 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                 let lon = pointCoords.lng;
                 let lat = pointCoords.lat;
 
-                if (this.field.hasValueAt(lon, lat)) {
-                    let v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
-
-                    let color = this._getColorFor(v);
-
-                    let rgb = color.rgb();
-                    let R = parseInt(rgb[0]);
-                    let G = parseInt(rgb[1]);
-                    let B = parseInt(rgb[2]);
-                    let A = 255; // :(, no alpha
+                let v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
+                if (v) {
+                    let [R, G, B, A] = this._getRGBAFor(v);
                     data[pos] = R;
                     data[pos + 1] = G;
                     data[pos + 2] = B;
@@ -82,6 +73,23 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                 pos = pos + 4;
             }
         }
+        console.timeEnd('prepareImageIn');
+    },
+
+    /**
+     * Gets RGBA components for a value
+     * @private
+     * @param   {Number} v - value
+     * @returns {Array}    [R, G, B, A]
+     */
+    _getRGBAFor(v) {
+        let color = this._getColorFor(v);
+        let rgb = color.rgb();
+        let R = parseInt(rgb[0]);
+        let G = parseInt(rgb[1]);
+        let B = parseInt(rgb[2]);
+        let A = 255; // :(, no alpha
+        return [R, G, B, A];
     },
 
     /**
