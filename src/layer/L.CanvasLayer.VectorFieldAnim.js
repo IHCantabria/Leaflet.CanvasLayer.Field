@@ -31,6 +31,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
+        this._updateOpacity();
+
         let ctx = this._getDrawingContext();
         let paths = this._prepareParticlePaths();
 

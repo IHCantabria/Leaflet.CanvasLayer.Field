@@ -1621,6 +1621,7 @@
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        //console.time('onDrawLayer');
+	        this._updateOpacity();
 	        this._drawImage();
 	        //console.timeEnd('onDrawLayer');
 	    },
@@ -1754,6 +1755,8 @@
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
+	        this._updateOpacity();
+
 	        var ctx = this._getDrawingContext();
 	        var paths = this._prepareParticlePaths();
 
