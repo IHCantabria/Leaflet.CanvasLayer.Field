@@ -1487,7 +1487,8 @@
 	    options: {
 	        click: true, // 'onclick' event enabled
 	        pointerOnHover: true,
-	        defaultCursor: 'default'
+	        defaultCursor: 'default',
+	        opacity: 1
 	    },
 
 	    initialize: function initialize(field, options) {
@@ -1532,6 +1533,15 @@
 	        this.needRedraw(); // -- call to drawLayer
 	    },
 
+	    setOpacity: function setOpacity(opacity) {
+	        this.options.opacity = opacity;
+
+	        if (this._canvas) {
+	            this._updateOpacity();
+	        }
+	        return this;
+	    },
+
 	    getBounds: function getBounds() {
 	        var bb = this.field.extent();
 	        var southWest = L.latLng(bb[1], bb[0]),
@@ -1550,6 +1560,10 @@
 	        } else {
 	            style.cursor = this.options.defaultCursor;
 	        }
+	    },
+
+	    _updateOpacity: function _updateOpacity() {
+	        L.DomUtil.setOpacity(this._canvas, this.options.opacity);
 	    },
 
 	    _queryValue: function _queryValue(e) {

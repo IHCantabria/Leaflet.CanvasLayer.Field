@@ -7,7 +7,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     options: {
         click: true, // 'onclick' event enabled
         pointerOnHover: true,
-        defaultCursor: 'default'
+        defaultCursor: 'default',
+        opacity: 1
     },
 
     initialize: function (field, options) {
@@ -51,6 +52,15 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         this.needRedraw(); // -- call to drawLayer
     },
 
+    setOpacity: function (opacity) {
+        this.options.opacity = opacity;
+
+        if (this._canvas) {
+            this._updateOpacity();
+        }
+        return this;
+    },
+
     getBounds: function () {
         let bb = this.field.extent();
         let southWest = L.latLng(bb[1], bb[0]),
@@ -69,6 +79,10 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         } else {
             style.cursor = this.options.defaultCursor;
         }
+    },
+
+    _updateOpacity: function () {
+        L.DomUtil.setOpacity(this._canvas, this.options.opacity);
     },
 
     _queryValue: function (e) {
