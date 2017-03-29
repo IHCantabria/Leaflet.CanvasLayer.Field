@@ -32,6 +32,30 @@ export default class VectorField extends Field {
         return new VectorField(p);
     }
 
+    /**
+     * Creates a VectorField from the content of Multiband Geotiff
+     * @param   {ArrayBuffer} geotiffData - multiband
+     * @param   {Array} bandIndexesForUV
+     * @returns {VectorField}
+     */
+    static fromMultibandGeoTIFF(geotiffData, bandIndexesForUV=[0, 1]) {
+        let u = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[0]);
+        let v = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[1]);
+
+        // TODO - refactor
+        let p = {
+            nCols: u.nCols,
+            nRows: u.nRows,
+            xllCorner: u.xllCorner,
+            yllCorner: u.yllCorner,
+            cellSize: u.cellSize,
+            us: u.zs,
+            vs: v.zs
+        };
+        return new VectorField(p);
+    }
+
+
     constructor(params) {
         super(params);
 
