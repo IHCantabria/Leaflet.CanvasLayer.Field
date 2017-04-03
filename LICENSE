@@ -1,3 +1,4 @@
+# Leaflet.CanvasLayer.Field
 
 This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,7 +15,16 @@ This program is free software: you can redistribute it and/or modify
     
 ---
 
+
 This software uses:
 * gLayers.Leaflet [https://github.com/Sumbera/gLayers.Leaflet] - MIT License
-* chroma.js [https://github.com/gka/chroma.js] - See https://github.com/gka/chroma.js/blob/master/LICENSE
+* chroma.js [https://github.com/gka/chroma.js] - BSD License
+* geotiff.js [https://github.com/constantinius/geotiff.js] - BSD License
+* d3js [https://d3js.org/] - BSD License
+
+
+        "leaflet": "^1.0.1",
+        "chroma-js": "^1.2.1",
+        "geotiff": "^0.3.5",
+        "d3": "^4.7.4"
 
