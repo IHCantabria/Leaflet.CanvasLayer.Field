@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ScalarField from Geotiff </title>
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="examples.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+</head>
+
+<body>
+    <h1 id="title">Two different ScalarFields from multiband GeoTIFF</h1>
+    <div id="map"></div>
+
+    <!-- CDN -->
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/geotiff@0.3.5/dist/geotiff.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.1/chroma.min.js"></script>
+
+    <!-- Plugin -->
+    <script src="../dist/leaflet.canvaslayer.field.js"></script>
+
+    <script>
+        let map = L.map('map');
+
+        /* Dark basemap */
+        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        L.tileLayer(url, {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd'
+        }).addTo(map);
+
+        /* Wind velocity NOAA (NCEP/NCAR Reanalysis)
+            https://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.pressure.html
+        */
+        d3.request("data/base/wind_noaa.tif").responseType('arraybuffer').get(
+            function (error, tiffData) {
+                // u & v in two bands
+                let vf = L.VectorField.fromMultibandGeoTIFF(tiffData.response, bandIndexesForUV=[0, 1]);
+                let winds = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 10000,
+                    color: chroma.scale("YlGn").domain(vf.range),
+                    width: 0.5,
+                    fade: 0.95,
+                    maxAge: 20,
+                    velocityScale: 1 / 25
+                }).addTo(map);
+
+                map.fitBounds(winds.getBounds());
+
+                winds.on('click', function(e) {
+                    if (e.value !== null) {
+                        let vector = e.value;
+                        let v = vector.magnitude().toFixed(2);
+                        let d = vector.directionFrom().toFixed(0);
+                        let html = (`<span class="popupText">${v} m/s from ${d}&deg</span>`);
+                        let popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(html)
+                            .openOn(map);
+                    }
+                });
+
+            });
+    </script>
+</body>
+
+</html>
