@@ -1,53 +1,52 @@
 # Leaflet.CanvasLayer.Field
-v0.8.1
+
+A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files.
 
 ## Description
-A set of layers to visualize 'Fields' (aka *Rasters*) from ASCIIGrid or GeoTIFF files, based on [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler
 
-* ScalarField: a Raster layer from scalars, such as DTM, temperature...
+It includes:
 
-TODO * VectorField: a Raster layer from vectors, such as wind or ocean currents, using arrows
+* `L.CanvasLayer.ScalarField`: a raster layer from scalars (such as DTM, temperature...)
+* `L.CanvasLayer.VectorFieldAnim`: an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
 
-* VectorFieldAnim: an animated layer representing a vector field, based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
+This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and uses [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler. 
 
-![Example](https://url-to-image.gif "Example")
+
+## Demos
+
+Velocity currents forecast into the Santander Bay, Spain
+
+### VectorFieldAnim
+![Example](TBD: url/to/VectorFieldAnim.gif)
+
+### ScalarField
+![Example](TBD: url/to/ScalarField.png)
+
+See the [live examples](TBD: url/to/docs/index.html)
 
 
 ## Requirements
-### Leaflet version
-Tested on v1.0.3
 
-### Dependencies
-- CDN
-    * [Leaflet](https://github.com/Leaflet/Leaflet) (v1.0.3)
-    * [geotiff.js](https://github.com/constantinius/geotiff.js) (v0.3.5)
-    * [D3](https://github.com/d3/d3) (v4) - dom, canvas, ajax...
-    * [chromajs](https://github.com/gka/chroma.js) (v1.2.1) - color scales
-- Included in src: 
-    * [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (v1.0.1) - full canvas layer
+It works with Leaflet >=v1.0.0
+
+The plugin has these dependencies:
+
+- npm:
+    * [leaflet](https://github.com/Leaflet/Leaflet)
+    * [chroma-js](https://github.com/gka/chroma.js)
+    * [geotiff](https://github.com/constantinius/geotiff.js)
+    * [d3](https://github.com/d3/d3)
     
-### Dev-dependencies
-- Some tests with Jasmine (v2.4)
-- ES6 to ES5 with babel
-- Bundle with webpack
-
-### Browser / device compatibility
-- HTML5 canvas & ES5
-
-## Demos
-See the included [examples](https://xxx.github.com)
+- already included in src & dist: 
+    * [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (v1.0.1) - full canvas layer
 
 
 ## Instructions
-TBD
 
 
-## Simple code
 
-
-## API Reference
-
-* * * 
+## License
+Licensed under the GNU General Public License v3.0
 
 
 
