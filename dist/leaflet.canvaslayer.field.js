@@ -1065,6 +1065,34 @@
 	            };
 	            return new VectorField(p);
 	        }
+
+	        /**
+	         * Creates a VectorField from the content of Multiband Geotiff
+	         * @param   {ArrayBuffer} geotiffData - multiband
+	         * @param   {Array} bandIndexesForUV
+	         * @returns {VectorField}
+	         */
+
+	    }, {
+	        key: 'fromMultibandGeoTIFF',
+	        value: function fromMultibandGeoTIFF(geotiffData) {
+	            var bandIndexesForUV = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 1];
+
+	            var u = _ScalarField2.default.fromGeoTIFF(geotiffData, bandIndexesForUV[0]);
+	            var v = _ScalarField2.default.fromGeoTIFF(geotiffData, bandIndexesForUV[1]);
+
+	            // TODO - refactor
+	            var p = {
+	                nCols: u.nCols,
+	                nRows: u.nRows,
+	                xllCorner: u.xllCorner,
+	                yllCorner: u.yllCorner,
+	                cellSize: u.cellSize,
+	                us: u.zs,
+	                vs: v.zs
+	            };
+	            return new VectorField(p);
+	        }
 	    }]);
 
 	    function VectorField(params) {
