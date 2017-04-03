@@ -1,7 +1,3 @@
-/test/tests/qunit.blanket.js
-/test/tests/qunit.html
-/test/tests/qunit.css
-/test/tests/qunit.js
 # Logs
 logs
 *.log
