@@ -1,6 +1,6 @@
 {
     "name": "leaflet-canvaslayer-field",
-    "version": "1.0.0",
+    "version": "0.9.0",
     "description": "A set of layers using canvas to draw ASCIIGrid or GeoTIFF files. This includes a basic raster layer (*ScalaField*) and an animated layer for vector fields, such as wind or currents (*VectorFieldAnim*)",
     "main": "index.js",
     "directories": {
@@ -8,7 +8,10 @@
     },
     "dependencies": {
         "npm": "^3.10.7",
-        "leaflet": "^1.0.1"
+        "leaflet": "^1.0.1",
+        "chroma-js": "^1.2.1",
+        "geotiff": "^0.3.5",
+        "d3": "^4.7.4"
     },
     "devDependencies": {
         "babel-cli": "^6.16.0",
@@ -43,7 +46,11 @@
     "currents",
     "animation"
   ],
-    "author": "Víctor Velarde Gutiérrez",
+    "author": {
+        "name": "Víctor Velarde Gutiérrez",
+        "email": "victor.velarde@unican.es",
+        "url": "http://ihcantabria.com/"
+    },
     "license": "GPL-3.0",
-    "homepage": "https://bitbucket.org/VictorVelarde/vector2anim#readme"
+    "homepage": "https://github.com/IHCantabria/Leaflet.CanvasLayer.Field"
 }
