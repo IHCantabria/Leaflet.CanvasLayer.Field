@@ -60,11 +60,11 @@ export default class ScalarField extends Field {
         let fileDirectory = image.getFileDirectory();
         let pixelScale = fileDirectory.ModelPixelScale;
 
-        let regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
+        /*let regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
         if (!regularGrid) {
             console.error(`pixelScale: ${pixelScale}`);
             throw new Error('A raster without regular cells is not supported');
-        }
+        }*/
         // TODO check no rotation, or else ... throw "Not supported raster"
 
         let zs = rasters[bandIndex]; // left-right and top-down.
@@ -72,7 +72,7 @@ export default class ScalarField extends Field {
         if (fileDirectory.GDAL_NODATA) {
             let noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
             console.log(noData);
-            let simpleZS = Array.from(zs); // to simple array, so null is allowed
+            let simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
             zs = simpleZS.map(function (z) {
                 return z === noData ? null : z;
             });
