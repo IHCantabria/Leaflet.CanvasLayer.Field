@@ -38,7 +38,8 @@
                 // geopotential height (band 0)
                 let geo = L.ScalarField.fromGeoTIFF(tiffData.response);
                 let layerGeo = L.canvasLayer.scalarField(geo, {
-                    color: chroma.scale('Spectral').domain(geo.range)
+                    color: chroma.scale('Spectral').domain(geo.range),
+                    opacity: 0.5
                 }).addTo(map);
 
                 // temperature
