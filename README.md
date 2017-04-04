@@ -39,7 +39,7 @@ The plugin works with Leaflet >=v1.0.0 and it has these dependencies:
     <!-- CDN references -->
     <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.2/chroma.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.0/chroma.min.js"></script>
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//npmcdn.com/geotiff@0.3.6/dist/geotiff.js"></script> <!-- optional -->
 
