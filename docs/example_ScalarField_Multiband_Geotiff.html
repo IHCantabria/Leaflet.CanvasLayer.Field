@@ -42,7 +42,7 @@
                     opacity: 0.5
                 }).addTo(map);
 
-                // temperature
+                // temperature (band 1)
                 let t = L.ScalarField.fromGeoTIFF(tiffData.response, bandIndex = 1);
                 let layerT = L.canvasLayer.scalarField(t, {
                     color: chroma.scale('OrRd').domain(t.range)
