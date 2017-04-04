@@ -1,52 +1,90 @@
 # Leaflet.CanvasLayer.Field
-
-A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files.
-
-## Description
+A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files (just EPSG:4326).
 
 It includes:
+* `L.CanvasLayer.ScalarField` - a raster layer from scalars (such as DTM, temperature...)
+* `L.CanvasLayer.VectorFieldAnim` - an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
 
-* `L.CanvasLayer.ScalarField`: a raster layer from scalars (such as DTM, temperature...)
-* `L.CanvasLayer.VectorFieldAnim`: an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
-
-This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and uses [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler. 
+This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and uses [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler.
 
 
-## Demos
+## Demo
+The above figures show the results for two basic layers, showing *Velocity currents into the Bay of Santander, Spain*
 
-Velocity currents forecast into the Santander Bay, Spain
-
-### VectorFieldAnim
+### 1. VectorFieldAnim
 ![Example](TBD: url/to/VectorFieldAnim.gif)
 
-### ScalarField
+### 2. ScalarField
 ![Example](TBD: url/to/ScalarField.png)
 
-See the [live examples](TBD: url/to/docs/index.html)
+Working examples at (TBD: url/to/docs/index.html)
 
 
 ## Requirements
+The plugin works with Leaflet >=v1.0.0 and it has these dependencies:
 
-It works with Leaflet >=v1.0.0
-
-The plugin has these dependencies:
-
-- npm:
-    * [leaflet](https://github.com/Leaflet/Leaflet)
-    * [chroma-js](https://github.com/gka/chroma.js)
-    * [geotiff](https://github.com/constantinius/geotiff.js)
-    * [d3](https://github.com/d3/d3)
-    
-- already included in src & dist: 
-    * [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (v1.0.1) - full canvas layer
+* [chroma-js](https://github.com/gka/chroma.js)
+* [geotiff](https://github.com/constantinius/geotiff.js)
+* [d3](https://github.com/d3/d3)
+* [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (source already included)
 
 
 ## Instructions
 
+### Basic Usage
+1. Get the JavaScript file. You can grab a copy from `/dist`: [leaflet.canvaslayer.field.js](https://github.com/IHCantabria/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js)
+
+2. Include the JavaScript dependencies in your page:
+```html
+    <!-- CDN references -->
+    <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.2.2/chroma.min.js"></script>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//npmcdn.com/geotiff@0.3.6/dist/geotiff.js"></script> <!-- optional -->
+
+    <!-- Plugin (your local path!) -->
+    <script src="leaflet.canvaslayer.field.js"></script>
+```
+
+3. Prepare a Raster File with your favourite GIS tool, using [EPSG:4326](https://epsg.io/4326) (**ASCII Grid** or **GeoTIFF** format)
+
+4. Create a `scalarField` layer and add it to the `map`
+```js
+d3.text("TBD: url/to/docs/data/Bay_Speed.asc", function (asc) {
+    var s = L.ScalarField.fromASCIIGrid(asc);
+    var layer = L.canvasLayer.scalarField(s).addTo(map);
+
+    map.fitBounds(layer.getBounds());
+});
+```
+
+5. Or try the `vectorFieldAnim` layer, adding a popup. Previously you have to prepare 2 raster files, with 'u' and 'v' components:
+```js
+d3.text('TBD: url/to/data/Bay_U.asc', function(u) {
+    d3.text('TBD: url/to/data/Bay_V.asc', function(v) {
+        let vf = L.VectorField.fromASCIIGrids(u, v);
+        let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+        map.fitBounds(layer.getBounds());
+
+        layer.on('click', function(e) {
+            if (e.value !== null) {
+                let vector = e.value;
+                let v = vector.magnitude().toFixed(2);
+                let d = vector.directionTo().toFixed(0);
+                let html = (`<span>${v} m/s to ${d}&deg</span>`);
+                let popup = L.popup()
+                    .setLatLng(e.latlng)
+                    .setContent(html)
+                    .openOn(map);
+            }
+        });
+    });
+});
+```
+
+5. To explore different options, see the [examples](TBD: url/to/docs/index.html)
 
 
 ## License
 Licensed under the GNU General Public License v3.0
-
-
-
