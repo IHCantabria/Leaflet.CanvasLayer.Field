@@ -57,24 +57,22 @@
             function (error, tiffData) {
                 // band 0
                 let geo = L.ScalarField.fromGeoTIFF(tiffData.response);
-                let layerGeo = L.canvasLayer.scalarField(geo, {
-                    color: chroma.scale('Spectral').domain(geo.range)
+                let dtm = L.canvasLayer.scalarField(geo, {
+                    color: chroma.scale('Spectral').domain([geo.range[1], geo.range[0]])
                 }).addTo(map);
 
-                map.fitBounds(layerGeo.getBounds());
+                map.fitBounds(dtm.getBounds());
 
-                /*
-                layer2.on('click', function(e) {
+                dtm.on('click', function(e) {
                     if (e.value !== null) {
-                        let v = e.value.toFixed(3);
-                        let html = (`temperature from 2:2 ${v}`);
+                        let v = e.value.toFixed(0);
+                        let html = (`Height: ${v} meters`);
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)
                             .openOn(map);
                     }
                 });
-                */
             });
     </script>
 </body>
