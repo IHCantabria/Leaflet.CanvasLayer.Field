@@ -1,0 +1,853 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis projectname="" version="2.18.3">
+  <title></title>
+  <autotransaction active="0"/>
+  <evaluateDefaultValues active="0"/>
+  <layer-tree-group expanded="1" checked="Qt::Checked" name="">
+    <customproperties/>
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="Little sample 10 x 10 for vectorField anim tests">
+      <customproperties/>
+      <layer-tree-layer expanded="0" checked="Qt::Checked" id="U20161022163016964" name="U">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Checked" id="V20161022190717474" name="V">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="Bay of Santander">
+      <customproperties/>
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:v_current">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="Small LIDAR DTM">
+      <customproperties/>
+      <layer-tree-layer expanded="0" checked="Qt::Checked" id="castro_mdt432620170404140101666" name="castro_mdt4326">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="Arabian Gulf - two bands geotiff">
+      <customproperties/>
+      <layer-tree-layer expanded="0" checked="Qt::Checked" id="tz85020170404141409284" name="geopotential height - tz850">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Checked" id="Arabian_Gulf___tz850_copy20170404141515780" name="temperature">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="BASE">
+      <customproperties/>
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="EOC_Basemap20170404163516659" name="EOC Basemap">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+  </layer-tree-group>
+  <relations/>
+  <mapcanvas>
+    <units>degrees</units>
+    <extent>
+      <xmin>-7.73348960108739547</xmin>
+      <ymin>35.89455440898675675</ymin>
+      <xmax>-1.45101753530078526</xmax>
+      <ymax>38.82000840489515525</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <projections>1</projections>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+    <layer_coordinate_transform_info>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:26710" srcDatumTransform="-1" destDatumTransform="-1" layerid="m30dem20170404140705773"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="countries20170404135945107"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__temp20170404171157532"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="Arabian_Gulf___tz850_copy20170404141515780"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__temp20170404141236707"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__temp20170404171141675"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="tz85020170404141409284"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="EOC_Basemap20170404163516659"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="V20161022190717474"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="U20161022163016964"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="castro_mdt432620170404140101666"/>
+    </layer_coordinate_transform_info>
+  </mapcanvas>
+  <layer-tree-canvas>
+    <custom-order enabled="0">
+      <item>U20161022163016964</item>
+      <item>V20161022190717474</item>
+      <item>castro_mdt432620170404140101666</item>
+      <item>tz85020170404141409284</item>
+      <item>Arabian_Gulf___tz850_copy20170404141515780</item>
+      <item>EOC_Basemap20170404163516659</item>
+      <item>NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827</item>
+      <item>NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756</item>
+      <item>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907</item>
+      <item>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168</item>
+    </custom-order>
+  </layer-tree-canvas>
+  <legend updateDrawingOrder="true">
+    <legendgroup open="true" checked="Qt::Checked" name="Little sample 10 x 10 for vectorField anim tests">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="U" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="U20161022163016964" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="V" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="V20161022190717474" visible="1"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+    <legendgroup open="true" checked="Qt::Checked" name="Bay of Santander">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:v_current" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756" visible="1"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+    <legendgroup open="true" checked="Qt::Checked" name="Small LIDAR DTM">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="castro_mdt4326" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="castro_mdt432620170404140101666" visible="1"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+    <legendgroup open="true" checked="Qt::Checked" name="Arabian Gulf - two bands geotiff">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="geopotential height - tz850" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="tz85020170404141409284" visible="1"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="temperature" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Arabian_Gulf___tz850_copy20170404141515780" visible="1"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+    <legendgroup open="true" checked="Qt::Checked" name="BASE">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="EOC Basemap" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="EOC_Basemap20170404163516659" visible="1"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+  </legend>
+  <projectlayers>
+    <maplayer minimumScale="inf" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>24.75</xmin>
+        <ymin>8.25</ymin>
+        <xmax>69.75</xmax>
+        <ymax>39.25</ymax>
+      </extent>
+      <id>Arabian_Gulf___tz850_copy20170404141515780</id>
+      <datasource>./tz850.tiff</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>temperature</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="0"/>
+        <noDataList bandNo="2" useSrcNoData="0"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="0" classificationMax="40" classificationMinMaxOrigin="User" band="2" classificationMin="0" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="0" label="0" color="#000004"/>
+              <item alpha="255" value="0.784" label="0.784" color="#02020b"/>
+              <item alpha="255" value="1.57" label="1.57" color="#050416"/>
+              <item alpha="255" value="2.35" label="2.35" color="#090720"/>
+              <item alpha="255" value="3.14" label="3.14" color="#0e0b2b"/>
+              <item alpha="255" value="3.92" label="3.92" color="#140e36"/>
+              <item alpha="255" value="4.71" label="4.71" color="#1a1042"/>
+              <item alpha="255" value="5.49" label="5.49" color="#21114e"/>
+              <item alpha="255" value="6.27" label="6.27" color="#29115a"/>
+              <item alpha="255" value="7.06" label="7.06" color="#311165"/>
+              <item alpha="255" value="7.84" label="7.84" color="#390f6e"/>
+              <item alpha="255" value="8.63" label="8.63" color="#420f75"/>
+              <item alpha="255" value="9.41" label="9.41" color="#4a1079"/>
+              <item alpha="255" value="10.2" label="10.2" color="#52137c"/>
+              <item alpha="255" value="11" label="11" color="#5a167e"/>
+              <item alpha="255" value="11.8" label="11.8" color="#621980"/>
+              <item alpha="255" value="12.5" label="12.5" color="#6a1c81"/>
+              <item alpha="255" value="13.3" label="13.3" color="#721f81"/>
+              <item alpha="255" value="14.1" label="14.1" color="#792282"/>
+              <item alpha="255" value="14.9" label="14.9" color="#812581"/>
+              <item alpha="255" value="15.7" label="15.7" color="#892881"/>
+              <item alpha="255" value="16.5" label="16.5" color="#912b81"/>
+              <item alpha="255" value="17.3" label="17.3" color="#992d80"/>
+              <item alpha="255" value="18" label="18" color="#a1307e"/>
+              <item alpha="255" value="18.8" label="18.8" color="#aa337d"/>
+              <item alpha="255" value="19.6" label="19.6" color="#b2357b"/>
+              <item alpha="255" value="20.4" label="20.4" color="#ba3878"/>
+              <item alpha="255" value="21.2" label="21.2" color="#c23b75"/>
+              <item alpha="255" value="22" label="22" color="#ca3e72"/>
+              <item alpha="255" value="22.7" label="22.7" color="#d2426f"/>
+              <item alpha="255" value="23.5" label="23.5" color="#d9466b"/>
+              <item alpha="255" value="24.3" label="24.3" color="#e04c67"/>
+              <item alpha="255" value="25.1" label="25.1" color="#e75263"/>
+              <item alpha="255" value="25.9" label="25.9" color="#ec5860"/>
+              <item alpha="255" value="26.7" label="26.7" color="#f1605d"/>
+              <item alpha="255" value="27.5" label="27.5" color="#f4695c"/>
+              <item alpha="255" value="28.2" label="28.2" color="#f7725c"/>
+              <item alpha="255" value="29" label="29" color="#f97b5d"/>
+              <item alpha="255" value="29.8" label="29.8" color="#fb8560"/>
+              <item alpha="255" value="30.6" label="30.6" color="#fc8e64"/>
+              <item alpha="255" value="31.4" label="31.4" color="#fd9869"/>
+              <item alpha="255" value="32.2" label="32.2" color="#fea16e"/>
+              <item alpha="255" value="32.9" label="32.9" color="#feaa74"/>
+              <item alpha="255" value="33.7" label="33.7" color="#feb47b"/>
+              <item alpha="255" value="34.5" label="34.5" color="#febd82"/>
+              <item alpha="255" value="35.3" label="35.3" color="#fec68a"/>
+              <item alpha="255" value="36.1" label="36.1" color="#fecf92"/>
+              <item alpha="255" value="36.9" label="36.9" color="#fed89a"/>
+              <item alpha="255" value="37.6" label="37.6" color="#fde2a3"/>
+              <item alpha="255" value="38.4" label="38.4" color="#fdebac"/>
+              <item alpha="255" value="39.2" label="39.2" color="#fcf4b6"/>
+              <item alpha="255" value="40" label="40" color="#fcfdbf"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-180</xmin>
+        <ymin>-90</ymin>
+        <xmax>180</xmax>
+        <ymax>90</ymax>
+      </extent>
+      <id>EOC_Basemap20170404163516659</id>
+      <datasource>contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=eoc:basemap&amp;styles=TileLayer.encodeDimensionValue(defStyle)&amp;tileMatrixSet=EPSG:4326&amp;url=https://b.tiles.geoservice.dlr.de/service/wmts</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>EOC Basemap</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Undefined"/>
+      </customproperties>
+      <provider>wms</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="0"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="-1" band="1" type="singlebandcolordata">
+          <rasterTransparency/>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-7.58390693285438022</xmin>
+        <ymin>35.96420807555600163</ymin>
+        <xmax>-1.60060020353380006</xmax>
+        <ymax>38.75035473832590327</ymax>
+      </extent>
+      <id>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907</id>
+      <datasource>cache=PreferNetwork&amp;crs=EPSG:4326&amp;format=GTiff&amp;identifier=Modelo%20Digital%20de%20Elevaciones%20(MDE)%20de%20Andalucia%20100%20m&amp;url=http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>Modelo Digital de Elevaciones (MDE) de Andalucia 100 m</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>wcs</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="0"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
+          <rasterTransparency/>
+          <contrastEnhancement>
+            <minValue>0</minValue>
+            <maxValue>1446.7893442382813</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="inf" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-7.58390693285438022</xmin>
+        <ymin>35.96420807555600163</ymin>
+        <xmax>-1.60060020353380006</xmax>
+        <ymax>38.75035473832590327</ymax>
+      </extent>
+      <id>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168</id>
+      <datasource>cache=PreferNetwork&amp;crs=EPSG:4326&amp;format=GTiff&amp;identifier=Modelo%20Digital%20de%20Elevaciones%20(MDE)%20de%20Andalucia%20100%20m&amp;url=http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>Modelo Digital de Elevaciones (MDE) de Andalucia 100 m</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>wcs</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="0"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="-1" classificationMax="1446.79" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="0" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="0" label="0" color="#018571"/>
+              <item alpha="255" value="361.7" label="361.7" color="#80cdc1"/>
+              <item alpha="255" value="723.4" label="723.4" color="#f5f5f5"/>
+              <item alpha="255" value="1085" label="1085" color="#dfc27d"/>
+              <item alpha="255" value="1447" label="1447" color="#a6611a"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.8462522504851222</xmin>
+        <ymin>43.37856598171899236</ymin>
+        <xmax>-3.71645040530711412</xmax>
+        <ymax>43.52099303927710139</ymax>
+      </extent>
+      <id>NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827</id>
+      <datasource>NETCDF:"./ncss_BahiaSantander_2016072618_1H.nc":u_current</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>NETCDF:"ncss_BahiaSantander_2016072618_1H":u_current</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
+          <rasterTransparency/>
+          <contrastEnhancement>
+            <minValue>-0.329622063537598</minValue>
+            <maxValue>0.875056570068359</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.8462522504851222</xmin>
+        <ymin>43.37856598171899236</ymin>
+        <xmax>-3.71645040530711412</xmax>
+        <ymax>43.52099303927710139</ymax>
+      </extent>
+      <id>NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756</id>
+      <datasource>NETCDF:"./ncss_BahiaSantander_2016072618_1H.nc":v_current</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>NETCDF:"ncss_BahiaSantander_2016072618_1H":v_current</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
+          <rasterTransparency/>
+          <contrastEnhancement>
+            <minValue>-0.343714010620117</minValue>
+            <maxValue>0.269407670593262</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="100000" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.76947003316400009</xmin>
+        <ymin>43.46034189883800281</ymin>
+        <xmax>-3.76441937771400026</xmax>
+        <ymax>43.46539255428800175</ymax>
+      </extent>
+      <id>U20161022163016964</id>
+      <datasource>../U.asc</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>U</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="-1" classificationMax="0.204561" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="0.0121421" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="0.0121" label="0.0121" color="#f7fbff"/>
+              <item alpha="255" value="0.0372" label="0.0372" color="#deebf7"/>
+              <item alpha="255" value="0.0622" label="0.0622" color="#c6dbef"/>
+              <item alpha="255" value="0.0872" label="0.0872" color="#9ecae1"/>
+              <item alpha="255" value="0.112" label="0.112" color="#6baed6"/>
+              <item alpha="255" value="0.137" label="0.137" color="#4292c6"/>
+              <item alpha="255" value="0.162" label="0.162" color="#2171b5"/>
+              <item alpha="255" value="0.185" label="0.185" color="#08519c"/>
+              <item alpha="255" value="0.205" label="0.205" color="#08306b"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="inf" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.76947003316400009</xmin>
+        <ymin>43.46034189883800281</ymin>
+        <xmax>-3.76441937771400026</xmax>
+        <ymax>43.46539255428800175</ymax>
+      </extent>
+      <id>V20161022190717474</id>
+      <datasource>../V.asc</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>V</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="-1" classificationMax="0.0142305" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="-0.0289113" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="-0.0289" label="-0.0289" color="#edf8fb"/>
+              <item alpha="255" value="-0.0181" label="-0.0181" color="#b2e2e2"/>
+              <item alpha="255" value="-0.00734" label="-0.00734" color="#66c2a4"/>
+              <item alpha="255" value="0.00345" label="0.00345" color="#2ca25f"/>
+              <item alpha="255" value="0.0142" label="0.0142" color="#006d2c"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="inf" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>-3.23675427748454281</xmin>
+        <ymin>43.37056650214723419</ymin>
+        <xmax>-3.20878888744722257</xmax>
+        <ymax>43.39784465197569574</ymax>
+      </extent>
+      <id>castro_mdt432620170404140101666</id>
+      <datasource>./castro_mdt4326.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>castro_mdt4326</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="1"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="-1" classificationMax="39.1362" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="3.33106" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="3.33" label="3.33" color="#2b83ba"/>
+              <item alpha="255" value="12.3" label="12.3" color="#abdda4"/>
+              <item alpha="255" value="21.2" label="21.2" color="#ffffbf"/>
+              <item alpha="255" value="30.2" label="30.2" color="#fdae61"/>
+              <item alpha="255" value="39.1" label="39.1" color="#d7191c"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer minimumScale="inf" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>24.75</xmin>
+        <ymin>8.25</ymin>
+        <xmax>69.75</xmax>
+        <ymax>39.25</ymax>
+      </extent>
+      <id>tz85020170404141409284</id>
+      <datasource>./tz850.tiff</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>geopotential height - tz850</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="identify/format" value="Value"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList bandNo="1" useSrcNoData="0"/>
+        <noDataList bandNo="2" useSrcNoData="0"/>
+      </noData>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" alphaBand="-1" classificationMax="1526.27" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="1411.85" type="singlebandpseudocolor">
+          <rasterTransparency/>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" clip="0">
+              <item alpha="255" value="1412" label="1412" color="#f7fbff"/>
+              <item alpha="255" value="1427" label="1427" color="#deebf7"/>
+              <item alpha="255" value="1442" label="1442" color="#c6dbef"/>
+              <item alpha="255" value="1456" label="1456" color="#9ecae1"/>
+              <item alpha="255" value="1471" label="1471" color="#6baed6"/>
+              <item alpha="255" value="1486" label="1486" color="#4292c6"/>
+              <item alpha="255" value="1501" label="1501" color="#2171b5"/>
+              <item alpha="255" value="1515" label="1515" color="#08519c"/>
+              <item alpha="255" value="1526" label="1526" color="#08306b"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+  </projectlayers>
+  <properties>
+    <Variables>
+      <variableNames type="QStringList"/>
+      <variableValues type="QStringList"/>
+    </Variables>
+    <WMSContactPerson type="QString"></WMSContactPerson>
+    <WMSOnlineResource type="QString"></WMSOnlineResource>
+    <WMSUseLayerIDs type="bool">false</WMSUseLayerIDs>
+    <WMSContactOrganization type="QString"></WMSContactOrganization>
+    <WMSKeywordList type="QStringList">
+      <value></value>
+    </WMSKeywordList>
+    <WFSUrl type="QString"></WFSUrl>
+    <Paths>
+      <Absolute type="bool">false</Absolute>
+    </Paths>
+    <WMSServiceTitle type="QString"></WMSServiceTitle>
+    <WFSLayers type="QStringList"/>
+    <WMSRestrictedLayers type="QStringList"/>
+    <WMSContactMail type="QString"></WMSContactMail>
+    <WMSRestrictedComposers type="QStringList"/>
+    <PositionPrecision>
+      <DecimalPlaces type="int">2</DecimalPlaces>
+      <Automatic type="bool">true</Automatic>
+      <DegreeFormat type="QString">MU</DegreeFormat>
+    </PositionPrecision>
+    <WCSUrl type="QString"></WCSUrl>
+    <WMSServiceCapabilities type="bool">false</WMSServiceCapabilities>
+    <WMSContactPhone type="QString"></WMSContactPhone>
+    <WMSServiceAbstract type="QString"></WMSServiceAbstract>
+    <WMSContactPosition type="QString"></WMSContactPosition>
+    <WMSAddWktGeometry type="bool">false</WMSAddWktGeometry>
+    <Measure>
+      <Ellipsoid type="QString">NONE</Ellipsoid>
+    </Measure>
+    <WMSPrecision type="QString">8</WMSPrecision>
+    <WMSSegmentizeFeatureInfoGeometry type="bool">false</WMSSegmentizeFeatureInfoGeometry>
+    <WFSTLayers>
+      <Insert type="QStringList"/>
+      <Update type="QStringList"/>
+      <Delete type="QStringList"/>
+    </WFSTLayers>
+    <Gui>
+      <SelectionColorBluePart type="int">0</SelectionColorBluePart>
+      <CanvasColorGreenPart type="int">255</CanvasColorGreenPart>
+      <CanvasColorRedPart type="int">255</CanvasColorRedPart>
+      <SelectionColorRedPart type="int">255</SelectionColorRedPart>
+      <SelectionColorAlphaPart type="int">255</SelectionColorAlphaPart>
+      <SelectionColorGreenPart type="int">255</SelectionColorGreenPart>
+      <CanvasColorBluePart type="int">255</CanvasColorBluePart>
+    </Gui>
+    <Digitizing>
+      <DefaultSnapToleranceUnit type="int">2</DefaultSnapToleranceUnit>
+      <LayerSnappingList type="QStringList"/>
+      <LayerSnappingEnabledList type="QStringList"/>
+      <SnappingMode type="QString">current_layer</SnappingMode>
+      <AvoidIntersectionsList type="QStringList"/>
+      <LayerSnappingToleranceUnitList type="QStringList"/>
+      <LayerSnapToList type="QStringList"/>
+      <DefaultSnapType type="QString">off</DefaultSnapType>
+      <DefaultSnapTolerance type="double">0</DefaultSnapTolerance>
+      <LayerSnappingToleranceList type="QStringList"/>
+    </Digitizing>
+    <Identify>
+      <disabledLayers type="QStringList"/>
+    </Identify>
+    <Macros>
+      <pythonCode type="QString"></pythonCode>
+    </Macros>
+    <WMSAccessConstraints type="QString">None</WMSAccessConstraints>
+    <WCSLayers type="QStringList"/>
+    <Legend>
+      <filterByMap type="bool">false</filterByMap>
+    </Legend>
+    <SpatialRefSys>
+      <ProjectCRSProj4String type="QString">+proj=longlat +datum=WGS84 +no_defs</ProjectCRSProj4String>
+      <ProjectCrs type="QString">EPSG:4326</ProjectCrs>
+      <ProjectCRSID type="int">3452</ProjectCRSID>
+      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
+    </SpatialRefSys>
+    <DefaultStyles>
+      <Fill type="QString"></Fill>
+      <Line type="QString"></Line>
+      <Marker type="QString"></Marker>
+      <RandomColors type="bool">true</RandomColors>
+      <AlphaInt type="int">255</AlphaInt>
+      <ColorRamp type="QString"></ColorRamp>
+    </DefaultStyles>
+    <WMSFees type="QString">conditions unknown</WMSFees>
+    <WMSImageQuality type="int">90</WMSImageQuality>
+    <Measurement>
+      <DistanceUnits type="QString">meters</DistanceUnits>
+      <AreaUnits type="QString">m2</AreaUnits>
+    </Measurement>
+    <WMSUrl type="QString"></WMSUrl>
+  </properties>
+  <visibility-presets/>
+</qgis>
