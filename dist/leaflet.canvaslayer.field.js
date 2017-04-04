@@ -866,11 +866,11 @@
 	            var fileDirectory = image.getFileDirectory();
 	            var pixelScale = fileDirectory.ModelPixelScale;
 
-	            var regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
+	            /*let regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
 	            if (!regularGrid) {
-	                console.error('pixelScale: ' + pixelScale);
+	                console.error(`pixelScale: ${pixelScale}`);
 	                throw new Error('A raster without regular cells is not supported');
-	            }
+	            }*/
 	            // TODO check no rotation, or else ... throw "Not supported raster"
 
 	            var zs = rasters[bandIndex]; // left-right and top-down.
@@ -879,7 +879,7 @@
 	                (function () {
 	                    var noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
 	                    console.log(noData);
-	                    var simpleZS = Array.from(zs); // to simple array, so null is allowed
+	                    var simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
 	                    zs = simpleZS.map(function (z) {
 	                        return z === noData ? null : z;
 	                    });
@@ -1263,10 +1263,11 @@
 	'use strict';
 
 	/*
+	  1.0.1 (downloaded from https://github.com/Sumbera/gLayers.Leaflet/releases/tag/v1.0.1)
+
 	  Generic  Canvas Layer for leaflet 0.7 and 1.0-rc,
 	  copyright Stanislav Sumbera,  2016 , sumbera.com , license MIT
 	  originally created and motivated by L.CanvasOverlay  available here: https://gist.github.com/Sumbera/11114288
-
 	*/
 
 	L.CanvasLayer = L.Layer.extend({
