@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h1 id="title">OGC WCS (GeoTIFF)</h1>
+    <h1 id="title">OGC WCS (Web Coverage Service / GeoTIFF)</h1>
     <div id="map"></div>
 
     <!-- CDN -->
@@ -37,15 +37,13 @@
 
         let getCapabilities = "http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?SERVICE=wcs&VERSION=1.0.0&REQUEST=GetCapabilities";
 
-        let getCoverage =  "http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?";
+        let getCoverage = "http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?";
         getCoverage += "SERVICE=wcs&";
         getCoverage += "VERSION=1.0.0&";
         getCoverage += "REQUEST=GetCoverage&";
-        getCoverage += "COVERAGE=Modelo Digital de Elevaciones (MDE) de Andalucia 100 m&";
+        getCoverage += "COVERAGE=Modelo Digital de Elevaciones (MDE) de Andalucia 10 m&";
         getCoverage += "CRS=EPSG:4326&";
         getCoverage += "BBOX=-7.58390693285438,35.964208075556,-1.6006002035338,38.7503547383259&";
-        /*getCoverage += "WIDTH=800&";
-        getCoverage += "HEIGHT=800&";*/
         getCoverage += "RESX=0.01&";
         getCoverage += "RESY=0.01&";
         getCoverage += "FORMAT=GTiff";
@@ -54,11 +52,13 @@
         console.log(urlCoverage);
 
         d3.request(urlCoverage).responseType('arraybuffer').get(
-            function (error, tiffData) {
+            function(error, tiffData) {
                 // band 0
                 let geo = L.ScalarField.fromGeoTIFF(tiffData.response);
+
+                // check styles at http://www.juntadeandalucia.es/medioambiente/site/rediam/menuitem.04dc44281e5d53cf8ca78ca731525ea0/?vgnextoid=f6284d9721fa3410VgnVCM2000000624e50aRCRD&vgnextchannel=8ca090a63670f210VgnVCM2000000624e50aRCRD&vgnextfmt=rediam&lr=lang_es
                 let dtm = L.canvasLayer.scalarField(geo, {
-                    color: chroma.scale('Spectral').domain([geo.range[1], geo.range[0]])
+                    color: chroma.scale('RdYlGn').domain([geo.range[1], geo.range[0]])
                 }).addTo(map);
 
                 map.fitBounds(dtm.getBounds());
@@ -66,7 +66,7 @@
                 dtm.on('click', function(e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(0);
-                        let html = (`Height: ${v} meters`);
+                        let html = (`<span class="popupText">Height: ${v} meters</span>`);
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)
@@ -74,6 +74,7 @@
                     }
                 });
             });
+
     </script>
 </body>
 
