@@ -5,39 +5,42 @@
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-group expanded="1" checked="Qt::Checked" name="Little sample 10 x 10 for vectorField anim tests">
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="Little sample 10 x 10 for vectorField anim tests">
       <customproperties/>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="U20161022163016964" name="U">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="U20161022163016964" name="U">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="V20161022190717474" name="V">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="V20161022190717474" name="V">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="1" checked="Qt::Checked" name="Bay of Santander">
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="Bay of Santander">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:v_current">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:v_current">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="1" checked="Qt::Checked" name="Small LIDAR DTM">
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="Small LIDAR DTM">
       <customproperties/>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="castro_mdt432620170404140101666" name="castro_mdt4326">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="castro_mdt432620170404140101666" name="castro_mdt4326">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="1" checked="Qt::Checked" name="Arabian Gulf - two bands geotiff">
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="Arabian Gulf - two bands geotiff">
       <customproperties/>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="tz85020170404141409284" name="geopotential height - tz850">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="tz85020170404141409284" name="geopotential height - tz850">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Checked" id="Arabian_Gulf___tz850_copy20170404141515780" name="temperature">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Arabian_Gulf___tz850_copy20170404141515780" name="temperature">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="WCS Andalucia">
+      <customproperties/>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170405093116156" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
@@ -47,21 +50,15 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="1" checked="Qt::Unchecked" name="TEST">
-      <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m">
-        <customproperties/>
-      </layer-tree-layer>
-    </layer-tree-group>
   </layer-tree-group>
   <relations/>
   <mapcanvas>
     <units>degrees</units>
     <extent>
-      <xmin>-7.73348960108739547</xmin>
-      <ymin>35.89455440898675675</ymin>
-      <xmax>-1.45101753530078526</xmax>
-      <ymax>38.82000840489515525</ymax>
+      <xmin>-189</xmin>
+      <ymin>-94.5</ymin>
+      <xmax>189</xmax>
+      <ymax>94.5</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -82,9 +79,11 @@
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:26710" srcDatumTransform="-1" destDatumTransform="-1" layerid="m30dem20170404140705773"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="countries20170404135945107"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__temp20170404171157532"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170405093116156"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="Arabian_Gulf___tz850_copy20170404141515780"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__temp20170404141236707"/>
+      <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="REDIAM_WCS_mdt__8_20170404190812049"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__temp20170404171141675"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="tz85020170404141409284"/>
       <layer_coordinate_transform destAuthId="EPSG:4326" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="EOC_Basemap20170404163516659"/>
@@ -106,56 +105,57 @@
       <item>EOC_Basemap20170404163516659</item>
       <item>NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827</item>
       <item>NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756</item>
-      <item>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907</item>
-      <item>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168</item>
+      <item>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170405093116156</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendgroup open="true" checked="Qt::Checked" name="Little sample 10 x 10 for vectorField anim tests">
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="U" showFeatureCount="0">
+    <legendgroup open="false" checked="Qt::Unchecked" name="Little sample 10 x 10 for vectorField anim tests">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="U" showFeatureCount="0">
         <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="U20161022163016964" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="U20161022163016964" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="V" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="V" showFeatureCount="0">
         <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="V20161022190717474" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="V20161022190717474" visible="0"/>
         </filegroup>
       </legendlayer>
     </legendgroup>
-    <legendgroup open="true" checked="Qt::Checked" name="Bay of Santander">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m" showFeatureCount="0">
+    <legendgroup open="false" checked="Qt::Unchecked" name="Bay of Santander">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:u_current" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:v_current" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__u_current20170404170858827" visible="1"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="NETCDF:&quot;ncss_BahiaSantander_2016072618_1H&quot;:v_current" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="NETCDF__ncss_BahiaSantander_2016072618_1H__v_current20170404171046756" visible="0"/>
         </filegroup>
       </legendlayer>
     </legendgroup>
-    <legendgroup open="true" checked="Qt::Checked" name="Small LIDAR DTM">
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="castro_mdt4326" showFeatureCount="0">
+    <legendgroup open="false" checked="Qt::Unchecked" name="Small LIDAR DTM">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="castro_mdt4326" showFeatureCount="0">
         <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="castro_mdt432620170404140101666" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="castro_mdt432620170404140101666" visible="0"/>
         </filegroup>
       </legendlayer>
     </legendgroup>
-    <legendgroup open="true" checked="Qt::Checked" name="Arabian Gulf - two bands geotiff">
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="geopotential height - tz850" showFeatureCount="0">
+    <legendgroup open="false" checked="Qt::Unchecked" name="Arabian Gulf - two bands geotiff">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="geopotential height - tz850" showFeatureCount="0">
         <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="tz85020170404141409284" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="tz85020170404141409284" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="temperature" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="temperature" showFeatureCount="0">
         <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Arabian_Gulf___tz850_copy20170404141515780" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="Arabian_Gulf___tz850_copy20170404141515780" visible="0"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
+    <legendgroup open="false" checked="Qt::Unchecked" name="WCS Andalucia">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170405093116156" visible="0"/>
         </filegroup>
       </legendlayer>
     </legendgroup>
@@ -163,13 +163,6 @@
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="EOC Basemap" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="EOC_Basemap20170404163516659" visible="1"/>
-        </filegroup>
-      </legendlayer>
-    </legendgroup>
-    <legendgroup open="true" checked="Qt::Unchecked" name="TEST">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Modelo Digital de Elevaciones (MDE) de Andalucia 100 m" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168" visible="0"/>
         </filegroup>
       </legendlayer>
     </legendgroup>
@@ -323,56 +316,6 @@
       </pipe>
       <blendMode>0</blendMode>
     </maplayer>
-    <maplayer minimumScale="0" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
-      <extent>
-        <xmin>-7.58390693285438022</xmin>
-        <ymin>35.96420807555600163</ymin>
-        <xmax>-1.60060020353380006</xmax>
-        <ymax>38.75035473832590327</ymax>
-      </extent>
-      <id>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171725907</id>
-      <datasource>cache=PreferNetwork&amp;crs=EPSG:4326&amp;format=GTiff&amp;identifier=Modelo%20Digital%20de%20Elevaciones%20(MDE)%20de%20Andalucia%20100%20m&amp;url=http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt</datasource>
-      <keywordList>
-        <value></value>
-      </keywordList>
-      <layername>Modelo Digital de Elevaciones (MDE) de Andalucia 100 m</layername>
-      <srs>
-        <spatialrefsys>
-          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
-          <srsid>3452</srsid>
-          <srid>4326</srid>
-          <authid>EPSG:4326</authid>
-          <description>WGS 84</description>
-          <projectionacronym>longlat</projectionacronym>
-          <ellipsoidacronym>WGS84</ellipsoidacronym>
-          <geographicflag>true</geographicflag>
-        </spatialrefsys>
-      </srs>
-      <customproperties>
-        <property key="identify/format" value="Value"/>
-      </customproperties>
-      <provider>wcs</provider>
-      <noData>
-        <noDataList bandNo="1" useSrcNoData="0"/>
-      </noData>
-      <map-layer-style-manager current="">
-        <map-layer-style name=""/>
-      </map-layer-style-manager>
-      <pipe>
-        <rasterrenderer gradient="BlackToWhite" opacity="1" alphaBand="-1" type="singlebandgray" grayBand="1">
-          <rasterTransparency/>
-          <contrastEnhancement>
-            <minValue>0</minValue>
-            <maxValue>1446.7893442382813</maxValue>
-            <algorithm>StretchToMinimumMaximum</algorithm>
-          </contrastEnhancement>
-        </rasterrenderer>
-        <brightnesscontrast brightness="0" contrast="0"/>
-        <huesaturation colorizeGreen="128" colorizeOn="0" colorizeRed="255" colorizeBlue="128" grayscaleMode="0" saturation="0" colorizeStrength="100"/>
-        <rasterresampler maxOversampling="2"/>
-      </pipe>
-      <blendMode>0</blendMode>
-    </maplayer>
     <maplayer minimumScale="inf" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
       <extent>
         <xmin>-7.58390693285438022</xmin>
@@ -380,7 +323,7 @@
         <xmax>-1.60060020353380006</xmax>
         <ymax>38.75035473832590327</ymax>
       </extent>
-      <id>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170404171728168</id>
+      <id>Modelo_Digital_de_Elevaciones__MDE__de_Andalucia_100_m20170405093116156</id>
       <datasource>cache=PreferNetwork&amp;crs=EPSG:4326&amp;format=GTiff&amp;identifier=Modelo%20Digital%20de%20Elevaciones%20(MDE)%20de%20Andalucia%20100%20m&amp;url=http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt</datasource>
       <keywordList>
         <value></value>
@@ -410,15 +353,15 @@
         <map-layer-style name=""/>
       </map-layer-style-manager>
       <pipe>
-        <rasterrenderer opacity="1" alphaBand="-1" classificationMax="1446.79" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="0" type="singlebandpseudocolor">
+        <rasterrenderer opacity="1" alphaBand="0" classificationMax="1446.79" classificationMinMaxOrigin="CumulativeCutFullExtentEstimated" band="1" classificationMin="0" type="singlebandpseudocolor">
           <rasterTransparency/>
           <rastershader>
             <colorrampshader colorRampType="INTERPOLATED" clip="0">
-              <item alpha="255" value="0" label="0" color="#018571"/>
-              <item alpha="255" value="361.7" label="361.7" color="#80cdc1"/>
-              <item alpha="255" value="723.4" label="723.4" color="#f5f5f5"/>
-              <item alpha="255" value="1085" label="1085" color="#dfc27d"/>
-              <item alpha="255" value="1447" label="1447" color="#a6611a"/>
+              <item alpha="255" value="0" label="0" color="#1a9641"/>
+              <item alpha="255" value="361.7" label="361.7" color="#a6d96a"/>
+              <item alpha="255" value="723.4" label="723.4" color="#ffffc0"/>
+              <item alpha="255" value="1085" label="1085" color="#fdae61"/>
+              <item alpha="255" value="1447" label="1447" color="#d7191c"/>
             </colorrampshader>
           </rastershader>
         </rasterrenderer>
