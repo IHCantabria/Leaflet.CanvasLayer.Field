@@ -1692,39 +1692,24 @@
 
 	                var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
 	                if (v) {
-	                    var _getRGBAFor = this._getRGBAFor(v),
-	                        _getRGBAFor2 = _slicedToArray(_getRGBAFor, 4),
-	                        R = _getRGBAFor2[0],
-	                        G = _getRGBAFor2[1],
-	                        B = _getRGBAFor2[2],
-	                        A = _getRGBAFor2[3];
+	                    var color = this._getColorFor(v);
+
+	                    var _color$rgba = color.rgba(),
+	                        _color$rgba2 = _slicedToArray(_color$rgba, 4),
+	                        R = _color$rgba2[0],
+	                        G = _color$rgba2[1],
+	                        B = _color$rgba2[2],
+	                        A = _color$rgba2[3];
 
 	                    data[pos] = R;
 	                    data[pos + 1] = G;
 	                    data[pos + 2] = B;
-	                    data[pos + 3] = A;
+	                    data[pos + 3] = parseInt(A * 255); // not percent in alpha but hex 0-255
 	                }
 	                pos = pos + 4;
 	            }
 	        }
 	        console.timeEnd('prepareImageIn');
-	    },
-
-
-	    /**
-	     * Gets RGBA components for a value
-	     * @private
-	     * @param   {Number} v - value
-	     * @returns {Array}    [R, G, B, A]
-	     */
-	    _getRGBAFor: function _getRGBAFor(v) {
-	        var color = this._getColorFor(v);
-	        var rgb = color.rgb();
-	        var R = parseInt(rgb[0]);
-	        var G = parseInt(rgb[1]);
-	        var B = parseInt(rgb[2]);
-	        var A = 255; // :(, no alpha
-	        return [R, G, B, A];
 	    },
 
 
