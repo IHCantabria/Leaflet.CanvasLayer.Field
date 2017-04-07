@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>ScalarField styles</title>
+    <title>ScalarField / color</title>
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -65,8 +65,17 @@
                 )
             });
 
+            //var custom = function (v) { return v < 0.75 ? 'rgba(0,0,0,0)' : 'purple'; };
+            var custom = function (v) {
+                if (v< 0.75){
+                    return 'rgba(0,0,0,0)';}
+                else {
+                    return 'purple';
+                }
+            };
+
             var layer5 = L.canvasLayer.scalarField(s, {
-                color: function(v) {
+                color: custom /*function(v) {
                     if (v > 0.75) {
                         if (v > 0.85) {
                             return 'Indigo';
@@ -75,7 +84,7 @@
                     } else {
                         return 'DimGray';
                     }
-                }
+                }*/
             });
 
             var layers = {
