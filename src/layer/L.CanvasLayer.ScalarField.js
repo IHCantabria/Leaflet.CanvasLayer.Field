@@ -5,7 +5,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     options: {
         color: null, // function colorFor(value) [e.g. chromajs.scale],
-        interpolate: false
+        interpolate: false // TODO artifacts review
     },
 
     initialize: function (scalarField, options) {
@@ -65,32 +65,17 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
                 let v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
                 if (v) {
-                    let [R, G, B, A] = this._getRGBAFor(v);
+                    let color = this._getColorFor(v);
+                    let [R, G, B, A] = color.rgba();
                     data[pos] = R;
                     data[pos + 1] = G;
                     data[pos + 2] = B;
-                    data[pos + 3] = A;
+                    data[pos + 3] = parseInt(A * 255); // not percent in alpha but hex 0-255
                 }
                 pos = pos + 4;
             }
         }
         console.timeEnd('prepareImageIn');
-    },
-
-    /**
-     * Gets RGBA components for a value
-     * @private
-     * @param   {Number} v - value
-     * @returns {Array}    [R, G, B, A]
-     */
-    _getRGBAFor(v) {
-        let color = this._getColorFor(v);
-        let rgb = color.rgb();
-        let R = parseInt(rgb[0]);
-        let G = parseInt(rgb[1]);
-        let B = parseInt(rgb[2]);
-        let A = 255; // :(, no alpha
-        return [R, G, B, A];
     },
 
     /**
