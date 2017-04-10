@@ -13,6 +13,33 @@
     <h1 id="title">ScalarField layers with custom styles</h1>
     <div id="map"></div>
 
+     <div id="floating-panel">
+         <div id="gradientPanel">
+            <label>Gradient</label>
+            <input type="color" id="lowColor" value="#FFFFFF">
+            <input type="color" id="highColor" value="#000000">
+        </div>
+
+        <div id="colorBrewerPanel" style="display:none;">
+            <label>Color Brewer palettes</label>
+            <!-- some color scales... (for a full list see: https://github.com/gka/chroma.js/wiki/Predefined-Colors) -->
+            <select id="colorBrewer">
+                <option>OrRd</option>
+                <option>PuBu</option>
+                <option>BuPu</option>
+                <option>Oranges</option>
+                <option>RdPu</option>
+                <option>YlGnBu</option>
+                <option>GnBu</option>
+                <option>PuRd</option>
+                <option>PuBuGn</option>
+                <option>Spectral</option>
+                <option>RdYlGn</option>
+                <option>PiYG</option>
+                <option>Paired</option>
+            </select>
+        </div>
+    </div>
 
 
     <!-- CDN -->
@@ -43,45 +70,75 @@
             var s = L.ScalarField.fromASCIIGrid(asc);
 
             var layer1 = L.canvasLayer.scalarField(s, {
-                color: chroma.scale(['black', 'white']).domain(s.range),
+                color: chroma.scale(['white', 'black']).domain(s.range),
                 click: false
             }).addTo(map);
             map.fitBounds(layer1.getBounds());
 
             var layer2 = L.canvasLayer.scalarField(s, {
-                color: chroma.scale('YlGnBu').domain(s.range),
+                color: chroma.scale('OrRd').domain(s.range),
                 click: false
             });
 
             var layer3 = L.canvasLayer.scalarField(s, {
-                color: chroma.scale('Spectral').domain(s.range),
-                click: false
-            });
-
-            var layer4 = L.canvasLayer.scalarField(s, {
                 color: chroma.scale('OrRd').classes(
                     [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2]
                 ),
                 click: false
             });
 
-            var layer5 = L.canvasLayer.scalarField(s, {
+            var layer4 = L.canvasLayer.scalarField(s, {
                 color: function (v) { return v < 0.75 ? 'rgba(0,0,0,0)' : 'purple'; },
                 click: false
             });
 
             var layers = {
-                'Black-White': layer1,
-                'YlGnBu': layer2,
-                'Spectral': layer3,
-                'OrRd bucket (Classes)': layer4,
-                'Custom (function)': layer5
+                'Two colors gradient': layer1,
+                'ColorBrewer2': layer2,
+                'Custom buckets (6 classes)': layer3,
+                'Custom function (>0.75)': layer4
             };
 
             L.control.layers(layers, {}, {
                 position: 'bottomleft',
                 collapsed: false
             }).addTo(map);
+
+
+            /* Dynamic styles */
+            //  Gradient two colors
+            let gradientColors = document.getElementsByTagName('input[type=color]');
+            let low = document.getElementById('lowColor');
+            let high = document.getElementById('highColor');
+            var updateGradient = function(){
+                var scale = chroma.scale([low.value, high.value]).domain(s.range);
+                layer1.setColor(scale);
+            }
+            low.addEventListener('input', updateGradient);
+            high.addEventListener('input', updateGradient);
+
+            //  Color
+            let colorBrewer = document.getElementById('colorBrewer');
+            colorBrewer.addEventListener('change', function() {
+                var scale = chroma.scale(this.value).domain(s.range);
+                layer2.setColor(scale);
+            });
+
+
+
+            /* enable panels */
+            map.on('baselayerchange', function(e) {
+                // gradient
+                let gradientPanel = document.getElementById('gradientPanel');
+                gradientPanel.style.display = (e.layer === layer1) ? "block" : "none";
+
+                // colorBrewer
+                let colorBrewerPanel = document.getElementById('colorBrewerPanel');
+                colorBrewerPanel.style.display = (e.layer === layer2) ? "block" : "none";
+
+
+
+            });
         });
 
     </script>
