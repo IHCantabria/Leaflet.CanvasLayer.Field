@@ -33,8 +33,8 @@
             subdomains: 'abcd'
         }).addTo(map);
 
-        /* NASA NDVI Index (2017-02) 0.1 deg (3600 x 1800) = 24.7MB*/
-        d3.request("http://puerpc42.caminos.unican.es/SAMPLE_DATA/ndvi_201702.tif").responseType('arraybuffer').get(
+        /* NASA NDVI Index (2017-02) 0.1 deg (3600 x 1800) = 24.7MB uncompressed */
+        d3.request("data/ndvi_201702_LZW.tif").responseType('arraybuffer').get(
             function (error, tiffData) {
                 let ndvi = L.ScalarField.fromGeoTIFF(tiffData.response);
 
