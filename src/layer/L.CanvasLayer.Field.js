@@ -6,7 +6,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     options: {
         click: true, // 'onclick' event enabled
-        pointerOnHover: true,
+        hoverCursor: 'pointer',
         defaultCursor: 'default',
         opacity: 1
     },
@@ -20,8 +20,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         //console.log('onLayerDidMount');
         if (this.options.click) {
             this._map.on('click', this._queryValue, this);
-        }
-        if (this.options.pointerOnHover) {
             this._map.on('mousemove', this._showPointerOnValue, this);
         }
         this._ensureCanvasAlignment();
@@ -36,8 +34,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         //console.log('onLayerWillUnmount');
         if (this.options.click) {
             this._map.off('click', this._queryValue, this);
-        }
-        if (this.options.pointerOnHover) {
             this._map.off('mousemove', this._showPointerOnValue, this);
         }
     },
@@ -75,7 +71,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
         let style = this._map.getContainer().style;
         if (this.field.hasValueAt(lon, lat)) {
-            style.cursor = 'pointer';
+            style.cursor = this.options.hoverCursor;
         } else {
             style.cursor = this.options.defaultCursor;
         }
