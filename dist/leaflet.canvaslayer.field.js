@@ -90,6 +90,7 @@
 	// control
 	__webpack_require__(11);
 
+	console.log('leaflet.canvaslayer.field v0.9');
 	// TODO - check umd pattern
 
 /***/ },
@@ -876,14 +877,12 @@
 	            var zs = rasters[bandIndex]; // left-right and top-down.
 
 	            if (fileDirectory.GDAL_NODATA) {
-	                (function () {
-	                    var noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
-	                    console.log(noData);
-	                    var simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
-	                    zs = simpleZS.map(function (z) {
-	                        return z === noData ? null : z;
-	                    });
-	                })();
+	                var noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
+	                // console.log(noData);
+	                var simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
+	                zs = simpleZS.map(function (z) {
+	                    return z === noData ? null : z;
+	                });
 	            }
 
 	            var p = {
@@ -1515,7 +1514,7 @@
 
 	    options: {
 	        click: true, // 'onclick' event enabled
-	        pointerOnHover: true,
+	        hoverCursor: 'pointer',
 	        defaultCursor: 'default',
 	        opacity: 1
 	    },
@@ -1529,8 +1528,6 @@
 	        //console.log('onLayerDidMount');
 	        if (this.options.click) {
 	            this._map.on('click', this._queryValue, this);
-	        }
-	        if (this.options.pointerOnHover) {
 	            this._map.on('mousemove', this._showPointerOnValue, this);
 	        }
 	        this._ensureCanvasAlignment();
@@ -1546,8 +1543,6 @@
 	        //console.log('onLayerWillUnmount');
 	        if (this.options.click) {
 	            this._map.off('click', this._queryValue, this);
-	        }
-	        if (this.options.pointerOnHover) {
 	            this._map.off('mousemove', this._showPointerOnValue, this);
 	        }
 	    },
@@ -1585,7 +1580,7 @@
 
 	        var style = this._map.getContainer().style;
 	        if (this.field.hasValueAt(lon, lat)) {
-	            style.cursor = 'pointer';
+	            style.cursor = this.options.hoverCursor;
 	        } else {
 	            style.cursor = this.options.defaultCursor;
 	        }
@@ -1632,7 +1627,7 @@
 
 	    options: {
 	        color: null, // function colorFor(value) [e.g. chromajs.scale],
-	        interpolate: false
+	        interpolate: false // TODO artifacts review
 	    },
 
 	    initialize: function initialize(scalarField, options) {
