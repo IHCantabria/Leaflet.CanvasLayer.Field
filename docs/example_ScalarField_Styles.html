@@ -13,11 +13,7 @@
     <h1 id="title">ScalarField layers with custom styles</h1>
     <div id="map"></div>
 
-     <div id="floating-panel">
-        <select id="renderFunction">
 
-        </select>
-    </div>
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
@@ -47,55 +43,42 @@
             var s = L.ScalarField.fromASCIIGrid(asc);
 
             var layer1 = L.canvasLayer.scalarField(s, {
-                color: chroma.scale(['black', 'white']).domain(s.range)
+                color: chroma.scale(['black', 'white']).domain(s.range),
+                click: false
             }).addTo(map);
             map.fitBounds(layer1.getBounds());
 
             var layer2 = L.canvasLayer.scalarField(s, {
-                color: chroma.scale('YlGnBu').domain(s.range)
+                color: chroma.scale('YlGnBu').domain(s.range),
+                click: false
             });
 
             var layer3 = L.canvasLayer.scalarField(s, {
-                color: chroma.scale('Spectral').domain(s.range)
+                color: chroma.scale('Spectral').domain(s.range),
+                click: false
             });
 
             var layer4 = L.canvasLayer.scalarField(s, {
                 color: chroma.scale('OrRd').classes(
                     [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2]
-                )
+                ),
+                click: false
             });
 
-            //var custom = function (v) { return v < 0.75 ? 'rgba(0,0,0,0)' : 'purple'; };
-            var custom = function (v) {
-                if (v< 0.75){
-                    return 'rgba(0,0,0,0)';}
-                else {
-                    return 'purple';
-                }
-            };
-
             var layer5 = L.canvasLayer.scalarField(s, {
-                color: custom /*function(v) {
-                    if (v > 0.75) {
-                        if (v > 0.85) {
-                            return 'Indigo';
-                        }
-                        return 'Purple';
-                    } else {
-                        return 'DimGray';
-                    }
-                }*/
+                color: function (v) { return v < 0.75 ? 'rgba(0,0,0,0)' : 'purple'; },
+                click: false
             });
 
             var layers = {
                 'Black-White': layer1,
                 'YlGnBu': layer2,
                 'Spectral': layer3,
-                'OrRd bucket': layer4,
-                'Custom': layer5
+                'OrRd bucket (Classes)': layer4,
+                'Custom (function)': layer5
             };
 
-            L.control.layers({}, layers, {
+            L.control.layers(layers, {}, {
                 position: 'bottomleft',
                 collapsed: false
             }).addTo(map);
