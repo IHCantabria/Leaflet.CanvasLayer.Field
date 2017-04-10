@@ -5,7 +5,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     options: {
         color: null, // function colorFor(value) [e.g. chromajs.scale],
-        interpolate: false // TODO artifacts review
+        interpolate: false // TODO review
     },
 
     initialize: function (scalarField, options) {
@@ -13,12 +13,17 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         L.Util.setOptions(this, options);
 
         if (this.options.color === null) {
-            this.options.color = this._defaultColorScale();
+            this.setColor(this._defaultColorScale());
         }
     },
 
     _defaultColorScale: function () {
         return chroma.scale(['white', 'black']).domain(this.field.range);
+    },
+
+    setColor(f){
+        this.options.color = f;
+        this.needRedraw();
     },
 
     onDrawLayer: function (viewInfo) {
