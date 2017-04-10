@@ -56,7 +56,6 @@
 
         /* Basemap */
         var url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
-        //let url = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'CartoDB & OSM',
             subdomains: 'abc',
@@ -87,16 +86,10 @@
                 click: false
             });
 
-            var layer4 = L.canvasLayer.scalarField(s, {
-                color: function (v) { return v < 0.75 ? 'rgba(0,0,0,0)' : 'purple'; },
-                click: false
-            });
-
             var layers = {
                 'Two colors gradient': layer1,
                 'ColorBrewer2': layer2,
-                'Custom buckets (6 classes)': layer3,
-                'Custom function (>0.75)': layer4
+                'Custom buckets (6 classes)': layer3
             };
 
             L.control.layers(layers, {}, {
@@ -106,7 +99,7 @@
 
 
             /* Dynamic styles */
-            //  Gradient two colors
+            //      gradient with two colors
             let gradientColors = document.getElementsByTagName('input[type=color]');
             let low = document.getElementById('lowColor');
             let high = document.getElementById('highColor');
@@ -117,27 +110,20 @@
             low.addEventListener('input', updateGradient);
             high.addEventListener('input', updateGradient);
 
-            //  Color
+            //      colorBrewer scale
             let colorBrewer = document.getElementById('colorBrewer');
             colorBrewer.addEventListener('change', function() {
                 var scale = chroma.scale(this.value).domain(s.range);
                 layer2.setColor(scale);
             });
 
-
-
-            /* enable panels */
+            //      enable panels
             map.on('baselayerchange', function(e) {
-                // gradient
                 let gradientPanel = document.getElementById('gradientPanel');
                 gradientPanel.style.display = (e.layer === layer1) ? "block" : "none";
 
-                // colorBrewer
                 let colorBrewerPanel = document.getElementById('colorBrewerPanel');
                 colorBrewerPanel.style.display = (e.layer === layer2) ? "block" : "none";
-
-
-
             });
         });
 
