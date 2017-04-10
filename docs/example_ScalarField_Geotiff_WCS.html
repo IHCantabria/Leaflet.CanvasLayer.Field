@@ -32,12 +32,10 @@
             subdomains: 'abcd'
         }).addTo(map);
 
-        /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
-        let wcsRequest = "data/tz850.tiff";
+        /* DTM from OGC-WCS */
+        // let getCapabilities = "http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?SERVICE=wcs&VERSION=1.0.0&REQUEST=GetCapabilities";
 
-        let getCapabilities = "http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?SERVICE=wcs&VERSION=1.0.0&REQUEST=GetCapabilities";
-
-        let getCoverage = "http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?";
+        let getCoverage = "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?";
         getCoverage += "SERVICE=wcs&";
         getCoverage += "VERSION=1.0.0&";
         getCoverage += "REQUEST=GetCoverage&";
