@@ -1627,7 +1627,7 @@
 
 	    options: {
 	        color: null, // function colorFor(value) [e.g. chromajs.scale],
-	        interpolate: false // TODO artifacts review
+	        interpolate: false // TODO review
 	    },
 
 	    initialize: function initialize(scalarField, options) {
@@ -1635,13 +1635,19 @@
 	        L.Util.setOptions(this, options);
 
 	        if (this.options.color === null) {
-	            this.options.color = this._defaultColorScale();
+	            this.setColor(this._defaultColorScale());
 	        }
 	    },
 
 	    _defaultColorScale: function _defaultColorScale() {
 	        return chroma.scale(['white', 'black']).domain(this.field.range);
 	    },
+
+	    setColor: function setColor(f) {
+	        this.options.color = f;
+	        this.needRedraw();
+	    },
+
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        //console.time('onDrawLayer');
