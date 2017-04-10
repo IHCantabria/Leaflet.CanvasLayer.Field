@@ -1,7 +1,5 @@
 # Leaflet.CanvasLayer.Field
-A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files (just EPSG:4326).
-
-It includes:
+A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files (EPSG:4326). It includes:
 * `L.CanvasLayer.ScalarField` - a raster layer from scalars (such as DTM, temperature...)
 * `L.CanvasLayer.VectorFieldAnim` - an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
 
@@ -9,30 +7,20 @@ This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) 
 
 
 ## Demo
-The above figures show the results for two basic layers, showing *Velocity currents into the Bay of Santander, Spain*
+The above figures show the results for two basic layers, showing *Currents in the Bay of Santander (Spain)*
 
-### 1. VectorFieldAnim
-![Example](TBD: url/to/VectorFieldAnim.gif)
+![Example](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/img/VectorFieldAnim.gif)
 
-### 2. ScalarField
-![Example](TBD: url/to/ScalarField.png)
-
-Working examples at (TBD: url/to/docs/index.html)
+![Example](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
 
 
-## Requirements
-The plugin works with Leaflet >=v1.0.0 and it has these dependencies:
-
-* [chroma-js](https://github.com/gka/chroma.js)
-* [geotiff](https://github.com/constantinius/geotiff.js)
-* [d3](https://github.com/d3/d3)
-* [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (source already included)
+EXAMPLES: https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/
 
 
 ## Instructions
 
 ### Basic Usage
-1. Get the JavaScript file. You can grab a copy from `/dist`: [leaflet.canvaslayer.field.js](https://github.com/IHCantabria/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js)
+1. Get the JavaScript file. You can grab a copy from [leaflet.canvaslayer.field.js](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js)
 
 2. Include the JavaScript dependencies in your page:
 ```html
@@ -43,15 +31,15 @@ The plugin works with Leaflet >=v1.0.0 and it has these dependencies:
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//npmcdn.com/geotiff@0.3.6/dist/geotiff.js"></script> <!-- optional -->
 
-    <!-- Plugin (your local path!) -->
-    <script src="leaflet.canvaslayer.field.js"></script>
+    <!-- Plugin -->
+    <script src="https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js"></script>
 ```
 
 3. Prepare a Raster File with your favourite GIS tool, using [EPSG:4326](https://epsg.io/4326) (**ASCII Grid** or **GeoTIFF** format)
 
-4. Create a `scalarField` layer and add it to the `map`
+4. Create a `scalarField` layer and add it to the `map`, using your raster files as source (e.g. this .asc)
 ```js
-d3.text("TBD: url/to/docs/data/Bay_Speed.asc", function (asc) {
+d3.text("https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_Speed.asc", function (asc) {
     var s = L.ScalarField.fromASCIIGrid(asc);
     var layer = L.canvasLayer.scalarField(s).addTo(map);
 
@@ -59,10 +47,10 @@ d3.text("TBD: url/to/docs/data/Bay_Speed.asc", function (asc) {
 });
 ```
 
-5. Or try the `vectorFieldAnim` layer, adding a popup. Previously you have to prepare 2 raster files, with 'u' and 'v' components:
+5. Or try the `vectorFieldAnim` layer, adding also a popup (previously you have to prepare 2 raster files, with 'u' and 'v' components in 'm/s'):
 ```js
-d3.text('TBD: url/to/data/Bay_U.asc', function(u) {
-    d3.text('TBD: url/to/data/Bay_V.asc', function(v) {
+d3.text('https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc', function(u) {
+    d3.text('https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_V.asc', function(v) {
         let vf = L.VectorField.fromASCIIGrids(u, v);
         let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
         map.fitBounds(layer.getBounds());
@@ -83,7 +71,26 @@ d3.text('TBD: url/to/data/Bay_U.asc', function(u) {
 });
 ```
 
-5. To explore different options, see the [examples](TBD: url/to/docs/index.html)
+5. To explore available options see the [examples](TBD: url/to/docs/index.html)
+
+
+### Developers
+`node` & `npm` are needed to build and test the plugin.
+
+It works with Leaflet >=v1.0.0 and it has these dependencies (see package.json > dependencies):
+
+* [chroma-js](https://github.com/gka/chroma.js)
+* [geotiff](https://github.com/constantinius/geotiff.js)
+* [d3](https://github.com/d3/d3)
+* [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (source already included)
+
+The project uses `webpack` as module bundler. 
+To launch it just:
+
+```shell
+npm install
+npm run watch
+```
 
 
 ## License
