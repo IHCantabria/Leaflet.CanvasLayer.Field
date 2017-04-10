@@ -71,7 +71,7 @@ export default class ScalarField extends Field {
 
         if (fileDirectory.GDAL_NODATA) {
             let noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
-            console.log(noData);
+            // console.log(noData);
             let simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
             zs = simpleZS.map(function (z) {
                 return z === noData ? null : z;
