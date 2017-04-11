@@ -7,14 +7,13 @@ This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) 
 
 
 ## Demo
-The above figures show the results for two basic layers, showing *Currents in the Bay of Santander (Spain)*
+The figures below show the results for two basic layers, showing *Currents in the Bay of Santander (Spain)*
 
 ![Example](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/img/VectorFieldAnim.gif)
 
 ![Example](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
 
-
-EXAMPLES: https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/
+**EXAMPLES**: https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/
 
 
 ## Instructions
@@ -91,7 +90,6 @@ To launch it just:
 npm install
 npm run watch
 ```
-
 
 ## License
 Licensed under the GNU General Public License v3.0
