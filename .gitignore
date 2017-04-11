@@ -39,8 +39,6 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-/docs/data/base/tz850.tiff.aux.xml
-/docs/data/base/tz850_geopotentialHeight.tif.aux.xml
-/docs/data/base/tz850_temperatureK.tif.aux.xml
-/docs/data/Bay_U.asc.aux.xml
-/docs/data/Bay_V.asc.aux.xml
+
+# Linked library (/dist)
+/docs/dist/leaflet.canvaslayer.field.js
