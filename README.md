@@ -70,8 +70,6 @@ d3.text('https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.as
 });
 ```
 
-5. To explore available options see the [examples](TBD: url/to/docs/index.html)
-
 
 ### Developers
 `node` & `npm` are needed to build and test the plugin.
