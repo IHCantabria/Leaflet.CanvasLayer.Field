@@ -13,7 +13,8 @@ The figures below show the results for two basic layers, showing *Currents in th
 
 ![Example](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
 
-**EXAMPLES**: https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/
+**EXAMPLES**: [Leaflet.CanvasLayer.Field](/Leaflet.CanvasLayer.Field/)
+**EXAMPLES**: [Leaflet.CanvasLayer.Field](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/)
 
 
 ## Instructions
