@@ -9,18 +9,17 @@ This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) 
 ## Demo
 The figures below show the results for two basic layers, showing *Currents in the Bay of Santander (Spain)*
 
-![Example](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/img/VectorFieldAnim.gif)
+![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/VectorFieldAnim.gif)
 
-![Example](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
+![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
 
-**EXAMPLES**: [Leaflet.CanvasLayer.Field](/Leaflet.CanvasLayer.Field/)
-**EXAMPLES**: [Leaflet.CanvasLayer.Field](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/)
+**EXAMPLES**: [Leaflet.CanvasLayer.Field](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)
 
 
 ## Instructions
 
 ### Basic Usage
-1. Get the JavaScript file. You can grab a copy from [leaflet.canvaslayer.field.js](https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js)
+1. Get the JavaScript file. You can grab a copy from [leaflet.canvaslayer.field.js](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js)
 
 2. Include the JavaScript dependencies in your page:
 ```html
@@ -32,14 +31,14 @@ The figures below show the results for two basic layers, showing *Currents in th
     <script src="//npmcdn.com/geotiff@0.3.6/dist/geotiff.js"></script> <!-- optional -->
 
     <!-- Plugin -->
-    <script src="https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js"></script>
+    <script src="https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js"></script>
 ```
 
 3. Prepare a Raster File with your favourite GIS tool, using [EPSG:4326](https://epsg.io/4326) (**ASCII Grid** or **GeoTIFF** format)
 
 4. Create a `scalarField` layer and add it to the `map`, using your raster files as source (e.g. this .asc)
 ```js
-d3.text("https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_Speed.asc", function (asc) {
+d3.text("https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_Speed.asc", function (asc) {
     var s = L.ScalarField.fromASCIIGrid(asc);
     var layer = L.canvasLayer.scalarField(s).addTo(map);
 
@@ -49,8 +48,8 @@ d3.text("https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_Spee
 
 5. Or try the `vectorFieldAnim` layer, adding also a popup (previously you have to prepare 2 raster files, with 'u' and 'v' components in 'm/s'):
 ```js
-d3.text('https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc', function(u) {
-    d3.text('https://victorvelarde.github.io/Leaflet.CanvasLayer.Field/data/Bay_V.asc', function(v) {
+d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc', function(u) {
+    d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_V.asc', function(v) {
         let vf = L.VectorField.fromASCIIGrids(u, v);
         let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
         map.fitBounds(layer.getBounds());
