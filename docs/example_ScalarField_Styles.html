@@ -13,8 +13,8 @@
     <h1 id="title">ScalarField layers with custom styles</h1>
     <div id="map"></div>
 
-     <div id="floating-panel">
-         <div id="gradientPanel">
+    <div id="floating-panel">
+        <div id="gradientPanel">
             <label>Gradient</label>
             <input type="color" id="lowColor" value="#FFFFFF">
             <input type="color" id="highColor" value="#000000">
@@ -38,6 +38,11 @@
                 <option>PiYG</option>
                 <option>Paired</option>
             </select>
+        </div>
+
+        <div id="classesPanel" style="display:none;">
+            <label>Nº classes</label>
+            <input id="classes" type="text" value="5">
         </div>
     </div>
 
@@ -80,16 +85,14 @@
             });
 
             var layer3 = L.canvasLayer.scalarField(s, {
-                color: chroma.scale('OrRd').classes(
-                    [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2]
-                ),
+                color: chroma.scale('OrRd').classes(5),
                 click: false
             });
 
             var layers = {
                 'Two colors gradient': layer1,
                 'ColorBrewer2': layer2,
-                'Custom buckets (6 classes)': layer3
+                'Classes (n-equidistant)': layer3
             };
 
             L.control.layers(layers, {}, {
@@ -103,7 +106,7 @@
             let gradientColors = document.getElementsByTagName('input[type=color]');
             let low = document.getElementById('lowColor');
             let high = document.getElementById('highColor');
-            var updateGradient = function(){
+            var updateGradient = function() {
                 var scale = chroma.scale([low.value, high.value]).domain(s.range);
                 layer1.setColor(scale);
             }
@@ -117,6 +120,13 @@
                 layer2.setColor(scale);
             });
 
+            //      classes
+            let classes = document.getElementById("classes");
+            classes.addEventListener("change", function() {
+                var scale = chroma.scale('OrRd').classes(parseInt(this.value));
+                layer3.setColor(scale);
+            });
+
             //      enable panels
             map.on('baselayerchange', function(e) {
                 let gradientPanel = document.getElementById('gradientPanel');
@@ -124,6 +134,9 @@
 
                 let colorBrewerPanel = document.getElementById('colorBrewerPanel');
                 colorBrewerPanel.style.display = (e.layer === layer2) ? "block" : "none";
+
+                let classesPanel = document.getElementById('classesPanel');
+                classesPanel.style.display = (e.layer === layer3) ? "block" : "none";
             });
         });
 
