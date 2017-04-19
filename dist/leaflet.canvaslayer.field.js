@@ -1525,14 +1525,27 @@
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
-	        //console.log('onLayerDidMount');
 	        if (this.options.click) {
-	            this._map.on('click', this._queryValue, this);
-	            this._map.on('mousemove', this._showPointerOnValue, this);
+	            this._enableIdentify();
 	        }
+
+	        this._hideWhenZooming();
 	        this._ensureCanvasAlignment();
 	    },
 
+	    _enableIdentify: function _enableIdentify() {
+	        this._map.on('click', this._queryValue, this);
+	        this._map.on('mousemove', this._showPointerOnValue, this);
+	    },
+	    _hideWhenZooming: function _hideWhenZooming() {
+	        this._map.on('zoomstart', function (e) {
+	            this._canvas.style.visibility = 'hidden';
+	        }.bind(this));
+
+	        this._map.on('zoomend', function (e) {
+	            this._canvas.style.visibility = 'visible';
+	        }.bind(this));
+	    },
 	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
@@ -1540,7 +1553,6 @@
 
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
-	        //console.log('onLayerWillUnmount');
 	        if (this.options.click) {
 	            this._map.off('click', this._queryValue, this);
 	            this._map.off('mousemove', this._showPointerOnValue, this);
@@ -1627,7 +1639,7 @@
 
 	    options: {
 	        color: null, // function colorFor(value) [e.g. chromajs.scale],
-	        interpolate: false // TODO review
+	        interpolate: false // TODO - Interpolation doesn't work yet (check some 'artifacts')
 	    },
 
 	    initialize: function initialize(scalarField, options) {
@@ -1650,10 +1662,10 @@
 
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
-	        //console.time('onDrawLayer');
+	        console.time('onDrawLayer');
 	        this._updateOpacity();
 	        this._drawImage();
-	        //console.timeEnd('onDrawLayer');
+	        console.timeEnd('onDrawLayer');
 	    },
 
 	    /**
@@ -1681,7 +1693,6 @@
 	     * @param {Number} height
 	     */
 	    _prepareImageIn: function _prepareImageIn(data, width, height) {
-	        console.time('prepareImageIn');
 	        var f = this.options.interpolate ? 'interpolatedValueAt' : 'valueAt';
 
 	        var pos = 0;
@@ -1691,7 +1702,7 @@
 	                var lon = pointCoords.lng;
 	                var lat = pointCoords.lat;
 
-	                var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
+	                var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
 	                if (v) {
 	                    var color = this._getColorFor(v);
 
@@ -1710,7 +1721,6 @@
 	                pos = pos + 4;
 	            }
 	        }
-	        console.timeEnd('prepareImageIn');
 	    },
 
 

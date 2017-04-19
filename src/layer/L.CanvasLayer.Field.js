@@ -17,12 +17,27 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     onLayerDidMount: function () {
-        //console.log('onLayerDidMount');
         if (this.options.click) {
-            this._map.on('click', this._queryValue, this);
-            this._map.on('mousemove', this._showPointerOnValue, this);
+            this._enableIdentify();
         }
+
+        this._hideWhenZooming();
         this._ensureCanvasAlignment();
+    },
+
+    _enableIdentify() {
+        this._map.on('click', this._queryValue, this);
+        this._map.on('mousemove', this._showPointerOnValue, this);
+    },
+
+    _hideWhenZooming() {
+        this._map.on('zoomstart', (function (e) {
+            this._canvas.style.visibility = 'hidden';
+        }).bind(this));
+
+        this._map.on('zoomend', (function (e) {
+            this._canvas.style.visibility = 'visible';
+        }).bind(this));
     },
 
     _ensureCanvasAlignment() {
@@ -31,7 +46,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     onLayerWillUnmount: function () {
-        //console.log('onLayerWillUnmount');
         if (this.options.click) {
             this._map.off('click', this._queryValue, this);
             this._map.off('mousemove', this._showPointerOnValue, this);
