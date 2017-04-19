@@ -3,6 +3,7 @@
 
 <head>
     <title>ScalarField / color</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -10,7 +11,7 @@
 </head>
 
 <body>
-    <h1 id="title">ScalarField layers with custom styles</h1>
+    <h1 class="title">ScalarField styles</h1>
     <div id="map"></div>
 
     <div id="floating-panel">
@@ -21,7 +22,7 @@
         </div>
 
         <div id="colorBrewerPanel" style="display:none;">
-            <label>Color Brewer palettes</label>
+            <label>Palettes</label>
             <!-- some color scales... (for a full list see: https://github.com/gka/chroma.js/wiki/Predefined-Colors) -->
             <select id="colorBrewer">
                 <option>OrRd</option>
@@ -42,7 +43,7 @@
 
         <div id="classesPanel" style="display:none;">
             <label>Nº classes</label>
-            <input id="classes" type="text" value="5">
+            <input id="classes" type="text" value="5" style="width: 15px">
         </div>
     </div>
 

@@ -3,6 +3,7 @@
 
 <head>
     <title>ScalarField from Geotiff </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -10,7 +11,7 @@
 </head>
 
 <body>
-    <h1 id="title">Two different ScalarFields from multiband GeoTIFF</h1>
+    <h1 class="title">Two different ScalarFields from multiband GeoTIFF</h1>
     <div id="map"></div>
 
     <!-- CDN -->
@@ -36,9 +37,9 @@
             https://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.pressure.html
         */
         d3.request("data/base/wind_noaa.tif").responseType('arraybuffer').get(
-            function (error, tiffData) {
+            function(error, tiffData) {
                 // u & v in two bands
-                let vf = L.VectorField.fromMultibandGeoTIFF(tiffData.response, bandIndexesForUV=[0, 1]);
+                let vf = L.VectorField.fromMultibandGeoTIFF(tiffData.response, bandIndexesForUV = [0, 1]);
                 let winds = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 10000,
                     color: chroma.scale("YlGn").domain(vf.range),
@@ -64,6 +65,7 @@
                 });
 
             });
+
     </script>
 </body>
 

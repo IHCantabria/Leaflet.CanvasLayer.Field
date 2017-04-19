@@ -5,13 +5,15 @@ body {
     margin: 0;
     background-color: black;
 }
+
 html,
 body,
 #map {
     height: 100%;
     width: 100%;
 }
-#title {
+
+.title {
     color: white;
     position: absolute;
     top: -10px;
@@ -20,22 +22,31 @@ body,
     font-family: 'Roboto', sans-serif;
     font-weight: 100;
 }
+
+.darkText {
+    color: #111;
+}
+
 body {
     color: white;
     font-family: 'Roboto', sans-serif;
     font-weight: 100;
 }
+
 #examples {
     margin-top: 80px;
     margin-left: 80px;
 }
+
 h2 {
     font-weight: 100;
 }
+
 ul a {
     font-size: 16px;
     color: white;
 }
+
 
 /* No rounded borders */
 
@@ -46,6 +57,7 @@ ul a {
 .leaflet-popup-content-wrapper {
     border-radius: 0px !important;
 }
+
 
 /* Panel to interact with layers */
 
@@ -58,18 +70,22 @@ ul a {
     padding: 2px;
     opacity: 0.85;
 }
+
 #floating-panel ul {
     list-style-type: none;
     padding-left: 20px;
     padding-right: 20px;
 }
-#floating-panel ul li > label {
+
+#floating-panel ul li>label {
     display: block;
     margin: 2px;
 }
+
 #floating-panel ul li {
     margin-bottom: 10px;
 }
+
 .verticalRange {
     margin-top: 60px!important;
     margin-bottom: 60px!important;
@@ -77,6 +93,7 @@ ul a {
     margin-right: -30px;
     transform: rotate(270deg);
 }
+
 
 /* Popup*/
 

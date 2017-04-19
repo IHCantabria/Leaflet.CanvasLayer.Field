@@ -3,6 +3,7 @@
 
 <head>
     <title>ScalarField / Geotiff Multiband</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -10,7 +11,7 @@
 </head>
 
 <body>
-    <h1 id="title">Two ScalarField layers from a multiband GeoTIFF</h1>
+    <h1 class="title">ScalarField from multiband GeoTIFF</h1>
     <div id="map"></div>
 
     <!-- CDN -->
@@ -34,7 +35,7 @@
 
         /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
         d3.request("data/tz850.tiff").responseType('arraybuffer').get(
-            function (error, tiffData) {
+            function(error, tiffData) {
                 // Geopotential height (BAND 0)
                 let geo = L.ScalarField.fromGeoTIFF(tiffData.response, bandIndex = 0);
 
@@ -73,7 +74,7 @@
                 L.control.layers({
                     "Geopotential Height": layerGeo,
                     "Temperature": layerT
-                },{}, {
+                }, {}, {
                     position: 'bottomleft',
                     collapsed: false
                 }).addTo(map);

@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>ScalarField / Geotiff</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <h1 id="title">ScalarField layer from a GeoTIFF</h1>
+    <h1 class="title">ScalarField from GeoTIFF</h1>
     <div id="map"></div>
 
     <!-- CDN -->
@@ -35,7 +35,7 @@
 
         /* NASA NDVI Index (2017-02) 0.1 deg (3600 x 1800) = 24.7MB uncompressed */
         d3.request("data/ndvi_201702_LZW.tif").responseType('arraybuffer').get(
-            function (error, tiffData) {
+            function(error, tiffData) {
                 let ndvi = L.ScalarField.fromGeoTIFF(tiffData.response);
 
                 let layer = L.canvasLayer.scalarField(ndvi, {
@@ -55,6 +55,7 @@
                 map.fitBounds(layer.getBounds());
 
             });
+
     </script>
 </body>
 
