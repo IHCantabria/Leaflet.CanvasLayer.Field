@@ -18,7 +18,7 @@
             <li>
                 <label>Height</label>
                 <input id="height" type="range" min="1" max="20" step="1" value="20" class="verticalRange">
-                <span id="meters" style="display:block;">&lt;1 m</span>
+                <span id="meters" style="display:block;">slide me!</span>
             </li>
         </ul>
     </div>
@@ -51,6 +51,7 @@
                 /* dynamic filtering */
                 let height = document.getElementById('height');
                 height.addEventListener('change', function() {
+                    layerDem.setColor('blue');
                     let h = height.value;
                     dem.inFilter = (function(v) {
                         return v >= 0 && v <= h;
@@ -71,7 +72,6 @@
                     }
                 });
             });
-
     </script>
 </body>
 
