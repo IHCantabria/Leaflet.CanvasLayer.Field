@@ -15,16 +15,16 @@ body,
 
 .title {
     color: white;
-    position: absolute;
-    top: -10px;
-    right: 10px;
-    z-index: 999;
     font-family: 'Roboto', sans-serif;
     font-weight: 100;
 }
 
-.darkText {
-    color: #111;
+.mapTitle {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    z-index: 999;
+    margin-left: 50px;
 }
 
 body {
