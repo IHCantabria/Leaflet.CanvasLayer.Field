@@ -5,7 +5,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     options: {
         color: null, // function colorFor(value) [e.g. chromajs.scale],
-        interpolate: false // TODO review
+        interpolate: false // TODO - Interpolation doesn't work yet (check some 'artifacts')
     },
 
     initialize: function (scalarField, options) {
@@ -21,16 +21,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         return chroma.scale(['white', 'black']).domain(this.field.range);
     },
 
-    setColor(f){
+    setColor(f) {
         this.options.color = f;
         this.needRedraw();
     },
 
     onDrawLayer: function (viewInfo) {
-        //console.time('onDrawLayer');
+        console.time('onDrawLayer');
         this._updateOpacity();
         this._drawImage();
-        //console.timeEnd('onDrawLayer');
+        console.timeEnd('onDrawLayer');
     },
 
     /**
@@ -58,7 +58,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * @param {Number} height
      */
     _prepareImageIn(data, width, height) {
-        console.time('prepareImageIn');
         let f = (this.options.interpolate) ? 'interpolatedValueAt' : 'valueAt';
 
         let pos = 0;
@@ -68,7 +67,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                 let lon = pointCoords.lng;
                 let lat = pointCoords.lat;
 
-                let v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check
+                let v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
                 if (v) {
                     let color = this._getColorFor(v);
                     let [R, G, B, A] = color.rgba();
@@ -80,7 +79,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                 pos = pos + 4;
             }
         }
-        console.timeEnd('prepareImageIn');
     },
 
     /**
