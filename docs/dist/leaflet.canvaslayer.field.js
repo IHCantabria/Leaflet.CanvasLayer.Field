@@ -1528,7 +1528,6 @@
 	        if (this.options.click) {
 	            this._enableIdentify();
 	        }
-
 	        this._hideWhenZooming();
 	        this._ensureCanvasAlignment();
 	    },
@@ -1538,17 +1537,22 @@
 	        this._map.on('mousemove', this._showPointerOnValue, this);
 	    },
 	    _hideWhenZooming: function _hideWhenZooming() {
-	        this._map.on('zoomstart', function (e) {
-	            this._canvas.style.visibility = 'hidden';
-	        }.bind(this));
-
-	        this._map.on('zoomend', function (e) {
-	            this._canvas.style.visibility = 'visible';
-	        }.bind(this));
+	        this._map.on('zoomstart', this._hideCanvas, this);
+	        this._map.on('zoomend', this._showCanvas, this);
 	    },
 	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
+	    },
+	    _showCanvas: function _showCanvas() {
+	        if (this._canvas) {
+	            this._canvas.style.visibility = 'visible';
+	        }
+	    },
+	    _hideCanvas: function _hideCanvas() {
+	        if (this._canvas) {
+	            this._canvas.style.visibility = 'hidden';
+	        }
 	    },
 
 
@@ -1557,6 +1561,9 @@
 	            this._map.off('click', this._queryValue, this);
 	            this._map.off('mousemove', this._showPointerOnValue, this);
 	        }
+
+	        this._map.off('zoomstart', this._hideCanvas, this);
+	        this._map.off('zoomend', this._showCanvas, this);
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {

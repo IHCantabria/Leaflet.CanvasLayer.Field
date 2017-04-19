@@ -20,7 +20,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         if (this.options.click) {
             this._enableIdentify();
         }
-
         this._hideWhenZooming();
         this._ensureCanvasAlignment();
     },
@@ -31,13 +30,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _hideWhenZooming() {
-        this._map.on('zoomstart', (function (e) {
-            this._canvas.style.visibility = 'hidden';
-        }).bind(this));
-
-        this._map.on('zoomend', (function (e) {
-            this._canvas.style.visibility = 'visible';
-        }).bind(this));
+        this._map.on('zoomstart', this._hideCanvas, this);
+        this._map.on('zoomend', this._showCanvas, this);
     },
 
     _ensureCanvasAlignment() {
@@ -45,11 +39,26 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         L.DomUtil.setPosition(this._canvas, topLeft);
     },
 
+    _showCanvas() {
+        if (this._canvas) {
+            this._canvas.style.visibility = 'visible';
+        }
+    },
+
+    _hideCanvas() {
+        if (this._canvas) {
+            this._canvas.style.visibility = 'hidden';
+        }
+    },
+
     onLayerWillUnmount: function () {
         if (this.options.click) {
             this._map.off('click', this._queryValue, this);
             this._map.off('mousemove', this._showPointerOnValue, this);
         }
+
+        this._map.off('zoomstart', this._hideCanvas, this);
+        this._map.off('zoomend', this._showCanvas, this);
     },
 
     onDrawLayer: function (viewInfo) {
