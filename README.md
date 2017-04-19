@@ -1,5 +1,9 @@
 # Leaflet.CanvasLayer.Field
-A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files (EPSG:4326). It includes:
+A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files (EPSG:4326). 
+
+[Leaflet.CanvasLayer.Field EXAMPLES](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)
+
+It includes:
 * `L.CanvasLayer.ScalarField` - a raster layer from scalars (such as DTM, temperature...)
 * `L.CanvasLayer.VectorFieldAnim` - an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
 
@@ -12,8 +16,6 @@ The figures below show the results for two basic layers, showing *Currents in th
 ![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/VectorFieldAnim.gif)
 
 ![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
-
-**EXAMPLES**: [Leaflet.CanvasLayer.Field](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)
 
 
 ## Instructions
