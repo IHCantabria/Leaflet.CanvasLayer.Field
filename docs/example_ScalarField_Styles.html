@@ -15,16 +15,17 @@
     <div id="map"></div>
 
     <div id="floating-panel">
-        <div id="gradientPanel">
-            <label>Gradient</label>
-            <input type="color" id="lowColor" value="#FFFFFF">
-            <input type="color" id="highColor" value="#000000">
-        </div>
+        <ul>
+            <li id="gradientPanel">
+                <label>Gradient</label>
+                <input type="color" id="lowColor" value="#FFFFFF">
+                <input type="color" id="highColor" value="#000000">
+            </li>
 
-        <div id="colorBrewerPanel" style="display:none;">
-            <label>Palettes</label>
-            <!-- some color scales... (for a full list see: https://github.com/gka/chroma.js/wiki/Predefined-Colors) -->
-            <select id="colorBrewer">
+            <li id="colorBrewerPanel" style="display:none;">
+                <label>Palettes</label>
+                <!-- some color scales... (for a full list see: https://github.com/gka/chroma.js/wiki/Predefined-Colors) -->
+                <select id="colorBrewer">
                 <option>OrRd</option>
                 <option>PuBu</option>
                 <option>BuPu</option>
@@ -39,14 +40,14 @@
                 <option>PiYG</option>
                 <option>Paired</option>
             </select>
-        </div>
+            </li>
 
-        <div id="classesPanel" style="display:none;">
-            <label>Nº classes</label>
-            <input id="classes" type="text" value="5" style="width: 15px">
-        </div>
+            <li id="classesPanel" style="display:none;">
+                <label>Nº classes</label>
+                <input id="classes" type="text" value="5" style="width: 15px">
+            </li>
+        </ul>
     </div>
-
 
     <!-- CDN -->
     <script src="//d3js.org/d3.v4.min.js"></script>
