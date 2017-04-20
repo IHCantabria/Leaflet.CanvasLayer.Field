@@ -33,7 +33,7 @@
             subdomains: 'abcd'
         }).addTo(map);
 
-        /* DTM from OGC-WCS */
+        /* DTM from an OGC-WCS */
         // let getCapabilities = "http://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?SERVICE=wcs&VERSION=1.0.0&REQUEST=GetCapabilities";
 
         let getCoverage = "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_WCS_mdt?";
@@ -42,8 +42,8 @@
         getCoverage += "REQUEST=GetCoverage&";
         getCoverage += "COVERAGE=Modelo Digital de Elevaciones (MDE) de Andalucia 10 m&";
         getCoverage += "CRS=EPSG:4326&";
-        getCoverage += "BBOX=-7.58390693285438,35.964208075556,-1.6006002035338,38.7503547383259&";
-        getCoverage += "RESX=0.01&";
+        getCoverage += "BBOX=-7.58390693285438,35.964208075556,-1.6006002035338,38.7503547383259&"; // full extension...
+        getCoverage += "RESX=0.01&"; // ...but reduced resolution (~800m)
         getCoverage += "RESY=0.01&";
         getCoverage += "FORMAT=GTiff";
 
@@ -55,7 +55,7 @@
                 // band 0
                 let geo = L.ScalarField.fromGeoTIFF(tiffData.response);
 
-                // check styles at http://www.juntadeandalucia.es/medioambiente/site/rediam/menuitem.04dc44281e5d53cf8ca78ca731525ea0/?vgnextoid=f6284d9721fa3410VgnVCM2000000624e50aRCRD&vgnextchannel=8ca090a63670f210VgnVCM2000000624e50aRCRD&vgnextfmt=rediam&lr=lang_es
+                // check alternative styles at http://www.juntadeandalucia.es/medioambiente/site/rediam/menuitem.04dc44281e5d53cf8ca78ca731525ea0/?vgnextoid=f6284d9721fa3410VgnVCM2000000624e50aRCRD&vgnextchannel=8ca090a63670f210VgnVCM2000000624e50aRCRD&vgnextfmt=rediam&lr=lang_es
                 let dtm = L.canvasLayer.scalarField(geo, {
                     color: chroma.scale('RdYlGn').domain([geo.range[1], geo.range[0]])
                 }).addTo(map);
