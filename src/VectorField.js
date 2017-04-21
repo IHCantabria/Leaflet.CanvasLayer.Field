@@ -38,7 +38,7 @@ export default class VectorField extends Field {
      * @param   {Array} bandIndexesForUV
      * @returns {VectorField}
      */
-    static fromMultibandGeoTIFF(geotiffData, bandIndexesForUV=[0, 1]) {
+    static fromMultibandGeoTIFF(geotiffData, bandIndexesForUV = [0, 1]) {
         let u = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[0]);
         let v = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[1]);
 
@@ -150,13 +150,19 @@ export default class VectorField extends Field {
      * @returns {Array}
      */
     _calculateRange() {
+        // TODO make a clearer method for getting these vectors...
         let vectors = this.getCells()
             .map(pt => pt.value)
             .filter(function (v) {
                 return v !== null;
             });
+
+        if (this._inFilter) {
+            vectors = vectors.filter(this._inFilter);
+        }
+
+        // TODO check memory crash with high num of vectors!
         let magnitudes = vectors.map(v => v.magnitude());
-        // TODO memory crash!
         let min = d3.min(magnitudes);
         let max = d3.max(magnitudes);
 

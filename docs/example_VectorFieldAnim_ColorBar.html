@@ -46,13 +46,13 @@
             d3.text('data/Cantabria_V.asc', function(v) {
                 let scaleFactor = 0.001; // to m/s
                 let vf = L.VectorField.fromASCIIGrids(u, v, scaleFactor);
-                vf.inFilter = function(vector) {
+                vf.setFilter(function(vector) {
                     return true;
                     /*if (vector) {
                         return vector.magnitude() > 0.5;
                     }
                     return false;*/
-                }
+                });
 
                 var range = vf.range;
                 var scale = chroma.scale('OrRd').domain(range);

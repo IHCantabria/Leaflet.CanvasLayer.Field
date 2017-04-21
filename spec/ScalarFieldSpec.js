@@ -80,6 +80,21 @@ describe('ScalarField', function () {
             expect(sf.range[1]).toBeCloseTo(0.21501889824867, 8);
         });
 
+        it('can be filtered', function () {
+            const min = 0.1;
+            const max = 0.15;
+
+            expect(sf.range[0] >= min).toBeFalsy();
+            expect(sf.range[1] <= max).toBeFalsy();
+
+            sf.setFilter(function (v) {
+                return v >= min && v <= max;
+            });
+
+            expect(sf.range[0] >= min).toBeTruthy();
+            expect(sf.range[1] <= max).toBeTruthy();
+        });
+
     });
 
     describe("Geotiff format", function () {

@@ -63,11 +63,31 @@ describe('VectorField', function () {
         expect(pN.equals(last)).toBe(true);
     });
 
-    it('can calculate the Range of its values', function () {
+    it('can calculate the Range of its values (magnitude)', function () {
         expect(vf.range).not.toBe(null);
         expect(vf.range[0]).toEqual(0.0067317434565905545);
         expect(vf.range[1]).toEqual(0.2150247092568961);
     });
+
+    it('can be filtered', function () {
+        const min = 0.1;
+        const max = 0.15;
+
+        expect(vf.range[0] >= min).toBeFalsy();
+        expect(vf.range[1] <= max).toBeFalsy();
+
+        vf.setFilter(function (v) {
+            if (v) {
+                const m = v.magnitude();
+                return m >= min && m <= max;
+            }
+            return false;
+        });
+
+        expect(vf.range[0] >= min).toBeTruthy();
+        expect(vf.range[1] <= max).toBeTruthy();
+    });
+
 
     it('can return a ScalarField with its Magnitude or Direction', function () {
         let types = ['magnitude', 'directionTo', 'directionFrom'];

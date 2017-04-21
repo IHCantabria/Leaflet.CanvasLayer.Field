@@ -96,8 +96,7 @@ export default class ScalarField extends Field {
         this.zs = params['zs'];
 
         this.grid = this._buildGrid();
-        this.range = this._calculateRange();
-
+        this._updateRange();
         //console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
     }
 
@@ -145,7 +144,11 @@ export default class ScalarField extends Field {
      * @returns {Array}
      */
     _calculateRange() {
-        return [d3.min(this.zs), d3.max(this.zs)];
+        var data = this.zs;
+        if (this._inFilter) {
+            data = data.filter(this._inFilter);
+        }
+        return [d3.min(data), d3.max(data)];
     }
 
     /**

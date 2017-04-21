@@ -315,7 +315,7 @@
 
 	        this.grid = null; // to be defined by subclasses
 
-	        this.inFilter = null;
+	        this._inFilter = null;
 	    }
 
 	    /**
@@ -332,6 +332,11 @@
 	        key: '_buildGrid',
 	        value: function _buildGrid() {
 	            throw new TypeError('Must be overriden');
+	        }
+	    }, {
+	        key: '_updateRange',
+	        value: function _updateRange() {
+	            this.range = this._calculateRange();
 	        }
 
 	        /**
@@ -368,6 +373,18 @@
 	                }
 	            }
 	            return cells;
+	        }
+
+	        /**
+	         * Apply a filter function to field values
+	         * @param   {Function} f - boolean function
+	         */
+
+	    }, {
+	        key: 'setFilter',
+	        value: function setFilter(f) {
+	            this._inFilter = f;
+	            this._updateRange();
 	        }
 
 	        /**
@@ -548,8 +565,8 @@
 	            var jj = Math.floor(j);
 
 	            var value = this._valueAtIndexes(ii, jj);
-	            if (this.inFilter) {
-	                if (!this.inFilter(value)) return null;
+	            if (this._inFilter) {
+	                if (!this._inFilter(value)) return null;
 	            }
 
 	            return value;
@@ -569,8 +586,8 @@
 	            var hasValue = value !== null;
 
 	            var included = true;
-	            if (this.inFilter) {
-	                included = this.inFilter(value);
+	            if (this._inFilter) {
+	                included = this._inFilter(value);
 	            }
 	            return hasValue && included;
 	        }
@@ -907,8 +924,7 @@
 	        _this.zs = params['zs'];
 
 	        _this.grid = _this._buildGrid();
-	        _this.range = _this._calculateRange();
-
+	        _this._updateRange();
 	        //console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
 	        return _this;
 	    }
@@ -968,7 +984,11 @@
 	    }, {
 	        key: '_calculateRange',
 	        value: function _calculateRange() {
-	            return [d3.min(this.zs), d3.max(this.zs)];
+	            var data = this.zs;
+	            if (this._inFilter) {
+	                data = data.filter(this._inFilter);
+	            }
+	            return [d3.min(data), d3.max(data)];
 	        }
 
 	        /**
@@ -1208,15 +1228,21 @@
 	    }, {
 	        key: '_calculateRange',
 	        value: function _calculateRange() {
+	            // TODO make a clearer method for getting these vectors...
 	            var vectors = this.getCells().map(function (pt) {
 	                return pt.value;
 	            }).filter(function (v) {
 	                return v !== null;
 	            });
+
+	            if (this._inFilter) {
+	                vectors = vectors.filter(this._inFilter);
+	            }
+
+	            // TODO check memory crash with high num of vectors!
 	            var magnitudes = vectors.map(function (v) {
 	                return v.magnitude();
 	            });
-	            // TODO memory crash!
 	            var min = d3.min(magnitudes);
 	            var max = d3.max(magnitudes);
 

@@ -27,7 +27,7 @@ export default class Field {
 
         this.grid = null; // to be defined by subclasses
 
-        this.inFilter = null;
+        this._inFilter = null;
     }
 
     /**
@@ -40,6 +40,10 @@ export default class Field {
      */
     _buildGrid() {
         throw new TypeError('Must be overriden');
+    }
+
+    _updateRange() {
+        this.range = this._calculateRange();
     }
 
     /**
@@ -66,6 +70,15 @@ export default class Field {
             }
         }
         return cells;
+    }
+
+    /**
+     * Apply a filter function to field values
+     * @param   {Function} f - boolean function
+     */
+    setFilter(f) {
+        this._inFilter = f;
+        this._updateRange();
     }
 
     /**
@@ -204,8 +217,8 @@ export default class Field {
         let jj = Math.floor(j);
 
         let value = this._valueAtIndexes(ii, jj);
-        if (this.inFilter) {
-            if (!this.inFilter(value)) return null;
+        if (this._inFilter) {
+            if (!this._inFilter(value)) return null;
         }
 
         return value;
@@ -222,8 +235,8 @@ export default class Field {
         let hasValue = (value !== null);
 
         let included = true;
-        if (this.inFilter) {
-            included = this.inFilter(value);
+        if (this._inFilter) {
+            included = this._inFilter(value);
         }
         return (hasValue && included);
     }
