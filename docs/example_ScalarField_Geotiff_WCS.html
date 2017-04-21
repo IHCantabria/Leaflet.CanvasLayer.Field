@@ -57,7 +57,8 @@
 
                 // check alternative styles at http://www.juntadeandalucia.es/medioambiente/site/rediam/menuitem.04dc44281e5d53cf8ca78ca731525ea0/?vgnextoid=f6284d9721fa3410VgnVCM2000000624e50aRCRD&vgnextchannel=8ca090a63670f210VgnVCM2000000624e50aRCRD&vgnextfmt=rediam&lr=lang_es
                 let dtm = L.canvasLayer.scalarField(geo, {
-                    color: chroma.scale('RdYlGn').domain([geo.range[1], geo.range[0]])
+                    color: chroma.scale('RdYlGn').domain([geo.range[1], geo.range[0]]),
+                    opacity: 0.7
                 }).addTo(map);
 
                 map.fitBounds(dtm.getBounds());
@@ -73,7 +74,6 @@
                     }
                 });
             });
-
     </script>
 </body>
 
