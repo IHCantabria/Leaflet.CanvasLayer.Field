@@ -50,14 +50,22 @@
         let urlCoverage = encodeURI(getCoverage);
         console.log(urlCoverage);
 
+        let geo;
+        let dtm;
+        let colorScale;
+
+        // palette from http://www.juntadeandalucia.es/medioambiente/site/rediam/menuitem.04dc44281e5d53cf8ca78ca731525ea0/?vgnextoid=f6284d9721fa3410VgnVCM2000000624e50aRCRD&vgnextchannel=8ca090a63670f210VgnVCM2000000624e50aRCRD&vgnextfmt=rediam&lr=lang_es
+        let juntaColors = ['#E4EF75', '#B3CF82', '#799B3C', '#60632C', '#A88446', '#CDB2B9', '#593815', '#CDB2B9', '#F4F2F5'];
+
         d3.request(urlCoverage).responseType('arraybuffer').get(
             function(error, tiffData) {
                 // band 0
-                let geo = L.ScalarField.fromGeoTIFF(tiffData.response);
+                geo = L.ScalarField.fromGeoTIFF(tiffData.response);
 
-                // check alternative styles at http://www.juntadeandalucia.es/medioambiente/site/rediam/menuitem.04dc44281e5d53cf8ca78ca731525ea0/?vgnextoid=f6284d9721fa3410VgnVCM2000000624e50aRCRD&vgnextchannel=8ca090a63670f210VgnVCM2000000624e50aRCRD&vgnextfmt=rediam&lr=lang_es
-                let dtm = L.canvasLayer.scalarField(geo, {
-                    color: chroma.scale('RdYlGn').domain([geo.range[1], geo.range[0]]),
+                colorScale = chroma.scale('RdYlGn').domain([geo.range[1], geo.range[0]]);
+
+                dtm = L.canvasLayer.scalarField(geo, {
+                    color: colorScale,
                     opacity: 0.7
                 }).addTo(map);
 
@@ -66,7 +74,10 @@
                 dtm.on('click', function(e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(0);
-                        let html = (`<span class="popupText">Height: ${v} meters</span>`);
+                        let html = (`<span class="popupText">Height: ${v} meters</span><br/>`);
+                        html += "<a href='#' onclick='styleGradient();'>gradient</a> | ";
+                        html += "<a href='#' onclick='styleClasses();'>classes</a> | ";
+                        html += "<a href='#' onclick='original();'>original</a>";
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)
@@ -74,6 +85,18 @@
                     }
                 });
             });
+
+        function original() {
+            dtm.setColor(colorScale);
+        }
+
+        function styleClasses() {
+            dtm.setColor(chroma.scale(juntaColors).classes([0, 200, 400, 600, 900, 1100, 1400, 1700, 2300, 3500]));
+        }
+
+        function styleGradient() {
+            dtm.setColor(chroma.scale(juntaColors).domain(geo.range));
+        }
     </script>
 </body>
 
