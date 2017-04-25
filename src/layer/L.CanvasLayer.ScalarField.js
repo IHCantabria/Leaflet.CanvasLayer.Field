@@ -89,7 +89,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         if (typeof c == 'function') {
             c = this.options.color(v);
         }
-        let color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
+        let color = chroma(c); // to be more flexible, a chroma color object is always created || TODO improve efficiency
         return color;
     }
 });
