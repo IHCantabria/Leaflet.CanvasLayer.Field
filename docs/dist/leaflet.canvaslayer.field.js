@@ -1547,6 +1547,7 @@
 
 	    initialize: function initialize(field, options) {
 	        this.field = field;
+	        this._visible = true;
 	        L.Util.setOptions(this, options);
 	    },
 
@@ -1558,27 +1559,29 @@
 	        this._ensureCanvasAlignment();
 	    },
 
+	    show: function show() {
+	        if (this._canvas) {
+	            this._canvas.style.visibility = 'visible';
+	            this._visible = true;
+	        }
+	    },
+	    hide: function hide() {
+	        if (this._canvas) {
+	            this._canvas.style.visibility = 'hidden';
+	            this._visible = false;
+	        }
+	    },
 	    _enableIdentify: function _enableIdentify() {
 	        this._map.on('click', this._queryValue, this);
 	        this._map.on('mousemove', this._showPointerOnValue, this);
 	    },
 	    _hideWhenZooming: function _hideWhenZooming() {
-	        this._map.on('zoomstart', this._hideCanvas, this);
-	        this._map.on('zoomend', this._showCanvas, this);
+	        this._map.on('zoomstart', this.hide, this);
+	        this._map.on('zoomend', this.show, this);
 	    },
 	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
-	    },
-	    _showCanvas: function _showCanvas() {
-	        if (this._canvas) {
-	            this._canvas.style.visibility = 'visible';
-	        }
-	    },
-	    _hideCanvas: function _hideCanvas() {
-	        if (this._canvas) {
-	            this._canvas.style.visibility = 'hidden';
-	        }
 	    },
 
 
@@ -1588,8 +1591,8 @@
 	            this._map.off('mousemove', this._showPointerOnValue, this);
 	        }
 
-	        this._map.off('zoomstart', this._hideCanvas, this);
-	        this._map.off('zoomend', this._showCanvas, this);
+	        this._map.off('zoomstart', this.hide, this);
+	        this._map.off('zoomend', this.show, this);
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
@@ -1765,7 +1768,7 @@
 	        if (typeof c == 'function') {
 	            c = this.options.color(v);
 	        }
-	        var color = chroma(c); // to be more flexible, a chroma color object is always created || TODO check efficiency
+	        var color = chroma(c); // to be more flexible, a chroma color object is always created || TODO improve efficiency
 	        return color;
 	    }
 	});
