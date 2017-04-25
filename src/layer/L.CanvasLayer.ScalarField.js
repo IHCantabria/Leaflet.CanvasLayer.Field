@@ -11,19 +11,10 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     initialize: function (scalarField, options) {
         L.CanvasLayer.Field.prototype.initialize.call(this, scalarField, options);
         L.Util.setOptions(this, options);
-
-        if (this.options.color === null) {
-            this.setColor(this._defaultColorScale());
-        }
     },
 
     _defaultColorScale: function () {
-        return chroma.scale(['white', 'black']).domain(this.field.range);
-    },
-
-    setData: function (data) {
-        // -- custom data set
-        this.needRedraw(); // -- call to drawLayer
+        return chroma.scale(['white', 'black']).domain(this._field.range);
     },
 
     setColor(f) {
@@ -33,9 +24,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     onDrawLayer: function (viewInfo) {
         console.time('onDrawLayer');
+        this._ensureColor();
         this._updateOpacity();
         this._drawImage();
         console.timeEnd('onDrawLayer');
+    },
+
+    _ensureColor: function () {
+        if (this.options.color === null) {
+            this.setColor(this._defaultColorScale());
+        }
     },
 
     /**
@@ -72,7 +70,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                 let lon = pointCoords.lng;
                 let lat = pointCoords.lat;
 
-                let v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
+                let v = this._field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
                 if (v) {
                     let color = this._getColorFor(v);
                     let [R, G, B, A] = color.rgba();

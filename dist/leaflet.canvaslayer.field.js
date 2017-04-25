@@ -1547,9 +1547,10 @@
 	    },
 
 	    initialize: function initialize(field, options) {
-	        this.field = field;
-	        this._visible = true;
 	        L.Util.setOptions(this, options);
+	        if (field) {
+	            this.setData(field);
+	        }
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
@@ -1563,13 +1564,11 @@
 	    show: function show() {
 	        if (this._canvas) {
 	            this._canvas.style.visibility = 'visible';
-	            this._visible = true;
 	        }
 	    },
 	    hide: function hide() {
 	        if (this._canvas) {
 	            this._canvas.style.visibility = 'hidden';
-	            this._visible = false;
 	        }
 	    },
 	    _enableIdentify: function _enableIdentify() {
@@ -1600,8 +1599,9 @@
 	        throw new TypeError('Must be overriden');
 	    },
 
-	    setData: function setData(data) {
-	        throw new TypeError('Must be overriden');
+	    setData: function setData(field) {
+	        this._field = field;
+	        this._map && this.needRedraw();
 	    },
 
 	    setOpacity: function setOpacity(opacity) {
@@ -1614,7 +1614,7 @@
 	    },
 
 	    getBounds: function getBounds() {
-	        var bb = this.field.extent();
+	        var bb = this._field.extent();
 	        var southWest = L.latLng(bb[1], bb[0]),
 	            northEast = L.latLng(bb[3], bb[2]);
 	        var bounds = L.latLngBounds(southWest, northEast);
@@ -1626,7 +1626,7 @@
 	        var lat = e.latlng.lat;
 
 	        var style = this._map.getContainer().style;
-	        if (this.field.hasValueAt(lon, lat)) {
+	        if (this._field.hasValueAt(lon, lat)) {
 	            style.cursor = this.options.hoverCursor;
 	        } else {
 	            style.cursor = this.options.defaultCursor;
@@ -1642,7 +1642,7 @@
 	        var lat = e.latlng.lat;
 	        var result = {
 	            latlng: e.latlng,
-	            value: this.field.valueAt(lon, lat)
+	            value: this._field.valueAt(lon, lat)
 	        };
 	        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
 	    },
@@ -1680,19 +1680,10 @@
 	    initialize: function initialize(scalarField, options) {
 	        L.CanvasLayer.Field.prototype.initialize.call(this, scalarField, options);
 	        L.Util.setOptions(this, options);
-
-	        if (this.options.color === null) {
-	            this.setColor(this._defaultColorScale());
-	        }
 	    },
 
 	    _defaultColorScale: function _defaultColorScale() {
-	        return chroma.scale(['white', 'black']).domain(this.field.range);
-	    },
-
-	    setData: function setData(data) {
-	        // -- custom data set
-	        this.needRedraw(); // -- call to drawLayer
+	        return chroma.scale(['white', 'black']).domain(this._field.range);
 	    },
 
 	    setColor: function setColor(f) {
@@ -1703,9 +1694,16 @@
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        console.time('onDrawLayer');
+	        this._ensureColor();
 	        this._updateOpacity();
 	        this._drawImage();
 	        console.timeEnd('onDrawLayer');
+	    },
+
+	    _ensureColor: function _ensureColor() {
+	        if (this.options.color === null) {
+	            this.setColor(this._defaultColorScale());
+	        }
 	    },
 
 	    /**
@@ -1742,7 +1740,7 @@
 	                var lon = pointCoords.lng;
 	                var lat = pointCoords.lat;
 
-	                var v = this.field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
+	                var v = this._field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
 	                if (v) {
 	                    var color = this._getColorFor(v);
 
@@ -1841,10 +1839,10 @@
 	                if (par.age > self.options.maxAge) {
 	                    // restart, on a random x,y
 	                    par.age = 0;
-	                    self.field.randomPosition(par);
+	                    self._field.randomPosition(par);
 	                }
 
-	                var vector = self.field.valueAt(par.x, par.y);
+	                var vector = self._field.valueAt(par.x, par.y);
 	                if (vector === null) {
 	                    par.age = self.options.maxAge;
 	                } else {
@@ -1852,7 +1850,7 @@
 	                    var xt = par.x + vector.u * self.options.velocityScale;
 	                    var yt = par.y + vector.v * self.options.velocityScale;
 
-	                    if (self.field.hasValueAt(xt, yt)) {
+	                    if (self._field.hasValueAt(xt, yt)) {
 	                        par.xt = xt;
 	                        par.yt = yt;
 	                        par.m = vector.magnitude();
@@ -1924,7 +1922,7 @@
 	        var paths = [];
 
 	        for (var i = 0; i < this.options.paths; i++) {
-	            var p = this.field.randomPosition();
+	            var p = this._field.randomPosition();
 	            p.age = this._randomAge();
 	            paths.push(p);
 	        }

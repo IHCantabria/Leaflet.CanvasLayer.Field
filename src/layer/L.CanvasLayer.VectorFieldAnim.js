@@ -52,10 +52,10 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                 if (par.age > self.options.maxAge) {
                     // restart, on a random x,y
                     par.age = 0;
-                    self.field.randomPosition(par);
+                    self._field.randomPosition(par);
                 }
 
-                let vector = self.field.valueAt(par.x, par.y);
+                let vector = self._field.valueAt(par.x, par.y);
                 if (vector === null) {
                     par.age = self.options.maxAge;
                 } else {
@@ -63,7 +63,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                     let xt = par.x + (vector.u * self.options.velocityScale);
                     let yt = par.y + (vector.v * self.options.velocityScale);
 
-                    if (self.field.hasValueAt(xt, yt)) {
+                    if (self._field.hasValueAt(xt, yt)) {
                         par.xt = xt;
                         par.yt = yt;
                         par.m = vector.magnitude();
@@ -134,7 +134,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
         let paths = [];
 
         for (var i = 0; i < this.options.paths; i++) {
-            let p = this.field.randomPosition();
+            let p = this._field.randomPosition();
             p.age = this._randomAge();
             paths.push(p);
         }

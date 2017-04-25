@@ -12,9 +12,10 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     initialize: function (field, options) {
-        this.field = field;
-        this._visible = true;
         L.Util.setOptions(this, options);
+        if (field) {
+            this.setData(field);
+        }
     },
 
     onLayerDidMount: function () {
@@ -28,14 +29,12 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     show() {
         if (this._canvas) {
             this._canvas.style.visibility = 'visible';
-            this._visible = true;
         }
     },
 
     hide() {
         if (this._canvas) {
             this._canvas.style.visibility = 'hidden';
-            this._visible = false;
         }
     },
 
@@ -68,8 +67,9 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         throw new TypeError('Must be overriden');
     },
 
-    setData: function (data) {
-        throw new TypeError('Must be overriden');
+    setData: function (field) {
+        this._field = field;
+        this._map && this.needRedraw();
     },
 
     setOpacity: function (opacity) {
@@ -82,7 +82,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     getBounds: function () {
-        let bb = this.field.extent();
+        let bb = this._field.extent();
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);
@@ -94,7 +94,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         let lat = e.latlng.lat;
 
         let style = this._map.getContainer().style;
-        if (this.field.hasValueAt(lon, lat)) {
+        if (this._field.hasValueAt(lon, lat)) {
             style.cursor = this.options.hoverCursor;
         } else {
             style.cursor = this.options.defaultCursor;
@@ -110,7 +110,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         let lat = e.latlng.lat;
         let result = {
             latlng: e.latlng,
-            value: this.field.valueAt(lon, lat)
+            value: this._field.valueAt(lon, lat)
         };
         this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
     },
