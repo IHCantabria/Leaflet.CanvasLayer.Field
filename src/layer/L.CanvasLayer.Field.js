@@ -63,13 +63,19 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         this._map.off('zoomend', this.show, this);
     },
 
+    needRedraw() {
+        if (this._map) {
+            L.CanvasLayer.prototype.needRedraw.call(this);
+        }
+    },
+
     onDrawLayer: function (viewInfo) {
         throw new TypeError('Must be overriden');
     },
 
     setData: function (field) {
         this._field = field;
-        this._map && this.needRedraw();
+        this.needRedraw();
     },
 
     setOpacity: function (opacity) {

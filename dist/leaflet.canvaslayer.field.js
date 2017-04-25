@@ -90,7 +90,7 @@
 	// control
 	__webpack_require__(11);
 
-	console.log('leaflet.canvaslayer.field v0.1');
+	console.log('leaflet.canvaslayer.field v0.1.1');
 
 	// TODO - check some other module systems (umd pattern)
 
@@ -1595,13 +1595,20 @@
 	        this._map.off('zoomend', this.show, this);
 	    },
 
+	    needRedraw: function needRedraw() {
+	        if (this._map) {
+	            L.CanvasLayer.prototype.needRedraw.call(this);
+	        }
+	    },
+
+
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        throw new TypeError('Must be overriden');
 	    },
 
 	    setData: function setData(field) {
 	        this._field = field;
-	        this._map && this.needRedraw();
+	        this.needRedraw();
 	    },
 
 	    setOpacity: function setOpacity(opacity) {
