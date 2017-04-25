@@ -90,8 +90,9 @@
 	// control
 	__webpack_require__(11);
 
-	console.log('leaflet.canvaslayer.field v0.9');
-	// TODO - check umd pattern
+	console.log('leaflet.canvaslayer.field v0.1');
+
+	// TODO - check some other module systems (umd pattern)
 
 /***/ },
 /* 1 */

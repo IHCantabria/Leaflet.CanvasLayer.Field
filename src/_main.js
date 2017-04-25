@@ -26,6 +26,6 @@ require('./layer/L.CanvasLayer.VectorFieldAnim.js');
 // control
 require('./control/L.Control.ColorBar.js');
 
-console.log('leaflet.canvaslayer.field v0.9');
-// TODO - check umd pattern
+console.log('leaflet.canvaslayer.field v0.1');
 
+// TODO - check some other module systems (umd pattern)
