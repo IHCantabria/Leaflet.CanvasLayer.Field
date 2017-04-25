@@ -69,9 +69,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     setData: function (data) {
-        // -- custom data set
-        // TODO
-        this.needRedraw(); // -- call to drawLayer
+        throw new TypeError('Must be overriden');
     },
 
     setOpacity: function (opacity) {

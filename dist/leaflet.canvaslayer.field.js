@@ -1601,9 +1601,7 @@
 	    },
 
 	    setData: function setData(data) {
-	        // -- custom data set
-	        // TODO
-	        this.needRedraw(); // -- call to drawLayer
+	        throw new TypeError('Must be overriden');
 	    },
 
 	    setOpacity: function setOpacity(opacity) {
@@ -1690,6 +1688,11 @@
 
 	    _defaultColorScale: function _defaultColorScale() {
 	        return chroma.scale(['white', 'black']).domain(this.field.range);
+	    },
+
+	    setData: function setData(data) {
+	        // -- custom data set
+	        this.needRedraw(); // -- call to drawLayer
 	    },
 
 	    setColor: function setColor(f) {

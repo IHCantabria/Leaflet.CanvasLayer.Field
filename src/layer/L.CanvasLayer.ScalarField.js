@@ -21,6 +21,11 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         return chroma.scale(['white', 'black']).domain(this.field.range);
     },
 
+    setData: function (data) {
+        // -- custom data set
+        this.needRedraw(); // -- call to drawLayer
+    },
+
     setColor(f) {
         this.options.color = f;
         this.needRedraw();
