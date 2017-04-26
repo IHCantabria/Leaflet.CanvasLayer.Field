@@ -27,7 +27,6 @@ describe('L.CanvasLayer.ScalarField', function () {
         document.body.removeChild(c);
     });
 
-
     it('can be added to the map', function () {
         let sfl = L.canvasLayer.scalarField(sf).addTo(map);
         expect(map.hasLayer(sfl)).toBe(true);
@@ -36,6 +35,12 @@ describe('L.CanvasLayer.ScalarField', function () {
     it('has bounds', function () {
         let sfl = L.canvasLayer.scalarField(sf);
         expect(sfl.getBounds()).not.toBe(null);
+    });
+
+    it('can receive data after creation', function () {
+        let sfl = L.canvasLayer.scalarField().addTo(map);
+        sfl.setData(sf);
+        expect(sf).not.toBe(null);
     });
 
     // TODO

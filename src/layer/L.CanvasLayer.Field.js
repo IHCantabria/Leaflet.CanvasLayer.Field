@@ -12,9 +12,10 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     initialize: function (field, options) {
-        this.field = field;
-        this._visible = true;
         L.Util.setOptions(this, options);
+        if (field) {
+            this.setData(field);
+        }
     },
 
     onLayerDidMount: function () {
@@ -28,14 +29,12 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     show() {
         if (this._canvas) {
             this._canvas.style.visibility = 'visible';
-            this._visible = true;
         }
     },
 
     hide() {
         if (this._canvas) {
             this._canvas.style.visibility = 'hidden';
-            this._visible = false;
         }
     },
 
@@ -64,14 +63,19 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         this._map.off('zoomend', this.show, this);
     },
 
+    needRedraw() {
+        if (this._map && this._field) {
+            L.CanvasLayer.prototype.needRedraw.call(this);
+        }
+    },
+
     onDrawLayer: function (viewInfo) {
         throw new TypeError('Must be overriden');
     },
 
-    setData: function (data) {
-        // -- custom data set
-        // TODO
-        this.needRedraw(); // -- call to drawLayer
+    setData: function (field) {
+        this._field = field;
+        this.needRedraw();
     },
 
     setOpacity: function (opacity) {
@@ -84,7 +88,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     getBounds: function () {
-        let bb = this.field.extent();
+        let bb = this._field.extent();
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);
@@ -92,11 +96,13 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _showPointerOnValue: function (e) {
+        if (!this._field) return;
+
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
 
         let style = this._map.getContainer().style;
-        if (this.field.hasValueAt(lon, lat)) {
+        if (this._field.hasValueAt(lon, lat)) {
             style.cursor = this.options.hoverCursor;
         } else {
             style.cursor = this.options.defaultCursor;
@@ -108,11 +114,13 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _queryValue: function (e) {
+        if (!this._field) return;
+
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
         let result = {
             latlng: e.latlng,
-            value: this.field.valueAt(lon, lat)
+            value: this._field.valueAt(lon, lat)
         };
         this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
     },
