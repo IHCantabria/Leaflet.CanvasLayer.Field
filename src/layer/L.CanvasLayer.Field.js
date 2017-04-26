@@ -64,7 +64,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     needRedraw() {
-        if (this._map) {
+        if (this._map && this._field) {
             L.CanvasLayer.prototype.needRedraw.call(this);
         }
     },
@@ -114,6 +114,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _queryValue: function (e) {
+        if (!this._field) return;
+
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
         let result = {
