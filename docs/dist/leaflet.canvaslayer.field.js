@@ -90,7 +90,7 @@
 	// control
 	__webpack_require__(11);
 
-	console.log('leaflet.canvaslayer.field v0.1.1');
+	console.log('leaflet.canvaslayer.field v0.1');
 
 	// TODO - check some other module systems (umd pattern)
 
@@ -1596,7 +1596,7 @@
 	    },
 
 	    needRedraw: function needRedraw() {
-	        if (this._map) {
+	        if (this._map && this._field) {
 	            L.CanvasLayer.prototype.needRedraw.call(this);
 	        }
 	    },
@@ -1629,6 +1629,8 @@
 	    },
 
 	    _showPointerOnValue: function _showPointerOnValue(e) {
+	        if (!this._field) return;
+
 	        var lon = e.latlng.lng;
 	        var lat = e.latlng.lat;
 
@@ -1645,6 +1647,8 @@
 	    },
 
 	    _queryValue: function _queryValue(e) {
+	        if (!this._field) return;
+
 	        var lon = e.latlng.lng;
 	        var lat = e.latlng.lat;
 	        var result = {
