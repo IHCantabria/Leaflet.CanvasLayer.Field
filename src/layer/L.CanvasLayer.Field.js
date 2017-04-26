@@ -96,6 +96,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _showPointerOnValue: function (e) {
+        if (!this._field) return;
+
         let lon = e.latlng.lng;
         let lat = e.latlng.lat;
 
