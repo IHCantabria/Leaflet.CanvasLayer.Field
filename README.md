@@ -38,7 +38,7 @@ The figures below show the results for two basic layers, showing *Currents in th
 
 3. Prepare a Raster File with your favourite GIS tool, using [EPSG:4326](https://epsg.io/4326) (**ASCII Grid** or **GeoTIFF** format)
 
-4. Create a `scalarField` layer and add it to the `map`, using your raster files as source (e.g. this .asc)
+4. Create a `ScalarField` layer and add it to the `map`, using your raster files as source (e.g. this .asc)
 ```js
 d3.text("https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_Speed.asc", function (asc) {
     var s = L.ScalarField.fromASCIIGrid(asc);
@@ -48,7 +48,7 @@ d3.text("https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_Speed.
 });
 ```
 
-5. Or try the `vectorFieldAnim` layer, adding also a popup (previously you have to prepare 2 raster files, with 'u' and 'v' components in 'm/s'):
+5. Or try the `VectorFieldAnim` layer, adding also a popup (previously you have to prepare 2 raster files, with 'u' and 'v' components in 'm/s'):
 ```js
 d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc', function(u) {
     d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_V.asc', function(v) {
