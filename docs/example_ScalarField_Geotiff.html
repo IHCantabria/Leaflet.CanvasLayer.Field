@@ -33,28 +33,53 @@
             subdomains: 'abcd'
         }).addTo(map);
 
-        /* NASA NDVI Index (2017-02) 0.1 deg (3600 x 1800): ~3.3MB with LZW (24.7MB uncompressed)
-        https://neo.sci.gsfc.nasa.gov/view.php?datasetId=MOD13A2_M_NDVI
-        */
-        d3.request("data/ndvi_201702_LZW.tif").responseType('arraybuffer').get(
+        /* Temperature and Geopotencial Height in GeoTIFF with 2 bands */
+        d3.request("data/tz850.tiff").responseType('arraybuffer').get(
             function(error, tiffData) {
-                let ndvi = L.ScalarField.fromGeoTIFF(tiffData.response);
+                // Geopotential height (BAND 0)
+                let geo = L.ScalarField.fromGeoTIFF(tiffData.response, bandIndex = 0);
 
-                let layer = L.canvasLayer.scalarField(ndvi, {
-                    color: chroma.scale('YlGn').domain(ndvi.range)
+                let layerGeo = L.canvasLayer.scalarField(geo, {
+                    color: chroma.scale('RdPu').domain(geo.range),
+                    opacity: 0.65
                 }).addTo(map);
-
-                layer.on('click', function(e) {
+                layerGeo.on('click', function(e) {
                     if (e.value !== null) {
-                        let v = e.value.toFixed(2);
-                        let html = (`<span class="popupText">NDVI ${v}</span>`);
+                        let v = e.value.toFixed(0);
+                        let html = (`<span class="popupText">Geopotential height ${v} m</span>`);
                         let popup = L.popup()
                             .setLatLng(e.latlng)
                             .setContent(html)
                             .openOn(map);
                     }
                 });
-                map.fitBounds(layer.getBounds());
+
+                // Temperature (BAND 1)
+                let t = L.ScalarField.fromGeoTIFF(tiffData.response, bandIndex = 1);
+                let layerT = L.canvasLayer.scalarField(t, {
+                    color: chroma.scale('OrRd').domain(t.range),
+                    opacity: 0.65
+                });
+                layerT.on('click', function(e) {
+                    if (e.value !== null) {
+                        let v = e.value.toFixed(1);
+                        let html = (`<span class="popupText">Temperature ${v} ºC</span>`);
+                        let popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(html)
+                            .openOn(map);
+                    }
+                });
+
+                L.control.layers({
+                    "Geopotential Height": layerGeo,
+                    "Temperature": layerT
+                }, {}, {
+                    position: 'bottomleft',
+                    collapsed: false
+                }).addTo(map);
+
+                map.fitBounds(layerGeo.getBounds());
 
             });
 

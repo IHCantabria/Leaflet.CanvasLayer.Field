@@ -39,7 +39,8 @@
                     paths: 100,
                     color: "#FF6699",
                     width: 3,
-                    velocityScale: 1 / 10
+                    velocityScale: 1 / 10,
+                    mouseMoveCursor: null
                 }).addTo(map);
 
                 var layer2 = L.canvasLayer.vectorFieldAnim(vf, {
@@ -48,7 +49,8 @@
                     width: 0.5,
                     fade: 0.92,
                     maxAge: 2000,
-                    velocityScale: 1 / 100
+                    velocityScale: 1 / 100,
+                    mouseMoveCursor: null
                 }).addTo(map);
 
                 map.fitBounds(layer.getBounds());
