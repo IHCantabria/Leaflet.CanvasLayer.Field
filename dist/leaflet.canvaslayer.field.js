@@ -1647,7 +1647,7 @@
 	            noValue = _options$mouseMoveCur.noValue;
 
 	        var style = this._map.getContainer().style;
-	        style.cursor = v ? value : noValue;
+	        style.cursor = v.value ? value : noValue;
 	    },
 
 	    _updateOpacity: function _updateOpacity() {
@@ -1655,9 +1655,7 @@
 	    },
 
 	    _queryValue: function _queryValue(e) {
-	        if (!this.field) return null;
-
-	        var v = this._field.valueAt(e.latlng.lng, e.latlng.lat);
+	        var v = this._field ? this._field.valueAt(e.latlng.lng, e.latlng.lat) : null;
 	        var result = {
 	            latlng: e.latlng,
 	            value: v

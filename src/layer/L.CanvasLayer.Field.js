@@ -115,7 +115,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
             noValue
         } = this.options.mouseMoveCursor;
         let style = this._map.getContainer().style;
-        style.cursor = (v) ? value : noValue;
+        style.cursor = (v.value) ? value : noValue;
     },
 
     _updateOpacity: function () {
@@ -123,9 +123,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _queryValue: function (e) {
-        if (!this.field) return null;
-
-        let v = this._field.valueAt(e.latlng.lng, e.latlng.lat);
+        let v = (this._field) ? this._field.valueAt(e.latlng.lng, e.latlng.lat) : null;
         let result = {
             latlng: e.latlng,
             value: v
