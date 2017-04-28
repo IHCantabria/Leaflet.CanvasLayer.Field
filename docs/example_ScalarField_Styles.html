@@ -77,18 +77,18 @@
 
             var layer1 = L.canvasLayer.scalarField(s, {
                 color: chroma.scale(['white', 'black']).domain(s.range),
-                click: false
+                mouseMoveCursor: null
             }).addTo(map);
             map.fitBounds(layer1.getBounds());
 
             var layer2 = L.canvasLayer.scalarField(s, {
                 color: chroma.scale('OrRd').domain(s.range),
-                click: false
+                mouseMoveCursor: null
             });
 
             var layer3 = L.canvasLayer.scalarField(s, {
                 color: chroma.scale('OrRd').classes(5),
-                click: false
+                mouseMoveCursor: null
             });
 
             var layers = {
