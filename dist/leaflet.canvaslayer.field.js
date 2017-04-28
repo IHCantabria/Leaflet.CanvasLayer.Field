@@ -1555,7 +1555,7 @@
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
-	        this._enableIdentifyEvents();
+	        this._enableIdentify();
 	        this._hideWhenZooming();
 	        this._ensureCanvasAlignment();
 	    },
@@ -1570,11 +1570,11 @@
 	            this._canvas.style.visibility = 'hidden';
 	        }
 	    },
-	    _enableIdentifyEvents: function _enableIdentifyEvents() {
+	    _enableIdentify: function _enableIdentify() {
 	        this._map.on('click', this._onClick, this);
 	        this._map.on('mousemove', this._onMouseMove, this);
 	    },
-	    _disableIdentifyEvents: function _disableIdentifyEvents() {
+	    _disableIdentify: function _disableIdentify() {
 	        this._map.off('click', this._onClick, this);
 	        this._map.off('mousemove', this._onMouseMove, this);
 	    },
@@ -1589,7 +1589,7 @@
 
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
-	        this._disableIdentifyEvents();
+	        this._disableIdentify();
 
 	        this._map.off('zoomstart', this.hide, this);
 	        this._map.off('zoomend', this.show, this);
@@ -1629,17 +1629,17 @@
 	    },
 
 	    _onClick: function _onClick(e) {
-	        var result = this._queryValue(e);
-	        this.fireEvent('click', result);
+	        var v = this._queryValue(e);
+	        this.fireEvent('click', v);
 	    },
 
 	    _onMouseMove: function _onMouseMove(e) {
-	        var result = this._queryValue(e);
-	        this._changeCursorOnValue(result);
-	        this.fireEvent('mousemove', result);
+	        var v = this._queryValue(e);
+	        this._changeCursorOn(v);
+	        this.fireEvent('mousemove', v);
 	    },
 
-	    _changeCursorOnValue: function _changeCursorOnValue(result) {
+	    _changeCursorOn: function _changeCursorOn(v) {
 	        if (!this.options.mouseMoveCursor) return;
 
 	        var _options$mouseMoveCur = this.options.mouseMoveCursor,
@@ -1647,7 +1647,7 @@
 	            noValue = _options$mouseMoveCur.noValue;
 
 	        var style = this._map.getContainer().style;
-	        style.cursor = result.value ? value : noValue;
+	        style.cursor = v ? value : noValue;
 	    },
 
 	    _updateOpacity: function _updateOpacity() {
@@ -1655,7 +1655,9 @@
 	    },
 
 	    _queryValue: function _queryValue(e) {
-	        var v = this._field ? this._field.valueAt(e.latlng.lng, e.latlng.lat) : null;
+	        if (!this.field) return null;
+
+	        var v = this._field.valueAt(e.latlng.lng, e.latlng.lat);
 	        var result = {
 	            latlng: e.latlng,
 	            value: v
