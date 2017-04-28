@@ -1540,9 +1540,10 @@
 	L.CanvasLayer.Field = L.CanvasLayer.extend({
 
 	    options: {
-	        click: true, // 'onclick' event enabled
-	        hoverCursor: 'pointer',
-	        defaultCursor: 'default',
+	        mouseMoveCursor: {
+	            value: 'pointer',
+	            noValue: 'default'
+	        },
 	        opacity: 1
 	    },
 
@@ -1554,9 +1555,7 @@
 	    },
 
 	    onLayerDidMount: function onLayerDidMount() {
-	        if (this.options.click) {
-	            this._enableIdentify();
-	        }
+	        this._enableIdentifyEvents();
 	        this._hideWhenZooming();
 	        this._ensureCanvasAlignment();
 	    },
@@ -1571,9 +1570,13 @@
 	            this._canvas.style.visibility = 'hidden';
 	        }
 	    },
-	    _enableIdentify: function _enableIdentify() {
-	        this._map.on('click', this._queryValue, this);
-	        this._map.on('mousemove', this._showPointerOnValue, this);
+	    _enableIdentifyEvents: function _enableIdentifyEvents() {
+	        this._map.on('click', this._onClick, this);
+	        this._map.on('mousemove', this._onMouseMove, this);
+	    },
+	    _disableIdentifyEvents: function _disableIdentifyEvents() {
+	        this._map.off('click', this._onClick, this);
+	        this._map.off('mousemove', this._onMouseMove, this);
 	    },
 	    _hideWhenZooming: function _hideWhenZooming() {
 	        this._map.on('zoomstart', this.hide, this);
@@ -1586,10 +1589,7 @@
 
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
-	        if (this.options.click) {
-	            this._map.off('click', this._queryValue, this);
-	            this._map.off('mousemove', this._showPointerOnValue, this);
-	        }
+	        this._disableIdentifyEvents();
 
 	        this._map.off('zoomstart', this.hide, this);
 	        this._map.off('zoomend', this.show, this);
@@ -1628,18 +1628,26 @@
 	        return bounds;
 	    },
 
-	    _showPointerOnValue: function _showPointerOnValue(e) {
-	        if (!this._field) return;
+	    _onClick: function _onClick(e) {
+	        var result = this._queryValue(e);
+	        this.fireEvent('click', result);
+	    },
 
-	        var lon = e.latlng.lng;
-	        var lat = e.latlng.lat;
+	    _onMouseMove: function _onMouseMove(e) {
+	        var result = this._queryValue(e);
+	        this._changeCursorOnValue(result);
+	        this.fireEvent('mousemove', result);
+	    },
+
+	    _changeCursorOnValue: function _changeCursorOnValue(result) {
+	        if (!this.options.mouseMoveCursor) return;
+
+	        var _options$mouseMoveCur = this.options.mouseMoveCursor,
+	            value = _options$mouseMoveCur.value,
+	            noValue = _options$mouseMoveCur.noValue;
 
 	        var style = this._map.getContainer().style;
-	        if (this._field.hasValueAt(lon, lat)) {
-	            style.cursor = this.options.hoverCursor;
-	        } else {
-	            style.cursor = this.options.defaultCursor;
-	        }
+	        style.cursor = result.value ? value : noValue;
 	    },
 
 	    _updateOpacity: function _updateOpacity() {
@@ -1647,15 +1655,12 @@
 	    },
 
 	    _queryValue: function _queryValue(e) {
-	        if (!this._field) return;
-
-	        var lon = e.latlng.lng;
-	        var lat = e.latlng.lat;
+	        var v = this._field ? this._field.valueAt(e.latlng.lng, e.latlng.lat) : null;
 	        var result = {
 	            latlng: e.latlng,
-	            value: this._field.valueAt(lon, lat)
+	            value: v
 	        };
-	        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
+	        return result;
 	    },
 
 	    /**

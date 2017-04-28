@@ -5,9 +5,10 @@
 L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     options: {
-        click: true, // 'onclick' event enabled
-        hoverCursor: 'pointer',
-        defaultCursor: 'default',
+        mouseMoveCursor: {
+            value: 'pointer',
+            noValue: 'default'
+        },
         opacity: 1
     },
 
@@ -19,9 +20,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     onLayerDidMount: function () {
-        if (this.options.click) {
-            this._enableIdentify();
-        }
+        this._enableIdentify();
         this._hideWhenZooming();
         this._ensureCanvasAlignment();
     },
@@ -39,8 +38,13 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _enableIdentify() {
-        this._map.on('click', this._queryValue, this);
-        this._map.on('mousemove', this._showPointerOnValue, this);
+        this._map.on('click', this._onClick, this);
+        this._map.on('mousemove', this._onMouseMove, this);
+    },
+
+    _disableIdentify() {
+        this._map.off('click', this._onClick, this);
+        this._map.off('mousemove', this._onMouseMove, this);
     },
 
     _hideWhenZooming() {
@@ -54,10 +58,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     onLayerWillUnmount: function () {
-        if (this.options.click) {
-            this._map.off('click', this._queryValue, this);
-            this._map.off('mousemove', this._showPointerOnValue, this);
-        }
+        this._disableIdentify();
 
         this._map.off('zoomstart', this.hide, this);
         this._map.off('zoomend', this.show, this);
@@ -95,18 +96,26 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         return bounds;
     },
 
-    _showPointerOnValue: function (e) {
-        if (!this._field) return;
+    _onClick: function (e) {
+        let v = this._queryValue(e);
+        this.fireEvent('click', v);
+    },
 
-        let lon = e.latlng.lng;
-        let lat = e.latlng.lat;
+    _onMouseMove: function (e) {
+        let v = this._queryValue(e);
+        this._changeCursorOn(v);
+        this.fireEvent('mousemove', result);
+    },
 
+    _changeCursorOn: function (v) {
+        if (!this.options.mouseMoveCursor) return;
+
+        let {
+            value,
+            noValue
+        } = this.options.mouseMoveCursor;
         let style = this._map.getContainer().style;
-        if (this._field.hasValueAt(lon, lat)) {
-            style.cursor = this.options.hoverCursor;
-        } else {
-            style.cursor = this.options.defaultCursor;
-        }
+        style.cursor = (v) ? value : noValue;
     },
 
     _updateOpacity: function () {
@@ -114,15 +123,14 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _queryValue: function (e) {
-        if (!this._field) return;
+        if (!this.field) return null;
 
-        let lon = e.latlng.lng;
-        let lat = e.latlng.lat;
+        let v = this._field.valueAt(e.latlng.lng, e.latlng.lat);
         let result = {
             latlng: e.latlng,
-            value: this._field.valueAt(lon, lat)
+            value: v
         };
-        this.fireEvent('click', result); /*includes: L.Mixin.Events,*/
+        return result;
     },
 
     /**
