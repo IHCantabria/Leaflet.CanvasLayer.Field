@@ -45,7 +45,12 @@
                     let popup = L.popup().setLatLng(e.latlng).setContent(html).openOn(map);
                 }
             });
+
+            layer.on('mousemove', function(e) {
+                console.log(e);
+            });
         });
+
     </script>
 </body>
 
