@@ -1843,12 +1843,23 @@
 	    onLayerDidMount: function onLayerDidMount() {
 	        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
 	        this._map.on('movestart resize', this._stopAnimation, this);
+
+	        this._hideWhenMoving();
 	    },
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
 	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
 	        this._map.off('movestart resize', this._stopAnimation, this);
+
+	        this._map.off('movestart', this.hide, this);
+	        this._map.off('moveend', this.show, this);
 	    },
+
+	    _hideWhenMoving: function _hideWhenMoving() {
+	        this._map.on('movestart', this.hide, this);
+	        this._map.on('moveend', this.show, this);
+	    },
+
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        this._updateOpacity();
@@ -1857,8 +1868,8 @@
 	        var paths = this._prepareParticlePaths();
 
 	        this.timer = d3.timer(function () {
-	            moveParticles();
-	            drawParticles();
+	            _moveParticles();
+	            _drawParticles();
 	        }, this.options.duration);
 
 	        var self = this;
@@ -1867,7 +1878,7 @@
 	         * Builds the paths, adding 'particles' on each animation step, considering
 	         * their properties (age / position source > target)
 	         */
-	        function moveParticles() {
+	        function _moveParticles() {
 	            paths.forEach(function (par) {
 	                if (par.age > self.options.maxAge) {
 	                    // restart, on a random x,y
@@ -1899,7 +1910,7 @@
 	        /**
 	         * Draws the paths on each step
 	         */
-	        function drawParticles() {
+	        function _drawParticles() {
 	            // Previous paths...
 	            var prev = ctx.globalCompositeOperation;
 	            ctx.globalCompositeOperation = 'destination-in';
