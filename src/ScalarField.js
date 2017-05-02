@@ -60,7 +60,7 @@ export default class ScalarField extends Field {
         let fileDirectory = image.getFileDirectory();
         let pixelScale = fileDirectory.ModelPixelScale;
 
-        // TODO check conditions for throw "Not supported raster"
+        // TODO check conditions for "Not supported raster"
         let zs = rasters[bandIndex]; // left-right and top-down order
 
         if (fileDirectory.GDAL_NODATA) {
