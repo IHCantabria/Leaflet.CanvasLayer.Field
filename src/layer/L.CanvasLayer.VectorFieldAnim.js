@@ -23,11 +23,21 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     onLayerDidMount: function () {
         L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
         this._map.on('movestart resize', this._stopAnimation, this);
+
+        this._hideWhenMoving();
     },
 
     onLayerWillUnmount: function () {
         L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
         this._map.off('movestart resize', this._stopAnimation, this);
+
+        this._map.off('movestart', this.hide, this);
+        this._map.off('moveend', this.show, this);
+    },
+
+    _hideWhenMoving() {
+        this._map.on('movestart', this.hide, this);
+        this._map.on('moveend', this.show, this);
     },
 
     onDrawLayer: function (viewInfo) {
@@ -37,8 +47,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
         let paths = this._prepareParticlePaths();
 
         this.timer = d3.timer(function () {
-            moveParticles();
-            drawParticles();
+            _moveParticles();
+            _drawParticles();
         }, this.options.duration);
 
         let self = this;
@@ -47,7 +57,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
          * Builds the paths, adding 'particles' on each animation step, considering
          * their properties (age / position source > target)
          */
-        function moveParticles() {
+        function _moveParticles() {
             paths.forEach(function (par) {
                 if (par.age > self.options.maxAge) {
                     // restart, on a random x,y
@@ -79,7 +89,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
         /**
          * Draws the paths on each step
          */
-        function drawParticles() {
+        function _drawParticles() {
             // Previous paths...
             let prev = ctx.globalCompositeOperation;
             ctx.globalCompositeOperation = 'destination-in';
