@@ -18,7 +18,7 @@ export default class VectorField extends Field {
     static fromASCIIGrids(ascU, ascV, scaleFactor = 1) {
         let u = ScalarField.fromASCIIGrid(ascU, scaleFactor);
         let v = ScalarField.fromASCIIGrid(ascV, scaleFactor);
-        let p = VectorField._parametersFromScalarFields(u, v);
+        let p = VectorField._paramsFromScalarFields(u, v);
 
         return new VectorField(p);
     }

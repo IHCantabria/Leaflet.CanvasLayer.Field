@@ -1066,7 +1066,7 @@
 
 	            var u = _ScalarField2.default.fromASCIIGrid(ascU, scaleFactor);
 	            var v = _ScalarField2.default.fromASCIIGrid(ascV, scaleFactor);
-	            var p = VectorField._parametersFromScalarFields(u, v);
+	            var p = VectorField._paramsFromScalarFields(u, v);
 
 	            return new VectorField(p);
 	        }
