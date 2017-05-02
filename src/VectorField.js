@@ -18,19 +18,25 @@ export default class VectorField extends Field {
     static fromASCIIGrids(ascU, ascV, scaleFactor = 1) {
         let u = ScalarField.fromASCIIGrid(ascU, scaleFactor);
         let v = ScalarField.fromASCIIGrid(ascV, scaleFactor);
+        let p = VectorField._parametersFromScalarFields(u, v);
 
-        // TODO - check equal parameters for u|v
-        let p = {
-            nCols: u.nCols,
-            nRows: u.nRows,
-            xllCorner: u.xllCorner,
-            yllCorner: u.yllCorner,
-            cellSize: u.cellSize,
-            us: u.zs,
-            vs: v.zs
-        };
         return new VectorField(p);
     }
+
+    /**
+     * Creates a VectorField from the content of two different Geotiff files
+     * @param   {ArrayBuffer} gtU - geotiff data with u-component (band 0)
+     * @param   {ArrayBuffer} gtV - geotiff data with v-component (band 0)
+     * @returns {VectorField}
+     */
+    static fromGeoTIFFs(gtU, gtV) {
+        let u = ScalarField.fromGeoTIFF(gtU);
+        let v = ScalarField.fromGeoTIFF(gtV);
+        let p = VectorField._paramsFromScalarFields(u, v);
+
+        return new VectorField(p);
+    }
+
 
     /**
      * Creates a VectorField from the content of Multiband Geotiff
@@ -41,8 +47,20 @@ export default class VectorField extends Field {
     static fromMultibandGeoTIFF(geotiffData, bandIndexesForUV = [0, 1]) {
         let u = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[0]);
         let v = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[1]);
+        let p = VectorField._paramsFromScalarFields(u, v);
 
-        // TODO - refactor
+        return new VectorField(p);
+    }
+
+    /**
+     * Build parameters for VectorField, from 2 ScalarFields.
+     * No validation at all (nor interpolation) is applied, so u and v
+     * must be 'compatible' from the source
+     * @param   {ScalarField} u
+     * @param   {ScalarField} v
+     * @returns {Object} - parameters to build VectorField
+     */
+    static _paramsFromScalarFields(u, v) {
         let p = {
             nCols: u.nCols,
             nRows: u.nRows,
@@ -52,9 +70,8 @@ export default class VectorField extends Field {
             us: u.zs,
             vs: v.zs
         };
-        return new VectorField(p);
+        return p;
     }
-
 
     constructor(params) {
         super(params);

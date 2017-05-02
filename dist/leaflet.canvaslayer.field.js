@@ -885,14 +885,8 @@
 	            var fileDirectory = image.getFileDirectory();
 	            var pixelScale = fileDirectory.ModelPixelScale;
 
-	            /*let regularGrid = Math.abs(pixelScale[0] - pixelScale[1]) < 0.00000001;
-	            if (!regularGrid) {
-	                console.error(`pixelScale: ${pixelScale}`);
-	                throw new Error('A raster without regular cells is not supported');
-	            }*/
-	            // TODO check no rotation, or else ... throw "Not supported raster"
-
-	            var zs = rasters[bandIndex]; // left-right and top-down.
+	            // TODO check conditions for "Not supported raster"
+	            var zs = rasters[bandIndex]; // left-right and top-down order
 
 	            if (fileDirectory.GDAL_NODATA) {
 	                var noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
@@ -979,7 +973,7 @@
 	        /**
 	         * Calculate min & max values
 	         * @private
-	         * @returns {Array}
+	         * @returns {Array} - [min, max]
 	         */
 
 	    }, {
@@ -1072,17 +1066,25 @@
 
 	            var u = _ScalarField2.default.fromASCIIGrid(ascU, scaleFactor);
 	            var v = _ScalarField2.default.fromASCIIGrid(ascV, scaleFactor);
+	            var p = VectorField._parametersFromScalarFields(u, v);
 
-	            // TODO - check equal parameters for u|v
-	            var p = {
-	                nCols: u.nCols,
-	                nRows: u.nRows,
-	                xllCorner: u.xllCorner,
-	                yllCorner: u.yllCorner,
-	                cellSize: u.cellSize,
-	                us: u.zs,
-	                vs: v.zs
-	            };
+	            return new VectorField(p);
+	        }
+
+	        /**
+	         * Creates a VectorField from the content of two different Geotiff files
+	         * @param   {ArrayBuffer} gtU - geotiff data with u-component (band 0)
+	         * @param   {ArrayBuffer} gtV - geotiff data with v-component (band 0)
+	         * @returns {VectorField}
+	         */
+
+	    }, {
+	        key: 'fromGeoTIFFs',
+	        value: function fromGeoTIFFs(gtU, gtV) {
+	            var u = _ScalarField2.default.fromGeoTIFF(gtU);
+	            var v = _ScalarField2.default.fromGeoTIFF(gtV);
+	            var p = VectorField._paramsFromScalarFields(u, v);
+
 	            return new VectorField(p);
 	        }
 
@@ -1100,8 +1102,23 @@
 
 	            var u = _ScalarField2.default.fromGeoTIFF(geotiffData, bandIndexesForUV[0]);
 	            var v = _ScalarField2.default.fromGeoTIFF(geotiffData, bandIndexesForUV[1]);
+	            var p = VectorField._paramsFromScalarFields(u, v);
 
-	            // TODO - refactor
+	            return new VectorField(p);
+	        }
+
+	        /**
+	         * Build parameters for VectorField, from 2 ScalarFields.
+	         * No validation at all (nor interpolation) is applied, so u and v
+	         * must be 'compatible' from the source
+	         * @param   {ScalarField} u
+	         * @param   {ScalarField} v
+	         * @returns {Object} - parameters to build VectorField
+	         */
+
+	    }, {
+	        key: '_paramsFromScalarFields',
+	        value: function _paramsFromScalarFields(u, v) {
 	            var p = {
 	                nCols: u.nCols,
 	                nRows: u.nRows,
@@ -1111,7 +1128,7 @@
 	                us: u.zs,
 	                vs: v.zs
 	            };
-	            return new VectorField(p);
+	            return p;
 	        }
 	    }]);
 
