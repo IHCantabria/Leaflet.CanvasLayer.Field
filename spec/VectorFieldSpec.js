@@ -88,7 +88,6 @@ describe('VectorField', function () {
         expect(vf.range[1] <= max).toBeTruthy();
     });
 
-
     it('can return a ScalarField with its Magnitude or Direction', function () {
         let types = ['magnitude', 'directionTo', 'directionFrom'];
         for (var i = 0; i < 3; i++) {
