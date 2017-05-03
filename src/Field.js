@@ -7,9 +7,6 @@ import Cell from './Cell';
 export default class Field {
 
     constructor(params) {
-        if (new.target === Field) {
-            throw new TypeError('Cannot construct Field instances directly (use VectorField or ScalarField)');
-        }
         this.params = params;
 
         this.nCols = params['nCols'];
