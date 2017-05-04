@@ -1,4 +1,8 @@
+Copyright (c) 2017 IHCantabria
+
 # Leaflet.CanvasLayer.Field
+
+GNU GENERAL PUBLIC LICENSE - Version 3
 
 This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,8 +19,10 @@ This program is free software: you can redistribute it and/or modify
     
 ------------------------------------------------------------------------------
 
-This software uses:
+This software currently includes:
 * gLayers.Leaflet [https://github.com/Sumbera/gLayers.Leaflet] - MIT License
+
+It requires:
 * chroma.js [https://github.com/gka/chroma.js] - BSD License
 * geotiff.js [https://github.com/constantinius/geotiff.js] - MIT License
 * d3js [https://github.com/d3/d3] - BSD License
