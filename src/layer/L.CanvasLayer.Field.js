@@ -98,13 +98,14 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     _onClick: function (e) {
         let v = this._queryValue(e);
-        this.fireEvent('click', v);
+        this.fire('click', v);
+
     },
 
     _onMouseMove: function (e) {
         let v = this._queryValue(e);
         this._changeCursorOn(v);
-        this.fireEvent('mousemove', v);
+        this.fire('mousemove', v);
     },
 
     _changeCursorOn: function (v) {
