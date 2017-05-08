@@ -1623,6 +1623,7 @@
 	    setData: function setData(field) {
 	        this._field = field;
 	        this.needRedraw();
+	        this.fire('load');
 	    },
 
 	    setOpacity: function setOpacity(opacity) {
@@ -1644,13 +1645,13 @@
 
 	    _onClick: function _onClick(e) {
 	        var v = this._queryValue(e);
-	        this.fireEvent('click', v);
+	        this.fire('click', v);
 	    },
 
 	    _onMouseMove: function _onMouseMove(e) {
 	        var v = this._queryValue(e);
 	        this._changeCursorOn(v);
-	        this.fireEvent('mousemove', v);
+	        this.fire('mousemove', v);
 	    },
 
 	    _changeCursorOn: function _changeCursorOn(v) {

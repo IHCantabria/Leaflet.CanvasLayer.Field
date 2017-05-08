@@ -77,6 +77,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     setData: function (field) {
         this._field = field;
         this.needRedraw();
+        this.fire('load');
     },
 
     setOpacity: function (opacity) {
@@ -99,7 +100,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     _onClick: function (e) {
         let v = this._queryValue(e);
         this.fire('click', v);
-
     },
 
     _onMouseMove: function (e) {
