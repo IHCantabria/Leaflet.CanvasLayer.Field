@@ -23,6 +23,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
+        if (!this.isVisible()) return;
         console.time('onDrawLayer');
         this._ensureColor();
         this._updateOpacity();
@@ -34,6 +35,11 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         if (this.options.color === null) {
             this.setColor(this._defaultColorScale());
         }
+    },
+
+    _showCanvas() {
+        L.CanvasLayer.Field.prototype._showCanvas.call(this);
+        this.needRedraw();
     },
 
     /**

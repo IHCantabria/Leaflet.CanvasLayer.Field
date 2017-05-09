@@ -31,16 +31,18 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
         L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
         this._map.off('movestart resize', this._stopAnimation, this);
 
-        this._map.off('movestart', this.hide, this);
-        this._map.off('moveend', this.show, this);
+        this._map.off('movestart', this._hideCanvas, this);
+        this._map.off('moveend', this._showCanvas, this);
     },
 
     _hideWhenMoving() {
-        this._map.on('movestart', this.hide, this);
-        this._map.on('moveend', this.show, this);
+        this._map.on('movestart', this._hideCanvas, this);
+        this._map.on('moveend', this._showCanvas, this);
     },
 
     onDrawLayer: function (viewInfo) {
+        if (!this.isVisible()) return;
+
         this._updateOpacity();
 
         let ctx = this._getDrawingContext();
