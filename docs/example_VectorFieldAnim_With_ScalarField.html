@@ -58,6 +58,15 @@
                     color: 'rgba(255,255,255,0.7)'
                 }).addTo(map);
 
+                L.control.layers({}, {
+                    "Vector animation": animation,
+                    "Derived magnitude": magnitude
+                }, {
+                    position: 'bottomleft',
+                    collapsed: false
+                }).addTo(map);
+
+
                 map.fitBounds(animation.getBounds());
 
                 magnitude.on('click', function(e) {
@@ -73,7 +82,6 @@
                 });
             });
         });
-
     </script>
 </body>
 
