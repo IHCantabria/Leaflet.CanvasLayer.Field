@@ -11,7 +11,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         },
         opacity: 1,
         onClick: null,
-        onMouseMove: null
+        onMouseMove: null,
+        inFilter: null
     },
 
     initialize: function (field, options) {
@@ -83,9 +84,16 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     setData: function (field) {
+        this.options.inFilter && field.setFilter(this.options.inFilter);
         this._field = field;
         this.needRedraw();
         this.fire('load');
+    },
+
+    setFilter: function (f) {
+        this.options.inFilter = f;
+        this._field && this._field.setFilter(f);
+        this.needRedraw();
     },
 
     setOpacity: function (opacity) {

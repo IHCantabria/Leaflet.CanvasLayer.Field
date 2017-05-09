@@ -1560,7 +1560,8 @@
 	        },
 	        opacity: 1,
 	        onClick: null,
-	        onMouseMove: null
+	        onMouseMove: null,
+	        inFilter: null
 	    },
 
 	    initialize: function initialize(field, options) {
@@ -1629,9 +1630,16 @@
 	    },
 
 	    setData: function setData(field) {
+	        this.options.inFilter && field.setFilter(this.options.inFilter);
 	        this._field = field;
 	        this.needRedraw();
 	        this.fire('load');
+	    },
+
+	    setFilter: function setFilter(f) {
+	        this.options.inFilter = f;
+	        this._field && this._field.setFilter(f);
+	        this.needRedraw();
 	    },
 
 	    setOpacity: function setOpacity(opacity) {
