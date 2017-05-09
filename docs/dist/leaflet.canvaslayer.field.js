@@ -1558,7 +1558,9 @@
 	            value: 'pointer',
 	            noValue: 'default'
 	        },
-	        opacity: 1
+	        opacity: 1,
+	        onClick: null,
+	        onMouseMove: null
 	    },
 
 	    initialize: function initialize(field, options) {
@@ -1587,10 +1589,16 @@
 	    _enableIdentify: function _enableIdentify() {
 	        this._map.on('click', this._onClick, this);
 	        this._map.on('mousemove', this._onMouseMove, this);
+
+	        this.options.onClick && this.on('click', this.options.onClick, this);
+	        this.options.onMouseMove && this.on('mousemove', this.options.onMouseMove, this);
 	    },
 	    _disableIdentify: function _disableIdentify() {
 	        this._map.off('click', this._onClick, this);
 	        this._map.off('mousemove', this._onMouseMove, this);
+
+	        this.options.onClick && this.off('click', this.options.onClick, this);
+	        this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
 	    },
 	    _hideWhenZooming: function _hideWhenZooming() {
 	        this._map.on('zoomstart', this.hide, this);

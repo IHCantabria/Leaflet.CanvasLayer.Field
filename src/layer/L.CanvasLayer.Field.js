@@ -9,7 +9,9 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
             value: 'pointer',
             noValue: 'default'
         },
-        opacity: 1
+        opacity: 1,
+        onClick: null,
+        onMouseMove: null
     },
 
     initialize: function (field, options) {
@@ -40,11 +42,17 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     _enableIdentify() {
         this._map.on('click', this._onClick, this);
         this._map.on('mousemove', this._onMouseMove, this);
+
+        this.options.onClick && this.on('click', this.options.onClick, this);
+        this.options.onMouseMove && this.on('mousemove', this.options.onMouseMove, this);
     },
 
     _disableIdentify() {
         this._map.off('click', this._onClick, this);
         this._map.off('mousemove', this._onMouseMove, this);
+
+        this.options.onClick && this.off('click', this.options.onClick, this);
+        this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
     },
 
     _hideWhenZooming() {
