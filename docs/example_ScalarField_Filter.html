@@ -53,10 +53,10 @@
                 height.addEventListener('change', function() {
                     layerDem.setColor('blue');
                     let h = height.value;
-                    dem.setFilter(function(v) {
+                    let f = function(v) {
                         return v >= 0 && v <= h;
-                    });
-                    layerDem.needRedraw();
+                    };
+                    layerDem.setFilter(f);
                     document.getElementById('meters').innerHTML = '< ' + h + ' m'
                 });
 
