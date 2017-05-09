@@ -14,6 +14,7 @@
             font-weight: 100;
             font-size: large;
         }
+
     </style>
 </head>
 
@@ -48,9 +49,16 @@
                 var range = vf.range;
                 var scale = chroma.scale('OrRd').domain(range);
 
+                // Layer
+                var layer = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 2000,
+                    color: scale,
+                    velocityScale: 1 / 200
+                }).addTo(map);
+
                 /*
-                vf.setFilter(function(vector) {
-                    //return true;
+                layer.setFilter(function(vector) {
+                    // it might be needed to reduce the number of paths
                     if (vector) {
                         return vector.magnitude() > 1;
                     }
@@ -58,12 +66,6 @@
                 });
                 */
 
-                // Layer
-                var layer = L.canvasLayer.vectorFieldAnim(vf, {
-                    paths: 2000,
-                    color: scale,
-                    velocityScale: 1 / 200
-                }).addTo(map);
                 map.fitBounds(layer.getBounds());
 
                 // Simple colorbar
@@ -88,6 +90,7 @@
                 });
             });
         });
+
     </script>
 </body>
 
