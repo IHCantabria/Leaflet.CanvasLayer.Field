@@ -17,6 +17,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     initialize: function (field, options) {
         L.Util.setOptions(this, options);
+        this._visible = true;
         if (field) {
             this.setData(field);
         }
@@ -29,12 +30,28 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     show() {
-        if (this._canvas) {
+        this._visible = true;
+        this._showCanvas();
+        this._enableIdentify();
+    },
+
+    hide() {
+        this._visible = false;
+        this._hideCanvas();
+        this._disableIdentify();
+    },
+
+    isVisible() {
+        return this._visible;
+    },
+
+    _showCanvas() {
+        if (this._canvas && this._visible) {
             this._canvas.style.visibility = 'visible';
         }
     },
 
-    hide() {
+    _hideCanvas() {
         if (this._canvas) {
             this._canvas.style.visibility = 'hidden';
         }
@@ -57,8 +74,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     _hideWhenZooming() {
-        this._map.on('zoomstart', this.hide, this);
-        this._map.on('zoomend', this.show, this);
+        this._map.on('zoomstart', this._hideCanvas, this);
+        this._map.on('zoomend', this._showCanvas, this);
     },
 
     _ensureCanvasAlignment() {
@@ -69,8 +86,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     onLayerWillUnmount: function () {
         this._disableIdentify();
 
-        this._map.off('zoomstart', this.hide, this);
-        this._map.off('zoomend', this.show, this);
+        this._map.off('zoomstart', this._hideCanvas, this);
+        this._map.off('zoomend', this._showCanvas, this);
     },
 
     needRedraw() {

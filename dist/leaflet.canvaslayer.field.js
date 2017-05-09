@@ -1566,6 +1566,7 @@
 
 	    initialize: function initialize(field, options) {
 	        L.Util.setOptions(this, options);
+	        this._visible = true;
 	        if (field) {
 	            this.setData(field);
 	        }
@@ -1578,11 +1579,24 @@
 	    },
 
 	    show: function show() {
-	        if (this._canvas) {
+	        this._visible = true;
+	        this._showCanvas();
+	        this._enableIdentify();
+	    },
+	    hide: function hide() {
+	        this._visible = false;
+	        this._hideCanvas();
+	        this._disableIdentify();
+	    },
+	    isVisible: function isVisible() {
+	        return this._visible;
+	    },
+	    _showCanvas: function _showCanvas() {
+	        if (this._canvas && this._visible) {
 	            this._canvas.style.visibility = 'visible';
 	        }
 	    },
-	    hide: function hide() {
+	    _hideCanvas: function _hideCanvas() {
 	        if (this._canvas) {
 	            this._canvas.style.visibility = 'hidden';
 	        }
@@ -1602,8 +1616,8 @@
 	        this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
 	    },
 	    _hideWhenZooming: function _hideWhenZooming() {
-	        this._map.on('zoomstart', this.hide, this);
-	        this._map.on('zoomend', this.show, this);
+	        this._map.on('zoomstart', this._hideCanvas, this);
+	        this._map.on('zoomend', this._showCanvas, this);
 	    },
 	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
@@ -1614,8 +1628,8 @@
 	    onLayerWillUnmount: function onLayerWillUnmount() {
 	        this._disableIdentify();
 
-	        this._map.off('zoomstart', this.hide, this);
-	        this._map.off('zoomend', this.show, this);
+	        this._map.off('zoomstart', this._hideCanvas, this);
+	        this._map.off('zoomend', this._showCanvas, this);
 	    },
 
 	    needRedraw: function needRedraw() {
@@ -1740,6 +1754,7 @@
 
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
+	        if (!this.isVisible()) return;
 	        console.time('onDrawLayer');
 	        this._ensureColor();
 	        this._updateOpacity();
@@ -1752,6 +1767,12 @@
 	            this.setColor(this._defaultColorScale());
 	        }
 	    },
+
+	    _showCanvas: function _showCanvas() {
+	        L.CanvasLayer.Field.prototype._showCanvas.call(this);
+	        this.needRedraw();
+	    },
+
 
 	    /**
 	     * Draws the field in an ImageData and applying it with putImageData.
@@ -1865,17 +1886,19 @@
 	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
 	        this._map.off('movestart resize', this._stopAnimation, this);
 
-	        this._map.off('movestart', this.hide, this);
-	        this._map.off('moveend', this.show, this);
+	        this._map.off('movestart', this._hideCanvas, this);
+	        this._map.off('moveend', this._showCanvas, this);
 	    },
 
 	    _hideWhenMoving: function _hideWhenMoving() {
-	        this._map.on('movestart', this.hide, this);
-	        this._map.on('moveend', this.show, this);
+	        this._map.on('movestart', this._hideCanvas, this);
+	        this._map.on('moveend', this._showCanvas, this);
 	    },
 
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
+	        if (!this.isVisible()) return;
+
 	        this._updateOpacity();
 
 	        var ctx = this._getDrawingContext();
