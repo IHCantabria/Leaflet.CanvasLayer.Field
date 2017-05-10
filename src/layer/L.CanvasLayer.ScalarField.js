@@ -39,7 +39,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     _showCanvas() {
         L.CanvasLayer.Field.prototype._showCanvas.call(this);
-        this.needRedraw();
+        this.needRedraw(); // TODO check spurious redraw (e.g. hide/show without moving map)
     },
 
     /**
