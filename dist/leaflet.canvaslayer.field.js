@@ -1572,6 +1572,13 @@
 	        }
 	    },
 
+	    getEvents: function getEvents() {
+	        var events = L.CanvasLayer.prototype.getEvents.call(this);
+	        events.zoomstart = this._hideCanvas.bind(this);
+	        events.zoomend = this._showCanvas.bind(this);
+	        return events;
+	    },
+
 	    onLayerDidMount: function onLayerDidMount() {
 	        this._enableIdentify();
 	        this._ensureCanvasAlignment();
@@ -1614,15 +1621,6 @@
 	        this.options.onClick && this.off('click', this.options.onClick, this);
 	        this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
 	    },
-
-
-	    getEvents: function getEvents() {
-	        var events = L.CanvasLayer.prototype.getEvents.call(this);
-	        events.zoomstart = this._hideCanvas.bind(this);
-	        events.zoomend = this._showCanvas.bind(this);
-	        return events;
-	    },
-
 	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
@@ -1875,23 +1873,12 @@
 	    onLayerDidMount: function onLayerDidMount() {
 	        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
 	        this._map.on('movestart resize', this._stopAnimation, this);
-
-	        this._hideWhenMoving();
 	    },
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
 	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
 	        this._map.off('movestart resize', this._stopAnimation, this);
-
-	        this._map.off('movestart', this._hideCanvas, this);
-	        this._map.off('moveend', this._showCanvas, this);
 	    },
-
-	    _hideWhenMoving: function _hideWhenMoving() {
-	        this._map.on('movestart', this._hideCanvas, this);
-	        this._map.on('moveend', this._showCanvas, this);
-	    },
-
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        if (!this.isVisible()) return;
