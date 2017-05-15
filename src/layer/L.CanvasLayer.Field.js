@@ -23,6 +23,13 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         }
     },
 
+    getEvents: function () {
+        var events = L.CanvasLayer.prototype.getEvents.call(this);
+        events.zoomstart = (this._hideCanvas).bind(this);
+        events.zoomend = (this._showCanvas).bind(this);
+        return events;
+    },
+
     onLayerDidMount: function () {
         this._enableIdentify();
         this._ensureCanvasAlignment();
@@ -70,13 +77,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
         this.options.onClick && this.off('click', this.options.onClick, this);
         this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
-    },
-
-    getEvents: function () {
-        var events = L.CanvasLayer.prototype.getEvents.call(this);
-        events.zoomstart = (this._hideCanvas).bind(this);
-        events.zoomend = (this._showCanvas).bind(this);
-        return events;
     },
 
     _ensureCanvasAlignment() {
