@@ -1872,12 +1872,12 @@
 
 	    onLayerDidMount: function onLayerDidMount() {
 	        L.CanvasLayer.Field.prototype.onLayerDidMount.call(this);
-	        this._map.on('movestart resize', this._stopAnimation, this);
+	        this._map.on('move resize', this._stopAnimation, this);
 	    },
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
 	        L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
-	        this._map.off('movestart resize', this._stopAnimation, this);
+	        this._map.off('move resize', this._stopAnimation, this);
 	    },
 
 	    onDrawLayer: function onDrawLayer(viewInfo) {
