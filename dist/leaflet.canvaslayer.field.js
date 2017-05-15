@@ -1709,10 +1709,6 @@
 	        return result;
 	    },
 
-	    /**
-	     * Get clean context to draw on canvas
-	     * @returns {CanvasRenderingContext2D}
-	     */
 	    _getDrawingContext: function _getDrawingContext() {
 	        var g = this._canvas.getContext('2d');
 	        g.clearRect(0, 0, this._canvas.width, this._canvas.height);

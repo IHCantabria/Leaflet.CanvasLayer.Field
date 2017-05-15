@@ -163,10 +163,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         return result;
     },
 
-    /**
-     * Get clean context to draw on canvas
-     * @returns {CanvasRenderingContext2D}
-     */
     _getDrawingContext: function () {
         let g = this._canvas.getContext('2d');
         g.clearRect(0, 0, this._canvas.width, this._canvas.height);
