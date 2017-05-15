@@ -1574,7 +1574,6 @@
 
 	    onLayerDidMount: function onLayerDidMount() {
 	        this._enableIdentify();
-	        this._hideWhenZooming();
 	        this._ensureCanvasAlignment();
 	    },
 
@@ -1615,10 +1614,15 @@
 	        this.options.onClick && this.off('click', this.options.onClick, this);
 	        this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
 	    },
-	    _hideWhenZooming: function _hideWhenZooming() {
-	        this._map.on('zoomstart', this._hideCanvas, this);
-	        this._map.on('zoomend', this._showCanvas, this);
+
+
+	    getEvents: function getEvents() {
+	        var events = L.CanvasLayer.prototype.getEvents.call(this);
+	        events.zoomstart = this._hideCanvas.bind(this);
+	        events.zoomend = this._showCanvas.bind(this);
+	        return events;
 	    },
+
 	    _ensureCanvasAlignment: function _ensureCanvasAlignment() {
 	        var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 	        L.DomUtil.setPosition(this._canvas, topLeft);
@@ -1627,9 +1631,6 @@
 
 	    onLayerWillUnmount: function onLayerWillUnmount() {
 	        this._disableIdentify();
-
-	        this._map.off('zoomstart', this._hideCanvas, this);
-	        this._map.off('zoomend', this._showCanvas, this);
 	    },
 
 	    needRedraw: function needRedraw() {
@@ -1770,7 +1771,7 @@
 
 	    _showCanvas: function _showCanvas() {
 	        L.CanvasLayer.Field.prototype._showCanvas.call(this);
-	        this.needRedraw();
+	        this.needRedraw(); // TODO check spurious redraw (e.g. hide/show without moving map)
 	    },
 
 

@@ -25,7 +25,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     onLayerDidMount: function () {
         this._enableIdentify();
-        this._hideWhenZooming();
         this._ensureCanvasAlignment();
     },
 
@@ -73,9 +72,11 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
     },
 
-    _hideWhenZooming() {
-        this._map.on('zoomstart', this._hideCanvas, this);
-        this._map.on('zoomend', this._showCanvas, this);
+    getEvents: function () {
+        var events = L.CanvasLayer.prototype.getEvents.call(this);
+        events.zoomstart = (this._hideCanvas).bind(this);
+        events.zoomend = (this._showCanvas).bind(this);
+        return events;
     },
 
     _ensureCanvasAlignment() {
@@ -85,9 +86,6 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     onLayerWillUnmount: function () {
         this._disableIdentify();
-
-        this._map.off('zoomstart', this._hideCanvas, this);
-        this._map.off('zoomend', this._showCanvas, this);
     },
 
     needRedraw() {
