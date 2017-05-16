@@ -1880,6 +1880,11 @@
 	        this._map.off('move resize', this._stopAnimation, this);
 	    },
 
+	    _hideCanvas: function _showCanvas() {
+	        L.CanvasLayer.Field.prototype._hideCanvas.call(this);
+	        this._stopAnimation();
+	    },
+
 	    onDrawLayer: function onDrawLayer(viewInfo) {
 	        if (!this.isVisible()) return;
 
