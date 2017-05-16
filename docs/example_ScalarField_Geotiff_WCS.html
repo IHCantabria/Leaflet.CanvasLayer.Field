@@ -66,7 +66,8 @@
 
                 dtm = L.canvasLayer.scalarField(geo, {
                     color: colorScale,
-                    opacity: 0.7
+                    opacity: 0.7,
+                    inFilter: (v) => v > 0
                 }).addTo(map);
 
                 map.fitBounds(dtm.getBounds());
@@ -97,6 +98,7 @@
         function styleGradient() {
             dtm.setColor(chroma.scale(juntaColors).domain(geo.range));
         }
+
     </script>
 </body>
 
