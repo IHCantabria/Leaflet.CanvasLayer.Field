@@ -1691,7 +1691,7 @@
 	            noValue = _options$mouseMoveCur.noValue;
 
 	        var style = this._map.getContainer().style;
-	        style.cursor = v.value ? value : noValue;
+	        style.cursor = v.value !== null ? value : noValue;
 	    },
 
 	    _updateOpacity: function _updateOpacity() {
@@ -1804,7 +1804,7 @@
 	                var lat = pointCoords.lat;
 
 	                var v = this._field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
-	                if (v) {
+	                if (v !== null) {
 	                    var color = this._getColorFor(v);
 
 	                    var _color$rgba = color.rgba(),

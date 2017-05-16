@@ -77,7 +77,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
                 let lat = pointCoords.lat;
 
                 let v = this._field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
-                if (v) {
+                if (v !== null) {
                     let color = this._getColorFor(v);
                     let [R, G, B, A] = color.rgba();
                     data[pos] = R;

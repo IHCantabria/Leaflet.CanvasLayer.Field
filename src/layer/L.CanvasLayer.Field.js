@@ -147,7 +147,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
             noValue
         } = this.options.mouseMoveCursor;
         let style = this._map.getContainer().style;
-        style.cursor = (v.value) ? value : noValue;
+        style.cursor = (v.value !== null) ? value : noValue;
     },
 
     _updateOpacity: function () {
