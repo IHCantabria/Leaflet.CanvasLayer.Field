@@ -1,10 +1,10 @@
 # Leaflet.CanvasLayer.Field
 A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files (EPSG:4326). 
 
-[Leaflet.CanvasLayer.Field EXAMPLES](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)
+**[Leaflet.CanvasLayer.Field EXAMPLES](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)**
 
 It includes:
-* `L.CanvasLayer.ScalarField` - a "typical" raster layer (from scalars such as DTM, temperature...)
+* `L.CanvasLayer.ScalarField` - a "typical" raster layer (from scalars such as DTM, temperature...) that can be rendered with different color scales.
 * `L.CanvasLayer.VectorFieldAnim` - an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
 
 This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and uses [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler.
@@ -16,6 +16,10 @@ The figures below show the results for two basic layers, showing *Currents in th
 ![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
 
 ![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/VectorFieldAnim.gif)
+
+If you want to have a quick testing environment, have a look at these **two snippets at codepen.io**:
+* [ScalarField](http://codepen.io/VictorVelarde/pen/ZKJWMb/)
+* [VectorFieldAnim](http://codepen.io/VictorVelarde/pen/BRPjMV)
 
 
 ## Instructions
@@ -74,30 +78,24 @@ d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc'
 
 
 ### Developers
-`node` & `npm` are needed to build and test the plugin.
+This plugin works with Leaflet >=v1.0.0
 
-It works with Leaflet >=v1.0.0 and it has these dependencies (see package.json > dependencies):
-
-* [chroma-js](https://github.com/gka/chroma.js)
-* [geotiff](https://github.com/constantinius/geotiff.js)
-* [d3](https://github.com/d3/d3)
-* [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) (source already included)
-
-The project uses `webpack` as module bundler. 
-To launch it just:
-
+`node` & `npm` are needed to build and test the plugin, and it uses `webpack 1.x` as module bundler. 
+* To bundle it just:
 ```shell
 npm install
 npm run watch
 ```
+* And then navigate to docs/index.html for some examples.
+
 
 ## License
 Licensed under the GNU General Public License v3.0
 
 This software currently includes a copy of:
-* gLayers.Leaflet [https://github.com/Sumbera/gLayers.Leaflet] - MIT License
+* [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) - MIT License
 
 At runtime it requires:
-* chroma.js [https://github.com/gka/chroma.js] - BSD License
-* geotiff.js [https://github.com/constantinius/geotiff.js] - MIT License
-* d3js [https://github.com/d3/d3] - BSD License
+* [chroma.js](https://github.com/gka/chroma.js) - BSD License
+* [geotiff.js](https://github.com/constantinius/geotiff.js) - MIT License
+* [d3js](https://github.com/d3/d3) - BSD License
