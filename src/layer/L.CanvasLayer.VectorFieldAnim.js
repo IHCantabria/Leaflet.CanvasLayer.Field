@@ -55,6 +55,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
          * their properties (age / position source > target)
          */
         function _moveParticles() {
+            // let screenFactor = 1 / self._map.getZoom(); // consider using a 'screenFactor' to ponderate velocityScale
             paths.forEach(function (par) {
                 if (par.age > self.options.maxAge) {
                     // restart, on a random x,y
@@ -67,8 +68,8 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
                     par.age = self.options.maxAge;
                 } else {
                     // the next point will be...
-                    let xt = par.x + (vector.u * self.options.velocityScale);
-                    let yt = par.y + (vector.v * self.options.velocityScale);
+                    let xt = par.x + vector.u * self.options.velocityScale; //* screenFactor;
+                    let yt = par.y + vector.v * self.options.velocityScale; //* screenFactor;
 
                     if (self._field.hasValueAt(xt, yt)) {
                         par.xt = xt;
