@@ -19,7 +19,7 @@ The figures below show the results for two basic layers, showing *Currents in th
 
 If you want to have a quick testing environment, have a look at these **two snippets at codepen.io**:
 * [ScalarField](http://codepen.io/VictorVelarde/pen/ZKJWMb/)
-* [VectorFieldAnim](http://codepen.io/VictorVelarde/pen/BRPjMV)
+* [VectorFieldAnim](http://codepen.io/VictorVelarde/pen/QvBeYV)
 
 
 ## Instructions
