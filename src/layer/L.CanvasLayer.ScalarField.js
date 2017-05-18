@@ -95,7 +95,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      */
     _getColorFor(v) {
         let c = this.options.color; // e.g. for a constant 'red'
-        if (typeof c == 'function') {
+        if (typeof c === 'function') {
             c = this.options.color(v);
         }
         let color = chroma(c); // to be more flexible, a chroma color object is always created || TODO improve efficiency

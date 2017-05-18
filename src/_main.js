@@ -1,5 +1,3 @@
-/* eslint global-require: "error" */
-
 // base
 import Vector from './Vector.js';
 window.L.Vector = Vector;

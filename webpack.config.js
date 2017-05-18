@@ -10,20 +10,31 @@ const config = {
         filename: 'leaflet.canvaslayer.field.js'
     },
     module: {
-        rules: [{
-            test: /\.js$/,
-            include: path.resolve(__dirname, 'src'),
-            use: [{
-                loader: 'babel-loader',
-                options: {
-                    presets: [
+        rules: [
+            /*{
+                test: /\.js$/,
+                include: path.resolve(__dirname, 'src'),
+                exclude: '/node_modules/',
+                use: [{
+                    loader: 'eslint-loader'
+                }]
+            },*/
+            {
+                test: /\.js$/,
+                include: path.resolve(__dirname, 'src'),
+                exclude: '/node_modules/',
+                use: [{
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
                         ['es2015', {
-                            modules: false
+                                modules: false
                         }]
                     ]
-                }
-            }]
-        }]
+                    }
+                }]
+            }
+        ]
     }
 }
 
