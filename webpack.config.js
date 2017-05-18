@@ -1,24 +1,30 @@
-module.exports = {
-    entry: './src/_main.js',
+// webpack.config.js
+const webpack = require('webpack')
+const path = require('path')
+
+const config = {
+    context: path.resolve(__dirname, 'src'),
+    entry: './_main.js',
     output: {
-        path: './dist',
+        path: path.resolve(__dirname, 'dist'),
         filename: 'leaflet.canvaslayer.field.js'
     },
     module: {
-        preLoaders: [
-            {
-                test: /\.js$/,
-                loader: "eslint-loader",
-                exclude: /node_modules/
-            }
-        ],
-        loaders: [{
+        rules: [{
             test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader'
-         }]
-    },
-    rules: {
-        "no-unused-vars": "warn"
+            include: path.resolve(__dirname, 'src'),
+            use: [{
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        ['es2015', {
+                            modules: false
+                        }]
+                    ]
+                }
+            }]
+        }]
     }
-};
+}
+
+module.exports = config
