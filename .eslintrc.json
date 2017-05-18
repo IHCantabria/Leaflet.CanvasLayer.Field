@@ -1,0 +1,40 @@
+{
+    "extends": "eslint:recommended",
+    "plugins": [
+        "import"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-unused-vars": "warn",
+        "no-console": "warn"
+    },
+    "globals": {
+        "require": true,
+        "window": true,
+        "document": true,
+        "console": true,
+        "L": true,
+        "d3": true,
+        "chroma": true,
+        "GeoTIFF": true
+    }
+}
