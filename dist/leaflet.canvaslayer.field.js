@@ -1905,6 +1905,7 @@
 	         * their properties (age / position source > target)
 	         */
 	        function _moveParticles() {
+	            // let screenFactor = 1 / self._map.getZoom(); // consider using a 'screenFactor' to ponderate velocityScale
 	            paths.forEach(function (par) {
 	                if (par.age > self.options.maxAge) {
 	                    // restart, on a random x,y
@@ -1917,8 +1918,8 @@
 	                    par.age = self.options.maxAge;
 	                } else {
 	                    // the next point will be...
-	                    var xt = par.x + vector.u * self.options.velocityScale;
-	                    var yt = par.y + vector.v * self.options.velocityScale;
+	                    var xt = par.x + vector.u * self.options.velocityScale; //* screenFactor;
+	                    var yt = par.y + vector.v * self.options.velocityScale; //* screenFactor;
 
 	                    if (self._field.hasValueAt(xt, yt)) {
 	                        par.xt = xt;

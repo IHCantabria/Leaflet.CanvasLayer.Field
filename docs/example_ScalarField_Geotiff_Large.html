@@ -41,7 +41,8 @@
                 let ndvi = L.ScalarField.fromGeoTIFF(tiffData.response);
 
                 let layer = L.canvasLayer.scalarField(ndvi, {
-                    color: chroma.scale('YlGn').domain(ndvi.range)
+                    color: chroma.scale('YlGn').domain(ndvi.range),
+                    inFilter: (v) => v !== 0
                 }).addTo(map);
 
                 layer.on('click', function(e) {
