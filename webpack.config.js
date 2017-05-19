@@ -11,19 +11,19 @@ const config = {
     },
     module: {
         rules: [
-            /*{
-                test: /\.js$/,
+            {
+                enforce: 'pre',
+				test: /\.js$/,
                 include: path.resolve(__dirname, 'src'),
                 exclude: '/node_modules/',
-                use: [{
-                    loader: 'eslint-loader'
-                }]
-            },*/
+				loader: "eslint-loader"
+            },
             {
                 test: /\.js$/,
                 include: path.resolve(__dirname, 'src'),
                 exclude: '/node_modules/',
-                use: [{
+                use: [
+				{
                     loader: 'babel-loader',
                     options: {
                         presets: [

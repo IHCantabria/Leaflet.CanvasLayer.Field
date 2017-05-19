@@ -79,12 +79,11 @@ d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc'
 
 ### Developers
 This plugin works with Leaflet >=v1.0.0
-
-`node` & `npm` are needed to build and test the plugin, and it uses `webpack 1.x` as module bundler. 
-* To bundle it just:
+`node` & `npm` are needed to build and test the plugin, and it uses `webpack 2` as module bundler. 
+* To use it just:
 ```shell
 npm install
-npm run watch
+npm run start
 ```
 * And then navigate to docs/index.html for some examples.
 
