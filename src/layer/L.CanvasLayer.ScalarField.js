@@ -24,11 +24,11 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     onDrawLayer: function (viewInfo) {
         if (!this.isVisible()) return;
-        console.time('onDrawLayer');
+        //console.time('onDrawLayer');
         this._ensureColor();
         this._updateOpacity();
         this._drawImage();
-        console.timeEnd('onDrawLayer');
+        //console.timeEnd('onDrawLayer');
     },
 
     _ensureColor: function () {

@@ -109,6 +109,28 @@ export default class Field {
         return !this.contains(lon, lat);
     }
 
+    //    /**
+    //     * Modify the current Field applying an interpolation
+    //     */
+    //    interpolate() {
+    //        var newField = this._cloneGrid(this.grid);
+    //        for (let j = 0; j < this.nRows; j++) {
+    //            for (let i = 0; i < this.nCols; i++) {
+    //                let interpolated = this.interpolatedValueAtIndexes(i, j);
+    //                newField[j, i] = interpolated;
+    //            }
+    //        }
+    //        this.grid = newField;
+    //    }
+    //
+    //    _cloneGrid(grid) {
+    //        var newArray = [];
+    //        for (var i = 0; i < grid.length; i++) {
+    //            newArray[i] = grid[i].slice();
+    //        }
+    //        return newArray;
+    //    }
+
     /**
      * Interpolated value at lon-lat coordinates (bilinear method)
      * @param   {Number} longitude
@@ -120,6 +142,19 @@ export default class Field {
     interpolatedValueAt(lon, lat) {
         if (this.notContains(lon, lat)) return null;
 
+        let [i, j] = this._getDecimalIndexes(lon, lat);
+        return this.interpolatedValueAtIndexes(i, j);
+    }
+
+    /**
+     * Interpolated value at i-j indexes (bilinear method)
+     * @param   {Number} i
+     * @param   {Number} j
+     * @returns {Vector|Number} [u, v, magnitude]
+     *
+     * Source: https://github.com/cambecc/earth > product.js
+     */
+    interpolatedValueAtIndexes(i, j) {
         //         1      2           After converting λ and φ to fractional grid indexes i and j, we find the
         //        fi  i   ci          four points 'G' that enclose point (i, j). These points are at the four
         //         | =1.4 |           corners specified by the floor and ceiling of i and j. For example, given
@@ -129,7 +164,6 @@ export default class Field {
         //      ---G------G--- cj 9   Note that for wrapped grids, the first column is duplicated as the last
         //         |      |           column, so the index ci can be used without taking a modulo.
 
-        let [i, j] = this._getDecimalIndexes(lon, lat);
         let indexes = this._getFourSurroundingIndexes(i, j);
         let [fi, ci, fj, cj] = indexes;
         let values = this._getFourSurroundingValues(fi, ci, fj, cj);
@@ -137,7 +171,6 @@ export default class Field {
             let [g00, g10, g01, g11] = values;
             return this._doInterpolation(i - fi, j - fj, g00, g10, g01, g11);
         }
-        // console.log('cannot interpolate: ' + λ + ',' + φ + ': ' + fi + ' ' + ci + ' ' + fj + ' ' + cj);
         return null;
     }
 
@@ -249,26 +282,6 @@ export default class Field {
     }
 
     /**
-     * Gives a random position to 'o' inside the grid, trying to have
-     * a value in that position (several retries)
-     * @param {Object} [o] - an object (eg. a particle)
-     * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
-     */
-    randomPositionNEW(o = {}) {
-        let i, j;
-        let safetyNet = 0;
-        do {
-            let i = Math.random() * this.nCols | 0;
-            let j = Math.random() * this.nRows | 0;
-
-            o.x = this._longitudeAtX(i);
-            o.y = this._latitudeAtY(j);
-        } while (this.notHasValueAt(o.x, o.y) && safetyNet++ < 30);
-
-        return o;
-    }
-
-    /**
      * Gives a random position to 'o' inside the grid
      * @param {Object} [o] - an object (eg. a particle)
      * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
@@ -330,11 +343,8 @@ export default class Field {
      * Apply the interpolation
      * @abstract
      * @private
-     * @param {Number} lon - longitude
-     * @param {Number} lat - latitude
-     * @returns {Vector|Number}
      */
-    _doInterpolation(lon, lat) {
+    _doInterpolation(x, y, g00, g10, g01, g11) {
         throw new TypeError('Must be overriden');
     }
 
