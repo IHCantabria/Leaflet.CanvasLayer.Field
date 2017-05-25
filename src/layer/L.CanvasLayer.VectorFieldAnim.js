@@ -28,6 +28,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     onLayerWillUnmount: function () {
         L.CanvasLayer.Field.prototype.onLayerWillUnmount.call(this);
         this._map.off('move resize', this._stopAnimation, this);
+        this._stopAnimation();
     },
 
     _hideCanvas: function _showCanvas() {
@@ -36,7 +37,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        if (!this.isVisible()) return;
+        if (!this.field || !this.isVisible()) return;
 
         this._updateOpacity();
 

@@ -1,6 +1,6 @@
 {
   "name": "leaflet-canvaslayer-field",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A set of layers using canvas to draw ASCIIGrid or GeoTIFF files. This includes a basic raster layer (*ScalaField*) and an animated layer for vector fields, such as wind or currents (*VectorFieldAnim*)",
   "main": "index.js",
   "directories": {
@@ -25,8 +25,8 @@
     "webpack": "^2.5.1"
   },
   "scripts": {
-    "start": "webpack --watch",
-    "build": "webpack -p"
+    "start": "node_modules/.bin/webpack --watch",
+    "build": "node_modules/.bin/webpack -p"
   },
   "repository": {
     "type": "git",
