@@ -47,7 +47,10 @@
                     color: chroma.scale(
                         ['#1F263A', '#414AA9', '#44758C', '#399B58', 'DCD296', 'F2E899', 'A53E3C', '9C3333'], [.1, .2, .3, .4, .7, .9, 1.5, 2]
                     ),
-                    opacity: 0.65
+                    opacity: 0.65,
+                    inFilter: function(v) {
+                        return v > 0;
+                    }
                 }).addTo(map);
 
                 const animation = L.canvasLayer.vectorFieldAnim(vf, {
