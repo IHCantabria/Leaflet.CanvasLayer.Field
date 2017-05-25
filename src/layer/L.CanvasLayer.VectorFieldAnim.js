@@ -37,7 +37,7 @@ L.CanvasLayer.VectorFieldAnim = L.CanvasLayer.Field.extend({
     },
 
     onDrawLayer: function (viewInfo) {
-        if (!this.field || !this.isVisible()) return;
+        if (!this._field || !this.isVisible()) return;
 
         this._updateOpacity();
 
