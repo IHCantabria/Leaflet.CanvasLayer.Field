@@ -24,7 +24,7 @@ export default class ScalarField extends Field {
             yllCorner: parseFloat(lines[3].match(n)),
             cellSize: parseFloat(lines[4].match(n))
         };
-        let NODATA_value = lines[5].replace('NODATA_value', '').trim();
+        let noDataValue = lines[5].replace('NODATA_value', '').trim();
 
         // Data (left-right and top-down)
         let zs = []; // TODO Consider using TypedArray (& manage NO_DATA)
@@ -34,7 +34,7 @@ export default class ScalarField extends Field {
 
             let items = line.split(' ');
             let values = items.map(it => {
-                return (it !== NODATA_value) ? parseFloat(it * scaleFactor) : null;
+                return (it !== noDataValue) ? parseFloat(it * scaleFactor) : null;
             });
             zs.push(...values);
         }

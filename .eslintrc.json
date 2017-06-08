@@ -25,7 +25,9 @@
             "always"
         ],
         "no-unused-vars": "warn",
-        "no-console": "warn"
+        "no-console": "warn",
+        "camelcase": "warn",
+        "max-len": [ "warn", 132 ]
     },
     "globals": {
         "require": true,
