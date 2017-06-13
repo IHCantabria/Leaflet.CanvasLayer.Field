@@ -4,3 +4,6 @@
 #v1.0.1
 - VectorFieldAnim: stop animation on remove and field check before drawing, to avoid errors when adding/removing several layers
 - local webpack in npm run commands
+
+#nextVersion vx.x.x
+- automatic copy of `dist` to `docs/dist` (to be used by examples)

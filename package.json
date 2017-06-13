@@ -3,9 +3,6 @@
   "version": "1.0.1",
   "description": "A set of layers using canvas to draw ASCIIGrid or GeoTIFF files. This includes a basic raster layer (*ScalaField*) and an animated layer for vector fields, such as wind or currents (*VectorFieldAnim*)",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "dependencies": {
     "npm": "^3.10.7",
     "leaflet": "1.0.3",
@@ -22,7 +19,9 @@
     "eslint-loader": "^1.7.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-webpack": "^3.12.2",
-    "webpack": "^2.5.1"
+    "fs-extra": "^3.0.1",
+    "webpack": "^2.5.1",
+    "webpack-shell-plugin": "^0.5.0"
   },
   "scripts": {
     "start": "node_modules/.bin/webpack --watch",

@@ -1,6 +1,7 @@
 // webpack.config.js
 const webpack = require('webpack')
 const path = require('path')
+const WebpackShellPlugin = require('webpack-shell-plugin')
 
 const config = {
     context: path.resolve(__dirname, 'src'),
@@ -13,29 +14,35 @@ const config = {
         rules: [
             {
                 enforce: 'pre',
-				test: /\.js$/,
+                test: /\.js$/,
                 include: path.resolve(__dirname, 'src'),
                 exclude: '/node_modules/',
-				loader: "eslint-loader"
+                loader: "eslint-loader"
             },
             {
                 test: /\.js$/,
                 include: path.resolve(__dirname, 'src'),
                 exclude: '/node_modules/',
                 use: [
-				{
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
                         ['es2015', {
-                                modules: false
+                                    modules: false
                         }]
                     ]
-                    }
+                        }
                 }]
             }
         ]
-    }
+    },
+    plugins: [
+    new WebpackShellPlugin({
+            onBuildStart: ['echo "Webpack Start"'],
+            onBuildEnd: ['node copy-to-examples.js']
+        })
+  ]
 }
 
 module.exports = config
