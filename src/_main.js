@@ -24,5 +24,5 @@ require('./layer/L.CanvasLayer.VectorFieldAnim.js');
 // control
 require('./control/L.Control.ColorBar.js');
 
-console.log('leaflet.canvaslayer.field vx.x.x in progress...');
+console.log('leaflet.canvaslayer.field v1.0.2');
 
