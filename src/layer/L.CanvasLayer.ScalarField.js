@@ -5,7 +5,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
     options: {
         color: null, // function colorFor(value) [e.g. chromajs.scale],
-        interpolate: false // TODO - Interpolation doesn't work yet (check some 'artifacts')
+        interpolate: false // Change to use interpolation
     },
 
     initialize: function (scalarField, options) {

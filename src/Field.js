@@ -200,8 +200,8 @@ export default class Field {
      */
     _getFourSurroundingIndexes(i, j) {
         let fi = this._clampColumnIndex(Math.floor(i));
-        let ci = this._clampRowIndex(fi + 1);
-        let fj = this._clampColumnIndex(Math.floor(j));
+        let ci = this._clampColumnIndex(fi + 1);
+        let fj = this._clampRowIndex(Math.floor(j));
         let cj = this._clampRowIndex(fj + 1);
         //console.log(fi, ci, fj, cj);
         return [fi, ci, fj, cj];
