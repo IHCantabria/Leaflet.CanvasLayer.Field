@@ -7,4 +7,4 @@
 
 #v1.0.2
 - `interpolate` option is available for `L.CanvasLayer.ScalarField` (thanks to @claustres), see *./docs/example_ScalarField_Interpolation.html*
-- automatic copy of `dist` to `docs/dist` (to be used by examples)
+- automatic copy of `dist` to `docs/dist` when building project with webpack (to be used by examples)
