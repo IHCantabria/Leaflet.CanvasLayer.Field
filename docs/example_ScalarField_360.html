@@ -35,13 +35,15 @@
         /* An ASCIIGrid Raster */
         d3.text('data/u_noaa.asc', function(asc) {
             let s = L.ScalarField.fromASCIIGrid(asc);
-            let layer = L.canvasLayer.scalarField(s).addTo(map);
+            let c = chroma.scale('OrRd').domain(s.range);
+            let layer = L.canvasLayer.scalarField(s, {color: c}).addTo(map);
+            layer.setOpacity(0.8);
             map.fitBounds(layer.getBounds());
 
             layer.on('click', function(e) {
                 if (e.value !== null) {
                     let v = e.value.toFixed(3);
-                    let html = `<span class="popupText">Surface currents velocity ${v} m/s</span>`;
+                    let html = `<span class="popupText">NOAA wind_u component ${v} m/s</span>`;
                     let popup = L.popup().setLatLng(e.latlng).setContent(html).openOn(map);
                 }
             });

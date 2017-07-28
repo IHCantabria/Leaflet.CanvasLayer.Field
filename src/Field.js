@@ -23,8 +23,9 @@ export default class Field {
         this.cellSize = params['cellSize'];
 
         this.grid = null; // to be defined by subclasses
-
+        this.longitudeNeedsToBeWrapped = this.xurCorner > 180;  // [0, 360] --> [-180, 180]
         this._inFilter = null;
+
     }
 
     /**
@@ -83,7 +84,22 @@ export default class Field {
      * @returns {Number[]} [xmin, ymin, xmax, ymax]
      */
     extent() {
-        return [this.xllCorner, this.yllCorner, this.xurCorner, this.yurCorner];
+        let [xmin, xmax] = this._getWrappedLongitudes();
+        return [xmin, this.yllCorner, xmax, this.yurCorner];
+    }
+
+    /**
+     * [xmin, xmax] in [-180, 180] range
+     */
+    _getWrappedLongitudes() {
+        let xmin = this.xllCorner;
+        let xmax = this.xurCorner;
+
+        if (this.longitudeNeedsToBeWrapped) {
+            xmax = 180.0;
+            xmin = -180;
+        }
+        return [xmin, xmax];
     }
 
     /**
@@ -93,8 +109,9 @@ export default class Field {
      * @returns {Boolean}
      */
     contains(lon, lat) {
-        return (lon >= this.xllCorner &&
-            lon <= this.xurCorner &&
+        let [xmin, xmax] = this._getWrappedLongitudes();
+        return (lon >= xmin &&
+            lon <= xmax &&
             lat >= this.yllCorner &&
             lat <= this.yurCorner);
     }
@@ -182,6 +199,11 @@ export default class Field {
      * @returns {Array}    [[Description]]
      */
     _getDecimalIndexes(lon, lat) {
+        if (this.longitudeNeedsToBeWrapped) {
+            if (lon < 0) {
+                lon = lon + 360;
+            }
+        }
         let ii = (lon - this.xllCorner) / this.cellSize;
         let i = this._clampColumnIndex(ii);
 
@@ -326,7 +348,11 @@ export default class Field {
      */
     _longitudeAtX(i) {
         let halfPixel = this.cellSize / 2.0;
-        return this.xllCorner + halfPixel + (i * this.cellSize);
+        let lon = this.xllCorner + halfPixel + (i * this.cellSize);
+        if (this.longitudeNeedsToBeWrapped) {
+            lon = (lon > 180) ? lon - 360 : lon;
+        }
+        return lon;
     }
 
     /**

@@ -83,4 +83,52 @@ describe('Field', function () {
         let lat = 43.47082043045964;
         expect(f.hasValueAt(lon, lat)).toBe(false);
     });
+
+    describe('Field [0-360º]', function () {
+        let dataFolder = '../../docs/data';
+
+        beforeEach(function (fileLoaded2) {
+            d3.text(`${dataFolder}/u_noaa.asc`, function (asc) {
+                f360 = ScalarField.fromASCIIGrid(asc);
+                fileLoaded2();
+            });
+        });
+
+        it('supports 0-360 longitudes', function () {
+            expect(f360.longitudeNeedsToBeWrapped).toBe(true);
+        });
+
+        it('returns wrapped extent', function () {
+            // const original = [ -0.25, -90.25, 359.75, 90.25 ];
+            const expected = [-180, -90.25, 180, 90.25];
+            expect(f360.extent()).toEqual(expected);
+        });
+
+        it('contains points in [-180, 180] range', function () {
+            expect(f360.contains(-180, 0)).toBe(true);
+            expect(f360.contains(0, 0)).toBe(true);
+            expect(f360.contains(180, 0)).toBe(true);
+
+            expect(f360.contains(181, 0)).toBe(false);
+            expect(f360.contains(359, 0)).toBe(false);
+        });
+
+        it('uses a wrapped longitude & latitude for each cell', function () {
+            // longitudes
+            let xminCenter = f360._longitudeAtX(0);
+            expect(xminCenter).toBe(0);
+
+            let xmaxCenter = f360._longitudeAtX(719);
+            expect(xmaxCenter).toBeCloseTo(-0.5, 6);
+
+            // //
+            let first = f360._lonLatAtIndexes(0, 0);
+            expect(first[0]).toBe(0);
+            expect(first[1]).toBe(90);
+
+            let last = f360._lonLatAtIndexes(719, 360);
+            expect(last[0]).toBe(-0.5);
+            expect(last[1]).toBe(-90.0);
+        });
+    });
 });
