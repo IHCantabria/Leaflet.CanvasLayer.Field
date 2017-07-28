@@ -22,10 +22,12 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
         // -- custom cleanup
     },
 
+    /* eslint-disable no-unused-vars */
     setData: function (data) {
         // -- custom data set
         this.needRedraw(); // -- call to drawLayer
     },
+    /* eslint-enable no-unused-vars */
 
     onDrawLayer: function (viewInfo) {
         // canvas preparation

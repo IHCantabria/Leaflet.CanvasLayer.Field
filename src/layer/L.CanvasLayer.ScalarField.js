@@ -22,6 +22,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         this.needRedraw();
     },
 
+    /* eslint-disable no-unused-vars */
     onDrawLayer: function (viewInfo) {
         if (!this.isVisible()) return;
         //console.time('onDrawLayer');
@@ -30,6 +31,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         this._drawImage();
         //console.timeEnd('onDrawLayer');
     },
+    /* eslint-enable no-unused-vars */
 
     _ensureColor: function () {
         if (this.options.color === null) {

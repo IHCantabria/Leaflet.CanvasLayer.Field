@@ -94,9 +94,11 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         }
     },
 
+    /* eslint-disable no-unused-vars */
     onDrawLayer: function (viewInfo) {
         throw new TypeError('Must be overriden');
     },
+    /* eslint-enable no-unused-vars */
 
     setData: function (field) {
         this.options.inFilter && field.setFilter(this.options.inFilter);
@@ -122,6 +124,9 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
 
     getBounds: function () {
         let bb = this._field.extent();
+        /*let (xmin, ymin, xmax, ymax) = bb;    
+        let a, b = */
+
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
         let bounds = L.latLngBounds(southWest, northEast);

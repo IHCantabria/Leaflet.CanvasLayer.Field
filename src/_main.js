@@ -14,7 +14,12 @@ window.L.ScalarField = ScalarField;
 import VectorField from './VectorField.js';
 window.L.VectorField = VectorField;
 
+
+
+// require('./L.ColorScale.js');
+
 // layer
+
 require('./layer/L.CanvasLayer.js');
 require('./layer/L.CanvasLayer.SimpleLonLat.js');
 require('./layer/L.CanvasLayer.Field.js');
@@ -24,5 +29,6 @@ require('./layer/L.CanvasLayer.VectorFieldAnim.js');
 // control
 require('./control/L.Control.ColorBar.js');
 
-console.log('leaflet.canvaslayer.field v1.0.2');
-
+/* eslint-disable no-console */
+console.log('leaflet.canvaslayer.field v1.1.0 in progress...');
+/* eslint-enable no-console */

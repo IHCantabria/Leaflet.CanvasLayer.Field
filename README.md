@@ -30,9 +30,9 @@ If you want to have a quick testing environment, have a look at these **two snip
 2. Include the JavaScript dependencies in your page:
 ```html
     <!-- CDN references -->
-    <script src="//npmcdn.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/leaflet@1.1.0/dist/leaflet.js"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.0/chroma.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.4/chroma.min.js"></script>
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="//npmcdn.com/geotiff@0.3.6/dist/geotiff.js"></script> <!-- optional -->
 

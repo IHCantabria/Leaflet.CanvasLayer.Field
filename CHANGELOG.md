@@ -8,3 +8,8 @@
 #v1.0.2
 - `interpolate` option is available for `L.CanvasLayer.ScalarField` (thanks to @claustres), see *./docs/example_ScalarField_Interpolation.html*
 - automatic copy of `dist` to `docs/dist` when building project with webpack (to be used by examples)
+
+#v1.1 in progress...
+- Tested to work on Leaflet 1.1.0
+- No linter warnings when building with `webpack`
+- chromajs updated to 1.3.4

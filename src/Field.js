@@ -344,9 +344,11 @@ export default class Field {
      * @abstract
      * @private
      */
+    /* eslint-disable no-unused-vars */
     _doInterpolation(x, y, g00, g10, g01, g11) {
         throw new TypeError('Must be overriden');
     }
+    /* eslint-disable no-unused-vars */
 
     /**
      * Check the column index is inside the field,

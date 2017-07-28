@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ColorScale</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.1.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="examples.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+</head>
+
+<body>
+    <h1 class="title mapTitle">ColorScales</h1>
+    <div id="scales"></div>
+
+    <!-- CDN -->
+    <script src="//npmcdn.com/leaflet@1.1.0/dist/leaflet.js"></script>
+
+    <!-- Plugin -->
+    <script src="dist/leaflet.canvaslayer.field.js"></script>
+
+    <script>
+        function show(def) {
+            var cs = L.colorScale(def, {height: 50});
+            var div = document.getElementById('scales');
+            div.appendChild(cs.canvas);
+            div.appendChild(document.createElement('br'));
+            console.log(cs.colorFor(0), cs.colorFor(1));
+        }
+
+        // Just Black
+        show({
+            positions: [0, 1],
+            colors: ['#000000', '#000000']
+        });
+
+        // Black-White
+        show({
+            positions: [0, 1],
+            colors: ['#000000', '#ffffff']
+        });
+
+        // Blue-White-Red
+        show({
+            positions: [0, 0.25, 0.5, 0.75, 1],
+            colors: ['#0571b0', '#92c5de', '#f7f7f7', '#f4a582', '#ca0020']
+        });
+
+        // Blue-Red
+        show({
+            positions: [0, 1],
+            colors: ['#0571b0', '#ca0020']
+        });
+
+        // Blue&Red
+        show({
+            positions: [0, 0.5, 0.5, 1],
+            colors: ['#0571b0', '#0571b0', '#ca0020', '#ca0020']
+        });
+
+        // ColorBrewer - YlGnBu
+        show({
+            positions: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1],
+            /* 1.0 / (numColors - 1) */
+            colors: ['#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58']
+        });
+
+        // Cyan - Red
+        show({
+            positions: [0, 1],
+            /* 1.0 / (numColors - 1) */
+            colors: ['#00FFFF', '#FF0000']
+        });
+
+    </script>
+</body>
+
+</html>
