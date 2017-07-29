@@ -9,7 +9,8 @@ L.Control.ColorBar = L.Control.extend({
         position: 'bottomleft',
         width: 300,
         height: 15,
-        background: 'transparent',
+        background: '#fff',
+        textColor: 'black',
         steps: 100,
         decimals: 2,
         units: 'uds', // ej: m/s
@@ -36,10 +37,13 @@ L.Control.ColorBar = L.Control.extend({
 
     title: function () {
         let d = document.createElement('div');
-        d3.select(d).append('div')
-            .append('span')
+        d3.select(d).append('span')
+            .style('color', this.options.textColor)
+            .style('padding-left', '10px')
+            .style('padding-top', '5px')
+            .style('display', 'block')
             .attr('class', 'leaflet-control-colorBar-title')
-            .text(this.options.title);
+            .text(this.options.title);           
         return d.innerHTML;
     },
 
@@ -71,6 +75,7 @@ L.Control.ColorBar = L.Control.extend({
             .attr('y', () => 0)
             .attr('height', () => this.options.height /*w * 4*/ )
             .attr('width', () => w)
+            .attr('stroke-opacity', () => 0)                        
             .attr('fill', (d) => d.color);
 
         buckets.append('title').text(
