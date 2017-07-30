@@ -8,8 +8,8 @@ L.Control.ColorBar = L.Control.extend({
     options: {
         position: 'bottomleft',
         width: 300, // for colorbar itself (control is wider)
-        margin: 15,
         height: 15,
+        margin: 15,
         background: '#fff',
         textColor: 'black',
         steps: 100,
@@ -17,7 +17,8 @@ L.Control.ColorBar = L.Control.extend({
         units: 'uds', // ej: m/s
         title: 'Legend', // ej: Ocean Currents
         labels: [], // empty for no labels
-        labelFontSize: 10
+        labelFontSize: 10,
+        labelTextPosition: 'middle' // start | middle | end
     },
 
     initialize: function(color, range, options) {
@@ -118,10 +119,10 @@ L.Control.ColorBar = L.Control.extend({
             .append('text');
         labels
             .attr('x', d => d.position + this.options.margin)
-            .attr('y', () => this.options.height + this.options.margin)
-            .attr('font-size', () => `${this.options.labelFontSize}px`)
-            .attr('text-anchor', 'middle')
-            .attr('fill', () => this.options.textColor)
+            .attr('y', this.options.height + this.options.margin)
+            .attr('font-size', `${this.options.labelFontSize}px`)
+            .attr('text-anchor', this.options.labelTextPosition)
+            .attr('fill', this.options.textColor)
             .attr('class', 'leaflet-control-colorBar-label')
             .text(d => `${d.value.toFixed(this.options.decimals)}`);
     },
