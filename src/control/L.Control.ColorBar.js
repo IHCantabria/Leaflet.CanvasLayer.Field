@@ -75,8 +75,10 @@ L.Control.ColorBar = L.Control.extend({
             .attr('y', () => 0)
             .attr('height', () => this.options.height /*w * 4*/ )
             .attr('width', () => w)
-            .attr('stroke-opacity', () => 0)                        
-            .attr('fill', (d) => d.color);
+            .attr('stroke-width', 2)
+            .attr('stroke-linecap', 'butt')
+            .attr('stroke', (d) => d.color.hex())                    
+            .attr('fill', (d) => d.color.hex());
 
         buckets.append('title').text(
             (d) => `${d.value.toFixed(this.options.decimals)} ${this.options.units}`
