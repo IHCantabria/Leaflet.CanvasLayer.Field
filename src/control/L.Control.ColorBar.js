@@ -7,7 +7,7 @@
 L.Control.ColorBar = L.Control.extend({
     options: {
         position: 'bottomleft',
-        width: 300,
+        width: 300, // for colorbar itself (control is wider)
         margin: 15,
         height: 15,
         background: '#fff',
@@ -16,7 +16,7 @@ L.Control.ColorBar = L.Control.extend({
         decimals: 2,
         units: 'uds', // ej: m/s
         title: 'Legend', // ej: Ocean Currents
-        labels: [],
+        labels: [], // empty for no labels
         labelFontSize: 10
     },
 

@@ -16,6 +16,6 @@
     - No linter warnings when building with `webpack`
     - chromajs updated to 1.3.4
 
-#v1.2.0 in progress..
+#v1.2.0
 - Optional labels in `colorBar` control (see `example_VectorFieldAnim_ColorBar.html`)
 - Better colorBar styles and more options
