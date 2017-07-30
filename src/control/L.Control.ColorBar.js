@@ -8,6 +8,7 @@ L.Control.ColorBar = L.Control.extend({
     options: {
         position: 'bottomleft',
         width: 300,
+        margin: 15,
         height: 15,
         background: '#fff',
         textColor: 'black',
@@ -15,17 +16,24 @@ L.Control.ColorBar = L.Control.extend({
         decimals: 2,
         units: 'uds', // ej: m/s
         title: 'Legend', // ej: Ocean Currents
+        labels: [],
+        labelFontSize: 10
     },
 
-    initialize: function (color, range, options) {
+    initialize: function(color, range, options) {
         this.color = color; // 'chromajs' scale function
         this.range = range; // [min, max]
         L.Util.setOptions(this, options);
     },
 
-    onAdd: function (map) {
+    onAdd: function(map) {
         this._map = map;
-        let div = L.DomUtil.create('div', 'leaflet-control-colorBar leaflet-bar leaflet-control');
+        let div = L.DomUtil.create(
+            'div',
+            'leaflet-control-colorBar leaflet-bar leaflet-control'
+        );
+        div.style.padding = '10px';
+
         L.DomEvent
             .addListener(div, 'click', L.DomEvent.stopPropagation)
             .addListener(div, 'click', L.DomEvent.preventDefault);
@@ -35,58 +43,118 @@ L.Control.ColorBar = L.Control.extend({
         return div;
     },
 
-    title: function () {
+    title: function() {
         let d = document.createElement('div');
-        d3.select(d).append('span')
+        d3
+            .select(d)
+            .append('span')
             .style('color', this.options.textColor)
-            .style('padding-left', '10px')
-            .style('padding-top', '5px')
             .style('display', 'block')
+            .style('margin-bottom', '5px')
             .attr('class', 'leaflet-control-colorBar-title')
-            .text(this.options.title);           
+            .text(this.options.title);
         return d.innerHTML;
     },
 
-    palette: function () {
-        // data preparation
-        let min = this.range[0];
-        let max = this.range[1];
-        let delta = (max - min) / (this.options.steps);
-        let data = d3.range(min, max + delta, delta);
-        let colorPerValue = data.map(d => {
-            return {
-                'value': d,
-                'color': this.color(d)
-            };
-        });
-
-        // div.contenedor > svg
-        let w = this.options.width / colorPerValue.length;
+    palette: function() {
         let d = document.createElement('div');
-        let svg = d3.select(d).append('svg')
-            .attr('width', this.options.width)
-            .attr('height', this.options.height)
-            .style('padding', '10px'); //
+        let svg = this._createSvgIn(d);
 
-        // n color-bars
-        let buckets = svg.selectAll('rect').data(colorPerValue).enter().append('rect');
+        this._appendColorBarTo(svg);
+
+        if (this.options.labels) {
+            this._appendLabelsTo(svg);
+        }
+
+        return d.innerHTML;
+    },
+
+    _createSvgIn: function(d) {
+        let spaceForLabels = this.options.labels ? this.options.margin : 0;
+        let svg = d3
+            .select(d)
+            .append('svg')
+            .attr('width', this.options.width + this.options.margin * 2)
+            .attr('height', this.options.height + spaceForLabels);
+        return svg;
+    },
+
+    _appendColorBarTo: function(svg) {
+        const colorPerValue = this._getColorPerValue();
+        const w = this.options.width / colorPerValue.length;
+
+        let groupBars = svg.append('g').attr('id', 'colorBar-buckets');
+        let buckets = groupBars
+            .selectAll('rect')
+            .data(colorPerValue)
+            .enter()
+            .append('rect');
         buckets
-            .attr('x', (d, i) => i * w)
+            .attr('x', (d, i) => i * w + this.options.margin)
             .attr('y', () => 0)
-            .attr('height', () => this.options.height /*w * 4*/ )
+            .attr('height', () => this.options.height /*w * 4*/)
             .attr('width', () => w)
             .attr('stroke-width', 2)
             .attr('stroke-linecap', 'butt')
-            .attr('stroke', (d) => d.color.hex())                    
-            .attr('fill', (d) => d.color.hex());
+            .attr('stroke', d => d.color.hex())
+            .attr('fill', d => d.color.hex());
+        buckets
+            .append('title')
+            .text(
+                d =>
+                    `${d.value.toFixed(this.options.decimals)} ${this.options
+                        .units}`
+            );
+    },
 
-        buckets.append('title').text(
-            (d) => `${d.value.toFixed(this.options.decimals)} ${this.options.units}`
-        );
-        return d.innerHTML;
+    _appendLabelsTo: function(svg) {
+        const positionPerLabelValue = this._getPositionPerLabelValue();
+        //const w = this.options.width / colorPerValue.length;
+        let groupLabels = svg.append('g').attr('id', 'colorBar-labels');
+        let labels = groupLabels
+            .selectAll('text')
+            .data(positionPerLabelValue)
+            .enter()
+            .append('text');
+        labels
+            .attr('x', d => d.position + this.options.margin)
+            .attr('y', () => this.options.height + this.options.margin)
+            .attr('font-size', () => `${this.options.labelFontSize}px`)
+            .attr('text-anchor', 'middle')
+            .attr('fill', () => this.options.textColor)
+            .attr('class', 'leaflet-control-colorBar-label')
+            .text(d => `${d.value.toFixed(this.options.decimals)}`);
+    },
+
+    _getColorPerValue: function() {
+        const [min, max] = this.range;
+        let delta = (max - min) / this.options.steps;
+        let data = d3.range(min, max + delta, delta);
+        let colorPerValue = data.map(d => {
+            return {
+                value: d,
+                color: this.color(d)
+            };
+        });
+        return colorPerValue;
+    },
+
+    _getPositionPerLabelValue: function() {
+        var xPositionFor = d3
+            .scaleLinear()
+            .range([0, this.options.width])
+            .domain(this.range);
+        let data = this.options.labels;
+        let positionPerLabel = data.map(d => {
+            return {
+                value: d,
+                position: xPositionFor(d)
+            };
+        });
+        return positionPerLabel;
     }
 });
 
-L.control.colorBar = function (color, range, options) {
+L.control.colorBar = function(color, range, options) {
     return new L.Control.ColorBar(color, range, options);
 };

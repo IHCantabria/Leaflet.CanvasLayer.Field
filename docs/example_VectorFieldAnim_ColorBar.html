@@ -14,7 +14,6 @@
             font-weight: 100;
             font-size: large;
         }
-
     </style>
 </head>
 
@@ -42,8 +41,8 @@
         /*
             Vectorfield animation with a colormap for magnitude + and associated colorBar
         */
-        d3.text('data/Cantabria_U.asc', function(u) {
-            d3.text('data/Cantabria_V.asc', function(v) {
+        d3.text('data/Cantabria_U.asc', function (u) {
+            d3.text('data/Cantabria_V.asc', function (v) {
                 let scaleFactor = 0.001; // to m/s
                 let vf = L.VectorField.fromASCIIGrids(u, v, scaleFactor);
                 var range = vf.range;
@@ -72,11 +71,19 @@
                 var bar = L.control.colorBar(scale, range, {
                     title: 'Currents surface velocity (m/s)',
                     units: 'm/s',
-                    steps: 100
+                    steps: 100,
+                    decimals: 1,
+                    width: 350,
+                    height: 20,
+                    position: 'bottomright',
+                    background: '#000',
+                    textColor: 'white',
+                    labels: [0, 0.5, 1.0, 1.5, 2.0],
+                    labelFontSize: 9
                 }).addTo(map);
 
                 // info
-                layer.on('click', function(e) {
+                layer.on('click', function (e) {
                     if (e.value !== null) {
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
@@ -90,7 +97,6 @@
                 });
             });
         });
-
     </script>
 </body>
 
