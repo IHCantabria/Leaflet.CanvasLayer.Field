@@ -96,8 +96,8 @@ export default class Field {
         let xmax = this.xurCorner;
 
         if (this.longitudeNeedsToBeWrapped) {
-            xmax = 180.0;
-            xmin = -180;
+            if (this.xllCorner > 180) xmin = this.xllCorner - 180;
+            if (this.xurCorner > 180) xmax = this.xurCorner - 180;
         }
         return [xmin, xmax];
     }
