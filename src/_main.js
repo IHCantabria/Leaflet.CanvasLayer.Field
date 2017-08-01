@@ -14,12 +14,7 @@ window.L.ScalarField = ScalarField;
 import VectorField from './VectorField.js';
 window.L.VectorField = VectorField;
 
-
-
-// require('./L.ColorScale.js');
-
 // layer
-
 require('./layer/L.CanvasLayer.js');
 require('./layer/L.CanvasLayer.SimpleLonLat.js');
 require('./layer/L.CanvasLayer.Field.js');
