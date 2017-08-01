@@ -25,7 +25,7 @@ If you want to have a quick testing environment, have a look at these **two snip
 ## Instructions
 
 ### Basic Usage
-1. Get the JavaScript file. You can grab a copy from ongoing work at[leaflet.canvaslayer.field.js](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js). If you prefer to work locally with npm, then go with `npm install leaflet-canvaslayer-field --save`. Every version is automatically published to `unpkg CDN` (last version at: https://unpkg.com/leaflet-canvaslayer-field/dist/leaflet.canvaslayer.field.js)
+1. Get the JavaScript file. You can grab a copy from ongoing work at [leaflet.canvaslayer.field.js](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js). If you prefer to work locally with npm, then go with `npm install leaflet-canvaslayer-field --save`. Every version is automatically published to `unpkg CDN` (last version at: https://unpkg.com/leaflet-canvaslayer-field/dist/leaflet.canvaslayer.field.js)
 
 2. Include the JavaScript dependencies in your page:
 ```html
