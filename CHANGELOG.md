@@ -19,3 +19,6 @@
 #v1.2.0
 - Optional labels in `colorBar` control (see `example_VectorFieldAnim_ColorBar.html`)
 - Better colorBar styles and more options
+
+#v1.2.1
+- Fixing absence of interpolation on border (continuous raster)
