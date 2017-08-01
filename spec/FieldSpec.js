@@ -99,18 +99,30 @@ describe('Field', function () {
         });
 
         it('returns wrapped extent', function () {
-            // const original = [ -0.25, -90.25, 359.75, 90.25 ];
+            // const original = [ -0.25, -90.25, 359.75, 90.25 ];  //wrapped, as in some NOAA products
             const expected = [-180, -90.25, 180, 90.25];
-            expect(f360.extent()).toEqual(expected);
+            expect(expected).toEqual(f360.extent());
         });
 
         it('contains points in [-180, 180] range', function () {
             expect(f360.contains(-180, 0)).toBe(true);
             expect(f360.contains(0, 0)).toBe(true);
             expect(f360.contains(180, 0)).toBe(true);
+        });
 
-            expect(f360.contains(181, 0)).toBe(false);
-            expect(f360.contains(359, 0)).toBe(false);
+        it('returns values & interpolated values', function () {
+            // some values
+            const a = -0.43;
+            expect(a).toBe(f360.valueAt(0, 90)); // first value at .asc
+            const b = -1.35;
+            expect(b).toBe(f360.valueAt(0, -90));
+            const c = 1.35;
+            expect(c).toBe(f360.valueAt(-180, -90));
+
+            // and some interpolated...
+            expect(f360.interpolatedValueAt(0, 90)).not.toBe(a);
+            expect(f360.interpolatedValueAt(0, -90)).not.toBe(b);
+            expect(f360.interpolatedValueAt(-180, -90)).not.toBe(c);
         });
 
         it('uses a wrapped longitude & latitude for each cell', function () {
