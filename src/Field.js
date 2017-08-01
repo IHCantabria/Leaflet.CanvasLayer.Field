@@ -23,11 +23,10 @@ export default class Field {
         this.cellSize = params['cellSize'];
 
         this.grid = null; // to be defined by subclasses
-
-        this._isContinuous = (this.xurCorner - this.xllCorner) >= 360;
+        this.isContinuous = (this.xurCorner - this.xllCorner) >= 360;
         this.longitudeNeedsToBeWrapped = this.xurCorner > 180;  // [0, 360] --> [-180, 180]
-        this._inFilter = null;
 
+        this._inFilter = null;
     }
 
     /**
@@ -391,10 +390,10 @@ export default class Field {
 
         // duplicate last/first column when raster is continuous
         if (ii < 0) {
-            i = (this._isContinuous) ? maxCol : 0;
+            i = (this.isContinuous) ? maxCol : 0;
         }
         if (ii > maxCol) {
-            i = (this._isContinuous) ? 0 : maxCol;
+            i = (this.isContinuous) ? 0 : maxCol;
         }
         return i;
     }
