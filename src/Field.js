@@ -23,7 +23,9 @@ export default class Field {
         this.cellSize = params['cellSize'];
 
         this.grid = null; // to be defined by subclasses
-        this.longitudeNeedsToBeWrapped = this.xurCorner > 180;  // [0, 360] --> [-180, 180]
+
+        this._isContinuous = (this.xurCorner - this.xllCorner) >= 360;
+        this._longitudeNeedsToBeWrapped = this.xurCorner > 180;  // [0, 360] --> [-180, 180]
         this._inFilter = null;
 
     }
@@ -95,7 +97,7 @@ export default class Field {
         let xmin = this.xllCorner;
         let xmax = this.xurCorner;
 
-        if (this.longitudeNeedsToBeWrapped) {
+        if (this._longitudeNeedsToBeWrapped) {
             xmax = this.xurCorner - 180;
             xmin = this.xllCorner - 180;
         }
@@ -199,7 +201,7 @@ export default class Field {
      * @returns {Array}    [[Description]]
      */
     _getDecimalIndexes(lon, lat) {
-        if (this.longitudeNeedsToBeWrapped) {
+        if (this._longitudeNeedsToBeWrapped) {
             if (lon < 0) {
                 lon = lon + 360;
             }
@@ -349,7 +351,7 @@ export default class Field {
     _longitudeAtX(i) {
         let halfPixel = this.cellSize / 2.0;
         let lon = this.xllCorner + halfPixel + (i * this.cellSize);
-        if (this.longitudeNeedsToBeWrapped) {
+        if (this._longitudeNeedsToBeWrapped) {
             lon = (lon > 180) ? lon - 360 : lon;
         }
         return lon;
@@ -390,7 +392,8 @@ export default class Field {
         }
         let maxCol = (this.nCols - 1);
         if (ii > maxCol) {
-            i = maxCol;
+            // duplicate first column when raster us continuous
+            i = (this._isContinuous) ? 0 : maxCol;
         }
 
         return i;
