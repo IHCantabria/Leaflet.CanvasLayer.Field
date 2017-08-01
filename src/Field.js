@@ -97,8 +97,17 @@ export default class Field {
         let xmax = this.xurCorner;
 
         if (this.longitudeNeedsToBeWrapped) {
-            xmax = this.xurCorner - 180;
-            xmin = this.xllCorner - 180;
+            if (this.isContinuous) {
+                xmin = -180;
+                xmax = 180;
+            } else {
+                // not sure about this (just one particular case, but others...?)
+                xmax = this.xurCorner - 360;
+                xmin = this.xllCorner - 360;
+                /* eslint-disable no-console */
+                console.warn(`are these xmin: ${xmin} & xmax: ${xmax} OK?`);
+                /* eslint-enable no-console */
+            }
         }
         return [xmin, xmax];
     }
@@ -111,10 +120,12 @@ export default class Field {
      */
     contains(lon, lat) {
         let [xmin, xmax] = this._getWrappedLongitudes();
-        return (lon >= xmin &&
-            lon <= xmax &&
-            lat >= this.yllCorner &&
-            lat <= this.yurCorner);
+
+        //let longitudeIn = this.isContinuous ? true : (lon >= xmin && lon <= xmax);
+        let longitudeIn = lon >= xmin && lon <= xmax;
+        let latitudeIn = lat >= this.yllCorner && lat <= this.yurCorner;
+
+        return (longitudeIn && latitudeIn);
     }
 
     /**
@@ -386,14 +397,12 @@ export default class Field {
      */
     _clampColumnIndex(ii) {
         let i = ii;
-        let maxCol = (this.nCols - 1);
-
-        // duplicate last/first column when raster is continuous
         if (ii < 0) {
-            i = (this.isContinuous) ? maxCol : 0;
+            i = 0;
         }
+        let maxCol = (this.nCols - 1);
         if (ii > maxCol) {
-            i = (this.isContinuous) ? 0 : maxCol;
+            i = (this.isContinuous) ? 0 : maxCol; // duplicate first column when raster is continuous
         }
         return i;
     }
@@ -407,11 +416,10 @@ export default class Field {
      */
     _clampRowIndex(jj) {
         let j = jj;
-        let maxRow = (this.nRows - 1);
-
         if (jj < 0) {
             j = 0;
         }
+        let maxRow = (this.nRows - 1);
         if (jj > maxRow) {
             j = maxRow;
         }
