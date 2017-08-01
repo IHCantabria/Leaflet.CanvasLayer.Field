@@ -382,20 +382,20 @@ export default class Field {
      * Check the column index is inside the field,
      * adjusting to min or max when needed
      * @private
-     * @param   {Number} ii - decimal index
+     * @param   {Number} ii - index
      * @returns {Number} i - inside the allowed indexes
      */
     _clampColumnIndex(ii) {
         let i = ii;
-        if (ii < 0) {
-            i = 0;
-        }
         let maxCol = (this.nCols - 1);
+
+        // duplicate last/first column when raster is continuous
+        if (ii < 0) {
+            i = (this._isContinuous) ? maxCol : 0;
+        }
         if (ii > maxCol) {
-            // duplicate first column when raster us continuous
             i = (this._isContinuous) ? 0 : maxCol;
         }
-
         return i;
     }
 
@@ -403,19 +403,19 @@ export default class Field {
      * Check the row index is inside the field,
      * adjusting to min or max when needed
      * @private
-     * @param   {Number} jj decimal index
+     * @param   {Number} jj index
      * @returns {Number} j - inside the allowed indexes
      */
     _clampRowIndex(jj) {
         let j = jj;
+        let maxRow = (this.nRows - 1);
+
         if (jj < 0) {
             j = 0;
         }
-        let maxRow = (this.nRows - 1);
         if (jj > maxRow) {
             j = maxRow;
         }
-
         return j;
     }
 
