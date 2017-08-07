@@ -33,13 +33,13 @@
         }).addTo(map);
 
         // ScalarField derived from a Vectorfield
-        d3.text('data/Atlantic_U.asc', function(u) {
-            d3.text('data/Atlantic_V.asc', function(v) {
+        d3.text('data/Atlantic_U.asc', function (u) {
+            d3.text('data/Atlantic_V.asc', function (v) {
                 const toMetersPerSecond = 0.001;
                 const vf = L.VectorField.fromASCIIGrids(u, v, toMetersPerSecond);
 
+                // a) First derived field: Magnitude (m/s)
                 const s = vf.getScalarField('magnitude'); // << derived ScalarField
-
                 /*  custom scale, based on 'earth.nullschool.net'
                     (example:  https://earth.nullschool.net/#current/ocean/surface/currents/overlay=currents/equirectangular=-11.95,29.62,1112)
                 */
@@ -48,12 +48,20 @@
                         ['#1F263A', '#414AA9', '#44758C', '#399B58', 'DCD296', 'F2E899', 'A53E3C', '9C3333'], [.1, .2, .3, .4, .7, .9, 1.5, 2]
                     ),
                     opacity: 0.65,
-                    inFilter: function(v) {
+                    inFilter: function (v) {
                         return v > 0;
-                    }/*,
-                    interpolate: true*/
+                    },
+                    interpolate: true
 
-                }).addTo(map);
+                });
+
+                // b) Second derived field: DirectionTo (º): (0 to 360º) | N is 0º and E is 90º
+                const dt = vf.getScalarField('directionTo')
+                const directionTo = L.canvasLayer.scalarField(dt, {
+                    type: 'vector',
+                    arrowSize: 15
+                });
+
 
                 const animation = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 5000,
@@ -63,18 +71,19 @@
                     color: 'rgba(255,255,255,0.7)'
                 }).addTo(map);
 
-                L.control.layers({}, {
+                L.control.layers({
                     "Vector animation": animation,
-                    "Derived magnitude": magnitude
-                }, {
-                    position: 'bottomleft',
-                    collapsed: false
-                }).addTo(map);
+                    "Derived magnitude": magnitude,
+                    "Derived direction": directionTo,
+                }, {}, {
+                        position: 'bottomleft',
+                        collapsed: false
+                    }).addTo(map);
 
 
                 map.fitBounds(animation.getBounds());
 
-                magnitude.on('click', function(e) {
+                magnitude.on('click', function (e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(3);
                         let html = (`<span class="popupText">${v} m/s</span>`);

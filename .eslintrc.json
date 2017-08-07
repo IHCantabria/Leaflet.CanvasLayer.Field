@@ -8,26 +8,14 @@
         "sourceType": "module"
     },
     "rules": {
-        "indent": [
-            "error",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
         "no-unused-vars": "warn",
         "no-console": "warn",
         "camelcase": "warn",
-        "max-len": [ "warn", 132 ]
+        "max-len": ["warn", 132]
     },
     "globals": {
         "require": true,

@@ -2,18 +2,23 @@
  * ScalarField on canvas (a 'Raster')
  */
 L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
-
     options: {
+        type: 'colormap', // [colormap|vector]
+        arrowSize: 20, // only used if 'vector'
         color: null, // function colorFor(value) [e.g. chromajs.scale],
         interpolate: false // Change to use interpolation
     },
 
-    initialize: function (scalarField, options) {
-        L.CanvasLayer.Field.prototype.initialize.call(this, scalarField, options);
+    initialize: function(scalarField, options) {
+        L.CanvasLayer.Field.prototype.initialize.call(
+            this,
+            scalarField,
+            options
+        );
         L.Util.setOptions(this, options);
     },
 
-    _defaultColorScale: function () {
+    _defaultColorScale: function() {
         return chroma.scale(['white', 'black']).domain(this._field.range);
     },
 
@@ -23,17 +28,29 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     /* eslint-disable no-unused-vars */
-    onDrawLayer: function (viewInfo) {
+    onDrawLayer: function(viewInfo) {
         if (!this.isVisible()) return;
-        //console.time('onDrawLayer');
-        this._ensureColor();
         this._updateOpacity();
-        this._drawImage();
+
+        let r = this._getRendererMethod();
+        //console.time('onDrawLayer');
+        r();
         //console.timeEnd('onDrawLayer');
     },
     /* eslint-enable no-unused-vars */
 
-    _ensureColor: function () {
+    _getRendererMethod: function() {
+        switch (this.options.type) {
+            case 'colormap':
+                return this._drawImage.bind(this);
+            case 'vector':
+                return this._drawArrows.bind(this);
+            default:
+                throw Error(`Unkwown renderer type: ${this.options.type}`);
+        }
+    },
+
+    _ensureColor: function() {
         if (this.options.color === null) {
             this.setColor(this._defaultColorScale());
         }
@@ -48,7 +65,9 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * Draws the field in an ImageData and applying it with putImageData.
      * Used as a reference: http://geoexamples.com/d3-raster-tools-docs/code_samples/raster-pixels-page.html
      */
-    _drawImage: function () {
+    _drawImage: function() {
+        this._ensureColor();
+
         let ctx = this._getDrawingContext();
         let width = this._canvas.width;
         let height = this._canvas.height;
@@ -69,7 +88,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * @param {Number} height
      */
     _prepareImageIn(data, width, height) {
-        let f = (this.options.interpolate) ? 'interpolatedValueAt' : 'valueAt';
+        let f = this.options.interpolate ? 'interpolatedValueAt' : 'valueAt';
 
         let pos = 0;
         for (let j = 0; j < height; j++) {
@@ -93,6 +112,47 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     /**
+     * Draws the field as a set of arrows. Direction from 0 to 360 is assumed.
+     */
+    _drawArrows: function() {
+        /*this.setColor(chroma.scale(['red', 'orange']));
+        this._drawImage();*/
+
+        var stride = Math.max(
+            1,
+            Math.floor(1.2 * this.options.arrowSize / this._field.cellSize)
+        );
+
+        const cells = this._field.getCells();
+        const ctx = this._getDrawingContext();
+        for (var c = 0; c < cells.length; c = c + stride) {
+            const cell = cells[c];
+            if (cell.value !== null) {
+                this._drawArrow(cell, ctx);
+            }
+        }
+    },
+
+    _drawArrow: function(cell, ctx) {
+        const size = this.options.arrowSize;
+        var projected = this._map.latLngToContainerPoint(cell.center);
+        var xProjected = projected.x;
+        var yProjected = projected.y;
+
+        ctx.save();
+        ctx.translate(xProjected, yProjected);
+        ctx.rotate((90 + cell.value) * Math.PI / 180);
+        ctx.beginPath();
+        ctx.moveTo(-size / 2, 0);
+        ctx.lineTo(+size / 2, 0);
+        ctx.moveTo(size * 0.25, -size * 0.25);
+        ctx.lineTo(+size / 2, 0);
+        ctx.lineTo(size * 0.25, size * 0.25);
+        ctx.stroke();
+        ctx.restore();
+    },
+
+    /**
      * Gets a chroma color for a pixel value, according to 'options.color'
      */
     _getColorFor(v) {
@@ -105,6 +165,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     }
 });
 
-L.canvasLayer.scalarField = function (scalarField, options) {
+L.canvasLayer.scalarField = function(scalarField, options) {
     return new L.CanvasLayer.ScalarField(scalarField, options);
 };

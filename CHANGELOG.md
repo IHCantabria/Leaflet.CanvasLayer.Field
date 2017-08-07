@@ -22,3 +22,6 @@
 
 #v1.2.1
 - Fixing absence of interpolation on border (continuous raster)
+
+#v1.3.0 in progress...
+- Arrow style. This new renderer is available in ScalarField layers, and it is useful when loading ng a 'direction' field, from 0 to 360º (from / to)

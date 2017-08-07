@@ -7,18 +7,22 @@ It includes:
 * `L.CanvasLayer.ScalarField` - a "typical" raster layer (from scalars such as DTM, temperature...) that can be rendered with different color scales.
 * `L.CanvasLayer.VectorFieldAnim` - an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
 
-This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and uses [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler.
+This plugin extends [L.CanvasLayer](https://github.com/Sumbera/gLayers.Leaflet) Leaflet Plugin by Stanislav Sumbera and uses [geotiff.js](https://github.com/constantinius/geotiff.js) by Fabian Schindler. For the 'arrow' renderer, it includes a modified portion of [leaflet-geotiff](https://github.com/stuartmatthews/leaflet-geotiff) by 
+Stuart Matthews.
 
 
 ## Demo
-The figures below show the results for two basic layers, showing *Currents in the Bay of Santander (Spain)*
+The figures below show the results for three basic layers, showing *Currents in the Bay of Santander (Spain)*
 
 ![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/ScalarField.png)
 
+![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/ScalarField-Direction.png)
+
 ![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/VectorFieldAnim.gif)
 
-If you want to have a quick testing environment, have a look at these **two snippets at codepen.io**:
+If you want to have a quick testing environment, have a look at these **snippets at codepen.io**:
 * [ScalarField](http://codepen.io/VictorVelarde/pen/ZKJWMb/)
+* [ScalarField-Direction](http://codepen.io/VictorVelarde/pen/??????/)
 * [VectorFieldAnim](http://codepen.io/VictorVelarde/pen/QvBeYV)
 
 
