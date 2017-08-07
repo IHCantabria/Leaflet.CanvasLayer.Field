@@ -2,13 +2,11 @@ import Vector from './Vector';
 import Field from './Field';
 import ScalarField from './ScalarField';
 
-
 /**
  *  A set of vectors assigned to a regular 2D-grid (lon-lat)
  *  (e.g. a raster representing winds for a region)
  */
 export default class VectorField extends Field {
-
     /**
      * Creates a VectorField from the content of two ASCIIGrid files
      * @param   {String} ascU - with u-component
@@ -36,7 +34,6 @@ export default class VectorField extends Field {
 
         return new VectorField(p);
     }
-
 
     /**
      * Creates a VectorField from the content of Multiband Geotiff
@@ -102,7 +99,7 @@ export default class VectorField extends Field {
     }
 
     _getFunctionFor(type) {
-        return function (u, v) {
+        return function(u, v) {
             let uv = new Vector(u, v);
             return uv[type](); // magnitude, directionTo, directionFrom
         };
@@ -114,7 +111,11 @@ export default class VectorField extends Field {
         for (var i = 0; i < n; i++) {
             let u = this.us[i];
             let v = this.vs[i];
-            zs.push(func(u, v));
+            if (this._isValid(u) && this._isValid(v)) {
+                zs.push(func(u, v));
+            } else {
+                zs.push(null);
+            }
         }
         return zs;
     }
@@ -139,8 +140,8 @@ export default class VectorField extends Field {
             for (var i = 0; i < nCols; i++, p++) {
                 let u = us[p],
                     v = vs[p];
-                let valid = (this._isValid(u) && this._isValid(v));
-                row[i] = (valid) ? new Vector(u, v) : null; // <<<
+                let valid = this._isValid(u) && this._isValid(v);
+                row[i] = valid ? new Vector(u, v) : null; // <<<
             }
             grid[j] = row;
         }
@@ -150,7 +151,6 @@ export default class VectorField extends Field {
     _newDataArrays(params) {
         params['us'] = [];
         params['vs'] = [];
-
     }
     _pushValueToArrays(params, value) {
         //console.log(value);
@@ -168,11 +168,9 @@ export default class VectorField extends Field {
      */
     _calculateRange() {
         // TODO make a clearer method for getting these vectors...
-        let vectors = this.getCells()
-            .map(pt => pt.value)
-            .filter(function (v) {
-                return v !== null;
-            });
+        let vectors = this.getCells().map(pt => pt.value).filter(function(v) {
+            return v !== null;
+        });
 
         if (this._inFilter) {
             vectors = vectors.filter(this._inFilter);
@@ -198,8 +196,8 @@ export default class VectorField extends Field {
      * @returns {Vector}
      */
     _doInterpolation(x, y, g00, g10, g01, g11) {
-        var rx = (1 - x);
-        var ry = (1 - y);
+        var rx = 1 - x;
+        var ry = 1 - y;
         var a = rx * ry,
             b = x * ry,
             c = rx * y,
@@ -207,5 +205,15 @@ export default class VectorField extends Field {
         var u = g00.u * a + g10.u * b + g01.u * c + g11.u * d;
         var v = g00.v * a + g10.v * b + g01.v * c + g11.v * d;
         return new Vector(u, v);
+    }
+
+    /**
+     * Is valid (not 'null' nor 'undefined')
+     * @private
+     * @param   {Object} x object
+     * @returns {Boolean}
+     */
+    _isValid(x) {
+        return x !== null && x !== undefined;
     }
 }
