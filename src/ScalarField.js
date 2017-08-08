@@ -4,7 +4,6 @@ import Field from './Field';
  * Scalar Field
  */
 export default class ScalarField extends Field {
-
     /**
      * Creates a ScalarField from the content of an ASCIIGrid file
      * @param   {String}   asc
@@ -16,6 +15,8 @@ export default class ScalarField extends Field {
         let lines = asc.split('\n');
 
         // Header
+        ScalarField._checkIsValidASCIIGridHeader(lines);
+
         let n = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/; // any number
         let p = {
             nCols: parseInt(lines[0].match(n)),
@@ -24,7 +25,10 @@ export default class ScalarField extends Field {
             yllCorner: parseFloat(lines[3].match(n)),
             cellSize: parseFloat(lines[4].match(n))
         };
-        let noDataValue = lines[5].replace('NODATA_value', '').trim();
+        let noDataValue = lines[5]
+            .toUpperCase()
+            .replace('NODATA_VALUE', '')
+            .trim();
 
         // Data (left-right and top-down)
         let zs = []; // TODO Consider using TypedArray (& manage NO_DATA)
@@ -34,7 +38,7 @@ export default class ScalarField extends Field {
 
             let items = line.split(' ');
             let values = items.map(it => {
-                return (it !== noDataValue) ? parseFloat(it * scaleFactor) : null;
+                return it !== noDataValue ? parseFloat(it * scaleFactor) : null;
             });
             zs.push(...values);
         }
@@ -42,6 +46,29 @@ export default class ScalarField extends Field {
 
         //console.timeEnd('ScalarField from ASC');
         return new ScalarField(p);
+    }
+
+    static _checkIsValidASCIIGridHeader(lines) {
+        const upperCasesLines = lines.map(lin => lin.toUpperCase());
+
+        const parameters = [
+            'NCOLS',
+            'NROWS',
+            'XLLCORNER',
+            'YLLCORNER',
+            'CELLSIZE',
+            'NODATA_VALUE'
+        ];
+
+        let i = 0;
+        for (let expected of parameters) {
+            let line = upperCasesLines[i];
+            let found = line.indexOf(expected) != -1;
+            if (!found) {
+                throw `Not valid ASCIIGrid: expected '${expected}' at line '${line}' [lin. nº ${i}]`;
+            }
+            i++;
+        }
     }
 
     /**
@@ -64,10 +91,10 @@ export default class ScalarField extends Field {
         let zs = rasters[bandIndex]; // left-right and top-down order
 
         if (fileDirectory.GDAL_NODATA) {
-            let noData = parseFloat(fileDirectory.GDAL_NODATA); // TODO int values?
+            let noData = parseFloat(fileDirectory.GDAL_NODATA);
             // console.log(noData);
             let simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
-            zs = simpleZS.map(function (z) {
+            zs = simpleZS.map(function(z) {
                 return z === noData ? null : z;
             });
         }
@@ -76,7 +103,7 @@ export default class ScalarField extends Field {
             nCols: image.getWidth(),
             nRows: image.getHeight(),
             xllCorner: tiepoint.x,
-            yllCorner: tiepoint.y - (image.getHeight() * pixelScale[0]),
+            yllCorner: tiepoint.y - image.getHeight() * pixelScale[0],
             cellSize: pixelScale[0],
             zs: zs
         };
@@ -113,7 +140,7 @@ export default class ScalarField extends Field {
             var row = [];
             for (var i = 0; i < nCols; i++, p++) {
                 let z = array[p];
-                row[i] = (this._isValid(z)) ? z : null; // <<<
+                row[i] = this._isValid(z) ? z : null; // <<<
             }
             grid[j] = row;
         }
@@ -157,8 +184,8 @@ export default class ScalarField extends Field {
      * @returns {Number}
      */
     _doInterpolation(x, y, g00, g10, g01, g11) {
-        var rx = (1 - x);
-        var ry = (1 - y);
+        var rx = 1 - x;
+        var ry = 1 - y;
         return g00 * rx * ry + g10 * x * ry + g01 * rx * y + g11 * x * y;
     }
 }
