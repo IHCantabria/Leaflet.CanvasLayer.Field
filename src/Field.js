@@ -110,7 +110,8 @@ export default class Field {
                 xmax = this.xurCorner - 360;
                 xmin = this.xllCorner - 360;
                 /* eslint-disable no-console */
-                console.warn(`are these xmin: ${xmin} & xmax: ${xmax} OK?`);
+                // console.warn(`are these xmin: ${xmin} & xmax: ${xmax} OK?`);
+                // TODO: Better throw an exception on no-controlled situations.
                 /* eslint-enable no-console */
             }
         }
