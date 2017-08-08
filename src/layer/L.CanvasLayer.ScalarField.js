@@ -1,3 +1,5 @@
+import Cell from '../Cell';
+
 /**
  * ScalarField on canvas (a 'Raster')
  */
@@ -116,9 +118,6 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
      * Draws the field as a set of arrows. Direction from 0 to 360 is assumed.
      */
     _drawArrows: function() {
-        /*this.setColor(chroma.scale(['red', 'orange']));
-        this._drawImage();*/
-
         const bounds = this._pixelBounds();
         const pixelSize = (bounds.max.x - bounds.min.x) / this._field.nCols;
 
@@ -127,16 +126,21 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
             Math.floor(1.2 * this.options.vectorSize / pixelSize)
         );
 
-        const cells = this._field.getCells(stride);
         const ctx = this._getDrawingContext();
         ctx.strokeStyle = this.options.color;
 
         var currentBounds = this._map.getBounds();
 
-        for (var c = 0; c < cells.length; c = c + stride) {
-            const cell = cells[c];
-            if (cell.value !== null && currentBounds.contains(cell.center)) {
-                this._drawArrow(cell, ctx);
+        for (var y = 0; y < this._field.height; y = y + stride) {
+            for (var x = 0; x < this._field.width; x = x + stride) {
+                //var rasterIndex = y * this.raster.width + x; // TODO check
+                let [lon, lat] = this._field._lonLatAtIndexes(x, y);
+                let v = this._field.valueAt(lon, lat);
+                let center = L.latLng(lat, lon);
+                if (v !== null && currentBounds.contains(center)) {
+                    let cell = new Cell(center, v, this.cellSize);
+                    this._drawArrow(cell, ctx);
+                }
             }
         }
     },
