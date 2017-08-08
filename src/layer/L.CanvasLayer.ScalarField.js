@@ -4,9 +4,10 @@
 L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     options: {
         type: 'colormap', // [colormap|vector]
-        arrowSize: 20, // only used if 'vector'
         color: null, // function colorFor(value) [e.g. chromajs.scale],
-        interpolate: false // Change to use interpolation
+        interpolate: false, // Change to use interpolation
+        vectorSize: 20, // only used if 'vector'
+        arrowDirection: 'from' // [from|towards]
     },
 
     initialize: function(scalarField, options) {
@@ -118,30 +119,60 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
         /*this.setColor(chroma.scale(['red', 'orange']));
         this._drawImage();*/
 
+        const bounds = this._pixelBounds();
+        const pixelSize = (bounds.max.x - bounds.min.x) / this._field.nCols;
+
         var stride = Math.max(
             1,
-            Math.floor(1.2 * this.options.arrowSize / this._field.cellSize)
+            Math.floor(1.2 * this.options.vectorSize / pixelSize)
         );
 
-        const cells = this._field.getCells();
+        const cells = this._field.getCells(stride);
         const ctx = this._getDrawingContext();
+        ctx.strokeStyle = this.options.color;
+
+        var currentBounds = this._map.getBounds();
+
         for (var c = 0; c < cells.length; c = c + stride) {
             const cell = cells[c];
-            if (cell.value !== null) {
+            if (cell.value !== null && currentBounds.contains(cell.center)) {
                 this._drawArrow(cell, ctx);
             }
         }
     },
 
-    _drawArrow: function(cell, ctx) {
-        const size = this.options.arrowSize;
-        var projected = this._map.latLngToContainerPoint(cell.center);
-        var xProjected = projected.x;
-        var yProjected = projected.y;
+    _pixelBounds: function() {
+        const bounds = this.getBounds();
+        const northWest = this._map.latLngToContainerPoint(
+            bounds.getNorthWest()
+        );
+        const southEast = this._map.latLngToContainerPoint(
+            bounds.getSouthEast()
+        );
+        var pixelBounds = L.bounds(northWest, southEast);
+        return pixelBounds;
+    },
 
+    _drawArrow: function(cell, ctx) {
+        var projected = this._map.latLngToContainerPoint(cell.center);
+
+        // colormap vs. simple color
+        let color = this.options.color;
+        if (typeof color === 'function') {
+            ctx.strokeStyle = color(cell.value);
+        }
+
+        const size = this.options.vectorSize;
         ctx.save();
-        ctx.translate(xProjected, yProjected);
-        ctx.rotate((90 + cell.value) * Math.PI / 180);
+
+        ctx.translate(projected.x, projected.y);
+
+        let rotationRads = (90 + cell.value) * Math.PI / 180; // from, by default
+        if (this.options.arrowDirection === 'towards') {
+            rotationRads = rotationRads + Math.PI;
+        }
+        ctx.rotate(rotationRads);
+
         ctx.beginPath();
         ctx.moveTo(-size / 2, 0);
         ctx.lineTo(+size / 2, 0);

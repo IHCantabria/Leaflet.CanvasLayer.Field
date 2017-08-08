@@ -24,4 +24,5 @@
 - Fixing absence of interpolation on border (continuous raster)
 
 #v1.3.0 in progress...
-- Arrow style. This new renderer is available in ScalarField layers, and it is useful when loading ng a 'direction' field, from 0 to 360º (from / to)
+- Arrow style for `ScalarField Layer`, based on `leaflet-geotiff` plugin. This is a new renderer activated by specifying `type: vector` (vs. default `colormap`) and it is useful when loading a 'direction' field (from/to 0-360º values).
+- Fixes wrong derived values in `VectorField.getScalarField` when no vector is available (zs have to be null).
