@@ -3,7 +3,6 @@
  * (ScalarField or a VectorField)
  */
 L.CanvasLayer.Field = L.CanvasLayer.extend({
-
     options: {
         mouseMoveCursor: {
             value: 'pointer',
@@ -15,7 +14,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         inFilter: null
     },
 
-    initialize: function (field, options) {
+    initialize: function(field, options) {
         L.Util.setOptions(this, options);
         this._visible = true;
         if (field) {
@@ -23,14 +22,14 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         }
     },
 
-    getEvents: function () {
+    getEvents: function() {
         var events = L.CanvasLayer.prototype.getEvents.call(this);
-        events.zoomstart = (this._hideCanvas).bind(this);
-        events.zoomend = (this._showCanvas).bind(this);
+        events.zoomstart = this._hideCanvas.bind(this);
+        events.zoomend = this._showCanvas.bind(this);
         return events;
     },
 
-    onLayerDidMount: function () {
+    onLayerDidMount: function() {
         this._enableIdentify();
         this._ensureCanvasAlignment();
     },
@@ -68,7 +67,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         this._map.on('mousemove', this._onMouseMove, this);
 
         this.options.onClick && this.on('click', this.options.onClick, this);
-        this.options.onMouseMove && this.on('mousemove', this.options.onMouseMove, this);
+        this.options.onMouseMove &&
+            this.on('mousemove', this.options.onMouseMove, this);
     },
 
     _disableIdentify() {
@@ -76,7 +76,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         this._map.off('mousemove', this._onMouseMove, this);
 
         this.options.onClick && this.off('click', this.options.onClick, this);
-        this.options.onMouseMove && this.off('mousemove', this.options.onMouseMove, this);
+        this.options.onMouseMove &&
+            this.off('mousemove', this.options.onMouseMove, this);
     },
 
     _ensureCanvasAlignment() {
@@ -84,7 +85,7 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         L.DomUtil.setPosition(this._canvas, topLeft);
     },
 
-    onLayerWillUnmount: function () {
+    onLayerWillUnmount: function() {
         this._disableIdentify();
     },
 
@@ -95,25 +96,25 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
     },
 
     /* eslint-disable no-unused-vars */
-    onDrawLayer: function (viewInfo) {
+    onDrawLayer: function(viewInfo) {
         throw new TypeError('Must be overriden');
     },
     /* eslint-enable no-unused-vars */
 
-    setData: function (field) {
+    setData: function(field) {
         this.options.inFilter && field.setFilter(this.options.inFilter);
         this._field = field;
         this.needRedraw();
         this.fire('load');
     },
 
-    setFilter: function (f) {
+    setFilter: function(f) {
         this.options.inFilter = f;
         this._field && this._field.setFilter(f);
         this.needRedraw();
     },
 
-    setOpacity: function (opacity) {
+    setOpacity: function(opacity) {
         this.options.opacity = opacity;
 
         if (this._canvas) {
@@ -122,10 +123,8 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         return this;
     },
 
-    getBounds: function () {
+    getBounds: function() {
         let bb = this._field.extent();
-        /*let (xmin, ymin, xmax, ymax) = bb;    
-        let a, b = */
 
         let southWest = L.latLng(bb[1], bb[0]),
             northEast = L.latLng(bb[3], bb[2]);
@@ -133,34 +132,33 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         return bounds;
     },
 
-    _onClick: function (e) {
+    _onClick: function(e) {
         let v = this._queryValue(e);
         this.fire('click', v);
     },
 
-    _onMouseMove: function (e) {
+    _onMouseMove: function(e) {
         let v = this._queryValue(e);
         this._changeCursorOn(v);
         this.fire('mousemove', v);
     },
 
-    _changeCursorOn: function (v) {
+    _changeCursorOn: function(v) {
         if (!this.options.mouseMoveCursor) return;
 
-        let {
-            value,
-            noValue
-        } = this.options.mouseMoveCursor;
+        let { value, noValue } = this.options.mouseMoveCursor;
         let style = this._map.getContainer().style;
-        style.cursor = (v.value !== null) ? value : noValue;
+        style.cursor = v.value !== null ? value : noValue;
     },
 
-    _updateOpacity: function () {
+    _updateOpacity: function() {
         L.DomUtil.setOpacity(this._canvas, this.options.opacity);
     },
 
-    _queryValue: function (e) {
-        let v = (this._field) ? this._field.valueAt(e.latlng.lng, e.latlng.lat) : null;
+    _queryValue: function(e) {
+        let v = this._field
+            ? this._field.valueAt(e.latlng.lng, e.latlng.lat)
+            : null;
         let result = {
             latlng: e.latlng,
             value: v
@@ -168,10 +166,9 @@ L.CanvasLayer.Field = L.CanvasLayer.extend({
         return result;
     },
 
-    _getDrawingContext: function () {
+    _getDrawingContext: function() {
         let g = this._canvas.getContext('2d');
         g.clearRect(0, 0, this._canvas.width, this._canvas.height);
         return g;
     }
-
 });

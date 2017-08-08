@@ -5,7 +5,6 @@ import Cell from './Cell';
  *  assigned to a regular 2D-grid (lon-lat), aka 'a Raster source'
  */
 export default class Field {
-
     constructor(params) {
         this.params = params;
 
@@ -17,14 +16,16 @@ export default class Field {
         this.yllCorner = params['yllCorner'];
 
         // ur = upper-right
-        this.xurCorner = params['xllCorner'] + params['nCols'] * params['cellSize'];
-        this.yurCorner = params['yllCorner'] + params['nRows'] * params['cellSize'];
+        this.xurCorner =
+            params['xllCorner'] + params['nCols'] * params['cellSize'];
+        this.yurCorner =
+            params['yllCorner'] + params['nRows'] * params['cellSize'];
 
         this.cellSize = params['cellSize'];
 
         this.grid = null; // to be defined by subclasses
-        this.isContinuous = (this.xurCorner - this.xllCorner) >= 360;
-        this.longitudeNeedsToBeWrapped = this.xurCorner > 180;  // [0, 360] --> [-180, 180]
+        this.isContinuous = this.xurCorner - this.xllCorner >= 360;
+        this.longitudeNeedsToBeWrapped = this.xurCorner > 180; // [0, 360] --> [-180, 180]
 
         this._inFilter = null;
     }
@@ -57,10 +58,10 @@ export default class Field {
      * A list with every cell
      * @returns {Array<Cell>} - cells (x-ascending & y-descending order)
      */
-    getCells() {
+    getCells(stride = 1) {
         let cells = [];
-        for (let j = 0; j < this.nRows; j++) {
-            for (let i = 0; i < this.nCols; i++) {
+        for (let j = 0; j < this.nRows; j = j + stride) {
+            for (let i = 0; i < this.nCols; i = i + stride) {
                 let [lon, lat] = this._lonLatAtIndexes(i, j);
                 let center = L.latLng(lat, lon);
                 let value = this._valueAtIndexes(i, j);
@@ -125,7 +126,7 @@ export default class Field {
         let longitudeIn = lon >= xmin && lon <= xmax;
         let latitudeIn = lat >= this.yllCorner && lat <= this.yurCorner;
 
-        return (longitudeIn && latitudeIn);
+        return longitudeIn && latitudeIn;
     }
 
     /**
@@ -137,28 +138,6 @@ export default class Field {
     notContains(lon, lat) {
         return !this.contains(lon, lat);
     }
-
-    //    /**
-    //     * Modify the current Field applying an interpolation
-    //     */
-    //    interpolate() {
-    //        var newField = this._cloneGrid(this.grid);
-    //        for (let j = 0; j < this.nRows; j++) {
-    //            for (let i = 0; i < this.nCols; i++) {
-    //                let interpolated = this.interpolatedValueAtIndexes(i, j);
-    //                newField[j, i] = interpolated;
-    //            }
-    //        }
-    //        this.grid = newField;
-    //    }
-    //
-    //    _cloneGrid(grid) {
-    //        var newArray = [];
-    //        for (var i = 0; i < grid.length; i++) {
-    //            newArray[i] = grid[i].slice();
-    //        }
-    //        return newArray;
-    //    }
 
     /**
      * Interpolated value at lon-lat coordinates (bilinear method)
@@ -253,10 +232,16 @@ export default class Field {
      */
     _getFourSurroundingValues(fi, ci, fj, cj) {
         var row;
-        if ((row = this.grid[fj])) { // upper row ^^
+        if ((row = this.grid[fj])) {
+            // upper row ^^
             var g00 = row[fi]; // << left
             var g10 = row[ci]; // right >>
-            if (this._isValid(g00) && this._isValid(g10) && (row = this.grid[cj])) { // lower row vv
+            if (
+                this._isValid(g00) &&
+                this._isValid(g10) &&
+                (row = this.grid[cj])
+            ) {
+                // lower row vv
                 var g01 = row[fi]; // << left
                 var g11 = row[ci]; // right >>
                 if (this._isValid(g01) && this._isValid(g11)) {
@@ -296,13 +281,13 @@ export default class Field {
      */
     hasValueAt(lon, lat) {
         let value = this.valueAt(lon, lat);
-        let hasValue = (value !== null);
+        let hasValue = value !== null;
 
         let included = true;
         if (this._inFilter) {
             included = this._inFilter(value);
         }
-        return (hasValue && included);
+        return hasValue && included;
     }
 
     /**
@@ -321,8 +306,8 @@ export default class Field {
      * @returns {{x: Number, y: Number}} - object with x, y (lon, lat)
      */
     randomPosition(o = {}) {
-        let i = Math.random() * this.nCols | 0;
-        let j = Math.random() * this.nRows | 0;
+        let i = (Math.random() * this.nCols) | 0;
+        let j = (Math.random() * this.nRows) | 0;
 
         o.x = this._longitudeAtX(i);
         o.y = this._latitudeAtY(j);
@@ -360,9 +345,9 @@ export default class Field {
      */
     _longitudeAtX(i) {
         let halfPixel = this.cellSize / 2.0;
-        let lon = this.xllCorner + halfPixel + (i * this.cellSize);
+        let lon = this.xllCorner + halfPixel + i * this.cellSize;
         if (this.longitudeNeedsToBeWrapped) {
-            lon = (lon > 180) ? lon - 360 : lon;
+            lon = lon > 180 ? lon - 360 : lon;
         }
         return lon;
     }
@@ -374,7 +359,7 @@ export default class Field {
      */
     _latitudeAtY(j) {
         let halfPixel = this.cellSize / 2.0;
-        return this.yurCorner - halfPixel - (j * this.cellSize);
+        return this.yurCorner - halfPixel - j * this.cellSize;
     }
 
     /**
@@ -400,9 +385,9 @@ export default class Field {
         if (ii < 0) {
             i = 0;
         }
-        let maxCol = (this.nCols - 1);
+        let maxCol = this.nCols - 1;
         if (ii > maxCol) {
-            i = (this.isContinuous) ? 0 : maxCol; // duplicate first column when raster is continuous
+            i = this.isContinuous ? 0 : maxCol; // duplicate first column when raster is continuous
         }
         return i;
     }
@@ -419,7 +404,7 @@ export default class Field {
         if (jj < 0) {
             j = 0;
         }
-        let maxRow = (this.nRows - 1);
+        let maxRow = this.nRows - 1;
         if (jj > maxRow) {
             j = maxRow;
         }
@@ -433,6 +418,6 @@ export default class Field {
      * @returns {Boolean}
      */
     _isValid(x) {
-        return (x !== null) && (x !== undefined);
+        return x !== null && x !== undefined;
     }
 }
