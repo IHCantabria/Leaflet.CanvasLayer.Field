@@ -47,35 +47,31 @@
                     color: chroma.scale(
                         ['#1F263A', '#414AA9', '#44758C', '#399B58', 'DCD296', 'F2E899', 'A53E3C', '9C3333'], [.1, .2, .3, .4, .7, .9, 1.5, 2]
                     ),
-                    opacity: 0.65,
-                    inFilter: function (v) {
-                        return v > 0;
-                    },
-                    interpolate: true
-
+                    opacity: 0.65
                 });
 
-                // b) Second derived field: DirectionTo (º): (0 to 360º) | N is 0º and E is 90º
-                const dt = vf.getScalarField('directionTo')
-                const directionTo = L.canvasLayer.scalarField(dt, {
-                    type: 'vector',
-                    arrowSize: 15
-                });
-
+                // b) Second derived field: DirectionFrom (º): (0 to 360º) | N is 0º and E is 90º
+                const direction = L.canvasLayer.scalarField(
+                    vf.getScalarField('directionFrom'), {
+                        type: 'vector',
+                        color: 'white',
+                        vectorSize: 25,
+                        arrowDirection: 'from'
+                    });
 
                 const animation = L.canvasLayer.vectorFieldAnim(vf, {
                     paths: 5000,
                     fade: 0.97,
                     maxAge: 100,
                     velocityScale: 1 / 40,
-                    color: 'rgba(255,255,255,0.7)'
+                    color: 'rgba(255, 255, 255, 0.7)'
                 }).addTo(map);
 
-                L.control.layers({
+                L.control.layers({}, {
                     "Vector animation": animation,
                     "Derived magnitude": magnitude,
-                    "Derived direction": directionTo,
-                }, {}, {
+                    "Derived direction": direction,
+                }, {
                         position: 'bottomleft',
                         collapsed: false
                     }).addTo(map);
@@ -85,13 +81,17 @@
 
                 magnitude.on('click', function (e) {
                     if (e.value !== null) {
-                        let v = e.value.toFixed(3);
-                        let html = (`<span class="popupText">${v} m/s</span>`);
+                        let v = e.value.toFixed(2);
+                        let html = (`<span class="popupText">magnitude: ${v} m/s</span>`);
+                        let popup = L.popup().setLatLng(e.latlng).setContent(html).openOn(map);
+                    }
+                });
 
-                        let popup = L.popup()
-                            .setLatLng(e.latlng)
-                            .setContent(html)
-                            .openOn(map);
+                direction.on('click', function (e) {
+                    if (e.value !== null) {
+                        let v = e.value.toFixed(0);
+                        let html = (`<span class="popupText">direction: ${v}º</span>`);
+                        let popup = L.popup().setLatLng(e.latlng).setContent(html).openOn(map);
                     }
                 });
             });
