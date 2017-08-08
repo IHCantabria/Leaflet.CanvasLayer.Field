@@ -11,6 +11,10 @@ export default class Field {
         this.nCols = params['nCols'];
         this.nRows = params['nRows'];
 
+        // alias
+        this.width = params['nCols'];
+        this.height = params['nRows'];
+
         // ll = lower-left
         this.xllCorner = params['xllCorner'];
         this.yllCorner = params['yllCorner'];
