@@ -90,7 +90,12 @@ export default class ScalarField extends Field {
         // Check "Not supported raster"
         let [xScale, yScale] = pixelScale;
         if (xScale !== yScale) {
-            throw `GeoTIFF with different scale in x: ${xScale} y: ${yScale} is not currently supported`;
+            console.warn(
+                `GeoTIFF with different scale in x: ${xScale} y: ${yScale} is not currently supported`
+            );
+            console.warn(
+                'Make sure the difference is just a floating precission issue'
+            );
         }
 
         let zs = rasters[bandIndex]; // left-right and top-down order

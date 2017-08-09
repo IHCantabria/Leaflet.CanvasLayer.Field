@@ -28,3 +28,6 @@
 - New arrow style for `ScalarField Layer`, based on `leaflet-geotiff` plugin. This is a new renderer activated with`type: vector` (vs. default `colormap`) and it is useful when loading a 'direction' field (0-360º).
 - Raises an error when dealing with no regular cell sizes (width !== height). The coordinate calculus is based on regular cells, but irregular grids could be used under some circunstances, generating spatial inconsistencies without a warning.
 - Fixes wrong derived values in `VectorField.getScalarField` when no vector is available (zs have to be null); this allows the user to eliminate some previous `inFilter` functions to discard those values.
+
+#v1.3.1
+- Rounding issues throws not expected error when mananaging Geotiff with regular size cells. Substitute error with console.warn
