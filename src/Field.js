@@ -21,11 +21,12 @@ export default class Field {
 
         // ur = upper-right
         this.xurCorner =
-            params['xllCorner'] + params['nCols'] * params['cellSize'];
+            params['xllCorner'] + params['nCols'] * params['cellXSize'];
         this.yurCorner =
-            params['yllCorner'] + params['nRows'] * params['cellSize'];
+            params['yllCorner'] + params['nRows'] * params['cellYSize'];
 
-        this.cellSize = params['cellSize'];
+        this.cellXSize = params['cellXSize'];
+        this.cellYSize = params['cellYSize'];
 
         this.grid = null; // to be defined by subclasses
         this.isContinuous = this.xurCorner - this.xllCorner >= 360;
@@ -69,7 +70,7 @@ export default class Field {
                 let [lon, lat] = this._lonLatAtIndexes(i, j);
                 let center = L.latLng(lat, lon);
                 let value = this._valueAtIndexes(i, j);
-                let c = new Cell(center, value, this.cellSize);
+                let c = new Cell(center, value, this.cellXSize, this.cellYSize);
                 cells.push(c); // <<
             }
         }
@@ -200,10 +201,10 @@ export default class Field {
                 lon = lon + 360;
             }
         }
-        let ii = (lon - this.xllCorner) / this.cellSize;
+        let ii = (lon - this.xllCorner) / this.cellXSize;
         let i = this._clampColumnIndex(ii);
 
-        let jj = (this.yurCorner - lat) / this.cellSize;
+        let jj = (this.yurCorner - lat) / this.cellYSize;
         let j = this._clampRowIndex(jj);
 
         return [i, j];
@@ -349,8 +350,8 @@ export default class Field {
      * @returns {Number} longitude at the center of the cell
      */
     _longitudeAtX(i) {
-        let halfPixel = this.cellSize / 2.0;
-        let lon = this.xllCorner + halfPixel + i * this.cellSize;
+        let halfXPixel = this.cellXSize / 2.0;
+        let lon = this.xllCorner + halfXPixel + i * this.cellXSize;
         if (this.longitudeNeedsToBeWrapped) {
             lon = lon > 180 ? lon - 360 : lon;
         }
@@ -363,8 +364,8 @@ export default class Field {
      * @returns {Number} latitude at the center of the cell
      */
     _latitudeAtY(j) {
-        let halfPixel = this.cellSize / 2.0;
-        return this.yurCorner - halfPixel - j * this.cellSize;
+        let halfYPixel = this.cellYSize / 2.0;
+        return this.yurCorner - halfYPixel - j * this.cellYSize;
     }
 
     /**

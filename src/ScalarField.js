@@ -18,12 +18,15 @@ export default class ScalarField extends Field {
         ScalarField._checkIsValidASCIIGridHeader(lines);
 
         let n = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/; // any number
+
+        const cellSize = parseFloat(lines[4].match(n)); // right now, no different x-y size is allowed
         let p = {
             nCols: parseInt(lines[0].match(n)),
             nRows: parseInt(lines[1].match(n)),
             xllCorner: parseFloat(lines[2].match(n)),
             yllCorner: parseFloat(lines[3].match(n)),
-            cellSize: parseFloat(lines[4].match(n))
+            cellXSize: cellSize,
+            cellYSize: cellSize
         };
         let noDataValue = lines[5]
             .toUpperCase()
@@ -85,18 +88,18 @@ export default class ScalarField extends Field {
         let rasters = image.readRasters();
         let tiepoint = image.getTiePoints()[0];
         let fileDirectory = image.getFileDirectory();
-        let pixelScale = fileDirectory.ModelPixelScale;
+        let [xScale, yScale] = fileDirectory.ModelPixelScale;
 
         // Check "Not supported raster"
-        let [xScale, yScale] = pixelScale;
-        if (xScale !== yScale) {
-            console.warn(
-                `GeoTIFF with different scale in x: ${xScale} y: ${yScale} is not currently supported`
-            );
-            console.warn(
-                'Make sure the difference is just a floating precission issue'
-            );
-        }
+        // let [xScale, yScale] = pixelScale;
+        // if (xScale !== yScale) {
+        //     console.warn(
+        //         `GeoTIFF with different scale in x: ${xScale} y: ${yScale} is not currently supported`
+        //     );
+        //     console.warn(
+        //         'Make sure the difference is just a floating precission issue'
+        //     );
+        // }
 
         let zs = rasters[bandIndex]; // left-right and top-down order
 
@@ -113,8 +116,9 @@ export default class ScalarField extends Field {
             nCols: image.getWidth(),
             nRows: image.getHeight(),
             xllCorner: tiepoint.x,
-            yllCorner: tiepoint.y - image.getHeight() * pixelScale[0],
-            cellSize: pixelScale[0],
+            yllCorner: tiepoint.y - image.getHeight() * yScale,
+            cellXSize: xScale,
+            cellYSize: yScale,
             zs: zs
         };
 

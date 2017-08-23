@@ -58,12 +58,14 @@ export default class VectorField extends Field {
      * @returns {Object} - parameters to build VectorField
      */
     static _paramsFromScalarFields(u, v) {
+        // TODO check u & v compatibility (cellSize...)
         let p = {
             nCols: u.nCols,
             nRows: u.nRows,
             xllCorner: u.xllCorner,
             yllCorner: u.yllCorner,
-            cellSize: u.cellSize,
+            cellXSize: u.cellXSize,
+            cellYSize: u.cellYSize,
             us: u.zs,
             vs: v.zs
         };
@@ -92,7 +94,8 @@ export default class VectorField extends Field {
             nRows: this.params.nRows,
             xllCorner: this.params.xllCorner,
             yllCorner: this.params.yllCorner,
-            cellSize: this.params.cellSize,
+            cellXSize: this.params.cellXSize,
+            cellYSize: this.params.cellYSize,
             zs: this._applyOnField(f)
         };
         return new ScalarField(p);

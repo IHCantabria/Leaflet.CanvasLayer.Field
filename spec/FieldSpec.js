@@ -1,18 +1,18 @@
-describe('Field', function () {
+describe('Field', function() {
     let Field = L.Field;
     let ScalarField = L.ScalarField;
 
     let dataFolder = '../../docs/data';
     let f;
 
-    beforeEach(function (fileLoaded) {
-        d3.text(`${dataFolder}/U.asc`, function (asc) {
+    beforeEach(function(fileLoaded) {
+        d3.text(`${dataFolder}/U.asc`, function(asc) {
             f = ScalarField.fromASCIIGrid(asc);
             fileLoaded();
         });
     });
 
-    it('gives general info about its cells and extent', function () {
+    it('gives general info about its cells and extent', function() {
         expect(f.nCols).toEqual(10);
         expect(f.nRows).toEqual(10);
 
@@ -26,11 +26,14 @@ describe('Field', function () {
         expect(f.xurCorner).toBeCloseTo(xmax, 8);
         expect(f.yurCorner).toBeCloseTo(ymax, 8);
 
-        expect(f.cellSize).toEqual(0.000505065545);
+        const size = 0.000505065545;
+        expect(f.cellXSize).toEqual(size);
+        expect(f.cellYSize).toEqual(size);
+
         expect(f.numCells()).toEqual(100);
     });
 
-    it('is a regular grid with nCols & nRows', function () {
+    it('is a regular grid with nCols & nRows', function() {
         expect(f.grid).not.toBe(null);
 
         let i = f.grid.length;
@@ -39,7 +42,7 @@ describe('Field', function () {
         expect(j).toBe(f.nCols);
     });
 
-    it('can generate a random position inside', function () {
+    it('can generate a random position inside', function() {
         let pos = f.randomPosition();
         expect(pos).not.toBe(null);
         expect(f.contains(pos.x, pos.y)).toBe(true);
@@ -48,7 +51,7 @@ describe('Field', function () {
         expect(pos2).not.toBe(pos);
     });
 
-    it('knows the longitude & latitude for each cell', function () {
+    it('knows the longitude & latitude for each cell', function() {
         // longitudes
         let xminCenter = f._longitudeAtX(0);
         expect(xminCenter).toBeCloseTo(-3.7692175003915001, 6);
@@ -78,39 +81,39 @@ describe('Field', function () {
         expect(p[1]).toBeCloseTo(43.461099497838006, 7);
     });
 
-    it('doesn\'t return a value for a lon-lat outside of the grid ', function () {
+    it("doesn't return a value for a lon-lat outside of the grid ", function() {
         let lon = -3.710591474014617;
         let lat = 43.47082043045964;
         expect(f.hasValueAt(lon, lat)).toBe(false);
     });
 
-    describe('Field [0-360º]', function () {
+    describe('Field [0-360º]', function() {
         let dataFolder = '../../docs/data';
 
-        beforeEach(function (fileLoaded2) {
-            d3.text(`${dataFolder}/u_noaa.asc`, function (asc) {
+        beforeEach(function(fileLoaded2) {
+            d3.text(`${dataFolder}/u_noaa.asc`, function(asc) {
                 f360 = ScalarField.fromASCIIGrid(asc);
                 fileLoaded2();
             });
         });
 
-        it('supports 0-360 longitudes', function () {
+        it('supports 0-360 longitudes', function() {
             expect(f360.longitudeNeedsToBeWrapped).toBe(true);
         });
 
-        it('returns wrapped extent', function () {
+        it('returns wrapped extent', function() {
             // const original = [ -0.25, -90.25, 359.75, 90.25 ];  //wrapped, as in some NOAA products
             const expected = [-180, -90.25, 180, 90.25];
             expect(expected).toEqual(f360.extent());
         });
 
-        it('contains points in [-180, 180] range', function () {
+        it('contains points in [-180, 180] range', function() {
             expect(f360.contains(-180, 0)).toBe(true);
             expect(f360.contains(0, 0)).toBe(true);
             expect(f360.contains(180, 0)).toBe(true);
         });
 
-        it('returns values & interpolated values', function () {
+        it('returns values & interpolated values', function() {
             // some values
             const a = -0.43;
             expect(a).toBe(f360.valueAt(0, 90)); // first value at .asc
@@ -125,7 +128,7 @@ describe('Field', function () {
             expect(f360.interpolatedValueAt(-180, -90)).not.toBe(c);
         });
 
-        it('uses a wrapped longitude & latitude for each cell', function () {
+        it('uses a wrapped longitude & latitude for each cell', function() {
             // longitudes
             let xminCenter = f360._longitudeAtX(0);
             expect(xminCenter).toBe(0);

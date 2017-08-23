@@ -133,12 +133,16 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
         for (var y = 0; y < this._field.height; y = y + stride) {
             for (var x = 0; x < this._field.width; x = x + stride) {
-                //var rasterIndex = y * this.raster.width + x; // TODO check
                 let [lon, lat] = this._field._lonLatAtIndexes(x, y);
                 let v = this._field.valueAt(lon, lat);
                 let center = L.latLng(lat, lon);
                 if (v !== null && currentBounds.contains(center)) {
-                    let cell = new Cell(center, v, this.cellSize);
+                    let cell = new Cell(
+                        center,
+                        v,
+                        this.cellXSize,
+                        this.cellYSize
+                    );
                     this._drawArrow(cell, ctx);
                 }
             }
