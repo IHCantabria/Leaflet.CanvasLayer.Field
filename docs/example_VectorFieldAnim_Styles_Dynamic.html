@@ -46,7 +46,7 @@
         let map = L.map('map');
 
         /* Basemap */
-        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        let url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'OSM & Carto',
             subdomains: 'abcd',
@@ -55,13 +55,13 @@
 
         /* Default vectorfield animation, from two ASCIIGrid files with u|v current velocity */
         let layer;
-        d3.text('data/Bay_U.asc', function(u) {
-            d3.text('data/Bay_V.asc', function(v) {
+        d3.text('data/Bay_U.asc', function (u) {
+            d3.text('data/Bay_V.asc', function (v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v);
                 layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
                 map.fitBounds(layer.getBounds());
 
-                layer.on('click', function(e) {
+                layer.on('click', function (e) {
                     if (e.value !== null) {
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
@@ -78,25 +78,24 @@
 
         /* Basic style adjustments with controls */
         let width = document.getElementById('width');
-        width.addEventListener('input', function() {
+        width.addEventListener('input', function () {
             layer.options.width = width.value;
         });
 
         let color = document.getElementById('color');
-        color.addEventListener('input', function() {
+        color.addEventListener('input', function () {
             layer.options.color = color.value;
         });
 
         let velocityScale = document.getElementById('velocityScale');
-        velocityScale.addEventListener('input', function() {
+        velocityScale.addEventListener('input', function () {
             layer.options.velocityScale = 1 / velocityScale.value;
         });
 
         let opacity = document.getElementById('opacity');
-        opacity.addEventListener('input', function() {
+        opacity.addEventListener('input', function () {
             layer.setOpacity(opacity.value);
         });
-
     </script>
 </body>
 

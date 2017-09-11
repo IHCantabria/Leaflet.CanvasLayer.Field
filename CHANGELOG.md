@@ -32,8 +32,6 @@
 #v1.3.1
 - Rounding issues throws not expected error when mananaging Geotiff with regular size cells. Substitute error with console.warn
 
-#v1.3.2 in progress...
-- Now the plugin correctly manages different x-y pixel size in geotiff files (so it is more flexible and accurate). It also removes `v1.3.1` temporal warning such as in issue #10
-- TODO. Add 'arrow renderer' image to README
-- TODO. Change carto basemap urls to https
-- ?
+#v1.3.2
+- Now the plugin correctly manages different x-y pixel size in geotiff files (so it is more flexible and accurate). It also removes `v1.3.1` temporal console warning, described in issue #10
+- Change carto basemap urls to https in examples.

@@ -27,7 +27,7 @@
         let map = L.map('map');
 
         /* Basemap */
-        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        let url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'OSM & Carto',
             subdomains: 'abcd',
@@ -35,7 +35,7 @@
         }).addTo(map);
 
         /* Simple layer with points at the center of ScalarField cells */
-        d3.text('data/Bay_Speed.asc', function(s) {
+        d3.text('data/Bay_Speed.asc', function (s) {
             let f = L.ScalarField.fromASCIIGrid(s);
             let points = f.getCells().map(c => c.center); // es6! TODO
             let layer = L.canvasLayer.simpleLonLat(points, {
@@ -46,7 +46,6 @@
 
             map.fitBounds(layer.getBounds());
         });
-
     </script>
 </body>
 

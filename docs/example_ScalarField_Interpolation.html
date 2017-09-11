@@ -26,17 +26,17 @@
     let map = L.map('map');
 
     /* Basemap */
-    var url = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+    var url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png';
     L.tileLayer(url, {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd'
     }).addTo(map);
 
     /* An ASCIIGrid Raster with Surface current velocity */
-    d3.text('data/Bay_Speed.asc', function(asc) {
+    d3.text('data/Bay_Speed.asc', function (asc) {
       let s = L.ScalarField.fromASCIIGrid(asc);
 
-      let identify = function(e) {
+      let identify = function (e) {
         if (e.value !== null) {
           let v = e.value.toFixed(3);
           let html = `<span class="popupText">Surface currents velocity ${v} m/s</span>`;
@@ -61,9 +61,9 @@
         "Interpolated": interpolated,
         "Original": original
       }, {}, {
-        position: 'bottomleft',
-        collapsed: false
-      }).addTo(map);
+          position: 'bottomleft',
+          collapsed: false
+        }).addTo(map);
 
 
     });

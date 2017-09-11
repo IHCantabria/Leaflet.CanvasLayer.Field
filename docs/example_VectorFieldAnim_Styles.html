@@ -23,7 +23,7 @@
 
     <script>
         let map = L.map("map");
-        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        let url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'OSM & Carto',
             subdomains: 'abcd',
@@ -31,8 +31,8 @@
         }).addTo(map);
 
         // Vectorfield animations with custom parameters
-        d3.text('data/Atlantic_U.asc', function(u) {
-            d3.text('data/Atlantic_V.asc', function(v) {
+        d3.text('data/Atlantic_U.asc', function (u) {
+            d3.text('data/Atlantic_V.asc', function (v) {
                 let vf = L.VectorField.fromASCIIGrids(u, v, 0.001); // scalefactor to get units in m/s
 
                 let layer = L.canvasLayer.vectorFieldAnim(vf, {
@@ -57,13 +57,12 @@
 
                 // Change color of layer2, every n secs.
                 var colors = ['cyan', 'yellow', 'pink', 'aqua', 'DeepSkyBlue'];
-                setInterval(function() {
+                setInterval(function () {
                     var r = Math.random() * colors.length | 0;
                     layer.options.color = colors[r];
                 }, 5000);
             });
         });
-
     </script>
 </body>
 

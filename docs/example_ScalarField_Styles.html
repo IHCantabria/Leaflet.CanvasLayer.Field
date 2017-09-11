@@ -62,7 +62,7 @@
         var map = L.map('map');
 
         /* Basemap */
-        var url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        var url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: 'CartoDB & OSM',
             subdomains: 'abc',
@@ -72,7 +72,7 @@
         /*
             Some ScalarField layers with custom styles
         */
-        d3.text('data/Bay_Speed.asc', function(asc) {
+        d3.text('data/Bay_Speed.asc', function (asc) {
             var s = L.ScalarField.fromASCIIGrid(asc);
 
             var layer1 = L.canvasLayer.scalarField(s, {
@@ -108,7 +108,7 @@
             let gradientColors = document.getElementsByTagName('input[type=color]');
             let low = document.getElementById('lowColor');
             let high = document.getElementById('highColor');
-            var updateGradient = function() {
+            var updateGradient = function () {
                 var scale = chroma.scale([low.value, high.value]).domain(s.range);
                 layer1.setColor(scale);
             }
@@ -117,20 +117,20 @@
 
             //      colorBrewer scale
             let colorBrewer = document.getElementById('colorBrewer');
-            colorBrewer.addEventListener('change', function() {
+            colorBrewer.addEventListener('change', function () {
                 var scale = chroma.scale(this.value).domain(s.range);
                 layer2.setColor(scale);
             });
 
             //      classes
             let classes = document.getElementById("classes");
-            classes.addEventListener("change", function() {
+            classes.addEventListener("change", function () {
                 var scale = chroma.scale('OrRd').classes(parseInt(this.value));
                 layer3.setColor(scale);
             });
 
             //      enable panels
-            map.on('baselayerchange', function(e) {
+            map.on('baselayerchange', function (e) {
                 let gradientPanel = document.getElementById('gradientPanel');
                 gradientPanel.style.display = (e.layer === layer1) ? "block" : "none";
 
@@ -141,7 +141,6 @@
                 classesPanel.style.display = (e.layer === layer3) ? "block" : "none";
             });
         });
-
     </script>
 </body>
 

@@ -27,7 +27,7 @@
         let map = L.map('map');
 
         /* Dark basemap */
-        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        let url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd'
@@ -37,7 +37,7 @@
             https://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.pressure.html
         */
         d3.request("data/base/wind_noaa.tif").responseType('arraybuffer').get(
-            function(error, tiffData) {
+            function (error, tiffData) {
                 // u & v in two bands
                 let vf = L.VectorField.fromMultibandGeoTIFF(tiffData.response, bandIndexesForUV = [0, 1]);
                 let winds = L.canvasLayer.vectorFieldAnim(vf, {
@@ -51,7 +51,7 @@
 
                 map.fitBounds(winds.getBounds());
 
-                winds.on('click', function(e) {
+                winds.on('click', function (e) {
                     if (e.value !== null) {
                         let vector = e.value;
                         let v = vector.magnitude().toFixed(2);
@@ -65,7 +65,6 @@
                 });
 
             });
-
     </script>
 </body>
 

@@ -27,7 +27,7 @@
         let map = L.map('map');
 
         /* Dark basemap */
-        let url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
+        let url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
         L.tileLayer(url, {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd'
@@ -58,7 +58,7 @@
         let juntaColors = ['#E4EF75', '#B3CF82', '#799B3C', '#60632C', '#A88446', '#CDB2B9', '#593815', '#CDB2B9', '#F4F2F5'];
 
         d3.request(urlCoverage).responseType('arraybuffer').get(
-            function(error, tiffData) {
+            function (error, tiffData) {
                 // band 0
                 geo = L.ScalarField.fromGeoTIFF(tiffData.response);
 
@@ -72,7 +72,7 @@
 
                 map.fitBounds(dtm.getBounds());
 
-                dtm.on('click', function(e) {
+                dtm.on('click', function (e) {
                     if (e.value !== null) {
                         let v = e.value.toFixed(0);
                         let html = (`<span class="popupText">Height: ${v} meters</span><br/>`);
@@ -98,7 +98,6 @@
         function styleGradient() {
             dtm.setColor(chroma.scale(juntaColors).domain(geo.range));
         }
-
     </script>
 </body>
 
