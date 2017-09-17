@@ -87,36 +87,24 @@ describe('Field', function() {
         expect(f.hasValueAt(lon, lat)).toBe(false);
     });
 
-    describe('Field [0-360º]', function() {
-        let dataFolder = '../../docs/data';
-
-        beforeEach(function(fileLoaded2) {
-            d3.text(`${dataFolder}/u_noaa.asc`, function(asc) {
-                f360 = ScalarField.fromASCIIGrid(asc);
-                fileLoaded2();
-            });
-        });
-
-        /*
-        f360 = new ScalarField();
-        const p = {
+    describe('Field [0-360º] (Simple 3 x 3 matrix)', function() {
+        const f360 = new ScalarField({
             nCols: 3,
             nRows: 3,
             xllCorner: 0,
             yllCorner: -90,
             cellXSize: 120,
-            cellYSize: 30,
+            cellYSize: 60,
             zs: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        };
-        */
+        });
 
-        f360.it('supports 0-360 longitudes', function() {
+        it('supports 0-360 longitudes', function() {
             expect(f360.longitudeNeedsToBeWrapped).toBe(true);
         });
 
         it('returns wrapped extent', function() {
-            // const original = [ -0.25, -90.25, 359.75, 90.25 ];  //wrapped, as in some NOAA products
-            const expected = [-180, -90.25, 180, 90.25];
+            // const original = [ 0, -90, 360, 90 ];
+            const expected = [-180, -90, 180, 90];
             expect(expected).toEqual(f360.extent());
         });
 
@@ -124,6 +112,21 @@ describe('Field', function() {
             expect(f360.contains(-180, 0)).toBe(true);
             expect(f360.contains(0, 0)).toBe(true);
             expect(f360.contains(180, 0)).toBe(true);
+        });
+
+        it('returns wrapped longitudes for cells', function() {
+            // longitudes (center at first and last columns)
+            let xminCenter = f360._longitudeAtX(0);
+            expect(xminCenter).toBe(60);
+            let xmaxCenter = f360._longitudeAtX(2);
+            expect(xmaxCenter).toBe(-60); // 300º >> -60
+
+            // //
+            let first = f360._lonLatAtIndexes(0, 0); //topLeft
+            expect(first).toEqual([60, 60]);
+
+            let last = f360._lonLatAtIndexes(2, 2); // bottomRight
+            expect(last).toEqual([-60, -60]);
         });
 
         it('returns values & interpolated values', function() {
@@ -140,8 +143,36 @@ describe('Field', function() {
             expect(f360.interpolatedValueAt(0, -90)).not.toBe(b);
             expect(f360.interpolatedValueAt(-180, -90)).not.toBe(c);
         });
+    });
 
-        it('uses a wrapped longitude & latitude for each cell', function() {
+    describe('Field [0-360º] (NOAA Sample)', function() {
+        let dataFolder = '../../docs/data';
+        let f360;
+
+        beforeEach(function(fileLoaded2) {
+            d3.text(`${dataFolder}/u_noaa.asc`, function(asc) {
+                f360 = ScalarField.fromASCIIGrid(asc);
+                fileLoaded2();
+            });
+        });
+
+        it('supports 0-360 longitudes', function() {
+            expect(f360.longitudeNeedsToBeWrapped).toBe(true);
+        });
+
+        it('returns wrapped extent', function() {
+            // const original = [ -0.25, -90.25, 359.75, 90.25 ];  //wrapped, as in some NOAA products
+            const expected = [-180, -90.25, 180, 90.25];
+            expect(expected).toEqual(f360.extent());
+        });
+
+        it('contains points in [-180, 180] range', function() {
+            expect(f360.contains(-180, 0)).toBe(true);
+            expect(f360.contains(0, 0)).toBe(true);
+            expect(f360.contains(180, 0)).toBe(true);
+        });
+
+        it('returns wrapped longitudes for cells', function() {
             // longitudes
             let xminCenter = f360._longitudeAtX(0);
             expect(xminCenter).toBe(0);
@@ -157,6 +188,21 @@ describe('Field', function() {
             let last = f360._lonLatAtIndexes(719, 360);
             expect(last[0]).toBe(-0.5);
             expect(last[1]).toBe(-90.0);
+        });
+
+        it('returns values & interpolated values', function() {
+            // some values
+            const a = -0.43;
+            expect(a).toBe(f360.valueAt(0, 90)); // first value at .asc
+            const b = -1.35;
+            expect(b).toBe(f360.valueAt(0, -90));
+            const c = 1.35;
+            expect(c).toBe(f360.valueAt(-180, -90));
+
+            // and some interpolated...
+            expect(f360.interpolatedValueAt(0, 90)).not.toBe(a);
+            expect(f360.interpolatedValueAt(0, -90)).not.toBe(b);
+            expect(f360.interpolatedValueAt(-180, -90)).not.toBe(c);
         });
     });
 });

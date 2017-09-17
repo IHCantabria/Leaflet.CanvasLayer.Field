@@ -1,7 +1,7 @@
 // webpack.config.js
-const webpack = require('webpack')
-const path = require('path')
-const WebpackShellPlugin = require('webpack-shell-plugin')
+const webpack = require('webpack');
+const path = require('path');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 const config = {
     context: path.resolve(__dirname, 'src'),
@@ -10,6 +10,7 @@ const config = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'leaflet.canvaslayer.field.js'
     },
+    devtool: 'source-map',
     module: {
         rules: [
             {
@@ -17,7 +18,7 @@ const config = {
                 test: /\.js$/,
                 include: path.resolve(__dirname, 'src'),
                 exclude: '/node_modules/',
-                loader: "eslint-loader"
+                loader: 'eslint-loader'
             },
             {
                 test: /\.js$/,
@@ -28,21 +29,25 @@ const config = {
                         loader: 'babel-loader',
                         options: {
                             presets: [
-                        ['es2015', {
-                                    modules: false
-                        }]
-                    ]
+                                [
+                                    'es2015',
+                                    {
+                                        modules: false
+                                    }
+                                ]
+                            ]
                         }
-                }]
+                    }
+                ]
             }
         ]
     },
     plugins: [
-    new WebpackShellPlugin({
+        new WebpackShellPlugin({
             onBuildStart: ['echo "Webpack Start"'],
             onBuildEnd: ['node copy-to-examples.js']
         })
-  ]
-}
+    ]
+};
 
-module.exports = config
+module.exports = config;
