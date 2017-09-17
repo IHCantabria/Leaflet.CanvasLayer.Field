@@ -97,7 +97,20 @@ describe('Field', function() {
             });
         });
 
-        it('supports 0-360 longitudes', function() {
+        /*
+        f360 = new ScalarField();
+        const p = {
+            nCols: 3,
+            nRows: 3,
+            xllCorner: 0,
+            yllCorner: -90,
+            cellXSize: 120,
+            cellYSize: 30,
+            zs: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        };
+        */
+
+        f360.it('supports 0-360 longitudes', function() {
             expect(f360.longitudeNeedsToBeWrapped).toBe(true);
         });
 

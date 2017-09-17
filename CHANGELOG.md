@@ -35,3 +35,6 @@
 #v1.3.2
 - Now the plugin correctly manages different x-y pixel size in geotiff files (so it is more flexible and accurate). It also removes `v1.3.1` temporal console warning, described in issue #10
 - Change carto basemap urls to https in examples.
+
+#v1.3.3 in progress...
+- Finally fixes problem in interpolation, when dealing with 0-360º rasters (see v1.2.1).

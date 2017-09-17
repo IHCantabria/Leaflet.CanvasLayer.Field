@@ -90,17 +90,6 @@ export default class ScalarField extends Field {
         let fileDirectory = image.getFileDirectory();
         let [xScale, yScale] = fileDirectory.ModelPixelScale;
 
-        // Check "Not supported raster"
-        // let [xScale, yScale] = pixelScale;
-        // if (xScale !== yScale) {
-        //     console.warn(
-        //         `GeoTIFF with different scale in x: ${xScale} y: ${yScale} is not currently supported`
-        //     );
-        //     console.warn(
-        //         'Make sure the difference is just a floating precission issue'
-        //     );
-        // }
-
         let zs = rasters[bandIndex]; // left-right and top-down order
 
         if (fileDirectory.GDAL_NODATA) {
