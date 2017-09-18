@@ -2,7 +2,7 @@ describe('Field', function() {
     let Field = L.Field;
     let ScalarField = L.ScalarField;
 
-    let dataFolder = '../../docs/data';
+    let dataFolder = 'base/docs/data';
     let f;
 
     beforeEach(function(fileLoaded) {
@@ -131,11 +131,11 @@ describe('Field', function() {
 
         it('returns values & interpolated values', function() {
             // some values
-            const a = -0.43;
+            const a = -1;
             expect(a).toBe(f360.valueAt(0, 90)); // first value at .asc
-            const b = -1.35;
+            const b = -1;
             expect(b).toBe(f360.valueAt(0, -90));
-            const c = 1.35;
+            const c = -1;
             expect(c).toBe(f360.valueAt(-180, -90));
 
             // and some interpolated...
@@ -146,7 +146,6 @@ describe('Field', function() {
     });
 
     describe('Field [0-360º] (NOAA Sample)', function() {
-        let dataFolder = '../../docs/data';
         let f360;
 
         beforeEach(function(fileLoaded2) {
