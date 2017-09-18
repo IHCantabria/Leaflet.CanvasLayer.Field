@@ -21,12 +21,19 @@
         "eslint-plugin-import": "^2.2.0",
         "eslint-webpack": "^3.12.2",
         "fs-extra": "^3.0.1",
+        "jasmine": "^2.8.0",
+        "jasmine-core": "^2.8.0",
+        "karma": "^1.7.1",
+        "karma-chrome-launcher": "^2.2.0",
+        "karma-cli": "^1.0.1",
+        "karma-jasmine": "^1.1.0",
         "webpack": "^2.5.1",
         "webpack-shell-plugin": "^0.5.0"
     },
     "scripts": {
         "start": "node_modules/.bin/webpack --watch",
-        "build": "node_modules/.bin/webpack -p"
+        "build": "node_modules/.bin/webpack -p",
+        "test": "node_modules/.bin/karma start"
     },
     "repository": {
         "type": "git",
