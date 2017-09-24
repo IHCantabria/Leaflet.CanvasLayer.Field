@@ -87,69 +87,11 @@ describe('Field', function() {
         expect(f.hasValueAt(lon, lat)).toBe(false);
     });
 
-    describe('Field [0-360º] (Simple 3 x 3 matrix)', function() {
-        const f360 = new ScalarField({
-            nCols: 3,
-            nRows: 3,
-            xllCorner: 0,
-            yllCorner: -90,
-            cellXSize: 120,
-            cellYSize: 60,
-            zs: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        });
-
-        it('supports 0-360 longitudes', function() {
-            expect(f360.longitudeNeedsToBeWrapped).toBe(true);
-        });
-
-        it('returns wrapped extent', function() {
-            // const original = [ 0, -90, 360, 90 ];
-            const expected = [-180, -90, 180, 90];
-            expect(expected).toEqual(f360.extent());
-        });
-
-        it('contains points in [-180, 180] range', function() {
-            expect(f360.contains(-180, 0)).toBe(true);
-            expect(f360.contains(0, 0)).toBe(true);
-            expect(f360.contains(180, 0)).toBe(true);
-        });
-
-        it('returns wrapped longitudes for cells', function() {
-            // longitudes (center at first and last columns)
-            let xminCenter = f360._longitudeAtX(0);
-            expect(xminCenter).toBe(60);
-            let xmaxCenter = f360._longitudeAtX(2);
-            expect(xmaxCenter).toBe(-60); // 300º >> -60
-
-            // //
-            let first = f360._lonLatAtIndexes(0, 0); //topLeft
-            expect(first).toEqual([60, 60]);
-
-            let last = f360._lonLatAtIndexes(2, 2); // bottomRight
-            expect(last).toEqual([-60, -60]);
-        });
-
-        it('returns values & interpolated values', function() {
-            // some values
-            const a = -1;
-            expect(a).toBe(f360.valueAt(0, 90)); // first value at .asc
-            const b = -1;
-            expect(b).toBe(f360.valueAt(0, -90));
-            const c = -1;
-            expect(c).toBe(f360.valueAt(-180, -90));
-
-            // and some interpolated...
-            expect(f360.interpolatedValueAt(0, 90)).not.toBe(a);
-            expect(f360.interpolatedValueAt(0, -90)).not.toBe(b);
-            expect(f360.interpolatedValueAt(-180, -90)).not.toBe(c);
-        });
-    });
-
-    describe('Field [0-360º] (NOAA Sample)', function() {
+    describe('Field [0-360º] (simple360.asc == 6 x 3 cells))', function() {
         let f360;
 
         beforeEach(function(fileLoaded2) {
-            d3.text(`${dataFolder}/u_noaa.asc`, function(asc) {
+            d3.text(`${dataFolder}/simple360.asc`, function(asc) {
                 f360 = ScalarField.fromASCIIGrid(asc);
                 fileLoaded2();
             });
@@ -161,7 +103,7 @@ describe('Field', function() {
 
         it('returns wrapped extent', function() {
             // const original = [ -0.25, -90.25, 359.75, 90.25 ];  //wrapped, as in some NOAA products
-            const expected = [-180, -90.25, 180, 90.25];
+            const expected = [-180, -90, 180, 90];
             expect(expected).toEqual(f360.extent());
         });
 
@@ -176,32 +118,33 @@ describe('Field', function() {
             let xminCenter = f360._longitudeAtX(0);
             expect(xminCenter).toBe(0);
 
-            let xmaxCenter = f360._longitudeAtX(719);
-            expect(xmaxCenter).toBeCloseTo(-0.5, 6);
+            let xmaxCenter = f360._longitudeAtX(5);
+            expect(xmaxCenter).toBe(-60);
 
             // //
             let first = f360._lonLatAtIndexes(0, 0);
             expect(first[0]).toBe(0);
-            expect(first[1]).toBe(90);
+            expect(first[1]).toBe(60);
 
-            let last = f360._lonLatAtIndexes(719, 360);
-            expect(last[0]).toBe(-0.5);
-            expect(last[1]).toBe(-90.0);
+            let last = f360._lonLatAtIndexes(5, 2);
+            expect(last[0]).toBe(-60);
+            expect(last[1]).toBe(-60);
         });
 
-        it('returns values & interpolated values', function() {
-            // some values
-            const a = -0.43;
-            expect(a).toBe(f360.valueAt(0, 90)); // first value at .asc
-            const b = -1.35;
-            expect(b).toBe(f360.valueAt(0, -90));
-            const c = 1.35;
-            expect(c).toBe(f360.valueAt(-180, -90));
+        it('returns correct values', function() {
+            // raster original values...
+            //  corners...
+            expect(f360.valueAt(-30, 90)).toBe(1); // upper-left
+            expect(f360.valueAt(-30, -90)).toBe(13); // bottom-left
+            expect(f360.valueAt(-30.1, 90)).toBe(6); // upper-right;
+            expect(f360.valueAt(-30.1, -90)).toBe(18); // bottom-right
 
-            // and some interpolated...
-            expect(f360.interpolatedValueAt(0, 90)).not.toBe(a);
-            expect(f360.interpolatedValueAt(0, -90)).not.toBe(b);
-            expect(f360.interpolatedValueAt(-180, -90)).not.toBe(c);
+            expect(f360.valueAt(-30, 0)).toBe(7); // middle-left
+            expect(f360.valueAt(-30.1, 0)).toBe(12); // middle-right
+
+            //  around the 180º meridian...
+            expect(f360.valueAt(179, 0)).toBe(10);
+            expect(f360.valueAt(-179, 0)).toBe(10);
         });
     });
 });

@@ -28,11 +28,13 @@
         "karma-cli": "^1.0.1",
         "karma-jasmine": "^1.1.0",
         "webpack": "^2.5.1",
+        "webpack-dev-server": "^2.8.2",
         "webpack-shell-plugin": "^0.5.0"
     },
     "scripts": {
         "start": "node_modules/.bin/webpack --watch",
         "build": "node_modules/.bin/webpack -p",
+        "web": "node_modules/.bin/webpack-dev-server",
         "test": "node_modules/.bin/karma start"
     },
     "repository": {

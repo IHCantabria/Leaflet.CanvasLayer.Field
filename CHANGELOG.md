@@ -37,4 +37,6 @@
 - Change carto basemap urls to https in examples.
 
 #v1.3.3 in progress...
-- Finally fixes problem in interpolation, when dealing with 0-360º rasters (see v1.2.1).
+- Fixed some problems when dealing with 0-360º rasters [wrong wrapped value + interpolation artifact at first column (see v1.2.1)].
+- Build: added karma to run jasmine tests (instead of previous manual mode) and webpack-dev-server.
+- Delete unused L.ColorScale class.

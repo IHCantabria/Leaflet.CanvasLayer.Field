@@ -189,24 +189,18 @@ export default class Field {
     }
 
     /**
-     * Get decimal indexes, clampling on borders 
+     * Get decimal indexes
      * @private
      * @param {Number} lon
      * @param {Number} lat
      * @returns {Array}    [[Description]]
      */
     _getDecimalIndexes(lon, lat) {
-        if (this.longitudeNeedsToBeWrapped) {
-            if (lon < 0) {
-                lon = lon + 360;
-            }
+        if (this.longitudeNeedsToBeWrapped && lon < this.xllCorner) {
+            lon = lon + 360;
         }
-        let ii = (lon - this.xllCorner) / this.cellXSize;
-        let i = this._clampColumnIndex(ii);
-
-        let jj = (this.yurCorner - lat) / this.cellYSize;
-        let j = this._clampRowIndex(jj);
-
+        let i = (lon - this.xllCorner) / this.cellXSize;
+        let j = (this.yurCorner - lat) / this.cellYSize;
         return [i, j];
     }
 
@@ -218,11 +212,17 @@ export default class Field {
      * @returns {Array} [fi, ci, fj, cj]
      */
     _getFourSurroundingIndexes(i, j) {
-        let fi = this._clampColumnIndex(Math.floor(i));
-        let ci = this._clampColumnIndex(fi + 1);
+        let fi = Math.floor(i);
+        let ci = fi + 1;
+        // duplicate colum to simplify interpolation logic (wrapped value)
+        if (this.isContinuous && ci >= this.nCols) {
+            ci = 0;
+        }
+        ci = this._clampColumnIndex(ci);
+
         let fj = this._clampRowIndex(Math.floor(j));
         let cj = this._clampRowIndex(fj + 1);
-        //console.log(fi, ci, fj, cj);
+
         return [fi, ci, fj, cj];
     }
 
@@ -271,7 +271,10 @@ export default class Field {
         let ii = Math.floor(i);
         let jj = Math.floor(j);
 
-        let value = this._valueAtIndexes(ii, jj);
+        const ci = this._clampColumnIndex(ii);
+        const cj = this._clampRowIndex(jj);
+
+        let value = this._valueAtIndexes(ci, cj);
         if (this._inFilter) {
             if (!this._inFilter(value)) return null;
         }
@@ -393,7 +396,7 @@ export default class Field {
         }
         let maxCol = this.nCols - 1;
         if (ii > maxCol) {
-            i = this.isContinuous ? 0 : maxCol; // duplicate first column when raster is continuous
+            i = maxCol;
         }
         return i;
     }
