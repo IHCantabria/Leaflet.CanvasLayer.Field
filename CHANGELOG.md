@@ -36,7 +36,7 @@
 - Now the plugin correctly manages different x-y pixel size in geotiff files (so it is more flexible and accurate). It also removes `v1.3.1` temporal console warning, described in issue #10
 - Change carto basemap urls to https in examples.
 
-#v1.3.3 in progress...
+#v1.3.3
 - Fixed some problems when dealing with 0-360º rasters [wrong wrapped value + interpolation artifact at first column (see v1.2.1)].
 - Build: added karma to run jasmine tests (instead of previous manual mode) and webpack-dev-server.
-- Delete unused L.ColorScale class.
+- Minor: deleted unused L.ColorScale class + little adjustments in examples.
