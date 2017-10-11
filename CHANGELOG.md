@@ -41,5 +41,9 @@
 - Build: added karma to run jasmine tests (instead of previous manual mode) and webpack-dev-server.
 - Minor: deleted unused L.ColorScale class + little adjustments in examples.
 
+#v1.3.4
+- Fixed 'RangeError: Maximum call stack size exceeded', when loading some big ASCII Grid files.
+
 #v1.4.0 in progress...
 - Added an optional parameter `spatialMask` to layers. The mask defines a region for which the raster values will be considered (for rendering and identifying operations).
+
