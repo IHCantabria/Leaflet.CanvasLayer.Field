@@ -40,10 +40,11 @@ export default class ScalarField extends Field {
             if (line === '') break;
 
             let items = line.split(' ');
-            let values = items.map(it => {
-                return it !== noDataValue ? parseFloat(it * scaleFactor) : null;
+            items.forEach(it => {
+                const v =
+                    it !== noDataValue ? parseFloat(it * scaleFactor) : null;
+                zs.push(v);
             });
-            zs.push(...values);
         }
         p.zs = zs;
 
