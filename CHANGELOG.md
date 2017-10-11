@@ -40,3 +40,6 @@
 - Fixed some problems when dealing with 0-360º rasters [wrong wrapped value + interpolation artifact at first column (see v1.2.1)].
 - Build: added karma to run jasmine tests (instead of previous manual mode) and webpack-dev-server.
 - Minor: deleted unused L.ColorScale class + little adjustments in examples.
+
+#v1.3.4
+- Fixed 'RangeError: Maximum call stack size exceeded', when loading some big ASCII Grid files.
