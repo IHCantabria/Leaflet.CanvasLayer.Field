@@ -1,4 +1,5 @@
 import Cell from './Cell';
+import inside from '@turf/inside';
 
 /**
  *  Abstract class for a set of values (Vector | Scalar)
@@ -33,6 +34,7 @@ export default class Field {
         this.longitudeNeedsToBeWrapped = this.xurCorner > 180; // [0, 360] --> [-180, 180]
 
         this._inFilter = null;
+        this._spatialMask = null;
     }
 
     /**
@@ -87,6 +89,14 @@ export default class Field {
     }
 
     /**
+     * Apply a spatial mask to field values
+     * @param {L.GeoJSON} m 
+     */
+    setSpatialMask(m) {
+        this._spatialMask = m;
+    }
+
+    /**
      * Grid extent
      * @returns {Number[]} [xmin, ymin, xmax, ymax]
      */
@@ -120,19 +130,47 @@ export default class Field {
     }
 
     /**
-     * Returns whether or not the grid contains the point
+     * Returns whether or not the grid contains the point, considering
+     * the spatialMask if it has been previously set
      * @param   {Number} lon - longitude
      * @param   {Number} lat - latitude
      * @returns {Boolean}
      */
     contains(lon, lat) {
-        let [xmin, xmax] = this._getWrappedLongitudes();
+        if (this._spatialMask) {
+            this._pointInMask(lon, lat);
+        }
+        return this._pointInExtent(lon, lat);
+    }
 
-        //let longitudeIn = this.isContinuous ? true : (lon >= xmin && lon <= xmax);
+    /**
+     * Checks if coordinates are inside the Extent (considering wrapped longitudes if needed)
+     * @param {Number} lon 
+     * @param {Number} lat 
+     */
+    _pointInExtent(lon, lat) {
+        let [xmin, xmax] = this._getWrappedLongitudes();
         let longitudeIn = lon >= xmin && lon <= xmax;
         let latitudeIn = lat >= this.yllCorner && lat <= this.yurCorner;
-
         return longitudeIn && latitudeIn;
+    }
+
+    /**
+     * Check if coordinates are inside the spatialMask (Point in Polygon analysis)
+     * @param {Number} lon 
+     * @param {Number} lat 
+     */
+    _pointInMask(lon, lat) {
+        const pt = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [lon, lat] // geojson, lon-lat order
+            },
+            properties: {}
+        };
+        const poly = this._spatialMask.geometry;
+        return inside(pt, poly);
     }
 
     /**

@@ -87,6 +87,31 @@ describe('Field', function() {
         expect(f.hasValueAt(lon, lat)).toBe(false);
     });
 
+    it('accepts a spatialMask', function() {
+        let lon = (f.xllCorner + f.xurCorner) / 2.0;
+        let lat = (f.yllCorner + f.yurCorner) / 2.0;
+        expect(f.contains(lon, lat)).toBe(true);
+
+        const aRectangle = {
+            type: 'Feature',
+            properties: { name: 'south-east portion' },
+            geometry: {
+                type: 'Polygon',
+                coordinates: [
+                    [
+                        [-3.76620135256, 43.462119341],
+                        [-3.76413446895, 43.462119341],
+                        [-3.76413446895, 43.4600412382],
+                        [-3.76620135256, 43.4600412382],
+                        [-3.76620135256, 43.462119341]
+                    ]
+                ]
+            }
+        };
+        f.setSpatialMask(aRectangle);
+        expect(f.contains(lon, lat)).toBe(false);
+    });
+
     describe('Field [0-360º] (simple360.asc == 6 x 3 cells))', function() {
         let f360;
 
