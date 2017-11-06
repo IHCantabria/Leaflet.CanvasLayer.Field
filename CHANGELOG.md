@@ -43,3 +43,6 @@
 
 #v1.3.4
 - Fixed 'RangeError: Maximum call stack size exceeded', when loading some big ASCII Grid files.
+
+#v1.3.5
+- Added CI testing with travis, thanks to @sirreal (https://github.com/IHCantabria/Leaflet.CanvasLayer.Field/pull/12)
