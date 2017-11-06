@@ -31,10 +31,10 @@
         "webpack-shell-plugin": "^0.5.0"
     },
     "scripts": {
-        "start": "node_modules/.bin/webpack --watch",
-        "build": "node_modules/.bin/webpack -p",
-        "web": "node_modules/.bin/webpack-dev-server",
-        "test": "node_modules/.bin/karma start"
+        "start": "webpack --watch",
+        "build": "webpack -p",
+        "web": "webpack-dev-server",
+        "test": "karma start"
     },
     "repository": {
         "type": "git",
