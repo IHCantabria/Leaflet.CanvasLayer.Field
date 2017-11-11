@@ -4,6 +4,7 @@ A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize
 **[Leaflet.CanvasLayer.Field EXAMPLES](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)**
 
 ![Travis CI](https://travis-ci.org/IHCantabria/Leaflet.CanvasLayer.Field.svg?branch=master)
+[![npm version](https://badge.fury.io/js/leaflet-canvaslayer-field.svg)](https://badge.fury.io/js/leaflet-canvaslayer-field)
 
 It includes:
 * `L.CanvasLayer.ScalarField` - a "typical" raster layer (from scalars such as DTM, temperature...) that can be rendered with different color scales and arrows.
@@ -35,7 +36,7 @@ If you want to have a quick testing environment, have a look at these **snippets
 2. Include the JavaScript dependencies in your page:
 ```html
     <!-- CDN references -->
-    <script src="//npmcdn.com/leaflet@1.1.0/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/leaflet@1.2.0/dist/leaflet.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.4/chroma.min.js"></script>
     <script src="//d3js.org/d3.v4.min.js"></script>

@@ -47,7 +47,8 @@
 #v1.3.5
 - Added CI testing with travis, thanks to @sirreal (https://github.com/IHCantabria/Leaflet.CanvasLayer.Field/pull/12)
 
-#v1.4.0 in progress...
-- Added an optional parameter `spatialMask` to layers. The mask defines a region for which the raster values will be considered (for rendering and identifying operations).
-
-
+#v1.4.0
+- Added an optional parameter `spatialMask` (+ `setSpatialMask` method) to apply a Clip on `ScalarField`. The mask defines a Polygon as a GeoJSON Feature for which the raster values will be considered (for rendering and identifying operations). See `example_ScalarField_Mask`. This feature uses `@turf/inside`.
+- Minor:
+    - examples have been updated to work with Leaflet 1.2.0
+    - added a little npm badge in README file
