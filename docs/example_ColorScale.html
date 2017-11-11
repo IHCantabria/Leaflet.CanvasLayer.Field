@@ -4,7 +4,7 @@
 <head>
     <title>ColorScale</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" href="//unpkg.com/leaflet@1.1.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
@@ -15,14 +15,14 @@
     <div id="scales"></div>
 
     <!-- CDN -->
-    <script src="//npmcdn.com/leaflet@1.1.0/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/leaflet@1.2.0/dist/leaflet.js"></script>
 
     <!-- Plugin -->
     <script src="dist/leaflet.canvaslayer.field.js"></script>
 
     <script>
         function show(def) {
-            var cs = L.colorScale(def, {height: 50});
+            var cs = L.colorScale(def, { height: 50 });
             var div = document.getElementById('scales');
             div.appendChild(cs.canvas);
             div.appendChild(document.createElement('br'));
