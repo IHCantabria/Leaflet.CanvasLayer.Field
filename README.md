@@ -96,10 +96,11 @@ npm run start
 ## License
 Licensed under the GNU General Public License v3.0
 
-This software currently includes a copy of:
+This software currently depends a copy of:
 * [gLayers.Leaflet](https://github.com/Sumbera/gLayers.Leaflet) - MIT License
 
-At runtime it requires:
+At runtime it uses:
 * [chroma.js](https://github.com/gka/chroma.js) - BSD License
+* [@turf/inside](https://github.com/Turfjs/turf) - MIT License
 * [geotiff.js](https://github.com/constantinius/geotiff.js) - MIT License
 * [d3js](https://github.com/d3/d3) - BSD License
