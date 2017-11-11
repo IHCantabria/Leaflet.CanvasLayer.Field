@@ -138,7 +138,7 @@ export default class Field {
      */
     contains(lon, lat) {
         if (this._spatialMask) {
-            this._pointInMask(lon, lat);
+            return this._pointInMask(lon, lat);
         }
         return this._pointInExtent(lon, lat);
     }
@@ -165,11 +165,11 @@ export default class Field {
             type: 'Feature',
             geometry: {
                 type: 'Point',
-                coordinates: [lon, lat] // geojson, lon-lat order
+                coordinates: [lon, lat] // geojson, lon-lat order !
             },
             properties: {}
         };
-        const poly = this._spatialMask.geometry;
+        const poly = this._spatialMask;
         return inside(pt, poly);
     }
 

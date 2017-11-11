@@ -94,7 +94,7 @@ describe('Field', function() {
 
         const aRectangle = {
             type: 'Feature',
-            properties: { name: 'south-east portion' },
+            properties: { name: 'small south-east portion' },
             geometry: {
                 type: 'Polygon',
                 coordinates: [
