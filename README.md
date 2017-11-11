@@ -3,6 +3,8 @@ A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize
 
 **[Leaflet.CanvasLayer.Field EXAMPLES](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)**
 
+![Travis CI](https://travis-ci.org/IHCantabria/Leaflet.CanvasLayer.Field.svg?branch=master)
+
 It includes:
 * `L.CanvasLayer.ScalarField` - a "typical" raster layer (from scalars such as DTM, temperature...) that can be rendered with different color scales and arrows.
 * `L.CanvasLayer.VectorFieldAnim` - an animated layer representing a vector field (wind, currents...), based on the excellent [earth](https://github.com/cambecc/earth) by Cameron Becarrio
