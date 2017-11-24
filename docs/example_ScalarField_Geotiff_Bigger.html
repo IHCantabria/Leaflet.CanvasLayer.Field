@@ -38,7 +38,7 @@
         */
         d3.request("data/ndvi_201702_LZW.tif").responseType('arraybuffer').get(
             function (error, tiffData) {
-                let ndvi = L.ScalarField.fromGeoTIFF(tiffData.response);
+                let ndvi = L.ScalarField.fromGeoTIFF(tiffData.response, [0])[0];
 
                 let layer = L.canvasLayer.scalarField(ndvi, {
                     color: chroma.scale('YlGn').domain(ndvi.range),
