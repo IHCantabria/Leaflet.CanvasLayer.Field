@@ -52,3 +52,7 @@
 - Minor:
     - examples have been updated to work with Leaflet 1.2.0
     - added a little npm badge in README file
+
+#v1.4.1
+- Added new method `multipleFromGeoTIFF` to `ScalarField`to return all bands from a GeoTIFF raster file as an array, thanks to @santiquetzal (#16).
+
