@@ -69,19 +69,31 @@ export default class ScalarField extends Field {
             let line = upperCasesLines[i];
             let found = line.indexOf(expected) != -1;
             if (!found) {
-                throw `Not valid ASCIIGrid: expected '${expected}' at line '${line}' [lin. nº ${i}]`;
+                throw `Not valid ASCIIGrid: expected '${expected}' at line '${
+                    line
+                }' [lin. nº ${i}]`;
             }
             i++;
         }
     }
 
     /**
-     * Creates a ScalarField from the content of a GeoTIFF file, as read by geotiff.js
+     * Creates a ScalarField from the content of a GeoTIFF file
      * @param   {ArrayBuffer}   data
      * @param   {Number}   bandIndex
      * @returns {ScalarField}
      */
     static fromGeoTIFF(data, bandIndex = 0) {
+        return ScalarField.multipleFromGeoTIFF(data, [bandIndex])[0];
+    }
+
+    /**
+     * Creates a ScalarField array (one per band) from the content of a GeoTIFF file
+     * @param   {ArrayBuffer}   data
+     * @param   {Array}   bandIndexes - if not provided all bands are returned
+     * @returns {Array.<ScalarField>}
+     */
+    static multipleFromGeoTIFF(data, bandIndexes) {
         //console.time('ScalarField from GeoTIFF');
 
         let tiff = GeoTIFF.parse(data); // geotiff.js
@@ -91,29 +103,37 @@ export default class ScalarField extends Field {
         let fileDirectory = image.getFileDirectory();
         let [xScale, yScale] = fileDirectory.ModelPixelScale;
 
-        let zs = rasters[bandIndex]; // left-right and top-down order
-
-        if (fileDirectory.GDAL_NODATA) {
-            let noData = parseFloat(fileDirectory.GDAL_NODATA);
-            // console.log(noData);
-            let simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
-            zs = simpleZS.map(function(z) {
-                return z === noData ? null : z;
-            });
+        if (typeof bandIndexes === 'undefined' || bandIndexes.length === 0) {
+            bandIndexes = [...Array(rasters.length).keys()];
         }
 
-        let p = {
-            nCols: image.getWidth(),
-            nRows: image.getHeight(),
-            xllCorner: tiepoint.x,
-            yllCorner: tiepoint.y - image.getHeight() * yScale,
-            cellXSize: xScale,
-            cellYSize: yScale,
-            zs: zs
-        };
+        let scalarFields = [];
+        scalarFields = bandIndexes.map(function(bandIndex) {
+            let zs = rasters[bandIndex]; // left-right and top-down order
+
+            if (fileDirectory.GDAL_NODATA) {
+                let noData = parseFloat(fileDirectory.GDAL_NODATA);
+                // console.log(noData);
+                let simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
+                zs = simpleZS.map(function(z) {
+                    return z === noData ? null : z;
+                });
+            }
+
+            let p = {
+                nCols: image.getWidth(),
+                nRows: image.getHeight(),
+                xllCorner: tiepoint.x,
+                yllCorner: tiepoint.y - image.getHeight() * yScale,
+                cellXSize: xScale,
+                cellYSize: yScale,
+                zs: zs
+            };
+            return new ScalarField(p);
+        });
 
         //console.timeEnd('ScalarField from GeoTIFF');
-        return new ScalarField(p);
+        return scalarFields;
     }
 
     constructor(params) {
