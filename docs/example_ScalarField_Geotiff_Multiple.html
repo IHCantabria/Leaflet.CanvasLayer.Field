@@ -33,29 +33,40 @@
             subdomains: 'abcd'
         }).addTo(map);
 
-        /* NASA NDVI Index (2017-02) 0.1 deg (3600 x 1800): ~3.3MB with LZW (24.7MB uncompressed)
-        https://neo.sci.gsfc.nasa.gov/view.php?datasetId=MOD13A2_M_NDVI
-        */
-        d3.request("data/ndvi_201702_LZW.tif").responseType('arraybuffer').get(
+        /* GeoTIFF with n bands */
+        d3.request("data/tz850.tiff").responseType('arraybuffer').get(
             function (error, tiffData) {
-                let ndvi = L.ScalarField.fromGeoTIFF(tiffData.response);
+                let scalarFields = L.ScalarField.multipleFromGeoTIFF(tiffData.response);
+                let legend = {};
+                let bounds = {};
 
-                let layer = L.canvasLayer.scalarField(ndvi, {
-                    color: chroma.scale('YlGn').domain(ndvi.range),
-                    inFilter: (v) => v !== 0
+                scalarFields.forEach(function(sf, index) {
+                    let layerSf = L.canvasLayer.scalarField(sf, {
+                        color: chroma.scale('RdPu').domain(sf.range),
+                        opacity: 0.65
+                    }).addTo(map);
+                    layerSf.on('click', function (e) {
+                        if (e.value !== null) {
+                            let v = e.value.toFixed(0);
+                            let html = ('<span class="popupText">Value: ' + v + '</span>');
+                            L.popup()
+                                .setLatLng(e.latlng)
+                                .setContent(html)
+                                .openOn(map);
+                        }
+                    });
+                    legend["Band " + index] = layerSf;
+
+                    bounds = layerSf.getBounds();
+                });
+
+                // Layers control
+                L.control.layers(legend, {}, {
+                    position: 'bottomleft',
+                    collapsed: false
                 }).addTo(map);
 
-                layer.on('click', function (e) {
-                    if (e.value !== null) {
-                        let v = e.value.toFixed(2);
-                        let html = (`<span class="popupText">NDVI ${v}</span>`);
-                        let popup = L.popup()
-                            .setLatLng(e.latlng)
-                            .setContent(html)
-                            .openOn(map);
-                    }
-                });
-                map.fitBounds(layer.getBounds());
+                map.fitBounds(bounds);
 
             });
     </script>

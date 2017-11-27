@@ -862,15 +862,17 @@ var ScalarField = function (_Field) {
         }
 
         /**
-         * Creates a ScalarField array from the content of a GeoTIFF file, as read by geotiff.js
+         * Creates a ScalarField from the content of a GeoTIFF file, as read by geotiff.js
          * @param   {ArrayBuffer}   data
-         * @param   {Array}   bandIndex - If not provided all bands are returned
-         * @returns {ScalarField array}
+         * @param   {Number}   bandIndex
+         * @returns {ScalarField}
          */
 
     }, {
         key: 'fromGeoTIFF',
-        value: function fromGeoTIFF(data, bandIndexesRaw) {
+        value: function fromGeoTIFF(data) {
+            var bandIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
             //console.time('ScalarField from GeoTIFF');
 
             var tiff = GeoTIFF.parse(data); // geotiff.js
@@ -882,6 +884,53 @@ var ScalarField = function (_Field) {
             var _fileDirectory$ModelP = _slicedToArray(fileDirectory.ModelPixelScale, 2),
                 xScale = _fileDirectory$ModelP[0],
                 yScale = _fileDirectory$ModelP[1];
+
+            var zs = rasters[bandIndex]; // left-right and top-down order
+
+            if (fileDirectory.GDAL_NODATA) {
+                var noData = parseFloat(fileDirectory.GDAL_NODATA);
+                // console.log(noData);
+                var simpleZS = Array.from(zs); // to simple array, so null is allowed | TODO efficiency??
+                zs = simpleZS.map(function (z) {
+                    return z === noData ? null : z;
+                });
+            }
+
+            var p = {
+                nCols: image.getWidth(),
+                nRows: image.getHeight(),
+                xllCorner: tiepoint.x,
+                yllCorner: tiepoint.y - image.getHeight() * yScale,
+                cellXSize: xScale,
+                cellYSize: yScale,
+                zs: zs
+            };
+
+            //console.timeEnd('ScalarField from GeoTIFF');
+            return new ScalarField(p);
+        }
+
+        /**
+         * Creates a ScalarField array from the content of a GeoTIFF file, as read by geotiff.js
+         * @param   {ArrayBuffer}   data
+         * @param   {Array}   bandIndex - If not provided all bands are returned
+         * @returns {ScalarField array}
+         */
+
+    }, {
+        key: 'multipleFromGeoTIFF',
+        value: function multipleFromGeoTIFF(data, bandIndexesRaw) {
+            //console.time('ScalarField from GeoTIFF');
+
+            var tiff = GeoTIFF.parse(data); // geotiff.js
+            var image = tiff.getImage();
+            var rasters = image.readRasters();
+            var tiepoint = image.getTiePoints()[0];
+            var fileDirectory = image.getFileDirectory();
+
+            var _fileDirectory$ModelP2 = _slicedToArray(fileDirectory.ModelPixelScale, 2),
+                xScale = _fileDirectory$ModelP2[0],
+                yScale = _fileDirectory$ModelP2[1];
 
             var bandIndexes = bandIndexesRaw;
             if (typeof bandIndexes === 'undefined' || bandIndexes.length === 0) {
@@ -2719,7 +2768,7 @@ __webpack_require__(9);
 __webpack_require__(5);
 
 /* eslint-disable no-console */
-console.log('leaflet.canvaslayer.field v1.4.0');
+console.log('leaflet.canvaslayer.field v1.4.1');
 /* eslint-enable no-console */
 
 /***/ })

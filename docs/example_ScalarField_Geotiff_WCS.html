@@ -60,7 +60,7 @@
         d3.request(urlCoverage).responseType('arraybuffer').get(
             function (error, tiffData) {
                 // band 0
-                geo = L.ScalarField.fromGeoTIFF(tiffData.response, [0])[0];
+                geo = L.ScalarField.fromGeoTIFF(tiffData.response);
 
                 colorScale = chroma.scale('RdYlGn').domain([geo.range[1], geo.range[0]]);
 
