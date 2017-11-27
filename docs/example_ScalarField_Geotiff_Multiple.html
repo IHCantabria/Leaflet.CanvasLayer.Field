@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>ScalarField / Geotiff</title>
+    <title>ScalarField / Geotiff (Multiple bands)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="//unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
     <link rel="stylesheet" href="examples.css" />
@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <h1 class="title mapTitle">ScalarField GeoTIFF</h1>
+    <h1 class="title mapTitle">ScalarField GeoTIFF (Multiple bands)</h1>
     <div id="map"></div>
 
     <!-- CDN -->
@@ -40,7 +40,7 @@
                 let legend = {};
                 let bounds = {};
 
-                scalarFields.forEach(function(sf, index) {
+                scalarFields.forEach(function (sf, index) {
                     let layerSf = L.canvasLayer.scalarField(sf, {
                         color: chroma.scale('RdPu').domain(sf.range),
                         opacity: 0.65
