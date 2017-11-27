@@ -42,8 +42,10 @@ export default class VectorField extends Field {
      * @returns {VectorField}
      */
     static fromMultibandGeoTIFF(geotiffData, bandIndexesForUV = [0, 1]) {
-        let u = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[0]);
-        let v = ScalarField.fromGeoTIFF(geotiffData, bandIndexesForUV[1]);
+        let [u, v] = ScalarField.multipleFromGeoTIFF(
+            geotiffData,
+            bandIndexesForUV
+        );
         let p = VectorField._paramsFromScalarFields(u, v);
 
         return new VectorField(p);
@@ -82,7 +84,7 @@ export default class VectorField extends Field {
     }
 
     /**
-     * Get a derived field, from a computation on 
+     * Get a derived field, from a computation on
      * the VectorField
      * @param   {String} type ['magnitude' | 'directionTo' | 'directionFrom']
      * @returns {ScalarField}
@@ -171,9 +173,11 @@ export default class VectorField extends Field {
      */
     _calculateRange() {
         // TODO make a clearer method for getting these vectors...
-        let vectors = this.getCells().map(pt => pt.value).filter(function(v) {
-            return v !== null;
-        });
+        let vectors = this.getCells()
+            .map(pt => pt.value)
+            .filter(function(v) {
+                return v !== null;
+            });
 
         if (this._inFilter) {
             vectors = vectors.filter(this._inFilter);
