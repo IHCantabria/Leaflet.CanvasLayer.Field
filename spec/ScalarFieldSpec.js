@@ -18,6 +18,48 @@ describe('ScalarField', function() {
             expect(sf).not.toBe(null);
         });
 
+        it('understand header with XLLCORNER - YLLCORNER corner', function() {
+            var fileHeaderLines = [
+                'ncols        10',
+                'nrows        10',
+                'xllcorner    -3.00',
+                'yllcorner    43.00',
+                'cellsize     0.50',
+                'NODATA_value  -9999.0'
+            ];
+            var header = ScalarField._parseASCIIGridHeader(fileHeaderLines);
+            expect(header).toEqual({
+                nCols: 10,
+                nRows: 10,
+                xllCorner: -3.0,
+                yllCorner: 43.0,
+                cellXSize: 0.5,
+                cellYSize: 0.5,
+                noDataValue: -9999.0
+            });
+        });
+
+        it('understand header with XLLCENTER - YLLCENTER corner', function() {
+            var fileHeaderLines = [
+                'ncols        10',
+                'nrows        10',
+                'xllcenter    -2.50',
+                'yllcenter    43.50',
+                'cellsize     0.50',
+                'NODATA_value  -9999.0'
+            ];
+            var header = ScalarField._parseASCIIGridHeader(fileHeaderLines);
+            expect(header).toEqual({
+                nCols: 10,
+                nRows: 10,
+                xllCorner: -3.0,
+                yllCorner: 43.0,
+                cellXSize: 0.5,
+                cellYSize: 0.5,
+                noDataValue: -9999.0
+            });
+        });
+
         it('can return the value for (i, j) indexes', function() {
             // top-left
             expect(sf._valueAtIndexes(0, 0)).toEqual(0.011275325901806355);

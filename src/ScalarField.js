@@ -15,65 +15,64 @@ export default class ScalarField extends Field {
         let lines = asc.split('\n');
 
         // Header
-        ScalarField._checkIsValidASCIIGridHeader(lines);
-
-        let n = /-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/; // any number
-
-        const cellSize = parseFloat(lines[4].match(n)); // right now, no different x-y size is allowed
-        let p = {
-            nCols: parseInt(lines[0].match(n)),
-            nRows: parseInt(lines[1].match(n)),
-            xllCorner: parseFloat(lines[2].match(n)),
-            yllCorner: parseFloat(lines[3].match(n)),
-            cellXSize: cellSize,
-            cellYSize: cellSize
-        };
-        let noDataValue = lines[5]
-            .toUpperCase()
-            .replace('NODATA_VALUE', '')
-            .trim();
+        var header = ScalarField._parseASCIIGridHeader(lines.slice(0, 6));
 
         // Data (left-right and top-down)
-        let zs = []; // TODO Consider using TypedArray (& manage NO_DATA)
+        let zs = [];
         for (let i = 6; i < lines.length; i++) {
             let line = lines[i].trim();
             if (line === '') break;
 
             let items = line.split(' ');
             items.forEach(it => {
-                const v =
-                    it !== noDataValue ? parseFloat(it * scaleFactor) : null;
+                let floatItem = parseFloat(it);
+                let v =
+                    floatItem !== header.noDataValue
+                        ? floatItem * scaleFactor
+                        : null;
                 zs.push(v);
             });
         }
+        let p = header;
         p.zs = zs;
 
         //console.timeEnd('ScalarField from ASC');
         return new ScalarField(p);
     }
 
-    static _checkIsValidASCIIGridHeader(lines) {
-        const upperCasesLines = lines.map(lin => lin.toUpperCase());
+    /**
+     * Parse an ASCII Grid header, made with 6 lines
+     * It allows the use of XLLCORNER/YLLCORNER or XLLCENTER/YLLCENTER conventions
+     * @param {Array.String} headerLines
+     */
+    static _parseASCIIGridHeader(headerLines) {
+        try {
+            const headerItems = headerLines.map(line => {
+                var items = line.split(' ').filter(i => i != '');
+                var param = items[0].trim().toUpperCase();
+                var value = parseFloat(items[1].trim());
+                return { [param]: value };
+            });
 
-        const parameters = [
-            'NCOLS',
-            'NROWS',
-            'XLLCORNER',
-            'YLLCORNER',
-            'CELLSIZE',
-            'NODATA_VALUE'
-        ];
+            const usesCorner = 'XLLCORNER' in headerItems[2];
+            const cellSize = headerItems[4]['CELLSIZE'];
 
-        let i = 0;
-        for (let expected of parameters) {
-            let line = upperCasesLines[i];
-            let found = line.indexOf(expected) != -1;
-            if (!found) {
-                throw `Not valid ASCIIGrid: expected '${expected}' at line '${
-                    line
-                }' [lin. nº ${i}]`;
-            }
-            i++;
+            const header = {
+                nCols: parseInt(headerItems[0]['NCOLS']),
+                nRows: parseInt(headerItems[1]['NROWS']),
+                xllCorner: usesCorner
+                    ? headerItems[2]['XLLCORNER']
+                    : headerItems[2]['XLLCENTER'] - cellSize,
+                yllCorner: usesCorner
+                    ? headerItems[3]['YLLCORNER']
+                    : headerItems[3]['YLLCENTER'] - cellSize,
+                cellXSize: cellSize,
+                cellYSize: cellSize,
+                noDataValue: headerItems[5]['NODATA_VALUE']
+            };
+            return header;
+        } catch (err) {
+            throw new Error(`Not a valid ASCIIGrid Header: ${err}`);
         }
     }
 
