@@ -1,6 +1,6 @@
 language: node_js
 dist: trusty
-sudo: false
+sudo: true
 addons:
   chrome: stable
 cache:
