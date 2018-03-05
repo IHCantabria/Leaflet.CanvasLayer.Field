@@ -66,7 +66,7 @@
     * examples have been updated to work with Leaflet 1.2.0
     * added a little npm badge in README file
 
-#v1.4.1 (in progress...)
+#v1.4.1
 
 * Added new method `multipleFromGeoTIFF` to `ScalarField` to return all bands from a GeoTIFF raster file as an array of `ScalarField`, thanks to @santiquetzal (#16).
 * Added compatibility with ASCII Grid files using XLLCENTER and YLLCENTER, as suggested in #17
