@@ -17,17 +17,18 @@ L.Control.ColorBar = L.Control.extend({
         units: 'uds', // ej: m/s
         title: 'Legend', // ej: Ocean Currents
         labels: [], // empty for no labels
+        textLabels: [], // empty for default labels. Custom labels ej: ['low', 'mid','high'] 
         labelFontSize: 10,
         labelTextPosition: 'middle' // start | middle | end
     },
 
-    initialize: function(color, range, options) {
+    initialize: function (color, range, options) {
         this.color = color; // 'chromajs' scale function
         this.range = range; // [min, max]
         L.Util.setOptions(this, options);
     },
 
-    onAdd: function(map) {
+    onAdd: function (map) {
         this._map = map;
         let div = L.DomUtil.create(
             'div',
@@ -44,7 +45,7 @@ L.Control.ColorBar = L.Control.extend({
         return div;
     },
 
-    title: function() {
+    title: function () {
         let d = document.createElement('div');
         d3
             .select(d)
@@ -57,7 +58,7 @@ L.Control.ColorBar = L.Control.extend({
         return d.innerHTML;
     },
 
-    palette: function() {
+    palette: function () {
         let d = document.createElement('div');
         let svg = this._createSvgIn(d);
 
@@ -70,7 +71,7 @@ L.Control.ColorBar = L.Control.extend({
         return d.innerHTML;
     },
 
-    _createSvgIn: function(d) {
+    _createSvgIn: function (d) {
         let spaceForLabels = this.options.labels ? this.options.margin : 0;
         let svg = d3
             .select(d)
@@ -80,7 +81,7 @@ L.Control.ColorBar = L.Control.extend({
         return svg;
     },
 
-    _appendColorBarTo: function(svg) {
+    _appendColorBarTo: function (svg) {
         const colorPerValue = this._getColorPerValue();
         const w = this.options.width / colorPerValue.length;
 
@@ -93,7 +94,7 @@ L.Control.ColorBar = L.Control.extend({
         buckets
             .attr('x', (d, i) => i * w + this.options.margin)
             .attr('y', () => 0)
-            .attr('height', () => this.options.height /*w * 4*/)
+            .attr('height', () => this.options.height /*w * 4*/ )
             .attr('width', () => w)
             .attr('stroke-width', 2)
             .attr('stroke-linecap', 'butt')
@@ -103,12 +104,12 @@ L.Control.ColorBar = L.Control.extend({
             .append('title')
             .text(
                 d =>
-                    `${d.value.toFixed(this.options.decimals)} ${this.options
+                `${d.value.toFixed(this.options.decimals)} ${this.options
                         .units}`
             );
     },
 
-    _appendLabelsTo: function(svg) {
+    _appendLabelsTo: function (svg) {
         const positionPerLabelValue = this._getPositionPerLabelValue();
         //const w = this.options.width / colorPerValue.length;
         let groupLabels = svg.append('g').attr('id', 'colorBar-labels');
@@ -124,10 +125,10 @@ L.Control.ColorBar = L.Control.extend({
             .attr('text-anchor', this.options.labelTextPosition)
             .attr('fill', this.options.textColor)
             .attr('class', 'leaflet-control-colorBar-label')
-            .text(d => `${d.value.toFixed(this.options.decimals)}`);
+            .text(d => this.options.textLabels ? d.label : `${d.value.toFixed(this.options.decimals)}`);
     },
 
-    _getColorPerValue: function() {
+    _getColorPerValue: function () {
         const [min, max] = this.range;
         let delta = (max - min) / this.options.steps;
         let data = d3.range(min, max + delta, delta);
@@ -140,14 +141,15 @@ L.Control.ColorBar = L.Control.extend({
         return colorPerValue;
     },
 
-    _getPositionPerLabelValue: function() {
+    _getPositionPerLabelValue: function () {
         var xPositionFor = d3
             .scaleLinear()
             .range([0, this.options.width])
             .domain(this.range);
         let data = this.options.labels;
-        let positionPerLabel = data.map(d => {
+        let positionPerLabel = data.map((d, index) => {
             return {
+                label: this.options.textLabels ? this.options.textLabels[index] : '',
                 value: d,
                 position: xPositionFor(d)
             };
@@ -156,6 +158,6 @@ L.Control.ColorBar = L.Control.extend({
     }
 });
 
-L.control.colorBar = function(color, range, options) {
+L.control.colorBar = function (color, range, options) {
     return new L.Control.ColorBar(color, range, options);
 };

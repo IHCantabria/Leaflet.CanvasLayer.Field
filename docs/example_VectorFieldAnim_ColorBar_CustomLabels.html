@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VectorFieldAnim / ColorBar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="examples.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+
+    <style>
+        .leaflet-control-colorBar-title {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 100;
+            font-size: large;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="title mapTitle">VectorFieldAnim and ColorBar</h1>
+    <div id="map"></div>
+
+    <!-- CDN -->
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//npmcdn.com/leaflet@1.2.0/dist/leaflet.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.0/chroma.min.js"></script>
+
+    <!-- Plugin -->
+    <script src="dist/leaflet.canvaslayer.field.js"></script>
+
+    <script>
+        let map = L.map("map");
+        let url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
+        L.tileLayer(url, {
+            attribution: 'OSM & Carto',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        /*
+            Vectorfield animation with a colormap for magnitude + and associated colorBar
+        */
+        d3.text('data/Cantabria_U.asc', function (u) {
+            d3.text('data/Cantabria_V.asc', function (v) {
+                let scaleFactor = 0.001; // to m/s
+                let vf = L.VectorField.fromASCIIGrids(u, v, scaleFactor);
+                var range = vf.range;
+                var scale = chroma.scale('OrRd').domain(range);
+
+                // Layer
+                var layer = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 2000,
+                    color: scale,
+                    velocityScale: 1 / 200
+                }).addTo(map);
+
+                /*
+                layer.setFilter(function(vector) {
+                    // it might be needed to reduce the number of paths
+                    if (vector) {
+                        return vector.magnitude() > 1;
+                    }
+                    return false;
+                });
+                */
+
+                map.fitBounds(layer.getBounds());
+
+                // Simple colorbar
+                var bar = L.control.colorBar(scale, range, {
+                    title: 'Currents surface velocity (m/s)',
+                    units: 'm/s',
+                    steps: 100,
+                    decimals: 1,
+                    width: 350,
+                    height: 20,
+                    position: 'bottomright',
+                    background: '#000',
+                    textColor: 'white',
+                    textLabels: ['low', 'mid', 'high'],
+                    labels: [0, 1.0, 2.0],
+                    labelFontSize: 9
+                }).addTo(map);
+
+                // info
+                layer.on('click', function (e) {
+                    if (e.value !== null) {
+                        let vector = e.value;
+                        let v = vector.magnitude().toFixed(2);
+                        let d = vector.directionTo().toFixed(0);
+                        let html = (`<span class="popupText">${v} m/s to ${d}&deg</span>`);
+                        let popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(html)
+                            .openOn(map);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
