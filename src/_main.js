@@ -23,7 +23,3 @@ require('./layer/L.CanvasLayer.VectorFieldAnim.js');
 
 // control
 require('./control/L.Control.ColorBar.js');
-
-/* eslint-disable no-console */
-console.log('leaflet.canvaslayer.field v1.4.1');
-/* eslint-enable no-console */

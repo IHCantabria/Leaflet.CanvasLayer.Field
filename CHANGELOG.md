@@ -70,3 +70,8 @@
 
 * Added new method `multipleFromGeoTIFF` to `ScalarField` to return all bands from a GeoTIFF raster file as an array of `ScalarField`, thanks to @santiquetzal (#16).
 * Added compatibility with ASCII Grid files using XLLCENTER and YLLCENTER, as suggested in #17
+
+#v1.4.2
+
+* Fix Cell Size issue pointed by @nzahasan in #29
+* Update some dependencies (security updates)
