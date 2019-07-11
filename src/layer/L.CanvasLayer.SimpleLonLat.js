@@ -5,7 +5,8 @@
  */
 L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
     options: {
-        color: 'gray'
+        color: 'gray',
+        size: 2
     },
 
     initialize: function(points, options) {
@@ -38,7 +39,7 @@ L.CanvasLayer.SimpleLonLat = L.CanvasLayer.extend({
             let p = viewInfo.layer._map.latLngToContainerPoint(point);
             g.beginPath();
             //g.arc(p.x, p.y, 1, 0, Math.PI * 2); // circle | TODO style 'function' as parameter?
-            g.fillRect(p.x, p.y, 2, 2); //simple point
+            g.fillRect(p.x, p.y, this.options.size, this.options.size); //simple point
             g.fill();
             g.closePath();
             g.stroke();
