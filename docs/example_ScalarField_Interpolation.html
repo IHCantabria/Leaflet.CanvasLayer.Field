@@ -49,6 +49,7 @@
       // Bilinear interpolation
       let interpolated = L.canvasLayer.scalarField(s, {
         interpolate: true,
+        color: chroma.scale('RdPu').domain(s.range),
       });
       interpolated.on('click', identify);
       interpolated.addTo(map);

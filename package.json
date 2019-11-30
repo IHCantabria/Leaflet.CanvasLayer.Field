@@ -9,7 +9,7 @@
         "d3": "4.9.1",
         "geotiff": "^1.0.0-beta.6",
         "leaflet": ">=1.0.3",
-        "npm": "^6.11.2"
+        "npm": "^6.13.1"
     },
     "devDependencies": {
         "babel-core": "^6.26.3",
