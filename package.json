@@ -4,7 +4,7 @@
     "description": "A set of layers using canvas to draw ASCIIGrid or GeoTIFF files. This includes a basic raster layer (*ScalaField*) and an animated layer for vector fields, such as wind or currents (*VectorFieldAnim*)",
     "main": "index.js",
     "dependencies": {
-        "npm": "^3.10.7",
+        "npm": "^6.13.4",
         "leaflet": ">=1.0.3",
         "chroma-js": "1.3.4",
         "geotiff": "0.4.1",
