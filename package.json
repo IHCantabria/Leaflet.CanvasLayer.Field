@@ -38,6 +38,7 @@
         "web": "webpack-dev-server",
         "test": "karma start"
     },
+    "publishConfig": { "registry": "https://npm.pkg.github.com/" },
     "repository": {
         "type": "git",
         "url": "https://github.com/IHCantabria/Leaflet.CanvasLayer.Field.git"
