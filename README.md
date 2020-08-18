@@ -1,10 +1,10 @@
-# Leaflet.CanvasLayer.Field
+# IH.Leaflet.CanvasLayer.Field
 A plugin for [LeafletJS](http://www.leafletjs.com) that adds layers to visualize fields (*aka* **Rasters**) from ASCIIGrid or GeoTIFF files (EPSG:4326). 
 
 **[Leaflet.CanvasLayer.Field EXAMPLES](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/)**
 
 ![Travis CI](https://travis-ci.org/IHCantabria/Leaflet.CanvasLayer.Field.svg?branch=master)
-[![npm version](https://badge.fury.io/js/leaflet-canvaslayer-field.svg)](https://badge.fury.io/js/leaflet-canvaslayer-field)
+[![npm version](https://badge.fury.io/js/ih-leaflet-canvaslayer-field.svg)](https://badge.fury.io/js/ih-leaflet-canvaslayer-field)
 
 It includes:
 * `L.CanvasLayer.ScalarField` - a "typical" raster layer (from scalars such as DTM, temperature...) that can be rendered with different color scales and arrows.
