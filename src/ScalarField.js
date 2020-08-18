@@ -5,12 +5,12 @@ import Field from './Field';
  */
 export default class ScalarField extends Field {
     /**
-     * Creates a ScalarField from the content of an ASCIIGrid file
-     * @param   {String}   asc
-     * @returns {ScalarField}
-     */
+   * Creates a ScalarField from the content of an ASCIIGrid file
+   * @param   {String}   asc
+   * @returns {ScalarField}
+   */
     static fromASCIIGrid(asc, scaleFactor = 1) {
-        //console.time('ScalarField from ASC');
+    //console.time('ScalarField from ASC');
 
         let lines = asc.split('\n');
 
@@ -24,12 +24,10 @@ export default class ScalarField extends Field {
             if (line === '') break;
 
             let items = line.split(' ');
-            items.forEach(it => {
+            items.forEach((it) => {
                 let floatItem = parseFloat(it);
                 let v =
-                    floatItem !== header.noDataValue ?
-                    floatItem * scaleFactor :
-                    null;
+          floatItem !== header.noDataValue ? floatItem * scaleFactor : null;
                 zs.push(v);
             });
         }
@@ -41,18 +39,18 @@ export default class ScalarField extends Field {
     }
 
     /**
-     * Parse an ASCII Grid header, made with 6 lines
-     * It allows the use of XLLCORNER/YLLCORNER or XLLCENTER/YLLCENTER conventions
-     * @param {Array.String} headerLines
-     */
+   * Parse an ASCII Grid header, made with 6 lines
+   * It allows the use of XLLCORNER/YLLCORNER or XLLCENTER/YLLCENTER conventions
+   * @param {Array.String} headerLines
+   */
     static _parseASCIIGridHeader(headerLines) {
         try {
-            const headerItems = headerLines.map(line => {
-                var items = line.split(' ').filter(i => i != '');
+            const headerItems = headerLines.map((line) => {
+                var items = line.split(' ').filter((i) => i != '');
                 var param = items[0].trim().toUpperCase();
                 var value = parseFloat(items[1].trim());
                 return {
-                    [param]: value
+                    [param]: value,
                 };
             });
 
@@ -62,15 +60,15 @@ export default class ScalarField extends Field {
             const header = {
                 nCols: parseInt(headerItems[0]['NCOLS']),
                 nRows: parseInt(headerItems[1]['NROWS']),
-                xllCorner: usesCorner ?
-                    headerItems[2]['XLLCORNER'] :
-                    headerItems[2]['XLLCENTER'] - cellSize / 2,
-                yllCorner: usesCorner ?
-                    headerItems[3]['YLLCORNER'] :
-                    headerItems[3]['YLLCENTER'] - cellSize / 2,
+                xllCorner: usesCorner
+                    ? headerItems[2]['XLLCORNER']
+                    : headerItems[2]['XLLCENTER'] - cellSize / 2,
+                yllCorner: usesCorner
+                    ? headerItems[3]['YLLCORNER']
+                    : headerItems[3]['YLLCENTER'] - cellSize / 2,
                 cellXSize: cellSize,
                 cellYSize: cellSize,
-                noDataValue: headerItems[5]['NODATA_VALUE']
+                noDataValue: headerItems[5]['NODATA_VALUE'],
             };
             return header;
         } catch (err) {
@@ -79,23 +77,23 @@ export default class ScalarField extends Field {
     }
 
     /**
-     * Creates a ScalarField from the content of a GeoTIFF file
-     * @param   {ArrayBuffer}   data
-     * @param   {Number}   bandIndex
-     * @returns {ScalarField}
-     */
+   * Creates a ScalarField from the content of a GeoTIFF file
+   * @param   {ArrayBuffer}   data
+   * @param   {Number}   bandIndex
+   * @returns {ScalarField}
+   */
     static fromGeoTIFF(data, bandIndex = 0) {
         return ScalarField.multipleFromGeoTIFF(data, [bandIndex])[0];
     }
 
     /**
-     * Creates a ScalarField array (one per band) from the content of a GeoTIFF file
-     * @param   {ArrayBuffer}   data
-     * @param   {Array}   bandIndexes - if not provided all bands are returned
-     * @returns {Array.<ScalarField>}
-     */
+   * Creates a ScalarField array (one per band) from the content of a GeoTIFF file
+   * @param   {ArrayBuffer}   data
+   * @param   {Array}   bandIndexes - if not provided all bands are returned
+   * @returns {Array.<ScalarField>}
+   */
     static multipleFromGeoTIFF(data, bandIndexes) {
-        //console.time('ScalarField from GeoTIFF');
+    //console.time('ScalarField from GeoTIFF');
 
         let tiff = GeoTIFF.parse(data); // geotiff.js
         let image = tiff.getImage();
@@ -128,7 +126,7 @@ export default class ScalarField extends Field {
                 yllCorner: tiepoint.y - image.getHeight() * yScale,
                 cellXSize: xScale,
                 cellYSize: yScale,
-                zs: zs
+                zs: zs,
             };
             return new ScalarField(p);
         });
@@ -143,16 +141,16 @@ export default class ScalarField extends Field {
 
         this.grid = this._buildGrid();
         this._updateRange();
-        //console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
+    //console.log(`ScalarField created (${this.nCols} x ${this.nRows})`);
     }
 
     /**
-     * Builds a grid with a Number at each point, from an array
-     * 'zs' following x-ascending & y-descending order
-     * (same as in ASCIIGrid)
-     * @private
-     * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
-     */
+   * Builds a grid with a Number at each point, from an array
+   * 'zs' following x-ascending & y-descending order
+   * (same as in ASCIIGrid)
+   * @private
+   * @returns {Array.<Array.<Number>>} - grid[row][column]--> Number
+   */
     _buildGrid() {
         let grid = this._arrayTo2d(this.zs, this.nRows, this.nCols);
         return grid;
@@ -185,10 +183,10 @@ export default class ScalarField extends Field {
     }
 
     /**
-     * Calculate min & max values
-     * @private
-     * @returns {Array} - [min, max]
-     */
+   * Calculate min & max values
+   * @private
+   * @returns {Array} - [min, max]
+   */
     _calculateRange() {
         var data = this.zs;
         if (this._inFilter) {
@@ -198,16 +196,16 @@ export default class ScalarField extends Field {
     }
 
     /**
-     * Bilinear interpolation for Number
-     * https://en.wikipedia.org/wiki/Bilinear_interpolation
-     * @param   {Number} x
-     * @param   {Number} y
-     * @param   {Number} g00
-     * @param   {Number} g10
-     * @param   {Number} g01
-     * @param   {Number} g11
-     * @returns {Number}
-     */
+   * Bilinear interpolation for Number
+   * https://en.wikipedia.org/wiki/Bilinear_interpolation
+   * @param   {Number} x
+   * @param   {Number} y
+   * @param   {Number} g00
+   * @param   {Number} g10
+   * @param   {Number} g01
+   * @param   {Number} g11
+   * @returns {Number}
+   */
     _doInterpolation(x, y, g00, g10, g01, g11) {
         var rx = 1 - x;
         var ry = 1 - y;

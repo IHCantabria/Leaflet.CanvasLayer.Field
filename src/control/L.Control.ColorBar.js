@@ -104,7 +104,7 @@ L.Control.ColorBar = L.Control.extend({
             .append('title')
             .text(
                 d =>
-                `${d.value.toFixed(this.options.decimals)} ${this.options
+                    `${d.value.toFixed(this.options.decimals)} ${this.options
                         .units}`
             );
     },
