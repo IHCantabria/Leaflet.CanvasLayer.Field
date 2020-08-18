@@ -8,6 +8,4 @@ cache:
   directories:
     - node_modules
 node_js:
-  - 8
-after_failure:
-  - cat MSBuild_*.failure.txt
+  - 12
