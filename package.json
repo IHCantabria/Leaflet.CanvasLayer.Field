@@ -1,6 +1,6 @@
 {
     "name": "ih-leaflet-canvaslayer-field",
-    "version": "1.4.6",
+    "version": "1.4.7",
     "description": "A set of layers using canvas to draw ASCIIGrid or GeoTIFF files. This includes a basic raster layer (*ScalaField*) and an animated layer for vector fields, such as wind or currents (*VectorFieldAnim*)",
     "main": "index.js",
     "dependencies": {
@@ -37,7 +37,7 @@
         "build": "webpack -p",
         "web": "webpack-dev-server",
         "test": "karma start"
-    },    
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/IHCantabria/Leaflet.CanvasLayer.Field.git"
