@@ -1,5 +1,5 @@
 import Cell from '../Cell';
-
+import chroma from 'chroma-js';
 /**
  * ScalarField on canvas (a 'Raster')
  */
@@ -26,7 +26,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     },
 
     setColor(f) {
-        this.options.color = f;
+        this.options.color = f; //color scale
         this.needRedraw();
     },
 
@@ -102,8 +102,7 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
 
                 let v = this._field[f](lon, lat); // 'valueAt' | 'interpolatedValueAt' || TODO check some 'artifacts'
                 if (v !== null) {
-                    let color = this._getColorFor(v);
-                    let [R, G, B, A] = color.rgba();
+                    let [R, G, B, A] = this._getColorFor(v);                    
                     data[pos] = R;
                     data[pos + 1] = G;
                     data[pos + 2] = B;
@@ -194,13 +193,9 @@ L.CanvasLayer.ScalarField = L.CanvasLayer.Field.extend({
     /**
      * Gets a chroma color for a pixel value, according to 'options.color'
      */
-    _getColorFor(v) {
-        let c = this.options.color; // e.g. for a constant 'red'
-        if (typeof c === 'function') {
-            c = this.options.color(v);
-        }
-        let color = chroma(c); // to be more flexible, a chroma color object is always created || TODO improve efficiency
-        return color;
+    _getColorFor(v) {        
+        let rgba = this.options.color(v).rgba();
+        return rgba;
     }
 });
 
