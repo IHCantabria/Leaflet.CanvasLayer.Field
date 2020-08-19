@@ -40,27 +40,5 @@ describe('L.CanvasLayer.ScalarField', function() {
         let sfl = L.canvasLayer.scalarField().addTo(map);
         sfl.setData(sf);
         expect(sf).not.toBe(null);
-    });
-
-    // TODO
-    /*
-    it('can be painted with default renderer', function () {
-        let sfl = L.canvasLayer.scalarField(sf).addTo(map);
-        map.fitBounds(sfl.getBounds());
-
-        let halfCell = sf.cellsize / 2.0;
-
-        let upperRight = L.latLng(
-            sf.yurcorner - halfCell, sf.xurcorner - halfCell);
-        let p = map.latLngToContainerPoint(upperRight);
-        let color = sfl.getPixelColor(p.x, p.y);
-        expect(color).toEqual(chroma('black'));
-
-        let lowerLeft = L.latLng(
-            sf.yllcorner + halfCell, sf.xllcorner + halfCell);
-        let p2 = map.latLngToContainerPoint(lowerLeft);
-        let color2 = chroma(sfl.getPixelColor(p2.x, p2.y));
-        expect(color2).toEqual(chroma('white'));
-    });
-*/
+    });  
 });
