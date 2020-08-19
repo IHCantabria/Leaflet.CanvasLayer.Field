@@ -22,8 +22,7 @@
         "require": true,
         "window": true,
         "L": true,
-        "d3": true,
-        "chroma": true,
+        "d3": true,        
         "GeoTIFF": true
     }
 }
