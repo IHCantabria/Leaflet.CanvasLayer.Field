@@ -7,6 +7,7 @@
 */
 
 L.CanvasLayer = L.Layer.extend({
+	
     // -- initialized is called on prototype
     initialize: function (options) {
         this._map = null;
@@ -33,12 +34,14 @@ L.CanvasLayer = L.Layer.extend({
         this._canvas.width = resizeEvent.newSize.x;
         this._canvas.height = resizeEvent.newSize.y;
     },
+    
     //-------------------------------------------------------------
     _onLayerDidMove: function () {
         var topLeft = this._map.containerPointToLayerPoint([0, 0]);
         L.DomUtil.setPosition(this._canvas, topLeft);
         this.drawLayer();
     },
+    
     //-------------------------------------------------------------
     getEvents: function () {
         var events = {
@@ -64,8 +67,8 @@ L.CanvasLayer = L.Layer.extend({
         var animated = this._map.options.zoomAnimation && L.Browser.any3d;
         L.DomUtil.addClass(this._canvas, 'leaflet-zoom-' + (animated ? 'animated' : 'hide'));
 
-
-        map._panes.overlayPane.appendChild(this._canvas);
+        let pane = this.options.pane ? map.getPanes()[this.options.pane] : map._panes.overlayPane;
+        pane.appendChild(this._canvas);
 
         map.on(this.getEvents(), this);
 
@@ -80,13 +83,12 @@ L.CanvasLayer = L.Layer.extend({
         var del = this._delegate || this;
         del.onLayerWillUnmount && del.onLayerWillUnmount(); // -- callback
 
-
-        map.getPanes().overlayPane.removeChild(this._canvas);
+        let pane = this.options.pane ? map.getPanes()[this.options.pane] : map._panes.overlayPane;
+        pane.removeChild(this._canvas);
 
         map.off(this.getEvents(), this);
 
         this._canvas = null;
-
     },
 
     //------------------------------------------------------------
@@ -94,6 +96,7 @@ L.CanvasLayer = L.Layer.extend({
         map.addLayer(this);
         return this;
     },
+    
     // --------------------------------------------------------------------------------
     LatLonToMercator: function (latlon) {
         return {
