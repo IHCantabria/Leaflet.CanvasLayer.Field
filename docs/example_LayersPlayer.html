@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <!--
+    Handling multiple layers should be performed with 'panes' and CSS.
+    See: 'https://github.com/Leaflet/Leaflet/issues/4', post from 'ghybs'.
+  -->
+
+  <head>
+    <meta charset="utf-8"/>
+    <title>ScalarField / Geotiff (Multiple bands)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="examples.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+    
+    <style>
+      /* classes used by the player buttons */
+      
+      /* buttons when not pressed or running */
+      div.leaflet-control-layersPlayer-button {
+        float: left;
+        display: block;
+        width: 16px;
+        background-color: #EEEEEE;
+        padding: 2px;
+        border: 1px solid #333333;
+        cursor: pointer;
+        color: #111111;
+        text-align: center;
+      }
+      
+      /* buttons when pressed */
+      div.leaflet-control-layersPlayer-button:active {
+        background-color: #999999;
+      }
+      
+      /* buttons when running */
+      div.leaflet-control-layersPlayer-button-run {
+        background-color: #BBBBBB;
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <h1 class="title mapTitle">LayersPlayer</h1>
+    <div id="map"></div>
+
+    <!-- CDN -->
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//npmcdn.com/leaflet@1.2.0/dist/leaflet.js"></script>
+    <script src="//npmcdn.com/geotiff@0.3.6/dist/geotiff.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+
+    <!-- Plugin -->
+    <script src="dist/leaflet.canvaslayer.field.js"></script>
+
+    <script>
+        let geotiffUrl = 'data/HRRRfromPando_20180308_h06_prate_uint8.tiff';
+        let map = L.map('map');
+        let paneId = 'animated_pane';
+
+        /* Dark basemap */
+        let url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
+        L.tileLayer(url, {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            pane: paneId
+        }).addTo(map);
+        
+        /* Pane holder for the set of rasters */
+        let paneObj = map.createPane(paneId);
+        paneObj.style.pointerEvents = 'none';
+
+        /* GeoTIFF with n bands */
+        d3.request(geotiffUrl).responseType('arraybuffer').get(
+            function (error, tiffData) {
+                let scalarFields = L.ScalarField.multipleFromGeoTIFF(tiffData.response);
+                let bounds = {};
+                let playerReferences = [];
+                
+                // if the geotiff file has the META_ADD and META_MULT metadata for linear transformation, consider it
+                let tiff = GeoTIFF.parse(tiffData.response);
+                let tiffMetaData = tiff.getImage().getGDALMetadata();
+                let coefAdd = tiffMetaData.META_ADD ? parseFloat(tiffMetaData.META_ADD) : 0;
+                let coefMult = tiffMetaData.META_MULT ? parseFloat(tiffMetaData.META_MULT) : 1;
+                
+                // just add leading zeros
+                let padZeros = function (n, width) {
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+                }
+                
+                // create a canvas for each layer
+                scalarFields.forEach(function (sf, index) {
+                    
+                    // linearly rescale image values
+                    let rescaleValue = function(e) {return e == null ? null : ((e*coefMult) + coefAdd)}
+                    sf.grid = sf.grid.map(function(e) {
+                        return e.map(function(e) { return rescaleValue(e); });
+                    });
+                    sf.range = sf.range.map(function(e){ return rescaleValue(e); });
+                    
+                    // add to map
+                    let layerSf = L.canvasLayer.scalarField(sf, {
+                        color: chroma.scale('BuPu').domain(sf.range),
+                        opacity: 0.65,
+                        pane: paneId
+                    }).addTo(map);
+                    
+                    playerReferences.push([layerSf, "At: " + padZeros(index, 2) + ":00"]);
+
+                    bounds = layerSf.getBounds();
+                });
+                
+                // player control
+                let layersControl = L.control.layersPlayer(playerReferences, paneId, {
+                    position: 'bottomleft',
+                    collapsed: false,
+                    refreshTime: 500,
+                    buttons: {
+						moveFirst: {
+							cssClass: 'leaflet-control-layersPlayer-button'
+						},
+						playBackward: {
+                            cssClass: 'leaflet-control-layersPlayer-button',
+                            cssClassRun: 'leaflet-control-layersPlayer-button-run'
+                        },
+						previous: {
+                            cssClass: 'leaflet-control-layersPlayer-button'
+                        },
+                        next: {
+                            cssClass: 'leaflet-control-layersPlayer-button'
+                        },
+                        playForward: {
+                            cssClass: 'leaflet-control-layersPlayer-button',
+                            cssClassRun: 'leaflet-control-layersPlayer-button-run'
+                        },
+                        moveLast: {
+							cssClass: 'leaflet-control-layersPlayer-button'
+						},
+                        toggleLoop: {
+                            cssClass: 'leaflet-control-layersPlayer-button',
+                            cssClassRun: 'leaflet-control-layersPlayer-button-run'
+                        },
+                        stop: {
+							cssClass: 'leaflet-control-layersPlayer-button',
+                            style: {
+                                'color': '#993333'
+                            }
+                        }
+                    }
+                }).addTo(map);
+                
+                // response function for onClick
+                layersControl.onClick = function (e) {
+                    
+                    let valueHtmlContent = function (v) {
+                        let formatedValue = (v ? v.toFixed(1) : (0).toFixed(1));
+                        return '<span class="popupText">Value: ' + formatedValue + ' mm</span>';
+                    }
+                    
+                    if (e.frameChange) {
+                        let popUp = L.Control.LayersPlayer.lastCreated.activePopup;
+                        if (!popUp) { return; }
+                        popUp.setContent(valueHtmlContent(e.value));
+                        
+                    } else {
+                        if (e.value == null){ return; }
+                        
+                        L.Control.LayersPlayer.lastCreated.activePopup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(valueHtmlContent(e.value))
+                            .openOn(map);
+                    }
+                    
+                };
+                
+                // move to first layer
+                map.fitBounds(bounds);
+                layersControl.goTo(0);
+            });
+    </script>
+  </body>
+
+</html>
