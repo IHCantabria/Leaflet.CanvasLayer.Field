@@ -75,3 +75,11 @@
 
 * Fix Cell Size issue pointed by @nzahasan in #29
 * Update some dependencies (security updates)
+
+#v1.5.3
+
+* PR #61 - Add player control 
+* PR #59 - Allow user define map pane
+* Remove chroma-js global dependency
+* Move project to new npm package (ih-leaflet-canvaslayer-field)
+* Update docs & dependencies
