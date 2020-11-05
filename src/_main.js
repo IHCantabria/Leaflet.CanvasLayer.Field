@@ -23,3 +23,4 @@ require('./layer/L.CanvasLayer.VectorFieldAnim.js');
 
 // control
 require('./control/L.Control.ColorBar.js');
+require('./control/L.Control.LayersPlayer.js');

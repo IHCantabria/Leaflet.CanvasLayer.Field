@@ -29,6 +29,10 @@ The figures below show the results for three basic layers, showing *Currents in 
 
 ![Example](https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/img/ScalarFieldVector.png)
 
+The following animation shows the usage of the built-in Layers Player controller to display an hypothetical *precipitation event in the North American Great Lakes region*.    
+
+![Example](https://adlzanchetta.github.io/Leaflet.CanvasLayer.Field/img/LayersPlayerControl.gif)
+
 If you want to have a quick testing environment, have a look at these **snippets at codepen.io**:
 * [ScalarField](http://codepen.io/VictorVelarde/pen/ZKJWMb/)
 * [VectorFieldAnim](http://codepen.io/VictorVelarde/pen/QvBeYV)
